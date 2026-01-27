@@ -10,6 +10,7 @@ import MostPopular from "./MostPopular";
 import PlantWorkshopsSection from "./PlantWorkshopsSection";
 import BlogArticlesSection from "./BlogArticlesSection";
 import TestimonialsSection from "./TestimonialsSection";
+import Navbar from "../Navbar";
 import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
@@ -71,6 +72,8 @@ export default function HomePage() {
 
   return (
     <div>
+
+      <Navbar />
 
       <div className="min-h-screen bg-[#ffe1d1] rounded-bl-3xl rounded-br-3xl">
         {/* HERO */}

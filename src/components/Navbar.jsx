@@ -156,7 +156,7 @@ export default function Navbar() {
                 <>
                     {/* Backdrop */}
                     <div
-                        className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+                        className="md:hidden fixed inset-0 bg-white/60 backdrop-blur-sm z-40"
                         onClick={() => setIsMenuOpen(false)}
                     />
 

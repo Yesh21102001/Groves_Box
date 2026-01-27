@@ -201,8 +201,8 @@ export default function Navbar() {
                                 <X size={24} className="text-gray-700" />
                             </button>
                             <h1 className="text-3xl font-serif tracking-tight flex items-center">
-                                <span className="font-light">The</span>
-                                <span className="ml-3 font-normal">Sill</span>
+                                <span className="font-light">Groves Box</span>
+                                {/* <span className="ml-3 font-normal">Sill</span> */}
                             </h1>
                             <div className="w-6" /> {/* Spacer for balance */}
                         </div>
@@ -267,14 +267,14 @@ export default function Navbar() {
                             </div>
 
                             {/* Accessibility Badge */}
-                            <div className="flex justify-center py-3 bg-gray-50">
+                            {/* <div className="flex justify-center py-3 bg-gray-50">
                                 <div className="bg-emerald-600 rounded-full w-10 h-10 flex items-center justify-center">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                                         <circle cx="12" cy="8" r="2" />
                                         <path d="M12 14c-3 0-5 2-5 4v2h10v-2c0-2-2-4-5-4z" />
                                     </svg>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </>

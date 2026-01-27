@@ -1,11 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, MapPin, Heart, User, ShoppingCart, ChevronDown, Menu, X, ChevronRight, ChevronLeft } from 'lucide-react';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hoveredItem, setHoveredItem] = useState(null);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    // Handle scroll event
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 0) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const navItems = [
         { name: "Valentine's Day", icon: '💚', hasArrow: false },
@@ -33,7 +52,8 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-[#fee1d1] sticky top-0 z-50">
+        <nav className={`sticky top-0 z-50 transition-colors duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-[#fee1d1]'}`}>
+
             {/* Top Bar */}
             {/* <div className="bg-emerald-700 text-white py-2.5 px-4 relative">
                 <button className="absolute left-4 top-1/2 -translate-y-1/2 hover:opacity-80">
@@ -51,7 +71,6 @@ export default function Navbar() {
             <div className="container mx-auto px-4">
                 {/* Top Section */}
                 <div className="flex items-center justify-between py-4 border-b border-[#0000000D]">
-
 
                     {/* Logo */}
                     <div className="flex items-center gap-1">
@@ -162,6 +181,7 @@ export default function Navbar() {
 
                     {/* Sidebar */}
                     <div className="md:hidden fixed left-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-50 overflow-y-auto shadow-2xl">
+
                         {/* Top Bar in Sidebar */}
                         {/* <div className="bg-emerald-700 text-white py-2.5 px-4 relative">
                             <button className="absolute left-4 top-1/2 -translate-y-1/2 hover:opacity-80">

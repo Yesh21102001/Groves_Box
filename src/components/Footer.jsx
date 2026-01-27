@@ -52,7 +52,6 @@ export default function Footer() {
     const handleSubscribe = (e) => {
         e.preventDefault();
         console.log('Subscribe with email:', email);
-        // Add your subscribe logic here
     };
 
     return (

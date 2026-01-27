@@ -11,6 +11,7 @@ import PlantWorkshopsSection from "./PlantWorkshopsSection";
 import BlogArticlesSection from "./BlogArticlesSection";
 import TestimonialsSection from "./TestimonialsSection";
 import Navbar from "../Navbar";
+import Footer from "../Footer";
 import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
@@ -250,6 +251,8 @@ export default function HomePage() {
       <BlogArticlesSection />
 
       <TestimonialsSection />
+
+      <Footer />
     </div>
   );
 }

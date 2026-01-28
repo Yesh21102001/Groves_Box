@@ -118,7 +118,7 @@ export default function MostPopular() {
                 </div>
 
                 {/* Product Grid - Changed from grid-cols-1 to grid-cols-2 for mobile */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 justify-items-center">
                     {products.map((product) => (
                         <div key={product.id} className="group cursor-pointer">
                             {/* Image Container */}

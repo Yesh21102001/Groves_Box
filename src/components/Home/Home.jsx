@@ -165,24 +165,21 @@ export default function HomePage() {
     lg:min-h-[70vh]
     2xl:min-h-[85vh]
     px-4 sm:px-6 lg:px-12 2xl:px-24
-    flex items-center
+    flex items-center justify-end
     bg-cover bg-center
   "
-        style={{ backgroundImage: "url('/images/desktop2.png')" }}
+        style={{ backgroundImage: "url('/images/2151022072.jpg')" }}
       >
-        {/* Optional overlay (keep empty if image is clean) */}
+        {/* Optional overlay */}
         <div className="absolute inset-0"></div>
 
-        <div className="relative w-full max-w-7xl 2xl:max-w-[1600px] mt-[-80px] mx-auto">
-          <div className="max-w-xl sm:max-w-2xl">
+        <div className="relative w-full max-w-7xl 2xl:max-w-[1600px] mt-[-80px]">
+          <div className="max-w-xl sm:max-w-2xl ml-auto">
 
             <h1
               className="
           font-serif font-light text-[#2a2d24]
-          text-3xl
-          sm:text-4xl
-          lg:text-5xl
-          2xl:text-6xl
+          text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl
           leading-tight
           mb-6 sm:mb-8
         "
@@ -219,8 +216,7 @@ export default function HomePage() {
               <Link
                 href="/collections"
                 className="
-                bg-white
-             text-black
+            bg-white text-black
             px-8 lg:px-10
             py-3 lg:py-4
             text-base lg:text-l
@@ -231,9 +227,11 @@ export default function HomePage() {
                 Shop Valentine's Day Gifts
               </Link>
             </div>
+
           </div>
         </div>
       </section>
+
 
 
       {/* MOST POPULAR PLANTS */}

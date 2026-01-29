@@ -47,10 +47,10 @@ export default function Navbar() {
     ];
 
     const collections = [
-        { name: 'Large Plants', color: 'bg-orange-400', shape: 'rounded-t-full', href: '/collections' },
-        { name: 'Houseplants', color: 'bg-green-700', shape: 'rounded-br-[40%]', href: '/collections' },
-        { name: 'Outdoor & Patio', color: 'bg-blue-600', shape: 'rounded-br-[50%] rounded-tl-[50%]', href: '/collections' },
-        { name: 'Planters & Care', color: 'bg-red-500', shape: 'rounded-full', href: '/collections' },
+        { name: 'Large Plants', color: 'bg-orange-400', shape: 'rounded-t-full', href: '/collections/large-plants' },
+        { name: 'Houseplants', color: 'bg-green-700', shape: 'rounded-br-[40%]', href: '/collections/houseplants' },
+        { name: 'Outdoor & Patio', color: 'bg-blue-600', shape: 'rounded-br-[50%] rounded-tl-[50%]', href: '/collections/outdoor-patio' },
+        { name: 'Planters & Care', color: 'bg-red-500', shape: 'rounded-full', href: '/collections/planters-care' },
     ];
 
     const handleCloseMenu = () => {
@@ -234,7 +234,6 @@ export default function Navbar() {
                                     {collections.map((collection) => (
                                         <Link
                                             key={collection.name}
-                                            href="/collections"
                                             onClick={handleCloseMenu}
                                             className="relative aspect-square overflow-hidden hover:opacity-90 transition-opacity"
                                             style={{

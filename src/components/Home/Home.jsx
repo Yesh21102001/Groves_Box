@@ -161,27 +161,34 @@ export default function HomePage() {
         className="
     relative w-full
     min-h-[70vh]
-    sm:min-h-[70vh]
-    lg:min-h-[70vh]
     2xl:min-h-[85vh]
     px-4 sm:px-6 lg:px-12 2xl:px-24
     flex items-center justify-end
     bg-cover bg-center
+
+    /* MOBILE background */
+    bg-[url('/images/2151022076.jpg')]
+
+    /* DESKTOP background */
+    sm:bg-[url('/images/2151022072.jpg')]
   "
-        style={{ backgroundImage: "url('/images/2151022072.jpg')" }}
       >
         {/* Optional overlay */}
         <div className="absolute inset-0"></div>
 
-        <div className="relative w-full max-w-7xl 2xl:max-w-[1600px] mt-[-80px]">
+        <div className="
+  relative w-full
+  max-w-7xl 2xl:max-w-[1600px]
+  -mt-80 sm:-mt-40 lg:-mt-0
+">
+
           <div className="max-w-xl sm:max-w-2xl ml-auto">
 
             <h1
               className="
           font-serif font-light text-[#2a2d24]
           text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl
-          leading-tight
-          mb-6 sm:mb-8
+          leading-tight mb-6 sm:mb-8
         "
             >
               Plants for best friends
@@ -190,22 +197,22 @@ export default function HomePage() {
             <p
               className="
           text-[#2a2d24]
-          text-base
-          sm:text-m
-          mb-8 sm:mb-10
+    text-xs sm:text-sm lg:text-base
+    mb-6 sm:mb-10
         "
             >
               Expert Guidance • Connect & Grow • Judgement-Free Service
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+            {/* BUTTONS – SIDE BY SIDE EVEN ON MOBILE */}
+            <div className="flex flex-row gap-3 sm:gap-6">
               <Link
                 href="/collections"
                 className="
             bg-black text-white
-            px-8 lg:px-10
+            px-6 sm:px-8 lg:px-10
             py-3 lg:py-4
-            text-base lg:text-l
+            text-sm sm:text-base
             font-medium
             hover:bg-gray-800 transition
           "
@@ -217,21 +224,20 @@ export default function HomePage() {
                 href="/collections"
                 className="
             bg-white text-black
-            px-8 lg:px-10
+            px-6 sm:px-8 lg:px-10
             py-3 lg:py-4
-            text-base lg:text-l
+            text-sm sm:text-base
             font-medium
             hover:bg-black hover:text-white transition
           "
               >
-                Shop Valentine's Day Gifts
+                Valentine’s Day Gifts
               </Link>
             </div>
 
           </div>
         </div>
       </section>
-
 
 
       {/* MOST POPULAR PLANTS */}

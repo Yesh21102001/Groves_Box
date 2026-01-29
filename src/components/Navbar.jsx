@@ -40,10 +40,10 @@ export default function Navbar() {
     ]);
 
     const navItems = [
-        { name: 'Large Plants', href: '/collections' },
-        { name: 'Houseplants', href: '/collections', hasArrow: true },
-        { name: 'Outdoor & Patio', href: '/collections', hasArrow: true },
-        { name: 'Planters & Care', href: '/collections', hasArrow: true },
+        { name: 'Large Plants', href: '/collections/large-plants' },
+        { name: 'Houseplants', href: '/collections/houseplants', hasArrow: true },
+        { name: 'Outdoor & Patio', href: '/collections/outdoor-patio', hasArrow: true },
+        { name: 'Planters & Care', href: '/collections/planters-care', hasArrow: true },
     ];
 
     const collections = [

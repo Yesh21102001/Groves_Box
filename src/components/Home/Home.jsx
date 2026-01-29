@@ -41,6 +41,41 @@ export default function HomePage() {
       description: "Use code NEWLEAF10 for $10 off",
       price: 60,
       image: "https://cdn.shopify.com/s/files/1/0150/6262/files/small-subscriptions_gift-card.jpg",
+    },
+    {
+      id: 5,
+      name: "Money Tree Plant",
+      description: "The OG good-luck tree",
+      price: 39,
+      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/the-sill_Small-Money-Tree_Small_Marcelle-Gold_Variant.jpg",
+      badge: "Best Seller",
+      badgeColor: "bg-gray-800"
+    },
+    {
+      id: 6,
+      name: "Olive Tree",
+      description: "Free gift with purchase",
+      price: 40,
+      originalPrice: 70,
+      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/Olivetree-Isabella_Black_Variant.png",
+      badge: "On Sale",
+      badgeColor: "bg-red-600"
+    },
+    {
+      id: 7,
+      name: "Musa Nono Pink Variegated Banana",
+      description: "Pretty in pink streaks",
+      price: 249,
+      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/PinkBananaMusa-PDP-Wall1.png",
+      badge: "Rare Plant",
+      badgeColor: "bg-purple-600"
+    },
+    {
+      id: 8,
+      name: "Plant Of The Month Club",
+      description: "Use code NEWLEAF10 for $10 off",
+      price: 60,
+      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/small-subscriptions_gift-card.jpg",
     }
   ];
 
@@ -64,6 +99,56 @@ export default function HomePage() {
       quote: "Thank you so much for getting back to me about my plant concern! I'm grateful that customer service does still exist. Can't wait to recommend The Sill to others!",
       author: "Molly",
       location: "CO"
+    },
+    {
+      quote: "I love The Sill! It's a nice way to send plants to people you love who live far away. Thanks for helping me stay connected!",
+      author: "Hillary",
+      location: "TX"
+    },
+    {
+      quote: "My Monstera arrived gorgeous and healthy!!! Best looking plant I've ever pulled out of a box!!",
+      author: "Melanie",
+      location: "IL"
+    },
+    {
+      quote: "I have ordered several times and each time I get the healthiest, prettiest plants very quickly. I have been extremely satisfied with The Sill.",
+      author: "Kelsey",
+      location: "CA"
+    },
+    {
+      quote: "Thank you so much for getting back to me about my plant concern! I'm grateful that customer service does still exist. Can't wait to recommend The Sill to others!",
+      author: "Molly",
+      location: "CO"
+    }
+  ];
+
+  const workshops = [
+    {
+      id: 1,
+      date: 'February 4',
+      image: '/images/Blue_3.webp',
+      title: 'Diagnosing Plant Problems',
+      description: 'Learn how to properly diagnose your plants symptoms early and provide the care when it matters most!',
+      isFree: false,
+      imageAlt: 'Close-up of yellow plant leaves showing potential issues'
+    },
+    {
+      id: 2,
+      date: 'February 11',
+      image: '/images/Green_1 (1).webp',
+      title: 'The Complete Hoya Care Guide',
+      description: 'Master the art of Hoya care! Learn essential tips on light, water, and soil to help your Hoyas thrive and bloom in this hands-on workshop.',
+      isFree: true,
+      imageAlt: 'Pink pots with various Hoya plants'
+    },
+    {
+      id: 3,
+      date: 'February 18',
+      image: '/images/Group_coasters.webp',
+      title: 'Ask An Expert: Mastering Natural Light & Grow Lights',
+      description: 'Join our Lighting AMA! We\'ll start with a lighting crash course, then answer all your specific plant lighting questions.',
+      isFree: true,
+      imageAlt: 'Bright plant-filled room with natural light'
     }
   ];
 
@@ -123,7 +208,7 @@ export default function HomePage() {
             bg-black text-white
             px-8 lg:px-10
             py-3 lg:py-4
-            text-base lg:text-lg
+            text-base lg:text-l
             font-medium
             hover:bg-gray-800 transition
           "
@@ -138,7 +223,7 @@ export default function HomePage() {
              text-black
             px-8 lg:px-10
             py-3 lg:py-4
-            text-base lg:text-lg
+            text-base lg:text-l
             font-medium
             hover:bg-black hover:text-white transition
           "
@@ -157,7 +242,7 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-xl sm:text-2xl md:text-2xl lg:text-2xl 2xl:text-4xl font-serif font-light text-gray-900">
+            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
               Our Most Popular Plants
             </h2>
 
@@ -170,64 +255,54 @@ export default function HomePage() {
           </div>
 
           {/* Products Grid */}
-          <div
-            className="
-    grid
-    grid-cols-2
-    sm:grid-cols-3
-    md:grid-cols-3
-    lg:grid-cols-4
-    xl:grid-cols-5
-    2xl:grid-cols-6
-    gap-x-6 gap-y-10
-    place-items-center
-  "
-          >
-            {products.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="group w-full max-w-[260px]"
-              >
-                {/* Image */}
-                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
-                  {product.badge && (
-                    <div
-                      className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs font-medium rounded-full`}
-                    >
-                      {product.badge}
-                    </div>
-                  )}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-[1600px]">
+              {products.map((product) => (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.id}`}
+                  className="group flex flex-col w-full"
+                >
+                  {/* Image */}
+                  <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3 md:mb-4">
+                    {product.badge && (
+                      <div
+                        className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs font-medium rounded-full`}
+                      >
+                        {product.badge}
+                      </div>
+                    )}
 
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
 
-                {/* Content */}
-                <h3 className="text-[15px] font-serif font-light text-gray-900 mb-1">
-                  {product.name}
-                </h3>
+                  {/* Content */}
+                  <h3 className="text-sm md:text-[15px] lg:text-base font-serif font-light text-gray-900 mb-1">
+                    {product.name}
+                  </h3>
 
-                <p className="text-xs italic text-gray-500 mb-2">
-                  {product.description}
-                </p>
+                  <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                    {product.description}
+                  </p>
 
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="font-medium text-gray-900">
-                    From ${product.price}
-                  </span>
-
-                  {product.originalPrice && (
-                    <span className="text-gray-400 line-through">
-                      ${product.originalPrice}
+                  <div className="flex items-center gap-2 text-xs md:text-sm mt-auto">
+                    <span className="font-medium text-gray-900">
+                      From ${product.price}
                     </span>
-                  )}
-                </div>
-              </Link>
-            ))}
+
+                    {product.originalPrice && (
+                      <span className="text-gray-400 line-through">
+                        ${product.originalPrice}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
 
 
@@ -310,131 +385,289 @@ export default function HomePage() {
 
 
       {/* LARGE FLOOR PLANTS */}
-      <section className="w-full px-4 md:px-6 lg:px-8 py-16 md:py-24 lg:py-28">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-12 md:mb-16">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-light text-gray-900">Large Floor Plants</h2>
-            <Link href="/products" className="hidden md:flex items-center gap-2 text-gray-900 hover:text-gray-600 transition text-lg">
-              Shop all large plants <ChevronRight size={20} />
+      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+        <div className="max-w-[1600px] mx-auto">
+
+          {/* Heading */}
+          <div className="flex justify-between items-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+              Large Floor Plants
+            </h2>
+
+            <Link
+              href="/products"
+              className="hidden md:flex items-center gap-2 text-white bg-black py-2.5 px-4 text-lg"
+            >
+              Shop all <ChevronRight size={20} />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 lg:gap-8">
-            {products.slice(0, 4).map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="group"
-              >
-                <div className="relative overflow-hidden rounded-lg mb-4 bg-gray-100 h-64 md:h-80 lg:h-96">
-                  {product.badge && (
-                    <div className={`absolute top-4 left-4 z-10 ${product.badgeColor} text-white px-4 py-1 text-xs font-medium rounded-full`}>
-                      {product.badge}
-                    </div>
-                  )}
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                </div>
-                <h3 className="text-base md:text-lg lg:text-xl font-serif font-light text-gray-900 mb-1">{product.name}</h3>
-                <p className="text-sm md:text-base text-gray-600 mb-2">{product.description}</p>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-gray-900">From ${product.price}</span>
-                </div>
-              </Link>
-            ))}
+
+          {/* Products Grid */}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-[1600px]">
+              {products.map((product) => (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.id}`}
+                  className="group flex flex-col w-full"
+                >
+                  {/* Image */}
+                  <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3 md:mb-4">
+                    {product.badge && (
+                      <div
+                        className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs font-medium rounded-full`}
+                      >
+                        {product.badge}
+                      </div>
+                    )}
+
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="text-sm md:text-[15px] lg:text-base font-serif font-light text-gray-900 mb-1">
+                    {product.name}
+                  </h3>
+
+                  <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                    {product.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-xs md:text-sm mt-auto">
+                    <span className="font-medium text-gray-900">
+                      From ${product.price}
+                    </span>
+
+                    {product.originalPrice && (
+                      <span className="text-gray-400 line-through">
+                        ${product.originalPrice}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="md:hidden mt-8 text-center">
-            <Link href="/products" className="inline-flex items-center gap-2 text-gray-900 hover:text-gray-600 transition font-medium">
-              Shop all large plants <ChevronRight size={18} />
+
+
+          {/* Mobile CTA */}
+          <div className="md:hidden mt-10 text-center">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 text-white bg-black py-2.5 px-5 font-medium"
+            >
+              Shop all <ChevronRight size={18} />
             </Link>
           </div>
+
         </div>
       </section>
 
 
       {/* NEW ARRIVALS */}
-      <section className="w-full px-4 md:px-6 lg:px-8 py-16 md:py-24 lg:py-28">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-12 md:mb-16">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-light text-gray-900">New Arrivals</h2>
-            <Link href="/products" className="hidden md:flex items-center gap-2 text-gray-900 hover:text-gray-600 transition text-lg">
-              Shop all new arrivals <ChevronRight size={20} />
+      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+        <div className="max-w-[1600px] mx-auto">
+
+          {/* Heading */}
+          <div className="flex justify-between items-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+              New Arrivals
+            </h2>
+
+            <Link
+              href="/products"
+              className="hidden md:flex items-center gap-2 text-white bg-black py-2.5 px-4 text-lg"
+            >
+              Shop all <ChevronRight size={20} />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 lg:gap-8">
-            {products.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="group"
-              >
-                <div className="relative overflow-hidden rounded-lg mb-4 bg-gray-100 h-64 md:h-80 lg:h-96">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                </div>
-                <h3 className="text-base md:text-lg lg:text-xl font-serif font-light text-gray-900 mb-1">{product.name}</h3>
-                <p className="text-sm md:text-base text-gray-600 mb-2">{product.description}</p>
-              </Link>
-            ))}
+
+          {/* Products Grid */}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-[1600px]">
+              {products.map((product) => (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.id}`}
+                  className="group flex flex-col w-full"
+                >
+                  {/* Image */}
+                  <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3 md:mb-4">
+                    {product.badge && (
+                      <div
+                        className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs font-medium rounded-full`}
+                      >
+                        {product.badge}
+                      </div>
+                    )}
+
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="text-sm md:text-[15px] lg:text-base font-serif font-light text-gray-900 mb-1">
+                    {product.name}
+                  </h3>
+
+                  <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                    {product.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-xs md:text-sm mt-auto">
+                    <span className="font-medium text-gray-900">
+                      From ${product.price}
+                    </span>
+
+                    {product.originalPrice && (
+                      <span className="text-gray-400 line-through">
+                        ${product.originalPrice}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="md:hidden mt-8 text-center">
-            <Link href="/products" className="inline-flex items-center gap-2 text-gray-900 hover:text-gray-600 transition font-medium">
-              Shop all new arrivals <ChevronRight size={18} />
+
+
+          {/* Mobile CTA */}
+          <div className="md:hidden mt-10 text-center">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 text-white bg-black py-2.5 px-5 font-medium"
+            >
+              Shop all <ChevronRight size={18} />
             </Link>
           </div>
+
         </div>
       </section>
 
 
       {/* WORKSHOPS & BLOG */}
-      <section className="w-full px-4 md:px-6 lg:px-8 py-16 md:py-24 lg:py-28">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-light mb-6 md:mb-8 text-gray-900">Plant Care & Workshops</h2>
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-600 mb-12 md:mb-16 max-w-3xl">
-            Empowering all people to be plant people. Welcome to Plant Parenthood®.
-          </p>
-          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-            <Link href="#" className="group">
-              <div className="bg-gray-100 rounded-lg h-48 md:h-56 lg:h-64 mb-6 group-hover:bg-gray-200 transition" />
-              <h3 className="text-lg md:text-xl lg:text-2xl font-medium text-gray-900 mb-2">The Best Gifts for Every Love Language</h3>
-              <p className="text-sm md:text-base text-gray-600">Ask The Sill</p>
-            </Link>
-            <Link href="#" className="group">
-              <div className="bg-gray-100 rounded-lg h-48 md:h-56 lg:h-64 mb-6 group-hover:bg-gray-200 transition" />
-              <h3 className="text-lg md:text-xl lg:text-2xl font-medium text-gray-900 mb-2">Galentine's Day Plant Party Guide</h3>
-              <p className="text-sm md:text-base text-gray-600">Ask The Sill</p>
-            </Link>
-            <Link href="#" className="group">
-              <div className="bg-gray-100 rounded-lg h-48 md:h-56 lg:h-64 mb-6 group-hover:bg-gray-200 transition" />
-              <h3 className="text-lg md:text-xl lg:text-2xl font-medium text-gray-900 mb-2">The Sill 2025 Plant Trend Report</h3>
-              <p className="text-sm md:text-base text-gray-600">Ask The Sill</p>
-            </Link>
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-12 sm:py-16 md:py-20 lg:py-24 bg-gray-50">
+        <div className="max-w-[1600px] mx-auto">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-8 md:mb-12 lg:mb-16">
+            <div>
+              <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+                Plant Care & Workshops
+              </h2>
+              <p className="text-base sm:text-l md:text-l lg:text-l text-gray-600 max-w-2xl">
+                Empowering all people to be plant people. Welcome to Plant Parenthood®.
+              </p>
+            </div>
+            {/* <div className="flex items-center gap-4 sm:gap-6 sm:pt-2">
+              <a
+                href="#"
+                className="text-sm md:text-base lg:text-lg text-gray-900 hover:text-gray-600 transition-colors whitespace-nowrap flex items-center gap-1"
+              >
+                View All Workshops →
+              </a>
+              <a
+                href="#"
+                className="text-sm md:text-base lg:text-lg text-gray-900 hover:text-gray-600 transition-colors whitespace-nowrap flex items-center gap-1"
+              >
+                Visit Our Blog →
+              </a>
+            </div> */}
+          </div>
+
+          {/* Workshop Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 xl:gap-12">
+            {workshops.map((workshop) => (
+              <a
+                key={workshop.id}
+                href="#"
+                className="group block bg-white rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              >
+                {/* Image Container */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                  <img
+                    src={workshop.image}
+                    alt={workshop.imageAlt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {/* Date Badge */}
+                  <div className="absolute top-4 left-4 bg-teal-400 text-white px-3 py-1.5 text-sm font-medium rounded">
+                    {workshop.date}
+                  </div>
+                  {/* Free Badge */}
+                  {workshop.isFree && (
+                    <div className="absolute bottom-4 left-4 bg-white text-teal-600 px-3 py-1 text-xs font-semibold rounded">
+                      FREE
+                    </div>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="p-5 md:p-6 lg:p-7">
+                  <h3 className="text-xl md:text-xl lg:text-xl font-serif font-normal text-gray-900 mb-3 md:mb-4 leading-tight group-hover:text-gray-700 transition-colors">
+                    {workshop.title}
+                  </h3>
+                  <p className="text-sm md:text-base lg:text-l text-gray-600 leading-relaxed">
+                    {workshop.description}
+                  </p>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       </section>
 
 
       {/* TESTIMONIALS */}
-      <section className="w-full px-4 md:px-6 lg:px-8 py-16 md:py-24 lg:py-28">
+      <section className="w-full px-4 md:px-6 lg:px-8 py-16 md:py-24 lg:py-28 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-light mb-12 md:mb-16 text-gray-900">What our customers are saying</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          {/* Header */}
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+              What our customers are saying
+            </h2>
+          </div>
+
+          {/* Masonry Grid */}
+          <div className="columns-1 md:columns-2 lg:columns-4 gap-6 space-y-6">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-6 md:p-8">
-                <div className="flex gap-1 mb-6">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-gray-900 text-gray-900" />
-                  ))}
+              <div
+                key={index}
+                className="break-inside-avoid bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300 mb-6"
+              >
+                {/* Quote Icon */}
+                <div className="mb-6">
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="text-blue-200">
+                    <path d="M10 26h5l3-6V12H8v8h5l-3 6zm14 0h5l3-6V12h-10v8h5l-3 6z" fill="currentColor" />
+                  </svg>
                 </div>
-                <p className="text-gray-700 mb-6 italic text-sm md:text-base">"{testimonial.quote}"</p>
-                <div>
-                  <p className="font-medium text-gray-900">{testimonial.author}</p>
-                  <p className="text-sm text-gray-600">{testimonial.location}</p>
+
+                {/* Quote Text */}
+                <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-8">
+                  {testimonial.quote}
+                </p>
+
+                {/* Author Info */}
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">
+                      {testimonial.author}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {testimonial.location}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}

@@ -13,30 +13,9 @@ export default function Navbar() {
 
     // Sample cart items - replace with your actual cart data
     const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: 'Monstera Deliciosa',
-            price: 45.00,
-            quantity: 1,
-            image: '/placeholder-plant.jpg',
-            size: 'Medium'
-        },
-        {
-            id: 2,
-            name: 'Snake Plant',
-            price: 32.00,
-            quantity: 2,
-            image: '/placeholder-plant.jpg',
-            size: 'Small'
-        },
-        {
-            id: 3,
-            name: 'Pothos',
-            price: 28.00,
-            quantity: 1,
-            image: '/placeholder-plant.jpg',
-            size: 'Medium'
-        }
+        { id: 1, name: 'Monstera Deliciosa', price: 45.00, quantity: 1, image: '/placeholder-plant.jpg', size: 'Medium' },
+        { id: 2, name: 'Snake Plant', price: 32.00, quantity: 2, image: '/placeholder-plant.jpg', size: 'Small' },
+        { id: 3, name: 'Pothos', price: 28.00, quantity: 1, image: '/placeholder-plant.jpg', size: 'Medium' }
     ]);
 
     const navItems = [
@@ -103,77 +82,80 @@ export default function Navbar() {
     }, [isMenuOpen, isCartOpen]);
 
     return (
-        <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
-            <div className="w-full px-4 md:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto">
+        <>
+            <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Top section with logo, search and icons */}
-                    <div className="flex items-center justify-between py-3 md:py-4 lg:py-4 gap-4">
+                    <div className="flex items-center justify-between h-16 lg:h-20">
                         {/* Mobile Menu Toggle - Left Side */}
                         <button
-                            className="md:hidden p-2 -ml-2"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="lg:hidden p-2 text-gray-700 hover:text-gray-900 transition-colors"
                         >
                             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
 
                         {/* Logo */}
                         <Link href="/" className="flex-shrink-0">
-                            <h1 className="text-2xl md:text-3xl font-serif font-light tracking-widest text-gray-900 hover:opacity-70 transition-opacity">
-                                Groves Box
-                            </h1>
+                            <div className="text-2xl md:text-3xl font-bold text-green-700 flex items-center gap-2">
+                                <span className="text-3xl md:text-4xl">🌿</span>
+                                <span className="hidden sm:inline">Groves Box</span>
+                                <span className="sm:hidden">GB</span>
+                            </div>
                         </Link>
 
                         {/* Center Search - Hidden on mobile */}
-                        <div className="hidden md:flex flex-1 max-w-md mx-4 lg:max-w-lg lg:mx-8">
+                        <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
                             <div className="w-full relative">
                                 <input
                                     type="text"
-                                    placeholder="Search for plants ..."
-                                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-none focus:outline-none focus:ring-1 focus:ring-gray-400"
+                                    placeholder="Search plants, planters, and more..."
+                                    className="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                 />
-                                <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                             </div>
                         </div>
 
                         {/* Right Actions */}
-                        <div className="flex items-center gap-3 md:gap-4 lg:gap-6">
+                        <div className="flex items-center gap-3 sm:gap-4">
                             {/* Growing Zone - Desktop Only */}
-                            <button className="hidden lg:flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:text-gray-900">
-                                <MapPin size={18} />
+                            <div className="hidden lg:flex items-center gap-2 px-3 py-2 bg-green-50 rounded-lg cursor-pointer hover:bg-green-100 transition-colors">
+                                <MapPin size={18} className="text-green-700" />
                                 <div className="text-left">
-                                    <div className="text-xs text-gray-500">Growing Zone</div>
-                                    <div className="text-sm font-medium">Zip Code: 500038</div>
+                                    <div className="text-xs text-gray-600">Growing Zone</div>
+                                    <div className="text-sm font-semibold text-green-700">Zip Code: 500038</div>
                                 </div>
-                            </button>
+                                <ChevronDown size={16} className="text-gray-500" />
+                            </div>
 
                             {/* Search - Mobile Only */}
-                            <button className="md:hidden p-2 hover:bg-gray-100 rounded-md transition-colors">
-                                <Search size={20} className="text-gray-700" />
+                            <button className="lg:hidden p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                                <Search size={22} />
                             </button>
 
                             {/* Location - Mobile Only */}
-                            <button className="md:hidden p-2 hover:bg-gray-100 rounded-md transition-colors">
-                                <MapPin size={20} className="text-gray-700" />
+                            <button className="lg:hidden p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                                <MapPin size={22} />
                             </button>
 
                             {/* Heart - Wishlist */}
-                            <button className="hidden md:flex p-2 hover:bg-gray-100 rounded-md transition-colors">
-                                <Heart size={20} className="text-gray-700" />
-                            </button>
+                            <Link href="/wishlist" className="hidden sm:block p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                                <Heart size={22} />
+                            </Link>
 
                             {/* User Account */}
-                            <button className="hidden md:flex p-2 hover:bg-gray-100 rounded-md transition-colors">
-                                <User size={20} className="text-gray-700" />
-                            </button>
+                            <Link href="/account" className="hidden sm:block p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                                <User size={22} />
+                            </Link>
 
                             {/* Shopping Cart with badge */}
                             <button
                                 onClick={handleOpenCart}
-                                className="p-2 hover:bg-gray-100 rounded-md transition-colors relative"
+                                className="relative p-2 text-gray-700 hover:text-gray-900 transition-colors"
                             >
-                                <ShoppingCart size={20} className="text-gray-700" />
+                                <ShoppingCart size={22} />
                                 {cartCount > 0 && (
-                                    <span className="absolute top-0 right-0 bg-teal-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                                    <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                         {cartCount}
                                     </span>
                                 )}
@@ -182,20 +164,70 @@ export default function Navbar() {
                     </div>
 
                     {/* Navigation Links - Desktop (Centered) */}
-                    <div className="hidden md:block border-t border-gray-200">
-                        <ul className="flex items-center justify-center gap-5 lg:gap-6 xl:gap-7 py-3 overflow-x-auto">
-                            {navItems.map((item) => (
-                                <li key={item.name} className="flex-shrink-0">
-                                    <Link
-                                        href={item.href}
-                                        className="text-sm text-gray-700 hover:text-gray-900 font-medium transition-colors whitespace-nowrap"
-                                    >
-                                        {item.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                    <div className="hidden lg:flex justify-center items-center space-x-8 pb-4">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className="text-gray-700 hover:text-green-700 font-medium transition-colors flex items-center gap-1 group"
+                            >
+                                {item.name}
+                                {item.hasArrow && (
+                                    <ChevronDown size={16} className="text-gray-500 group-hover:text-green-700" />
+                                )}
+                            </Link>
+                        ))}
                     </div>
+                </div>
+            </nav>
+
+            {/* Mobile Bottom Navigation Bar */}
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#1a1a2e] text-white z-50 border-t border-gray-700">
+                <div className="flex items-center justify-around h-16 px-2">
+                    {/* Home */}
+                    <Link href="/" className="flex flex-col items-center justify-center flex-1 py-2">
+                        <div className="relative">
+                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                            </svg>
+                        </div>
+                        <span className="text-xs mt-1">Home</span>
+                    </Link>
+
+                    {/* Camera/Scan */}
+                    <button className="flex flex-col items-center justify-center flex-1 py-2">
+                        <div className="relative">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <span className="text-xs mt-1">Scan</span>
+                    </button>
+
+                    {/* Menu */}
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="flex flex-col items-center justify-center flex-1 py-2"
+                    >
+                        <div className="relative">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </div>
+                        <span className="text-xs mt-1">Menu</span>
+                    </button>
+
+                    {/* Settings */}
+                    <button className="flex flex-col items-center justify-center flex-1 py-2">
+                        <div className="relative">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <span className="text-xs mt-1">Settings</span>
+                    </button>
                 </div>
             </div>
 
@@ -204,85 +236,80 @@ export default function Navbar() {
                 <>
                     {/* Backdrop */}
                     <div
-                        className={`md:hidden fixed inset-0 bg-black/40 z-40 transition-opacity ${isClosing ? 'animate-fade-out' : 'animate-fade-in'
+                        className={`lg:hidden fixed inset-0 bg-black z-50 transition-opacity duration-300 ${isClosing ? 'opacity-0' : 'opacity-50'
                             }`}
                         onClick={handleCloseMenu}
                     />
 
                     {/* Sidebar */}
-                    <div className={`md:hidden fixed left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white z-50 shadow-2xl flex flex-col ${isClosing ? 'animate-slide-out' : 'animate-slide-in'
-                        }`}>
+                    <div
+                        className={`lg:hidden fixed inset-y-0 left-0 w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${isClosing ? '-translate-x-full' : 'translate-x-0'
+                            }`}
+                    >
                         {/* Sidebar Header */}
-                        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 flex-shrink-0">
-                            <h2 className="text-2xl font-serif font-light tracking-widest text-gray-900">
+                        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                            <div className="text-2xl font-bold text-green-700 flex items-center gap-2">
+                                <span className="text-3xl">🌿</span>
                                 Groves Box
-                            </h2>
+                            </div>
                             <button
                                 onClick={handleCloseMenu}
-                                className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                                className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
                             >
-                                <X size={24} className="text-gray-700" />
+                                <X size={24} />
                             </button>
                         </div>
 
                         {/* Scrollable Content */}
                         <div className="flex-1 overflow-y-auto">
                             {/* Collections Section */}
-                            <div className="px-4 py-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">Collections</h3>
+                            <div className="p-4">
+                                <h3 className="text-lg font-semibold mb-4 text-gray-900">Collections</h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {collections.map((collection) => (
                                         <Link
                                             key={collection.name}
-                                            href="/collections"
+                                            href={collection.href}
                                             onClick={handleCloseMenu}
-                                            className="relative aspect-square overflow-hidden hover:opacity-90 transition-opacity"
-                                            style={{
-                                                backgroundColor: collection.color === 'bg-orange-400' ? '#FEF3E2' :
-                                                    collection.color === 'bg-green-700' ? '#D4E8E4' :
-                                                        collection.color === 'bg-blue-600' ? '#E0E0F5' :
-                                                            '#FFE8E8'
-                                            }}
+                                            className="group"
                                         >
-                                            <div className={`absolute inset-0 flex items-center justify-center ${collection.color} ${collection.shape} transform transition-transform hover:scale-105`}>
-                                                <span className="text-white font-semibold text-base px-4 text-center">
-                                                    {collection.name}
-                                                </span>
-                                            </div>
+                                            <div className={`${collection.color} ${collection.shape} h-24 mb-2 transition-transform group-hover:scale-105`} />
+                                            <p className="text-sm font-medium text-gray-900 group-hover:text-green-700 transition-colors">
+                                                {collection.name}
+                                            </p>
                                         </Link>
                                     ))}
                                 </div>
                             </div>
 
                             {/* View Wishlist */}
-                            <div className="px-6 py-4 border-t border-gray-200">
-                                <Link
-                                    href="/wishlist"
-                                    className="flex items-center gap-2 text-base text-gray-800 hover:text-gray-900"
-                                    onClick={handleCloseMenu}
-                                >
-                                    <Heart size={18} className="text-gray-700" />
-                                    View Wishlist
-                                </Link>
-                            </div>
+                            <Link
+                                href="/wishlist"
+                                onClick={handleCloseMenu}
+                                className="flex items-center justify-between px-4 py-4 border-t border-gray-200 hover:bg-gray-50 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <Heart size={20} className="text-gray-700" />
+                                    <span className="font-medium text-gray-900">View Wishlist</span>
+                                </div>
+                                <ChevronRight size={20} className="text-gray-400" />
+                            </Link>
                         </div>
 
                         {/* Bottom Actions - Fixed at Bottom */}
-                        <div className="grid grid-cols-2 border-t border-gray-200 flex-shrink-0 bg-white">
+                        <div className="border-t border-gray-200 p-4 space-y-3">
                             <Link
-                                href="/login"
-                                className="flex items-center justify-center gap-2 px-4 py-4 text-sm text-white bg-black"
+                                href="/account"
                                 onClick={handleCloseMenu}
+                                className="block w-full py-3 px-4 bg-green-600 text-white text-center font-semibold rounded-lg hover:bg-green-700 transition-colors"
                             >
-                                <User size={18} />
                                 Log in
                             </Link>
                             <Link
                                 href="/resources"
-                                className="flex items-center justify-center gap-2 px-4 py-4 text-sm text-gray-800 hover:bg-gray-50"
                                 onClick={handleCloseMenu}
+                                className="block w-full py-3 px-4 border-2 border-green-600 text-green-600 text-center font-semibold rounded-lg hover:bg-green-50 transition-colors"
                             >
-                                <ShoppingCart size={18} />
                                 Resources
                             </Link>
                         </div>
@@ -295,36 +322,36 @@ export default function Navbar() {
                 <>
                     {/* Backdrop */}
                     <div
-                        className={`fixed inset-0 bg-black/40 z-40 transition-opacity ${isCartClosing ? 'animate-fade-out' : 'animate-fade-in'
+                        className={`fixed inset-0 bg-black z-50 transition-opacity duration-300 ${isCartClosing ? 'opacity-0' : 'opacity-50'
                             }`}
                         onClick={handleCloseCart}
                     />
 
                     {/* Cart Sidebar - Slides from Right */}
-                    <div className={`fixed right-0 top-0 bottom-0 w-96 max-w-[80vw] bg-white z-50 shadow-2xl flex flex-col ${isCartClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'
-                        }`}>
+                    <div
+                        className={`fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${isCartClosing ? 'translate-x-full' : 'translate-x-0'
+                            }`}
+                    >
                         {/* Cart Header */}
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
-                            <h2 className="text-xl font-semibold text-gray-900">
-                                Shopping Cart ({cartCount})
-                            </h2>
+                        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                            <h2 className="text-xl font-bold text-gray-900">Shopping Cart ({cartCount})</h2>
                             <button
                                 onClick={handleCloseCart}
-                                className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                                className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
                             >
-                                <X size={24} className="text-gray-700" />
+                                <X size={24} />
                             </button>
                         </div>
 
                         {/* Cart Items - Scrollable */}
-                        <div className="flex-1 overflow-y-auto px-6 py-4">
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
                             {cartItems.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center h-full text-center">
                                     <ShoppingCart size={64} className="text-gray-300 mb-4" />
-                                    <p className="text-gray-500 text-lg">Your cart is empty</p>
+                                    <p className="text-gray-500 mb-4">Your cart is empty</p>
                                     <button
                                         onClick={handleCloseCart}
-                                        className="mt-4 px-6 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors"
+                                        className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                                     >
                                         Continue Shopping
                                     </button>
@@ -332,22 +359,22 @@ export default function Navbar() {
                             ) : (
                                 <div className="space-y-4">
                                     {cartItems.map((item) => (
-                                        <div key={item.id} className="flex gap-4 pb-4 border-b border-gray-200">
+                                        <div key={item.id} className="flex gap-4 p-3 border border-gray-200 rounded-lg">
                                             {/* Product Image */}
-                                            <div className="w-24 h-24 bg-gray-100 rounded-md flex-shrink-0 flex items-center justify-center">
-                                                <div className="w-16 h-16 bg-green-200 rounded-full"></div>
+                                            <div className="w-20 h-20 bg-gray-100 rounded-lg flex-shrink-0">
+                                                <div className="w-full h-full flex items-center justify-center text-4xl">
+                                                    🌿
+                                                </div>
                                             </div>
 
                                             {/* Product Details */}
-                                            <div className="flex-1 flex flex-col">
-                                                <h3 className="font-medium text-gray-900">{item.name}</h3>
-                                                <p className="text-sm text-gray-500 mt-1">Size: {item.size}</p>
-                                                <p className="text-sm font-semibold text-gray-900 mt-1">
-                                                    ${item.price.toFixed(2)}
-                                                </p>
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="font-semibold text-gray-900 truncate">{item.name}</h3>
+                                                <p className="text-sm text-gray-500">Size: {item.size}</p>
+                                                <p className="text-green-600 font-semibold mt-1">${item.price.toFixed(2)}</p>
 
                                                 {/* Quantity Controls */}
-                                                <div className="flex items-center gap-3 mt-2">
+                                                <div className="flex items-center gap-2 mt-2">
                                                     <div className="flex items-center border border-gray-300 rounded-md">
                                                         <button
                                                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -363,7 +390,6 @@ export default function Navbar() {
                                                             <Plus size={16} />
                                                         </button>
                                                     </div>
-
                                                     <button
                                                         onClick={() => removeItem(item.id)}
                                                         className="p-1 text-red-500 hover:bg-red-50 rounded-md transition-colors"
@@ -380,121 +406,35 @@ export default function Navbar() {
 
                         {/* Cart Footer - Fixed at Bottom */}
                         {cartItems.length > 0 && (
-                            <div className="border-t border-gray-200 bg-white flex-shrink-0">
+                            <div className="border-t border-gray-200 p-4 space-y-4">
                                 {/* Subtotal */}
-                                <div className="px-6 py-4">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <span className="text-gray-600">Subtotal</span>
-                                        <span className="text-xl font-semibold text-gray-900">
-                                            ${calculateSubtotal()}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-gray-500">
-                                        Shipping and taxes calculated at checkout
-                                    </p>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-lg font-semibold text-gray-900">Subtotal</span>
+                                    <span className="text-2xl font-bold text-green-600">${calculateSubtotal()}</span>
                                 </div>
+                                <p className="text-sm text-gray-500">Shipping and taxes calculated at checkout</p>
 
                                 {/* View Cart Button */}
-                                <div className="px-6 pb-6">
-                                    <Link
-                                        href="/cart"
-                                        onClick={handleCloseCart}
-                                        className="block w-full py-3 bg-teal-600 text-white text-center font-semibold rounded-md hover:bg-teal-700 transition-colors"
-                                    >
-                                        View Cart
-                                    </Link>
-                                    <button
-                                        onClick={handleCloseCart}
-                                        className="block w-full py-3 mt-2 border border-gray-300 text-gray-700 text-center font-semibold rounded-md hover:bg-gray-50 transition-colors"
-                                    >
-                                        Continue Shopping
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={handleCloseCart}
+                                    className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                                >
+                                    View Cart
+                                </button>
+                                <button
+                                    onClick={handleCloseCart}
+                                    className="w-full py-3 border-2 border-green-600 text-green-600 font-semibold rounded-lg hover:bg-green-50 transition-colors"
+                                >
+                                    Continue Shopping
+                                </button>
                             </div>
                         )}
                     </div>
                 </>
             )}
 
-            <style jsx>{`
-                @keyframes slide-in {
-                    from {
-                        transform: translateX(-100%);
-                    }
-                    to {
-                        transform: translateX(0);
-                    }
-                }
-                
-                @keyframes slide-out {
-                    from {
-                        transform: translateX(0);
-                    }
-                    to {
-                        transform: translateX(-100%);
-                    }
-                }
-
-                @keyframes slide-in-right {
-                    from {
-                        transform: translateX(100%);
-                    }
-                    to {
-                        transform: translateX(0);
-                    }
-                }
-                
-                @keyframes slide-out-right {
-                    from {
-                        transform: translateX(0);
-                    }
-                    to {
-                        transform: translateX(100%);
-                    }
-                }
-                
-                @keyframes fade-in {
-                    from {
-                        opacity: 0;
-                    }
-                    to {
-                        opacity: 1;
-                    }
-                }
-                
-                @keyframes fade-out {
-                    from {
-                        opacity: 1;
-                    }
-                    to {
-                        opacity: 0;
-                    }
-                }
-                
-                .animate-slide-in {
-                    animation: slide-in 0.3s ease-out;
-                }
-                
-                .animate-slide-out {
-                    animation: slide-out 0.3s ease-in;
-                }
-
-                .animate-slide-in-right {
-                    animation: slide-in-right 0.3s ease-out;
-                }
-                
-                .animate-slide-out-right {
-                    animation: slide-out-right 0.3s ease-in;
-                }
-                
-                .animate-fade-in {
-                    animation: fade-in 0.3s ease-out;
-                }
-                
-                .animate-fade-out {
-                    animation: fade-out 0.3s ease-in;
-                }
-            `}</style>
-        </nav>
+            {/* Add padding to bottom of page for mobile nav */}
+            <div className="lg:hidden h-16" />
+        </>
     );
 }

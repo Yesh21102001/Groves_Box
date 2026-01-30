@@ -8,6 +8,7 @@ import {
     Shield,
     RotateCcw,
     ShoppingCart,
+    Heart,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -16,6 +17,7 @@ import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { products, getProductById } from '@/src/data/products';
 import { useCart } from '@/src/context/CartContext';
+import { useWishlist } from '@/src/context/WishlistContext';
 
 /* ---------------- TYPES ---------------- */
 
@@ -40,6 +42,7 @@ interface Product {
 export default function ProductDetailPage() {
     const params = useParams();
     const { addToCart } = useCart();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
@@ -87,6 +90,21 @@ export default function ProductDetailPage() {
             color: selectedColor,
             image: product.image,
         });
+    };
+
+    const handleWishlistToggle = () => {
+        if (!product) return;
+
+        if (isInWishlist(product.id)) {
+            removeFromWishlist(product.id);
+        } else {
+            addToWishlist({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+            });
+        }
     };
 
     /* ---------------- STATES ---------------- */
@@ -154,8 +172,8 @@ export default function ProductDetailPage() {
                                     key={idx}
                                     onClick={() => setMainImage(idx)}
                                     className={`border-2 rounded-lg overflow-hidden ${mainImage === idx
-                                            ? 'border-teal-600'
-                                            : 'border-transparent hover:border-gray-300'
+                                        ? 'border-teal-600'
+                                        : 'border-transparent hover:border-gray-300'
                                         }`}
                                 >
                                     <img
@@ -202,8 +220,8 @@ export default function ProductDetailPage() {
                                             key={size}
                                             onClick={() => setSelectedSize(size)}
                                             className={`px-4 py-2 rounded-lg border ${selectedSize === size
-                                                    ? 'border-teal-600 bg-teal-50'
-                                                    : 'border-gray-300'
+                                                ? 'border-teal-600 bg-teal-50'
+                                                : 'border-gray-300'
                                                 }`}
                                         >
                                             {size}
@@ -223,8 +241,8 @@ export default function ProductDetailPage() {
                                             key={color}
                                             onClick={() => setSelectedColor(color)}
                                             className={`px-4 py-2 rounded-lg border ${selectedColor === color
-                                                    ? 'border-teal-600 bg-teal-50'
-                                                    : 'border-gray-300'
+                                                ? 'border-teal-600 bg-teal-50'
+                                                : 'border-gray-300'
                                                 }`}
                                         >
                                             {color}
@@ -251,13 +269,24 @@ export default function ProductDetailPage() {
                             </button>
                         </div>
 
-                        <button
-                            onClick={handleAddToCart}
-                            className="w-full bg-teal-600 text-white py-4 rounded-lg flex justify-center items-center gap-2"
-                        >
-                            <ShoppingCart className="w-5 h-5" />
-                            Add to Cart
-                        </button>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleAddToCart}
+                                className="flex-1 bg-teal-600 text-white py-4 rounded-lg flex justify-center items-center gap-2"
+                            >
+                                <ShoppingCart className="w-5 h-5" />
+                                Add to Cart
+                            </button>
+                            <button
+                                onClick={handleWishlistToggle}
+                                className={`p-4 rounded-lg border-2 flex items-center justify-center ${isInWishlist(product.id)
+                                        ? 'border-red-300 bg-red-50 text-red-600'
+                                        : 'border-gray-300 bg-white text-gray-600 hover:border-red-300 hover:bg-red-50'
+                                    }`}
+                            >
+                                <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                            </button>
+                        </div>
 
                         {/* BENEFITS */}
                         <div className="bg-gray-50 p-5 rounded-xl grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -285,8 +314,8 @@ export default function ProductDetailPage() {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`flex-1 py-4 font-semibold ${activeTab === tab
-                                        ? 'text-teal-600 border-b-2 border-teal-600'
-                                        : 'text-gray-600'
+                                    ? 'text-teal-600 border-b-2 border-teal-600'
+                                    : 'text-gray-600'
                                     }`}
                             >
                                 {tab.toUpperCase()}

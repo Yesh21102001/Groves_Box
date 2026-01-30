@@ -291,20 +291,37 @@ export default function HomePage() {
                   )}
 
                   {/* Hover Icons */}
+                  {/* Hover Icons – Bottom */}
                   <div className="
-                    absolute top-1/2 right-3 -translate-y-1/2
-                    flex flex-col gap-2
-                    opacity-0 translate-x-4
-                    group-hover:opacity-100 group-hover:translate-x-0
-                    transition-all duration-300 z-20
-                  ">
-                    <IconButton icon={<Heart size={18} />} />
-                    <IconButton
-                      icon={<Eye size={18} />}
+  absolute bottom-3 left-1/2 -translate-x-1/2
+  flex gap-3
+  bg-white/90 backdrop-blur
+  px-4 py-2 rounded-full
+  opacity-0 translate-y-4
+  group-hover:opacity-100 group-hover:translate-y-0
+  transition-all duration-300
+  z-20
+">
+
+                    {/* Wishlist */}
+                    <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition">
+                      <Heart size={18} />
+                    </button>
+
+                    {/* Quick View */}
+                    <button
                       onClick={() => setQuickView(product)}
-                    />
-                    <IconButton icon={<ShoppingCart size={18} />} />
+                      className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition"
+                    >
+                      <Eye size={18} />
+                    </button>
+
+                    {/* Add to Cart */}
+                    <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition">
+                      <ShoppingCart size={18} />
+                    </button>
                   </div>
+
 
                   {/* Image */}
                   <img

@@ -41,7 +41,7 @@ interface Product {
 
 export default function ProductDetailPage() {
     const params = useParams();
-    const { addToCart } = useCart();
+    const { addToCart, cartItems } = useCart();
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
     const [product, setProduct] = useState<Product | null>(null);
@@ -50,6 +50,9 @@ export default function ProductDetailPage() {
     const [quantity, setQuantity] = useState(1);
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
+
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const [activeTab, setActiveTab] = useState<'description' | 'care' | 'reviews'>('description');
     const [mainImage, setMainImage] = useState(0);
 
@@ -143,7 +146,7 @@ export default function ProductDetailPage() {
     /* ---------------- UI ---------------- */
 
     return (
-        <div className="bg-white">
+        <div className={`bg-white ${totalItems > 0 ? 'pb-20' : ''}`}>
             <Navbar />
 
             <div className="max-w-7xl mx-auto px-4 py-8">
@@ -280,8 +283,8 @@ export default function ProductDetailPage() {
                             <button
                                 onClick={handleWishlistToggle}
                                 className={`p-4 rounded-lg border-2 flex items-center justify-center ${isInWishlist(product.id)
-                                        ? 'border-red-300 bg-red-50 text-red-600'
-                                        : 'border-gray-300 bg-white text-gray-600 hover:border-red-300 hover:bg-red-50'
+                                    ? 'border-red-300 bg-red-50 text-red-600'
+                                    : 'border-gray-300 bg-white text-gray-600 hover:border-red-300 hover:bg-red-50'
                                     }`}
                             >
                                 <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
@@ -358,6 +361,29 @@ export default function ProductDetailPage() {
                     </div>
                 )}
             </div>
+
+            {/* Bottom Cart Navigator */}
+            {totalItems > 0 && (
+                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
+                    <div className="max-w-7xl mx-auto flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                {totalItems}
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
+                                <p className="font-semibold">${totalPrice.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <Link
+                            href="/cart"
+                            className="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+                        >
+                            View Cart
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             <Footer />
         </div>

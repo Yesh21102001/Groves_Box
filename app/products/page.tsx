@@ -4,13 +4,119 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { ChevronLeft, Star, Filter, X } from 'lucide-react';
+import { ChevronLeft, Filter, X, Heart, ShoppingCart } from 'lucide-react';
 import { products } from '@/src/data/products';
+import { useCart } from '@/src/context/CartContext';
+
+interface Product {
+    id: string;
+    name: string;
+    price: number;
+    originalPrice?: number;
+    rating: number;
+    reviews: number;
+    description: string;
+    image: string;
+    badge?: string;
+    badgeColor?: string;
+}
 
 export default function ProductsPage() {
     const [showFiltersSidebar, setShowFiltersSidebar] = useState(false);
     const [sortBy, setSortBy] = useState('popular');
     const [priceRange, setPriceRange] = useState([0, 200]);
+    const { addToCart, cartItems } = useCart();
+
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    const handleAddToCart = (product: Product) => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            image: product.image,
+        });
+    };
+
+    // Product Card Component
+    const ProductCard = ({ product }: { product: Product }) => {
+        const [isWishlisted, setIsWishlisted] = useState(false);
+
+        return (
+            <div className="group">
+                {/* Image Container */}
+                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+                    {/* Badge */}
+                    {product.badge && (
+                        <div
+                            className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs rounded-full`}
+                        >
+                            {product.badge}
+                        </div>
+                    )}
+
+                    {/* Wishlist Icon - Top Right */}
+                    <button
+                        onClick={() => setIsWishlisted(!isWishlisted)}
+                        className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+                    >
+                        <Heart
+                            size={18}
+                            className={isWishlisted ? "fill-current text-red-500" : ""}
+                        />
+                    </button>
+
+                    {/* Quick Add Button */}
+                    {/* Mobile: Small circular button bottom-right, always visible */}
+                    <button
+                        onClick={() => handleAddToCart(product)}
+                        className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+                    >
+                        <ShoppingCart size={18} />
+                    </button>
+
+                    {/* Desktop: Full button at bottom on hover */}
+                    <button
+                        onClick={() => handleAddToCart(product)}
+                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                    >
+                        <ShoppingCart size={16} />
+                        Quick Add
+                    </button>
+
+                    {/* Product Image */}
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                </div>
+
+                {/* Product Info */}
+                <h3 className="text-sm md:text-base font-serif font-light text-gray-900 mb-1">
+                    {product.name}
+                </h3>
+
+                <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                    {product.description}
+                </p>
+
+                <div className="flex items-center gap-2 text-sm">
+                    <span className="font-medium text-gray-900">
+                        From ${product.price}
+                    </span>
+
+                    {product.originalPrice && (
+                        <span className="text-gray-400 line-through">
+                            ${product.originalPrice}
+                        </span>
+                    )}
+                </div>
+            </div>
+        );
+    };
 
     // Filter products by price
     const filteredProducts = products.filter(product => {
@@ -27,8 +133,15 @@ export default function ProductsPage() {
         return 0;
     });
 
+    // Transform products to match ProductCard format
+    const transformedProducts = sortedProducts.map(product => ({
+        ...product,
+        badge: product.price < 50 ? 'Best Seller' : product.rating >= 4.8 ? 'Top Rated' : undefined,
+        badgeColor: product.price < 50 ? 'bg-gray-800' : product.rating >= 4.8 ? 'bg-green-600' : undefined,
+    }));
+
     return (
-        <div>
+        <div className={`${totalItems > 0 ? 'pb-20' : ''}`}>
             <Navbar />
             <div className="min-h-screen bg-white py-8 md:py-12 lg:py-16">
                 <div className="w-full px-4 md:px-6 lg:px-8">
@@ -196,40 +309,15 @@ export default function ProductsPage() {
 
                         {/* Products Grid */}
                         <div className="w-full">
-                            {sortedProducts.length > 0 ? (
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
-                                    {sortedProducts.map((product) => (
+                            {transformedProducts.length > 0 ? (
+                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+                                    {transformedProducts.map((product) => (
                                         <Link
                                             key={product.id}
                                             href={`/products/${product.id}`}
                                             className="group"
                                         >
-                                            <div className="relative overflow-hidden rounded-lg bg-gray-100 mb-4 h-48 md:h-56 lg:h-64">
-                                                <img
-                                                    src={product.image}
-                                                    alt={product.name}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                                                />
-                                            </div>
-                                            <h3 className="font-serif font-light text-lg text-gray-900 mb-2 line-clamp-2">
-                                                {product.name}
-                                            </h3>
-                                            <div className="flex items-center gap-2 mb-3">
-                                                <div className="flex items-center gap-1">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <Star
-                                                            key={i}
-                                                            size={14}
-                                                            className={`${i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                                                        />
-                                                    ))}
-                                                </div>
-                                                <span className="text-xs text-gray-600">({product.reviews})</span>
-                                            </div>
-                                            <div>
-                                                <p className="text-gray-900 font-medium text-lg">${product.price}</p>
-                                                <p className="text-gray-500 text-sm line-through">${product.originalPrice}</p>
-                                            </div>
+                                            <ProductCard product={product} />
                                         </Link>
                                     ))}
                                 </div>
@@ -246,6 +334,29 @@ export default function ProductsPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Bottom Cart Navigator */}
+                {totalItems > 0 && (
+                    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
+                        <div className="max-w-7xl mx-auto flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                    {totalItems}
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
+                                    <p className="font-semibold">${totalPrice.toFixed(2)}</p>
+                                </div>
+                            </div>
+                            <Link
+                                href="/cart"
+                                className="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+                            >
+                                View Cart
+                            </Link>
+                        </div>
+                    </div>
+                )}
 
                 <Footer />
             </div>

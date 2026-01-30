@@ -7,6 +7,7 @@ import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { ChevronLeft, Star, Filter, X } from 'lucide-react';
 import { products } from '@/src/data/products';
+import { useCart } from '@/src/context/CartContext';
 
 const collectionMapping: { [key: string]: { name: string; category: string; description: string } } = {
     'houseplants': { name: 'Houseplants', category: 'houseplants', description: 'Beautiful plants for your indoor spaces' },

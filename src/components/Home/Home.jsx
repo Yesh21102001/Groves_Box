@@ -1,11 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, MessageSquare, Mail, ChevronRight, Star } from "lucide-react";
+import { useState } from "react";
+import { Phone, MessageSquare, Mail, ChevronRight, Star, Heart, Eye, ShoppingCart, X } from "lucide-react";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 
+/* ------------------ ICON BUTTON ------------------ */
+function IconButton({ icon, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+    >
+      {icon}
+    </button>
+  );
+}
+
 export default function HomePage() {
+  const [quickView, setQuickView] = useState(null);
+
   const products = [
     {
       id: 1,
@@ -245,8 +260,8 @@ export default function HomePage() {
         <div className="max-w-[1600px] mx-auto">
 
           {/* Heading */}
-          <div className="flex justify-between items-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
               Our Most Popular Plants
             </h2>
 
@@ -259,56 +274,69 @@ export default function HomePage() {
           </div>
 
           {/* Products Grid */}
-          <div className="flex justify-center">
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-[1600px]">
-              {products.map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/products/${product.id}`}
-                  className="group flex flex-col w-full"
-                >
-                  {/* Image */}
-                  <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3 md:mb-4">
-                    {product.badge && (
-                      <div
-                        className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs font-medium rounded-full`}
-                      >
-                        {product.badge}
-                      </div>
-                    )}
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+            {products.map((product) => (
+              <div key={product.id} className="group">
 
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                {/* Image */}
+                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+
+                  {/* Badge */}
+                  {product.badge && (
+                    <div
+                      className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs rounded-full`}
+                    >
+                      {product.badge}
+                    </div>
+                  )}
+
+                  {/* Hover Icons */}
+                  <div className="
+                    absolute top-1/2 right-3 -translate-y-1/2
+                    flex flex-col gap-2
+                    opacity-0 translate-x-4
+                    group-hover:opacity-100 group-hover:translate-x-0
+                    transition-all duration-300 z-20
+                  ">
+                    <IconButton icon={<Heart size={18} />} />
+                    <IconButton
+                      icon={<Eye size={18} />}
+                      onClick={() => setQuickView(product)}
                     />
+                    <IconButton icon={<ShoppingCart size={18} />} />
                   </div>
 
-                  {/* Content */}
-                  <h3 className="text-sm md:text-[15px] lg:text-base font-serif font-light text-gray-900 mb-1">
-                    {product.name}
-                  </h3>
+                  {/* Image */}
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
 
-                  <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
-                    {product.description}
-                  </p>
+                {/* Content */}
+                <h3 className="text-sm md:text-base font-serif font-light text-gray-900 mb-1">
+                  {product.name}
+                </h3>
 
-                  <div className="flex items-center gap-2 text-xs md:text-sm mt-auto">
-                    <span className="font-medium text-gray-900">
-                      From ${product.price}
+                <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                  {product.description}
+                </p>
+
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-gray-900">
+                    From ${product.price}
+                  </span>
+
+                  {product.originalPrice && (
+                    <span className="text-gray-400 line-through">
+                      ${product.originalPrice}
                     </span>
-
-                    {product.originalPrice && (
-                      <span className="text-gray-400 line-through">
-                        ${product.originalPrice}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-
 
           {/* Mobile CTA */}
           <div className="md:hidden mt-10 text-center">
@@ -319,9 +347,40 @@ export default function HomePage() {
               Shop all <ChevronRight size={18} />
             </Link>
           </div>
-
         </div>
       </section>
+
+      {/* QUICK VIEW MODAL */}
+      {quickView && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4">
+          <div className="bg-white max-w-lg w-full rounded-lg p-6 relative">
+            <button
+              onClick={() => setQuickView(null)}
+              className="absolute top-4 right-4"
+            >
+              <X size={20} />
+            </button>
+
+            <img
+              src={quickView.image}
+              alt={quickView.name}
+              className="w-full h-64 object-cover rounded mb-4"
+            />
+
+            <h3 className="text-xl font-serif mb-2">
+              {quickView.name}
+            </h3>
+
+            <p className="text-gray-600 mb-4">
+              {quickView.description}
+            </p>
+
+            <button className="w-full bg-black text-white py-3">
+              Add to Cart — ${quickView.price}
+            </button>
+          </div>
+        </div>
+      )}
 
 
       {/* HELP SECTION */}
@@ -393,8 +452,8 @@ export default function HomePage() {
         <div className="max-w-[1600px] mx-auto">
 
           {/* Heading */}
-          <div className="flex justify-between items-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
               Large Floor Plants
             </h2>
 
@@ -407,56 +466,69 @@ export default function HomePage() {
           </div>
 
           {/* Products Grid */}
-          <div className="flex justify-center">
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-[1600px]">
-              {products.map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/products/${product.id}`}
-                  className="group flex flex-col w-full"
-                >
-                  {/* Image */}
-                  <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3 md:mb-4">
-                    {product.badge && (
-                      <div
-                        className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs font-medium rounded-full`}
-                      >
-                        {product.badge}
-                      </div>
-                    )}
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+            {products.map((product) => (
+              <div key={product.id} className="group">
 
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                {/* Image */}
+                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+
+                  {/* Badge */}
+                  {product.badge && (
+                    <div
+                      className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs rounded-full`}
+                    >
+                      {product.badge}
+                    </div>
+                  )}
+
+                  {/* Hover Icons */}
+                  <div className="
+                    absolute top-1/2 right-3 -translate-y-1/2
+                    flex flex-col gap-2
+                    opacity-0 translate-x-4
+                    group-hover:opacity-100 group-hover:translate-x-0
+                    transition-all duration-300 z-20
+                  ">
+                    <IconButton icon={<Heart size={18} />} />
+                    <IconButton
+                      icon={<Eye size={18} />}
+                      onClick={() => setQuickView(product)}
                     />
+                    <IconButton icon={<ShoppingCart size={18} />} />
                   </div>
 
-                  {/* Content */}
-                  <h3 className="text-sm md:text-[15px] lg:text-base font-serif font-light text-gray-900 mb-1">
-                    {product.name}
-                  </h3>
+                  {/* Image */}
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
 
-                  <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
-                    {product.description}
-                  </p>
+                {/* Content */}
+                <h3 className="text-sm md:text-base font-serif font-light text-gray-900 mb-1">
+                  {product.name}
+                </h3>
 
-                  <div className="flex items-center gap-2 text-xs md:text-sm mt-auto">
-                    <span className="font-medium text-gray-900">
-                      From ${product.price}
+                <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                  {product.description}
+                </p>
+
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-gray-900">
+                    From ${product.price}
+                  </span>
+
+                  {product.originalPrice && (
+                    <span className="text-gray-400 line-through">
+                      ${product.originalPrice}
                     </span>
-
-                    {product.originalPrice && (
-                      <span className="text-gray-400 line-through">
-                        ${product.originalPrice}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-
 
           {/* Mobile CTA */}
           <div className="md:hidden mt-10 text-center">
@@ -467,9 +539,40 @@ export default function HomePage() {
               Shop all <ChevronRight size={18} />
             </Link>
           </div>
-
         </div>
       </section>
+
+      {/* QUICK VIEW MODAL */}
+      {quickView && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4">
+          <div className="bg-white max-w-lg w-full rounded-lg p-6 relative">
+            <button
+              onClick={() => setQuickView(null)}
+              className="absolute top-4 right-4"
+            >
+              <X size={20} />
+            </button>
+
+            <img
+              src={quickView.image}
+              alt={quickView.name}
+              className="w-full h-64 object-cover rounded mb-4"
+            />
+
+            <h3 className="text-xl font-serif mb-2">
+              {quickView.name}
+            </h3>
+
+            <p className="text-gray-600 mb-4">
+              {quickView.description}
+            </p>
+
+            <button className="w-full bg-black text-white py-3">
+              Add to Cart — ${quickView.price}
+            </button>
+          </div>
+        </div>
+      )}
 
 
       {/* NEW ARRIVALS */}
@@ -477,8 +580,8 @@ export default function HomePage() {
         <div className="max-w-[1600px] mx-auto">
 
           {/* Heading */}
-          <div className="flex justify-between items-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
               New Arrivals
             </h2>
 
@@ -491,56 +594,69 @@ export default function HomePage() {
           </div>
 
           {/* Products Grid */}
-          <div className="flex justify-center">
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-[1600px]">
-              {products.map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/products/${product.id}`}
-                  className="group flex flex-col w-full"
-                >
-                  {/* Image */}
-                  <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3 md:mb-4">
-                    {product.badge && (
-                      <div
-                        className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs font-medium rounded-full`}
-                      >
-                        {product.badge}
-                      </div>
-                    )}
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+            {products.map((product) => (
+              <div key={product.id} className="group">
 
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                {/* Image */}
+                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+
+                  {/* Badge */}
+                  {product.badge && (
+                    <div
+                      className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs rounded-full`}
+                    >
+                      {product.badge}
+                    </div>
+                  )}
+
+                  {/* Hover Icons */}
+                  <div className="
+                    absolute top-1/2 right-3 -translate-y-1/2
+                    flex flex-col gap-2
+                    opacity-0 translate-x-4
+                    group-hover:opacity-100 group-hover:translate-x-0
+                    transition-all duration-300 z-20
+                  ">
+                    <IconButton icon={<Heart size={18} />} />
+                    <IconButton
+                      icon={<Eye size={18} />}
+                      onClick={() => setQuickView(product)}
                     />
+                    <IconButton icon={<ShoppingCart size={18} />} />
                   </div>
 
-                  {/* Content */}
-                  <h3 className="text-sm md:text-[15px] lg:text-base font-serif font-light text-gray-900 mb-1">
-                    {product.name}
-                  </h3>
+                  {/* Image */}
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
 
-                  <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
-                    {product.description}
-                  </p>
+                {/* Content */}
+                <h3 className="text-sm md:text-base font-serif font-light text-gray-900 mb-1">
+                  {product.name}
+                </h3>
 
-                  <div className="flex items-center gap-2 text-xs md:text-sm mt-auto">
-                    <span className="font-medium text-gray-900">
-                      From ${product.price}
+                <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                  {product.description}
+                </p>
+
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-gray-900">
+                    From ${product.price}
+                  </span>
+
+                  {product.originalPrice && (
+                    <span className="text-gray-400 line-through">
+                      ${product.originalPrice}
                     </span>
-
-                    {product.originalPrice && (
-                      <span className="text-gray-400 line-through">
-                        ${product.originalPrice}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-
 
           {/* Mobile CTA */}
           <div className="md:hidden mt-10 text-center">
@@ -551,9 +667,40 @@ export default function HomePage() {
               Shop all <ChevronRight size={18} />
             </Link>
           </div>
-
         </div>
       </section>
+
+      {/* QUICK VIEW MODAL */}
+      {quickView && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4">
+          <div className="bg-white max-w-lg w-full rounded-lg p-6 relative">
+            <button
+              onClick={() => setQuickView(null)}
+              className="absolute top-4 right-4"
+            >
+              <X size={20} />
+            </button>
+
+            <img
+              src={quickView.image}
+              alt={quickView.name}
+              className="w-full h-64 object-cover rounded mb-4"
+            />
+
+            <h3 className="text-xl font-serif mb-2">
+              {quickView.name}
+            </h3>
+
+            <p className="text-gray-600 mb-4">
+              {quickView.description}
+            </p>
+
+            <button className="w-full bg-black text-white py-3">
+              Add to Cart — ${quickView.price}
+            </button>
+          </div>
+        </div>
+      )}
 
 
       {/* WORKSHOPS & BLOG */}

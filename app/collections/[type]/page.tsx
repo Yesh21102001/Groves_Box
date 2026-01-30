@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { ChevronLeft, Star, Filter, X } from 'lucide-react';
+import { ChevronLeft, Star, Filter, X, Heart, ShoppingCart } from 'lucide-react';
 import { products } from '@/src/data/products';
 import { useCart } from '@/src/context/CartContext';
 
@@ -29,6 +29,11 @@ export default function CollectionDetailPage() {
     const [sortBy, setSortBy] = useState('popular');
     const [priceRange, setPriceRange] = useState([0, 200]);
     const [loading, setLoading] = useState(true);
+    const { cartItems, addToCart } = useCart();
+
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const [isWishlisted, setIsWishlisted] = useState(false);
 
     const collectionType = params?.type as string;
     const collectionInfo = collectionMapping[collectionType] || { name: 'Collection', category: 'houseplants', description: 'Explore our collection' };
@@ -39,6 +44,16 @@ export default function CollectionDetailPage() {
         if (product.price < priceRange[0] || product.price > priceRange[1]) return false;
         return true;
     });
+
+    const handleAddToCart = (product: any) => {
+        addToCart({
+            id: product.id.toString(),
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            image: product.image,
+        });
+    };
 
     // Sort products
     const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -78,7 +93,7 @@ export default function CollectionDetailPage() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className={`flex flex-col min-h-screen ${totalItems > 0 ? 'pb-20' : ''}`}>
             <Navbar />
 
             <main className="flex-1 bg-white py-8 md:py-12 lg:py-16">
@@ -284,38 +299,97 @@ export default function CollectionDetailPage() {
                                         href={`/products/${product.id}`}
                                         className="group block"
                                     >
-                                        <div className="relative overflow-hidden rounded-lg bg-gray-100 mb-4 aspect-square">
+                                        {/* Image Card */}
+                                        <div className="relative rounded-xl overflow-hidden bg-gray-100 aspect-[3/4] mb-4">
+
+                                            {/* Badge */}
+                                            {product.reviews > 400 && (
+                                                <span className="absolute top-3 left-3 z-10 px-3 py-1 text-xs font-medium rounded-full bg-gray-900 text-white">
+                                                    Best Seller
+                                                </span>
+                                            )}
+
+                                            {product.originalPrice > product.price && product.reviews <= 400 && (
+                                                <span className="absolute top-3 left-3 z-10 px-3 py-1 text-xs font-medium rounded-full bg-red-600 text-white">
+                                                    On Sale
+                                                </span>
+                                            )}
+
+                                            {product.category === 'large-plants' && (
+                                                <span className="absolute top-3 left-3 z-10 px-3 py-1 text-xs font-medium rounded-full bg-purple-600 text-white">
+                                                    Rare Plant
+                                                </span>
+                                            )}
+
+                                            {/* Wishlist */}
+                                            <button
+                                                onClick={() => setIsWishlisted(!isWishlisted)}
+                                                className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+                                            >
+                                                <Heart
+                                                    size={18}
+                                                    className={isWishlisted ? "fill-current text-red-500" : ""}
+                                                />
+                                            </button>
+
+                                            {/* Image */}
                                             <img
                                                 src={product.image}
                                                 alt={product.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                             />
+
+                                            {/* DESKTOP: Quick Add bar */}
+                                            <button
+                                                onClick={() => handleAddToCart(product)}
+                                                className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                                            >
+                                                <ShoppingCart size={16} />
+                                                Quick Add
+                                            </button>
+
+                                            {/* MOBILE: Floating cart icon */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    // addToCart(product);
+                                                }}
+                                                className="
+        md:hidden
+        absolute bottom-3 right-3
+        w-11 h-11
+        bg-black text-white
+        rounded-full
+        flex items-center justify-center
+        shadow-lg
+      "
+                                            >
+                                                🛒
+                                            </button>
                                         </div>
-                                        <h3 className="font-serif font-light text-base md:text-lg text-gray-900 mb-2 line-clamp-2 group-hover:text-teal-600 transition-colors">
-                                            {product.name}
-                                        </h3>
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <div className="flex items-center gap-0.5">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <Star
-                                                        key={i}
-                                                        size={14}
-                                                        className={`${i < Math.floor(product.rating)
-                                                            ? 'fill-yellow-400 text-yellow-400'
-                                                            : 'fill-gray-200 text-gray-200'
-                                                            }`}
-                                                    />
-                                                ))}
-                                            </div>
-                                            <span className="text-xs text-gray-600">({product.reviews})</span>
-                                        </div>
-                                        <div className="flex items-baseline gap-2">
-                                            <p className="text-gray-900 font-semibold text-lg">${product.price}</p>
-                                            {product.originalPrice && product.originalPrice > product.price && (
-                                                <p className="text-gray-400 text-sm line-through">${product.originalPrice}</p>
-                                            )}
+
+                                        {/* Content */}
+                                        <div className="space-y-1">
+                                            <h3 className="font-serif text-[17px] text-gray-900">
+                                                {product.name}
+                                            </h3>
+
+                                            <p className="text-sm text-gray-500 italic line-clamp-1">
+                                                {product.description}
+                                            </p>
+
+                                            <p className="text-sm font-medium text-gray-900 pt-1">
+                                                From ${product.price}
+                                                {product.originalPrice && (
+                                                    <span className="ml-2 text-gray-400 line-through">
+                                                        ${product.originalPrice}
+                                                    </span>
+                                                )}
+                                            </p>
                                         </div>
                                     </Link>
+
+
                                 ))}
                             </div>
                         ) : (
@@ -337,6 +411,29 @@ export default function CollectionDetailPage() {
                     </div>
                 </div>
             </main>
+
+            {/* Bottom Cart Navigator */}
+            {totalItems > 0 && (
+                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
+                    <div className="max-w-7xl mx-auto flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                {totalItems}
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
+                                <p className="font-semibold">${totalPrice.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <Link
+                            href="/cart"
+                            className="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+                        >
+                            View Cart
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             <Footer />
         </div>

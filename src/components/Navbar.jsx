@@ -25,13 +25,6 @@ export default function Navbar() {
         { name: 'Planters & Care', href: '/collections/planters-care', hasArrow: true },
     ];
 
-    const collections = [
-        { name: 'Large Plants', color: 'bg-orange-400', shape: 'rounded-t-full', href: '/collections/large-plants' },
-        { name: 'Houseplants', color: 'bg-green-700', shape: 'rounded-br-[40%]', href: '/collections' },
-        { name: 'Outdoor & Patio', color: 'bg-blue-600', shape: 'rounded-br-[50%] rounded-tl-[50%]', href: '/collections' },
-        { name: 'Planters & Care', color: 'bg-red-500', shape: 'rounded-full', href: '/collections' },
-    ];
-
     const handleOpenMenu = () => {
         setIsMenuOpen(true);
     };
@@ -174,8 +167,8 @@ export default function Navbar() {
                     <Link
                         href="/"
                         className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/'
-                                ? 'text-green-600'
-                                : 'text-gray-400 hover:text-green-600'
+                            ? 'text-green-600'
+                            : 'text-gray-400 hover:text-green-600'
                             }`}
                     >
                         <Home size={24} />
@@ -186,8 +179,8 @@ export default function Navbar() {
                     <Link
                         href="/collections"
                         className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/collections')
-                                ? 'text-green-600'
-                                : 'text-gray-400 hover:text-green-600'
+                            ? 'text-green-600'
+                            : 'text-gray-400 hover:text-green-600'
                             }`}
                     >
                         <Store size={24} />
@@ -198,8 +191,8 @@ export default function Navbar() {
                     <Link
                         href="/wishlist"
                         className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist'
-                                ? 'text-green-600'
-                                : 'text-gray-400 hover:text-green-600'
+                            ? 'text-green-600'
+                            : 'text-gray-400 hover:text-green-600'
                             }`}
                     >
                         <Heart size={24} />
@@ -210,8 +203,8 @@ export default function Navbar() {
                     <Link
                         href="/account"
                         className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account'
-                                ? 'text-green-600'
-                                : 'text-gray-400 hover:text-green-600'
+                            ? 'text-green-600'
+                            : 'text-gray-400 hover:text-green-600'
                             }`}
                     >
                         <User size={24} />
@@ -254,19 +247,117 @@ export default function Navbar() {
                         <div className="p-4">
                             <h3 className="text-lg font-semibold mb-4 text-gray-900">Collections</h3>
                             <div className="grid grid-cols-2 gap-3">
-                                {collections.map((collection) => (
-                                    <Link
-                                        key={collection.name}
-                                        href={collection.href}
-                                        onClick={handleCloseMenu}
-                                        className="group"
-                                    >
-                                        <div className={`${collection.color} ${collection.shape} h-24 mb-2 transition-transform group-hover:scale-105`} />
-                                        <p className="text-sm font-medium text-gray-900 group-hover:text-green-700 transition-colors">
-                                            {collection.name}
-                                        </p>
-                                    </Link>
-                                ))}
+                                {/* Large Plants - Arch shape */}
+                                <Link
+                                    href="/collections/large-plants"
+                                    onClick={handleCloseMenu}
+                                    className="group"
+                                >
+                                    <div className="relative p-3 bg-orange-50 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
+                                        <div
+                                            className="absolute inset-3 flex items-center justify-center"
+                                            style={{
+                                                backgroundColor: '#fb923c',
+                                                maskImage: 'url(/images/mask1.svg)',
+                                                WebkitMaskImage: 'url(/images/mask1.svg)',
+                                                maskSize: '100% 100%',
+                                                WebkitMaskSize: '100% 100%',
+                                                maskRepeat: 'no-repeat',
+                                                WebkitMaskRepeat: 'no-repeat',
+                                                maskPosition: 'center',
+                                                WebkitMaskPosition: 'center'
+                                            }}
+                                        >
+                                            <span className="text-white font-bold text-base text-center px-2 relative z-10">
+                                                Large Plants
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+
+                                {/* Houseplants - Rounded rectangle */}
+                                <Link
+                                    href="/collections/houseplants"
+                                    onClick={handleCloseMenu}
+                                    className="group"
+                                >
+                                    <div className="relative p-3 bg-teal-100 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
+                                        <div
+                                            className="absolute inset-3 flex items-center justify-center"
+                                            style={{
+                                                backgroundColor: '#15803d',
+                                                maskImage: 'url(/images/mask2.svg)',
+                                                WebkitMaskImage: 'url(/images/mask2.svg)',
+                                                maskSize: '100% 100%',
+                                                WebkitMaskSize: '100% 100%',
+                                                maskRepeat: 'no-repeat',
+                                                WebkitMaskRepeat: 'no-repeat',
+                                                maskPosition: 'center',
+                                                WebkitMaskPosition: 'center'
+                                            }}
+                                        >
+                                            <span className="text-white font-bold text-base text-center px-2 relative z-10">
+                                                Houseplants
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+
+                                {/* Outdoor & Patio - Hourglass shape */}
+                                <Link
+                                    href="/collections/outdoor-patio"
+                                    onClick={handleCloseMenu}
+                                    className="group"
+                                >
+                                    <div className="relative p-3 bg-purple-100 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
+                                        <div
+                                            className="absolute inset-3 flex items-center justify-center"
+                                            style={{
+                                                backgroundColor: '#2563eb',
+                                                maskImage: 'url(/images/mask3.svg)',
+                                                WebkitMaskImage: 'url(/images/mask3.svg)',
+                                                maskSize: '100% 100%',
+                                                WebkitMaskSize: '100% 100%',
+                                                maskRepeat: 'no-repeat',
+                                                WebkitMaskRepeat: 'no-repeat',
+                                                maskPosition: 'center',
+                                                WebkitMaskPosition: 'center'
+                                            }}
+                                        >
+                                            <span className="text-white font-bold text-base text-center px-2 relative z-10">
+                                                Outdoor & Patio
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+
+                                {/* Planters & Care - Blob/organic shape */}
+                                <Link
+                                    href="/collections/planters-care"
+                                    onClick={handleCloseMenu}
+                                    className="group"
+                                >
+                                    <div className="relative p-3 bg-red-50 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
+                                        <div
+                                            className="absolute inset-3 flex items-center justify-center"
+                                            style={{
+                                                backgroundColor: '#ef4444',
+                                                maskImage: 'url(/images/mask4.svg)',
+                                                WebkitMaskImage: 'url(/images/mask4.svg)',
+                                                maskSize: '100% 100%',
+                                                WebkitMaskSize: '100% 100%',
+                                                maskRepeat: 'no-repeat',
+                                                WebkitMaskRepeat: 'no-repeat',
+                                                maskPosition: 'center',
+                                                WebkitMaskPosition: 'center'
+                                            }}
+                                        >
+                                            <span className="text-white font-bold text-base text-center px-2 relative z-10">
+                                                Planters & Care
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
 

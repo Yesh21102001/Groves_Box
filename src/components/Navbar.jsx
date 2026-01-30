@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store } from 'lucide-react';
 
 export default function Navbar() {
+    const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cartCount, setCartCount] = useState(3);
@@ -122,16 +124,6 @@ export default function Navbar() {
                                 <ChevronDown size={16} className="text-gray-500" />
                             </div>
 
-                            {/* Search - Mobile Only */}
-                            <button className="lg:hidden p-2 text-gray-700 hover:text-gray-900 transition-colors">
-                                <Search size={22} />
-                            </button>
-
-                            {/* Location - Mobile Only */}
-                            <button className="lg:hidden p-2 text-gray-700 hover:text-gray-900 transition-colors">
-                                <MapPin size={22} />
-                            </button>
-
                             {/* Heart - Wishlist - Desktop Only */}
                             <Link href="/wishlist" className="hidden lg:block p-2 text-gray-700 hover:text-gray-900 transition-colors">
                                 <Heart size={22} />
@@ -179,25 +171,49 @@ export default function Navbar() {
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 shadow-lg">
                 <div className="flex items-center justify-around h-16 px-2">
                     {/* Home */}
-                    <Link href="/" className="flex flex-col items-center justify-center flex-1 py-2 text-gray-700 hover:text-green-600 transition-colors">
+                    <Link
+                        href="/"
+                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/'
+                                ? 'text-green-600'
+                                : 'text-gray-400 hover:text-green-600'
+                            }`}
+                    >
                         <Home size={24} />
                         <span className="text-xs mt-1 font-medium">Home</span>
                     </Link>
 
                     {/* Shop */}
-                    <Link href="/collections" className="flex flex-col items-center justify-center flex-1 py-2 text-gray-700 hover:text-green-600 transition-colors">
+                    <Link
+                        href="/collections"
+                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/collections')
+                                ? 'text-green-600'
+                                : 'text-gray-400 hover:text-green-600'
+                            }`}
+                    >
                         <Store size={24} />
                         <span className="text-xs mt-1 font-medium">Shop</span>
                     </Link>
 
                     {/* Wishlist */}
-                    <Link href="/wishlist" className="flex flex-col items-center justify-center flex-1 py-2 text-gray-700 hover:text-green-600 transition-colors">
+                    <Link
+                        href="/wishlist"
+                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist'
+                                ? 'text-green-600'
+                                : 'text-gray-400 hover:text-green-600'
+                            }`}
+                    >
                         <Heart size={24} />
                         <span className="text-xs mt-1 font-medium">Wishlist</span>
                     </Link>
 
                     {/* Account */}
-                    <Link href="/account" className="flex flex-col items-center justify-center flex-1 py-2 text-gray-700 hover:text-green-600 transition-colors">
+                    <Link
+                        href="/account"
+                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account'
+                                ? 'text-green-600'
+                                : 'text-gray-400 hover:text-green-600'
+                            }`}
+                    >
                         <User size={24} />
                         <span className="text-xs mt-1 font-medium">Account</span>
                     </Link>

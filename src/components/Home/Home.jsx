@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Phone, MessageSquare, Mail, ChevronRight, Star, Heart, Eye, ShoppingCart, X } from "lucide-react";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
+import { useCart } from "../../context/CartContext";
 
 /* ------------------ ICON BUTTON ------------------ */
 function IconButton({ icon, onClick }) {
@@ -20,7 +21,10 @@ function IconButton({ icon, onClick }) {
 
 export default function HomePage() {
   const [quickView, setQuickView] = useState(null);
-  const [cart, setCart] = useState([]);
+  const { cartItems, addToCart } = useCart();
+
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const products = [
     {
@@ -169,9 +173,14 @@ export default function HomePage() {
   ];
 
   // Function to add product to cart
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-    alert(`${product.name} has been added to your cart!`);
+  const handleAddToCart = (product) => {
+    addToCart({
+      id: product.id.toString(),
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.image,
+    });
   };
 
   // Product Card Component
@@ -205,7 +214,7 @@ export default function HomePage() {
           {/* Quick Add Button */}
           {/* Mobile: Small circular button bottom-right, always visible */}
           <button
-            onClick={() => addToCart(product)}
+            onClick={() => handleAddToCart(product)}
             className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
           >
             <ShoppingCart size={18} />
@@ -213,7 +222,7 @@ export default function HomePage() {
 
           {/* Desktop: Full button at bottom on hover */}
           <button
-            onClick={() => addToCart(product)}
+            onClick={() => handleAddToCart(product)}
             className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
             <ShoppingCart size={16} />
@@ -253,7 +262,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-white">
+    <div className={`bg-white ${totalItems > 0 ? 'pb-20' : ''}`}>
       <Navbar />
 
       {/* HERO SECTION */}
@@ -404,7 +413,7 @@ export default function HomePage() {
 
             <button
               onClick={() => {
-                addToCart(quickView);
+                handleAddToCart(quickView);
                 setQuickView(null);
               }}
               className="w-full bg-black text-white py-3"
@@ -665,6 +674,29 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      {/* Bottom Cart Navigator */}
+      {totalItems > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                {totalItems}
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
+                <p className="font-semibold">${totalPrice.toFixed(2)}</p>
+              </div>
+            </div>
+            <Link
+              href="/cart"
+              className="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+            >
+              View Cart
+            </Link>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div >

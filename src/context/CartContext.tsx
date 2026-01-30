@@ -39,7 +39,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             }
             return [...prevItems, item];
         });
-        setShowCart(true);
     };
 
     const removeFromCart = (id: string) => {

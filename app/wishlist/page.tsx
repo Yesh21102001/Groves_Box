@@ -30,14 +30,14 @@ export default function WishlistPage() {
                 {/* Wishlist Items */}
                 {wishlistItems.length === 0 ? (
                     <div className="text-center py-16">
-                        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Heart className="w-12 h-12 text-green-600" />
+                        <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Heart className="w-12 h-12 text-white" />
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Your wishlist is empty</h2>
                         <p className="text-gray-600 mb-8">Start adding plants you love to your wishlist!</p>
                         <Link
                             href="/products"
-                            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-xl hover:from-green-700 hover:to-teal-700 transition-all duration-200 font-semibold shadow-sm hover:shadow-md"
+                            className="inline-flex items-center px-6 py-3 bg-black text-white rounded-xl hover:from-green-700 hover:to-teal-700 transition-all duration-200 font-semibold shadow-sm hover:shadow-md"
                         >
                             Browse Plants
                         </Link>

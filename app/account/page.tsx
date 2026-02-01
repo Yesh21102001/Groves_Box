@@ -175,7 +175,7 @@ export default function AccountPage() {
                                         {!isEditing && (
                                             <button
                                                 onClick={() => setIsEditing(true)}
-                                                className="flex items-center px-5 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                                                className="flex items-center px-5 py-2.5 bg-black text-white rounded-xl hover:bg-black-400 transition-all duration-200 shadow-sm hover:shadow-md"
                                             >
                                                 <Edit2 className="w-4 h-4 mr-2" />
                                                 Edit Profile
@@ -195,7 +195,7 @@ export default function AccountPage() {
                                                         name="firstName"
                                                         value={userData.firstName}
                                                         onChange={handleInputChange}
-                                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                                                     />
                                                 </div>
                                                 <div>

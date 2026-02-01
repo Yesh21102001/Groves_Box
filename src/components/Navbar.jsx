@@ -86,7 +86,7 @@ export default function Navbar() {
 
                         {/* Logo */}
                         <Link href="/" className="flex-shrink-0">
-                            <div className="text-2xl md:text-3xl font-bold text-green-700 flex items-center gap-2">
+                            <div className="text-2xl md:text-3xl font-bold text-black flex items-center gap-2">
                                 <span className="text-3xl md:text-4xl">🌿</span>
                                 <span className="hidden sm:inline">Groves Box</span>
                                 <span className="sm:hidden">GB</span>
@@ -99,7 +99,7 @@ export default function Navbar() {
                                 <input
                                     type="text"
                                     placeholder="Search plants, planters, and more..."
-                                    className="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                    className="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                                 />
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                             </div>
@@ -108,14 +108,7 @@ export default function Navbar() {
                         {/* Right Actions */}
                         <div className="flex items-center gap-3 sm:gap-4">
                             {/* Growing Zone - Desktop Only */}
-                            <div className="hidden lg:flex items-center gap-2 px-3 py-2 bg-green-50 rounded-lg cursor-pointer hover:bg-green-100 transition-colors">
-                                <MapPin size={18} className="text-green-700" />
-                                <div className="text-left">
-                                    <div className="text-xs text-gray-600">Growing Zone</div>
-                                    <div className="text-sm font-semibold text-green-700">Zip Code: 500038</div>
-                                </div>
-                                <ChevronDown size={16} className="text-gray-500" />
-                            </div>
+                            
 
                             {/* Heart - Wishlist - Desktop Only */}
                             <Link href="/wishlist" className="hidden lg:block p-2 text-gray-700 hover:text-gray-900 transition-colors">
@@ -134,7 +127,7 @@ export default function Navbar() {
                             >
                                 <ShoppingCart size={22} />
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    <span className="absolute -top-1 -right-1 bg-black text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                         {cartCount}
                                     </span>
                                 )}
@@ -143,19 +136,26 @@ export default function Navbar() {
                     </div>
 
                     {/* Navigation Links - Desktop Only */}
-                    <div className="hidden lg:flex justify-center items-center space-x-8 pb-4">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className="text-gray-700 hover:text-green-700 font-medium transition-colors flex items-center gap-1 group"
-                            >
-                                {item.name}
-                                {item.hasArrow && (
-                                    <ChevronDown size={16} className="text-gray-500 group-hover:text-green-700" />
-                                )}
-                            </Link>
-                        ))}
+                    <div className="hidden lg:flex justify-center items-center gap-2 pb-4">
+                        {navItems.map((item) => {
+                            const isActive = pathname === item.href || pathname?.startsWith(item.href);
+                            return (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className={`flex items-center gap-1 px-4 py-1.5 rounded-full font-medium transition-all duration-200 ${
+                                        isActive
+                                            ? 'bg-black text-white'
+                                            : 'text-gray-700 hover:bg-gray-100'
+                                    }`}
+                                >
+                                    {item.name}
+                                    {item.hasArrow && (
+                                        <ChevronDown size={16} className={isActive ? 'text-white' : 'text-gray-500'} />
+                                    )}
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
             </nav>
@@ -167,8 +167,8 @@ export default function Navbar() {
                     <Link
                         href="/"
                         className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/'
-                            ? 'text-green-600'
-                            : 'text-gray-400 hover:text-green-600'
+                            ? 'text-black'
+                            : 'text-gray-400 hover:text-black'
                             }`}
                     >
                         <Home size={24} />
@@ -179,8 +179,8 @@ export default function Navbar() {
                     <Link
                         href="/collections"
                         className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/collections')
-                            ? 'text-green-600'
-                            : 'text-gray-400 hover:text-green-600'
+                            ? 'text-black'
+                            : 'text-gray-400 hover:text-black'
                             }`}
                     >
                         <Store size={24} />
@@ -191,8 +191,8 @@ export default function Navbar() {
                     <Link
                         href="/wishlist"
                         className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist'
-                            ? 'text-green-600'
-                            : 'text-gray-400 hover:text-green-600'
+                            ? 'text-black'
+                            : 'text-gray-400 hover:text-black'
                             }`}
                     >
                         <Heart size={24} />
@@ -203,8 +203,8 @@ export default function Navbar() {
                     <Link
                         href="/account"
                         className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account'
-                            ? 'text-green-600'
-                            : 'text-gray-400 hover:text-green-600'
+                            ? 'text-black'
+                            : 'text-gray-400 hover:text-black'
                             }`}
                     >
                         <User size={24} />
@@ -229,7 +229,7 @@ export default function Navbar() {
                 >
                     {/* Sidebar Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                        <div className="text-2xl font-bold text-green-700 flex items-center gap-2">
+                        <div className="text-2xl font-bold text-black flex items-center gap-2">
                             <span className="text-3xl">🌿</span>
                             Groves Box
                         </div>
@@ -380,14 +380,14 @@ export default function Navbar() {
                         <Link
                             href="/account"
                             onClick={handleCloseMenu}
-                            className="block w-full py-3 px-4 bg-green-600 text-white text-center font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                            className="block w-full py-3 px-4 bg-black text-white text-center font-semibold rounded-lg hover:bg-black transition-colors"
                         >
                             Log in
                         </Link>
                         <Link
                             href="/resources"
                             onClick={handleCloseMenu}
-                            className="block w-full py-3 px-4 border-2 border-green-600 text-green-600 text-center font-semibold rounded-lg hover:bg-green-50 transition-colors"
+                            className="block w-full py-3 px-4 border-2 border-black text-black text-center font-semibold rounded-lg hover:bg-green-50 transition-colors"
                         >
                             Resources
                         </Link>
@@ -428,7 +428,7 @@ export default function Navbar() {
                                 <p className="text-gray-500 mb-4">Your cart is empty</p>
                                 <button
                                     onClick={handleCloseCart}
-                                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-black transition-colors"
                                 >
                                     Continue Shopping
                                 </button>
@@ -448,7 +448,7 @@ export default function Navbar() {
                                         <div className="flex-1 min-w-0">
                                             <h3 className="font-semibold text-gray-900 truncate">{item.name}</h3>
                                             <p className="text-sm text-gray-500">Size: {item.size}</p>
-                                            <p className="text-green-600 font-semibold mt-1">${item.price.toFixed(2)}</p>
+                                            <p className="text-black font-semibold mt-1">${item.price.toFixed(2)}</p>
 
                                             {/* Quantity Controls */}
                                             <div className="flex items-center gap-2 mt-2">
@@ -487,20 +487,20 @@ export default function Navbar() {
                             {/* Subtotal */}
                             <div className="flex justify-between items-center">
                                 <span className="text-lg font-semibold text-gray-900">Subtotal</span>
-                                <span className="text-2xl font-bold text-green-600">${calculateSubtotal()}</span>
+                                <span className="text-2xl font-bold text-black">${calculateSubtotal()}</span>
                             </div>
                             <p className="text-sm text-gray-500">Shipping and taxes calculated at checkout</p>
 
                             {/* View Cart Button */}
                             <button
                                 onClick={handleCloseCart}
-                                className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                                className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-black-700 transition-colors"
                             >
                                 View Cart
                             </button>
                             <button
                                 onClick={handleCloseCart}
-                                className="w-full py-3 border-2 border-green-600 text-green-600 font-semibold rounded-lg hover:bg-green-50 transition-colors"
+                                className="w-full py-3 border-2 border-black text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors"
                             >
                                 Continue Shopping
                             </button>
@@ -508,9 +508,6 @@ export default function Navbar() {
                     )}
                 </div>
             </>
-
-            {/* Add padding to bottom of page for mobile nav */}
-            {/* <div className="lg:hidden h-16" /> */}
         </>
     );
 }

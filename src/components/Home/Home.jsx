@@ -464,7 +464,7 @@ export default function HomePage() {
 
               {/* CHAT */}
               <div className="bg-white text-center p-10">
-                <MessageSquare size={36} className="mx-auto mb-6 text-green-700" />
+                <MessageSquare size={36} className="mx-auto mb-6 text-black" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   Chat
                 </h3>
@@ -475,7 +475,7 @@ export default function HomePage() {
 
               {/* CALL */}
               <div className="bg-white text-center p-10">
-                <Phone size={36} className="mx-auto mb-6 text-green-700" />
+                <Phone size={36} className="mx-auto mb-6 text-black" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   Call
                 </h3>
@@ -486,7 +486,7 @@ export default function HomePage() {
 
               {/* EMAIL */}
               <div className="bg-white text-center p-10">
-                <Mail size={36} className="mx-auto mb-6 text-green-700" />
+                <Mail size={36} className="mx-auto mb-6 text-black" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   Email
                 </h3>

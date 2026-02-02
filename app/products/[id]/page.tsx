@@ -175,7 +175,7 @@ export default function ProductDetailPage() {
                                     key={idx}
                                     onClick={() => setMainImage(idx)}
                                     className={`border-2 rounded-lg overflow-hidden ${mainImage === idx
-                                        ? 'border-teal-600'
+                                        ? 'border-black'
                                         : 'border-transparent hover:border-gray-300'
                                         }`}
                                 >
@@ -223,7 +223,7 @@ export default function ProductDetailPage() {
                                             key={size}
                                             onClick={() => setSelectedSize(size)}
                                             className={`px-4 py-2 rounded-lg border ${selectedSize === size
-                                                ? 'border-teal-600 bg-teal-50'
+                                                ? 'border-black bg-black-50'
                                                 : 'border-gray-300'
                                                 }`}
                                         >
@@ -244,7 +244,7 @@ export default function ProductDetailPage() {
                                             key={color}
                                             onClick={() => setSelectedColor(color)}
                                             className={`px-4 py-2 rounded-lg border ${selectedColor === color
-                                                ? 'border-teal-600 bg-teal-50'
+                                                ? 'border-black bg-black-50'
                                                 : 'border-gray-300'
                                                 }`}
                                         >
@@ -275,7 +275,7 @@ export default function ProductDetailPage() {
                         <div className="flex gap-3">
                             <button
                                 onClick={handleAddToCart}
-                                className="flex-1 bg-teal-600 text-white py-4 rounded-lg flex justify-center items-center gap-2"
+                                className="flex-1 bg-black text-white py-4 rounded-lg flex justify-center items-center gap-2"
                             >
                                 <ShoppingCart className="w-5 h-5" />
                                 Add to Cart

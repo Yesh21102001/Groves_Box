@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LogOut, Edit2, Heart, Package, MapPin, Lock, Bell, Check, Plus, Eye, User } from 'lucide-react';
+import { LogOut, Edit2, Heart, Package, MapPin, Lock, Bell, Check, Plus, Eye, User, ChevronDown } from 'lucide-react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 
 export default function AccountPage() {
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditing, setIsEditing] = useState(false);
+    const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
     const [userData, setUserData] = useState({
         firstName: 'John',
         lastName: 'Doe',
@@ -87,6 +88,10 @@ export default function AccountPage() {
     const handleLogout = () => {
         // Clear user session and redirect to home
         window.location.href = '/';
+    };
+
+    const toggleOrder = (orderId: string) => {
+        setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
     };
 
     const tabs = [
@@ -293,7 +298,7 @@ export default function AccountPage() {
                                                 <button
                                                     type="button"
                                                     onClick={handleSaveChanges}
-                                                    className="flex-1 px-6 py-3.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold shadow-sm hover:shadow-md"
+                                                    className="flex-1 px-6 py-3.5 bg-black text-white rounded-xl transition-all duration-200 font-semibold shadow-sm hover:shadow-md"
                                                 >
                                                     Save Changes
                                                 </button>
@@ -337,47 +342,84 @@ export default function AccountPage() {
                                 </div>
                             )}
 
-                            {/* Orders Tab */}
+                            {/* Orders Tab - Accordion Style */}
                             {activeTab === 'orders' && (
                                 <div className="p-6 lg:p-8">
                                     <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">Order History</h2>
-                                    <div className="space-y-4">
+                                    <div className="space-y-3">
                                         {orders.map((order, index) => (
                                             <div
                                                 key={order.id}
-                                                className="group border-2 border-gray-100 rounded-2xl p-6 hover:border-black-200 hover:shadow-lg transition-all duration-300"
-                                                style={{ animationDelay: `${index * 100}ms` }}
+                                                className="border-2 border-gray-100 rounded-2xl overflow-hidden hover:border-gray-200 transition-all duration-300"
                                             >
-                                                <div className="flex flex-col md:flex-row gap-6">
-                                                    {/* Order Image */}
-                                                    <div className="w-full md:w-32 h-32 bg-gradient-to-br from-green-100 to-teal-100 rounded-xl overflow-hidden flex-shrink-0">
-                                                        <div className="w-full h-full flex items-center justify-center text-5xl">
-                                                            🌿
+                                                {/* Accordion Header */}
+                                                <button
+                                                    onClick={() => toggleOrder(order.id)}
+                                                    className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-all duration-200"
+                                                >
+                                                    <div className="flex items-center gap-4">
+                                                        <Package className="w-6 h-6 text-gray-600" />
+                                                        <div className="text-left">
+                                                            <p className="text-lg font-bold text-gray-900">{order.id}</p>
+                                                            <p className="text-sm text-gray-500">{order.date}</p>
                                                         </div>
                                                     </div>
+                                                    <div className="flex items-center gap-4">
+                                                        <span className={`hidden sm:inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${order.status === 'Delivered'
+                                                            ? 'bg-green-100 text-green-700 border border-green-200'
+                                                            : 'bg-blue-100 text-blue-700 border border-blue-200'
+                                                            }`}>
+                                                            {order.status === 'Delivered' && <Check className="w-4 h-4 mr-1" />}
+                                                            {order.status}
+                                                        </span>
+                                                        <ChevronDown
+                                                            className={`w-5 h-5 text-gray-600 transition-transform duration-300 ${expandedOrderId === order.id ? 'rotate-180' : ''
+                                                                }`}
+                                                        />
+                                                    </div>
+                                                </button>
 
-                                                    {/* Order Details */}
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-3">
-                                                            <div>
-                                                                <p className="text-lg font-bold text-gray-900">{order.id}</p>
-                                                                <p className="text-sm text-gray-500 mt-1">{order.date}</p>
+                                                {/* Accordion Content */}
+                                                <div
+                                                    className={`transition-all duration-300 ease-in-out ${expandedOrderId === order.id
+                                                        ? 'max-h-96 opacity-100'
+                                                        : 'max-h-0 opacity-0 overflow-hidden'
+                                                        }`}
+                                                >
+                                                    <div className="p-5 pt-0 border-t border-gray-100">
+                                                        <div className="flex flex-col md:flex-row gap-6 pt-5">
+                                                            {/* Order Image */}
+                                                            <div className="w-full md:w-32 h-32 bg-gradient-to-br from-green-100 to-teal-100 rounded-xl overflow-hidden flex-shrink-0">
+                                                                <div className="w-full h-full flex items-center justify-center text-5xl">
+                                                                    🌿
+                                                                </div>
                                                             </div>
-                                                            <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${order.status === 'Delivered'
-                                                                ? 'bg-green-100 text-green-700 border border-green-200'
-                                                                : 'bg-blue-100 text-blue-700 border border-blue-200'
-                                                                }`}>
-                                                                {order.status === 'Delivered' && <Check className="w-4 h-4 mr-1" />}
-                                                                {order.status}
-                                                            </span>
-                                                        </div>
-                                                        <p className="text-gray-700 mb-3">{order.items}</p>
-                                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                                            <p className="text-2xl font-bold text-black-600">{order.total}</p>
-                                                            <button className="flex items-center justify-center px-5 py-2.5 bg-black text-white rounded-xl transition-all duration-200 font-semibold border border-green-200 ">
-                                                                <Eye className="w-4 h-4 mr-2" />
-                                                                View Details
-                                                            </button>
+
+                                                            {/* Order Details */}
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="mb-4">
+                                                                    <p className="text-sm font-medium text-gray-600 mb-1">Items</p>
+                                                                    <p className="text-gray-900 font-medium">{order.items}</p>
+                                                                </div>
+                                                                <div className="mb-4">
+                                                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Amount</p>
+                                                                    <p className="text-2xl font-bold text-black">{order.total}</p>
+                                                                </div>
+                                                                <div className="sm:hidden mb-4">
+                                                                    <p className="text-sm font-medium text-gray-600 mb-1">Status</p>
+                                                                    <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${order.status === 'Delivered'
+                                                                        ? 'bg-green-100 text-green-700 border border-green-200'
+                                                                        : 'bg-blue-100 text-blue-700 border border-blue-200'
+                                                                        }`}>
+                                                                        {order.status === 'Delivered' && <Check className="w-4 h-4 mr-1" />}
+                                                                        {order.status}
+                                                                    </span>
+                                                                </div>
+                                                                <button className="w-full sm:w-auto flex items-center justify-center px-5 py-2.5 bg-black text-white rounded-xl hover:bg-gray-800 transition-all duration-200 font-semibold">
+                                                                    <Eye className="w-4 h-4 mr-2" />
+                                                                    View Full Details
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -431,40 +473,6 @@ export default function AccountPage() {
                                     </div>
                                 </div>
                             )}
-
-                            {/* Wishlist Tab */}
-                            {/* {activeTab === 'wishlist' && (
-                                <div className="p-6 lg:p-8">
-                                    <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">Saved Items</h2>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {savedItems.map((item, index) => (
-                                            <div
-                                                key={item.id}
-                                                className="group bg-white rounded-2xl overflow-hidden border-2 border-gray-100 hover:border-green-200 hover:shadow-xl transition-all duration-300"
-                                                style={{ animationDelay: `${index * 100}ms` }}
-                                            >
-                                                <div className="relative h-56 bg-gradient-to-br from-green-100 to-teal-100 overflow-hidden">
-                                                    <div className="w-full h-full flex items-center justify-center text-6xl">
-                                                        🌿
-                                                    </div>
-                                                    <button className="absolute top-3 right-3 p-2.5 bg-white rounded-full shadow-lg hover:bg-red-50 transition-all duration-200 group">
-                                                        <Heart className="w-5 h-5 text-red-500 fill-red-500" />
-                                                    </button>
-                                                </div>
-                                                <div className="p-5">
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">
-                                                        {item.name}
-                                                    </h3>
-                                                    <p className="text-2xl font-bold text-green-600 mb-4">${item.price}</p>
-                                                    <button className="w-full py-3 bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-xl hover:from-green-700 hover:to-teal-700 transition-all duration-200 font-semibold shadow-sm hover:shadow-md">
-                                                        Add to Cart
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )} */}
 
                             {/* Settings Tab */}
                             {activeTab === 'settings' && (

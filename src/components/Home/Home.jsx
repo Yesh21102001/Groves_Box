@@ -338,7 +338,7 @@ export default function HomePage() {
             py-3 lg:py-4
             text-sm sm:text-base
             font-medium
-            hover:bg-gray-800 transition
+            transition
           "
               >
                 Shop All Houseplants
@@ -542,6 +542,7 @@ export default function HomePage() {
       </section>
 
 
+
       {/* NEW ARRIVALS */}
       <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
         <div className="max-w-[1600px] mx-auto">
@@ -656,10 +657,10 @@ export default function HomePage() {
                     <div
                       key={index}
                       className={`absolute inset-0 flex items-center justify-center p-4 md:p-6 transition-all duration-700 ${index === currentSlide
-                          ? 'opacity-100 translate-x-0'
-                          : index < currentSlide
-                            ? 'opacity-0 -translate-x-full'
-                            : 'opacity-0 translate-x-full'
+                        ? 'opacity-100 translate-x-0'
+                        : index < currentSlide
+                          ? 'opacity-0 -translate-x-full'
+                          : 'opacity-0 translate-x-full'
                         }`}
                     >
                       <p className="text-center text-gray-800 text-sm md:text-base leading-relaxed">
@@ -676,10 +677,10 @@ export default function HomePage() {
                   <div
                     key={index}
                     className={`absolute inset-0 transition-all duration-700 ${index === currentSlide
-                        ? 'opacity-100 translate-x-0'
-                        : index < currentSlide
-                          ? 'opacity-0 -translate-x-full'
-                          : 'opacity-0 translate-x-full'
+                      ? 'opacity-100 translate-x-0'
+                      : index < currentSlide
+                        ? 'opacity-0 -translate-x-full'
+                        : 'opacity-0 translate-x-full'
                       }`}
                   >
                     <img
@@ -716,8 +717,8 @@ export default function HomePage() {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`transition-all ${index === currentSlide
-                      ? 'w-6 md:w-8 h-2 md:h-3 bg-teal-600'
-                      : 'w-2 md:w-3 h-2 md:h-3 bg-gray-300 hover:bg-gray-400'
+                    ? 'w-6 md:w-8 h-2 md:h-3 bg-teal-600'
+                    : 'w-2 md:w-3 h-2 md:h-3 bg-gray-300 hover:bg-gray-400'
                     } rounded-full`}
                   aria-label={`Go to slide ${index + 1}`}
                 />

@@ -16,7 +16,7 @@ export default function Footer() {
     };
 
     return (
-        <footer className="bg-[#f9f8f6]">
+        <footer className="bg-[white]">
             {/* Mobile Newsletter - Visible only on mobile */}
             <div className="lg:hidden w-full px-4 py-8 bg-white border-b border-gray-200">
                 <h2 className="text-3xl font-sans font-light mb-3 text-gray-900">Get the Dirt.</h2>

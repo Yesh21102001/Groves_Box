@@ -108,7 +108,7 @@ export default function Navbar() {
                         {/* Right Actions */}
                         <div className="flex items-center gap-3 sm:gap-4">
                             {/* Growing Zone - Desktop Only */}
-                            
+
 
                             {/* Heart - Wishlist - Desktop Only */}
                             <Link href="/wishlist" className="hidden lg:block p-2 text-gray-700 hover:text-gray-900 transition-colors">
@@ -143,11 +143,10 @@ export default function Navbar() {
                                 <Link
                                     key={item.name}
                                     href={item.href}
-                                    className={`flex items-center gap-1 px-4 py-1.5 rounded-full font-medium transition-all duration-200 ${
-                                        isActive
-                                            ? 'bg-black text-white'
-                                            : 'text-gray-700 hover:bg-gray-100'
-                                    }`}
+                                    className={`flex items-center gap-1 px-4 py-1.5 rounded-full font-medium transition-all duration-200 ${isActive
+                                        ? 'bg-black text-white'
+                                        : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
                                 >
                                     {item.name}
                                     {item.hasArrow && (
@@ -494,6 +493,7 @@ export default function Navbar() {
                             {/* View Cart Button */}
                             <button
                                 onClick={handleCloseCart}
+                                href="/cart"
                                 className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-black-700 transition-colors"
                             >
                                 View Cart

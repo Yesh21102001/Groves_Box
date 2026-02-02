@@ -28,12 +28,11 @@ export default function CollectionDetailPage() {
     const [showFiltersSidebar, setShowFiltersSidebar] = useState(false);
     const [sortBy, setSortBy] = useState('popular');
     const [priceRange, setPriceRange] = useState([0, 200]);
-    const [loading, setLoading] = useState(true);
     const { cartItems, addToCart } = useCart();
+    const [wishlistedItems, setWishlistedItems] = useState<Set<string>>(new Set());
 
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const [isWishlisted, setIsWishlisted] = useState(false);
 
     const collectionType = params?.type as string;
     const collectionInfo = collectionMapping[collectionType] || { name: 'Collection', category: 'houseplants', description: 'Explore our collection' };
@@ -45,13 +44,29 @@ export default function CollectionDetailPage() {
         return true;
     });
 
-    const handleAddToCart = (product: any) => {
+    const handleAddToCart = (e: React.MouseEvent, product: any) => {
+        e.preventDefault(); // Prevent navigation
+        e.stopPropagation(); // Stop event bubbling
         addToCart({
             id: product.id.toString(),
             name: product.name,
             price: product.price,
             quantity: 1,
             image: product.image,
+        });
+    };
+
+    const toggleWishlist = (e: React.MouseEvent, productId: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setWishlistedItems(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(productId)) {
+                newSet.delete(productId);
+            } else {
+                newSet.add(productId);
+            }
+            return newSet;
         });
     };
 
@@ -64,10 +79,6 @@ export default function CollectionDetailPage() {
         return 0;
     });
 
-    useEffect(() => {
-        setLoading(false);
-    }, []);
-
     // Prevent body scroll when sidebar is open
     useEffect(() => {
         if (showFiltersSidebar) {
@@ -79,18 +90,6 @@ export default function CollectionDetailPage() {
             document.body.style.overflow = 'unset';
         };
     }, [showFiltersSidebar]);
-
-    if (loading) {
-        return (
-            <div className="flex flex-col min-h-screen">
-                <Navbar />
-                <div className="flex-1 flex items-center justify-center">
-                    <p className="text-gray-600">Loading...</p>
-                </div>
-                <Footer />
-            </div>
-        );
-    }
 
     return (
         <div className={`flex flex-col min-h-screen ${totalItems > 0 ? 'pb-20' : ''}`}>
@@ -112,14 +111,6 @@ export default function CollectionDetailPage() {
                             <span className="text-gray-900 font-medium">{collectionInfo.name}</span>
                         </nav>
                     </div>
-                    {/* Back Link */}
-                    {/* <Link
-                        href="/collections"
-                        className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 text-base transition-colors"
-                    >
-                        <ChevronLeft className="w-5 h-5 mr-1" />
-                        Back to Collections
-                    </Link> */}
 
                     {/* Header */}
                     <div className="mb-12">
@@ -337,12 +328,12 @@ export default function CollectionDetailPage() {
 
                                             {/* Wishlist */}
                                             <button
-                                                onClick={() => setIsWishlisted(!isWishlisted)}
+                                                onClick={(e) => toggleWishlist(e, product.id)}
                                                 className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
                                             >
                                                 <Heart
                                                     size={18}
-                                                    className={isWishlisted ? "fill-current text-red-500" : ""}
+                                                    className={wishlistedItems.has(product.id) ? "fill-current text-red-500" : ""}
                                                 />
                                             </button>
 
@@ -355,7 +346,7 @@ export default function CollectionDetailPage() {
 
                                             {/* DESKTOP: Quick Add bar */}
                                             <button
-                                                onClick={() => handleAddToCart(product)}
+                                                onClick={(e) => handleAddToCart(e, product)}
                                                 className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                                             >
                                                 <ShoppingCart size={16} />
@@ -364,19 +355,8 @@ export default function CollectionDetailPage() {
 
                                             {/* MOBILE: Floating cart icon */}
                                             <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    // addToCart(product);
-                                                }}
-                                                className="
-        md:hidden
-        absolute bottom-3 right-3
-        w-11 h-11
-        bg-black text-white
-        rounded-full
-        flex items-center justify-center
-        shadow-lg
-      "
+                                                onClick={(e) => handleAddToCart(e, product)}
+                                                className="md:hidden absolute bottom-3 right-3 w-11 h-11 bg-black text-white rounded-full flex items-center justify-center shadow-lg"
                                             >
                                                 🛒
                                             </button>
@@ -402,8 +382,6 @@ export default function CollectionDetailPage() {
                                             </p>
                                         </div>
                                     </Link>
-
-
                                 ))}
                             </div>
                         ) : (

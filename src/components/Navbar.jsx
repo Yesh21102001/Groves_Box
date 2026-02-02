@@ -267,7 +267,8 @@ export default function Navbar() {
                                                 WebkitMaskPosition: 'center'
                                             }}
                                         >
-                                            <span className="text-white font-bold text-base text-center px-2 relative z-10">
+                                            <span className="text-white text-sm text-center px-2 relative z-10">
+
                                                 Large Plants
                                             </span>
                                         </div>
@@ -295,7 +296,8 @@ export default function Navbar() {
                                                 WebkitMaskPosition: 'center'
                                             }}
                                         >
-                                            <span className="text-white font-bold text-base text-center px-2 relative z-10">
+                                            <span className="text-white text-sm text-center px-2 relative z-10">
+
                                                 Houseplants
                                             </span>
                                         </div>
@@ -323,7 +325,8 @@ export default function Navbar() {
                                                 WebkitMaskPosition: 'center'
                                             }}
                                         >
-                                            <span className="text-white font-bold text-base text-center px-2 relative z-10">
+                                            <span className="text-white text-sm text-center px-2 relative z-10">
+
                                                 Outdoor & Patio
                                             </span>
                                         </div>
@@ -351,7 +354,8 @@ export default function Navbar() {
                                                 WebkitMaskPosition: 'center'
                                             }}
                                         >
-                                            <span className="text-white font-bold text-base text-center px-2 relative z-10">
+                                            <span className="text-white text-sm text-center px-2 relative z-10">
+
                                                 Planters & Care
                                             </span>
                                         </div>
@@ -368,7 +372,7 @@ export default function Navbar() {
                         >
                             <div className="flex items-center gap-3">
                                 <Heart size={20} className="text-gray-700" />
-                                <span className="font-medium text-gray-900">View Wishlist</span>
+                                <span className="font-medium text-gray-900">Wishlist</span>
                             </div>
                             <ChevronRight size={20} className="text-gray-400" />
                         </Link>

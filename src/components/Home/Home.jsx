@@ -301,7 +301,7 @@ export default function HomePage() {
         <div
           className="
       absolute inset-0
-      bg-black/50
+      bg-black/60
       sm:hidden
     "
         />
@@ -309,45 +309,51 @@ export default function HomePage() {
         {/* CONTENT */}
         <div
           className="
-      relative z-10 w-full
-      max-w-7xl 2xl:max-w-[1600px]
-      -mt-10 sm:-mt-40 lg:-mt-0
-    "
+    relative z-10 w-full
+    max-w-7xl 2xl:max-w-[1600px]
+    -mt-10 sm:-mt-40 lg:-mt-0
+    flex justify-center sm:justify-end
+  "
         >
-          <div className="max-w-xl sm:max-w-2xl ml-auto">
-
+          <div
+            className="
+      max-w-xl sm:max-w-2xl
+      text-center sm:text-left
+      sm:ml-auto
+    "
+          >
             <h1
               className="
-          font-sans font-lexend text-white
-          text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl
-          leading-tight mb-6 sm:mb-8
-        "
+        font-sans font-lexend text-white
+        text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl
+        leading-tight mb-6 sm:mb-8
+      "
             >
               Plants for best friends
             </h1>
 
             <p
               className="
-          text-white
-          text-xs sm:text-sm lg:text-base
-          mb-6 sm:mb-10
-        "
+        text-white
+        text-xs sm:text-sm lg:text-base
+        mb-6 sm:mb-10
+      "
             >
               Expert Guidance • Connect & Grow • Judgement-Free Service
             </p>
 
             {/* BUTTONS */}
-            <div className="flex flex-row gap-3 sm:gap-6">
+            <div className="flex justify-center sm:justify-start gap-3 sm:gap-6">
               <Link
                 href="/collections"
                 className="
-            bg-black text-white
-            px-6 sm:px-8 lg:px-10
-            py-3 lg:py-4
-            text-sm sm:text-base
-            font-medium
-            transition
-          "
+          bg-black text-white
+          px-4 sm:px-8 lg:px-10
+          py-2.5 sm:py-3 lg:py-4
+          text-xs sm:text-base
+          font-medium
+          transition
+        "
               >
                 Shop All Houseplants
               </Link>
@@ -355,22 +361,22 @@ export default function HomePage() {
               <Link
                 href="/collections"
                 className="
-            bg-white text-black
-            px-6 sm:px-8 lg:px-10
-            py-3 lg:py-4
-            text-sm sm:text-base
-            font-medium
-            hover:bg-black hover:text-white transition
-          "
+          bg-white text-black
+          px-4 sm:px-8 lg:px-10
+          py-2.5 sm:py-3 lg:py-4
+          text-xs sm:text-base
+          font-medium
+          hover:bg-black hover:text-white
+          transition
+        "
               >
                 Valentine's Day Gifts
               </Link>
             </div>
-
           </div>
         </div>
-      </section>
 
+      </section>
 
 
       {/* MOST POPULAR PLANTS */}
@@ -409,6 +415,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
 
       {/* QUICK VIEW MODAL */}
       {quickView && (

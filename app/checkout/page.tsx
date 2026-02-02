@@ -52,22 +52,77 @@ export default function CheckoutPage() {
         return (
             <div>
                 <Navbar />
-                <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-20">
-                    <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-                        <div className="mb-6">
-                            <svg className="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
+                <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 flex items-center justify-center px-4 py-12">
+                    <div className="max-w-lg w-full">
+                        {/* Success Animation Container */}
+                        <div className="relative">
+                            {/* Decorative circles */}
+                            <div className="absolute -top-20 -right-20 w-40 h-40 bg-gray-300 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-pulse"></div>
+                            <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gray-400 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-pulse" style={{ animationDelay: '1s' }}></div>
+
+                            {/* Main Card */}
+                            <div className="relative bg-white backdrop-blur-lg rounded-3xl shadow-2xl shadow-gray-900/20 p-12 border border-gray-200">
+                                {/* Success Icon with Animation */}
+                                <div className="mb-8 relative">
+                                    <div className="mx-auto w-24 h-24 bg-black rounded-full flex items-center justify-center shadow-xl shadow-gray-900/30 animate-[bounce_1s_ease-in-out_3]">
+                                        <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    {/* Confetti dots */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2">
+                                        <div className="absolute w-2 h-2 bg-gray-800 rounded-full animate-ping" style={{ top: '-20px', left: '-30px' }}></div>
+                                        <div className="absolute w-2 h-2 bg-gray-700 rounded-full animate-ping" style={{ top: '-25px', left: '30px', animationDelay: '0.2s' }}></div>
+                                        <div className="absolute w-2 h-2 bg-gray-600 rounded-full animate-ping" style={{ top: '-15px', left: '50px', animationDelay: '0.4s' }}></div>
+                                    </div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="text-center space-y-4">
+                                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+                                        Order Confirmed!
+                                    </h1>
+
+                                    <p className="text-lg text-gray-800 font-medium">
+                                        Thank you for your purchase
+                                    </p>
+
+                                    <p className="text-gray-600 max-w-sm mx-auto">
+                                        Your order has been placed successfully and is being processed.
+                                    </p>
+
+                                    {/* Order Details Box */}
+                                    <div className="bg-gray-50 rounded-2xl p-6 mt-6 border border-gray-200">
+                                        <div className="flex items-center justify-center gap-2 text-sm text-gray-700">
+                                            <svg className="w-5 h-5 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                            <span>Confirmation sent to your email</span>
+                                        </div>
+                                    </div>
+
+                                    {/* CTA Button */}
+                                    <div className="pt-6">
+                                        <Link
+                                            href="/"
+                                            className="group relative inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full font-semibold text-lg shadow-xl shadow-gray-900/30 hover:shadow-2xl hover:shadow-gray-900/40 hover:scale-105 transition-all duration-300"
+                                        >
+                                            <span>Continue Shopping</span>
+                                            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                            </svg>
+                                        </Link>
+                                    </div>
+
+                                    {/* Secondary Link */}
+                                    <div className="pt-4">
+                                        <a href="#" className="text-sm text-gray-600 hover:text-black transition-colors underline underline-offset-4">
+                                            View order details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <h1 className="text-3xl font-bold text-gray-900 mb-4">Order Confirmed!</h1>
-                        <p className="text-gray-600 mb-6">Thank you for your purchase. Your order has been placed successfully.</p>
-                        <p className="text-sm text-gray-500 mb-8">Order confirmation has been sent to your email.</p>
-                        <Link
-                            href="/"
-                            className="inline-block bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition"
-                        >
-                            Continue Shopping
-                        </Link>
                     </div>
                 </div>
                 <Footer />
@@ -82,7 +137,7 @@ export default function CheckoutPage() {
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {/* Header */}
                     <div className="mb-8">
-                        <Link href="/cart" className="flex items-center text-teal-600 hover:text-teal-700 mb-6">
+                        <Link href="/cart" className="flex items-center text-black hover:text-teal-700 mb-6">
                             <ChevronLeft className="w-5 h-5 mr-2" />
                             Back to Cart
                         </Link>
@@ -210,7 +265,7 @@ export default function CheckoutPage() {
 
                                 <button
                                     type="submit"
-                                    className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition flex items-center justify-center"
+                                    className="w-full bg-black text-white py-3 rounded-lg font-semibold transition flex items-center justify-center"
                                 >
                                     <Lock className="w-5 h-5 mr-2" />
                                     Place Order
@@ -247,7 +302,7 @@ export default function CheckoutPage() {
                                     </div>
                                     <div className="border-t border-gray-200 pt-3 flex justify-between">
                                         <span className="text-xl font-bold">Total</span>
-                                        <span className="text-xl font-bold text-teal-600">${total}</span>
+                                        <span className="text-xl font-bold text-black-600">${total}</span>
                                     </div>
                                 </div>
                             </div>

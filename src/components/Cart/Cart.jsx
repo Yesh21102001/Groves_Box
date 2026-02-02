@@ -1,12 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronLeft, Trash2, Minus, Plus, AlertCircle, Package } from 'lucide-react';
+import { ChevronLeft, Trash2, Minus, Plus, AlertCircle, Package, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import Navbar from '../Navbar';
+import { products } from '../../data/products';
+import { useCart } from '../../context/CartContext';
+import Footer from '../Footer';
 
 export default function CartPage() {
     const [isGift, setIsGift] = useState(false);
+    const { addToCart } = useCart();
     const [cartItems, setCartItems] = useState([
         {
             id: '1',
@@ -26,6 +30,16 @@ export default function CartPage() {
     const estimatedTotal = subtotal + shipping;
     const shippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 
+    // Get recommended products (excluding items already in cart)
+    const recommendedProducts = products
+        .filter(product => !cartItems.some(cartItem => cartItem.id === product.id))
+        .slice(0, 4)
+        .map(product => ({
+            ...product,
+            badge: product.price < 50 ? 'Best Seller' : product.rating >= 4.8 ? 'Top Rated' : undefined,
+            badgeColor: product.price < 50 ? 'bg-gray-800' : product.rating >= 4.8 ? 'bg-green-600' : undefined,
+        }));
+
     const updateQuantity = (id, change) => {
         setCartItems(
             cartItems.map((item) =>
@@ -40,14 +54,108 @@ export default function CartPage() {
         setCartItems(cartItems.filter((item) => item.id !== id));
     };
 
+    // Product Card Component
+    const ProductCard = ({ product }) => {
+        const [isWishlisted, setIsWishlisted] = useState(false);
+
+        const handleAddToCart = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            addToCart({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: 1,
+                image: product.image,
+            });
+        };
+
+        return (
+            <Link href={`/products/${product.id}`} className="group block">
+                {/* Image Container */}
+                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+                    {/* Badge */}
+                    {product.badge && (
+                        <div
+                            className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs rounded-full`}
+                        >
+                            {product.badge}
+                        </div>
+                    )}
+
+                    {/* Wishlist Icon - Top Right */}
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setIsWishlisted(!isWishlisted);
+                        }}
+                        className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+                    >
+                        <Heart
+                            size={18}
+                            className={isWishlisted ? "fill-current text-red-500" : ""}
+                        />
+                    </button>
+
+                    {/* Quick Add Button */}
+                    {/* Mobile: Small circular button bottom-right, always visible */}
+                    <button
+                        onClick={handleAddToCart}
+                        className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+                    >
+                        <ShoppingCart size={18} />
+                    </button>
+
+                    {/* Desktop: Full button at bottom on hover */}
+                    <button
+                        onClick={handleAddToCart}
+                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                    >
+                        <ShoppingCart size={16} />
+                        Quick Add
+                    </button>
+
+                    {/* Product Image */}
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                </div>
+
+                {/* Product Info */}
+                <h3 className="text-sm md:text-base font-sans font-light text-gray-900 mb-1">
+                    {product.name}
+                </h3>
+
+                <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                    {product.description}
+                </p>
+
+                <div className="flex items-center gap-2 text-sm">
+                    <span className="font-medium text-gray-900">
+                        From ${product.price}
+                    </span>
+
+                    {product.originalPrice && (
+                        <span className="text-gray-400 line-through">
+                            ${product.originalPrice}
+                        </span>
+                    )}
+                </div>
+            </Link>
+        );
+    };
+
     return (
         <div className="bg-gray-50 min-h-screen">
             <Navbar />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
                 {/* Back Button */}
-                <Link 
-                    href="/collections" 
+                <Link
+                    href="/collections"
                     className="inline-flex items-center text-gray-600 hover:text-teal-600 transition-colors mb-6 group"
                 >
                     <ChevronLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
@@ -162,33 +270,9 @@ export default function CartPage() {
                                 Complete your plant collection with these essentials
                             </p>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                {[
-                                    { id: 1, badge: 'Best Seller', badgeColor: 'bg-teal-600', image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=400&fit=crop', name: 'Plant Food & Nutrients', price: 29 },
-                                    { id: 2, badge: 'New', badgeColor: 'bg-purple-600', image: 'https://images.unsplash.com/photo-1606115915090-be18fea23ec7?w=400&h=400&fit=crop', name: 'Decorative Planter', price: 39 },
-                                    { id: 3, badge: null, badgeColor: null, image: 'https://images.unsplash.com/photo-1591958911259-bee2173bdccc?w=400&h=400&fit=crop', name: 'Garden Tool Set', price: 24 }
-                                ].map((product) => (
-                                    <div 
-                                        key={product.id}
-                                        className="group relative bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
-                                    >
-                                        {product.badge && (
-                                            <span className={`absolute top-3 left-3 ${product.badgeColor} text-white text-xs font-medium px-3 py-1 rounded-full z-10`}>
-                                                {product.badge}
-                                            </span>
-                                        )}
-                                        <div className="aspect-square bg-gray-100 overflow-hidden">
-                                            <img
-                                                src={product.image}
-                                                alt={product.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                            />
-                                        </div>
-                                        <div className="p-4">
-                                            <h3 className="font-medium text-gray-900 text-sm">{product.name}</h3>
-                                            <p className="text-teal-600 font-semibold mt-1">${product.price}</p>
-                                        </div>
-                                    </div>
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                                {recommendedProducts.map((product) => (
+                                    <ProductCard key={product.id} product={product} />
                                 ))}
                             </div>
                         </div>
@@ -201,7 +285,7 @@ export default function CartPage() {
 
                             {/* Free Shipping Progress */}
                             {amountUntilFreeShipping > 0 ? (
-                                <div className="mb-6 p-4 bg-teal-50 rounded-lg border border-teal-200">
+                                <div className="mb-6 p-4 bg-gray-50 rounded-lg ">
                                     <p className="text-sm text-gray-700 mb-3">
                                         Add <span className="font-bold text-teal-700">${amountUntilFreeShipping}</span> more for free shipping!
                                     </p>
@@ -259,9 +343,9 @@ export default function CartPage() {
                             </div>
 
                             {/* Checkout Button */}
-                            <Link 
-                                href="/checkout" 
-                                className="block w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-lg transition-colors text-center shadow-sm hover:shadow-md"
+                            <Link
+                                href="/checkout"
+                                className="block w-full bg-black text-white font-semibold py-4 rounded-lg transition-colors text-center shadow-sm hover:shadow-md"
                             >
                                 Proceed to Checkout
                             </Link>
@@ -277,6 +361,7 @@ export default function CartPage() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

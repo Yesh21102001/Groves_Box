@@ -93,7 +93,6 @@ export default function AccountPage() {
         { id: 'profile', name: 'Profile', icon: User },
         { id: 'orders', name: 'Orders', icon: Package },
         { id: 'addresses', name: 'Addresses', icon: MapPin },
-        { id: 'wishlist', name: 'Wishlist', icon: Heart },
         { id: 'settings', name: 'Settings', icon: Lock },
     ];
 
@@ -127,9 +126,9 @@ export default function AccountPage() {
                     {/* Sidebar Navigation */}
                     <div className="lg:col-span-1">
                         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                            <div className="p-6 bg-gradient-to-br from-green-600 to-teal-600">
+                            <div className="p-6 bg-black">
                                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                                    <span className="text-3xl font-bold text-green-600">
+                                    <span className="text-3xl font-bold text-black">
                                         {userData.firstName[0]}{userData.lastName[0]}
                                     </span>
                                 </div>
@@ -149,11 +148,11 @@ export default function AccountPage() {
                                             key={tab.id}
                                             onClick={() => setActiveTab(tab.id)}
                                             className={`w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 mb-1 ${activeTab === tab.id
-                                                ? 'bg-green-50 text-green-700 font-semibold shadow-sm'
+                                                ? 'bg-gray-50 text-black-700 font-semibold shadow-sm'
                                                 : 'text-gray-600 hover:bg-gray-50'
                                                 }`}
                                         >
-                                            <Icon className={`w-5 h-5 mr-3 ${activeTab === tab.id ? 'text-green-600' : 'text-gray-400'}`} />
+                                            <Icon className={`w-5 h-5 mr-3 ${activeTab === tab.id ? 'text-black-600' : 'text-gray-400'}`} />
                                             {tab.name}
                                         </button>
                                     );
@@ -310,23 +309,23 @@ export default function AccountPage() {
                                     ) : (
                                         <div className="space-y-6">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div className="p-5 bg-gradient-to-br from-green-50 to-teal-50 rounded-xl border border-green-100">
+                                                <div className="p-5 bg-gray-100 rounded-xl">
                                                     <p className="text-sm font-medium text-gray-600 mb-2">First Name</p>
                                                     <p className="text-lg font-semibold text-gray-900">{userData.firstName}</p>
                                                 </div>
-                                                <div className="p-5 bg-gradient-to-br from-green-50 to-teal-50 rounded-xl border border-green-100">
+                                                <div className="p-5 bg-gray-100 rounded-xl">
                                                     <p className="text-sm font-medium text-gray-600 mb-2">Last Name</p>
                                                     <p className="text-lg font-semibold text-gray-900">{userData.lastName}</p>
                                                 </div>
-                                                <div className="p-5 bg-gradient-to-br from-green-50 to-teal-50 rounded-xl border border-green-100">
+                                                <div className="p-5 bg-gray-100 rounded-xl">
                                                     <p className="text-sm font-medium text-gray-600 mb-2">Email</p>
                                                     <p className="text-lg font-semibold text-gray-900">{userData.email}</p>
                                                 </div>
-                                                <div className="p-5 bg-gradient-to-br from-green-50 to-teal-50 rounded-xl border border-green-100">
+                                                <div className="p-5 bg-gray-100 rounded-xl">
                                                     <p className="text-sm font-medium text-gray-600 mb-2">Phone</p>
                                                     <p className="text-lg font-semibold text-gray-900">{userData.phone}</p>
                                                 </div>
-                                                <div className="md:col-span-2 p-5 bg-gradient-to-br from-green-50 to-teal-50 rounded-xl border border-green-100">
+                                                <div className="md:col-span-2 p-5 bg-gray-100 rounded-xl">
                                                     <p className="text-sm font-medium text-gray-600 mb-2">Address</p>
                                                     <p className="text-lg font-semibold text-gray-900">
                                                         {userData.address}, {userData.city}, {userData.state} {userData.zipCode}
@@ -346,7 +345,7 @@ export default function AccountPage() {
                                         {orders.map((order, index) => (
                                             <div
                                                 key={order.id}
-                                                className="group border-2 border-gray-100 rounded-2xl p-6 hover:border-green-200 hover:shadow-lg transition-all duration-300"
+                                                className="group border-2 border-gray-100 rounded-2xl p-6 hover:border-black-200 hover:shadow-lg transition-all duration-300"
                                                 style={{ animationDelay: `${index * 100}ms` }}
                                             >
                                                 <div className="flex flex-col md:flex-row gap-6">
@@ -374,8 +373,8 @@ export default function AccountPage() {
                                                         </div>
                                                         <p className="text-gray-700 mb-3">{order.items}</p>
                                                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                                            <p className="text-2xl font-bold text-green-600">{order.total}</p>
-                                                            <button className="flex items-center justify-center px-5 py-2.5 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-all duration-200 font-semibold border border-green-200 group-hover:bg-green-100">
+                                                            <p className="text-2xl font-bold text-black-600">{order.total}</p>
+                                                            <button className="flex items-center justify-center px-5 py-2.5 bg-black text-white rounded-xl transition-all duration-200 font-semibold border border-green-200 ">
                                                                 <Eye className="w-4 h-4 mr-2" />
                                                                 View Details
                                                             </button>
@@ -393,7 +392,7 @@ export default function AccountPage() {
                                 <div className="p-6 lg:p-8">
                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                                         <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">Saved Addresses</h2>
-                                        <button className="flex items-center justify-center px-5 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 shadow-sm hover:shadow-md font-semibold">
+                                        <button className="flex items-center justify-center px-5 py-2.5 bg-black text-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md font-semibold">
                                             <Plus className="w-5 h-5 mr-2" />
                                             Add Address
                                         </button>
@@ -402,10 +401,10 @@ export default function AccountPage() {
                                         {addresses.map((addr) => (
                                             <div
                                                 key={addr.id}
-                                                className="relative border-2 border-gray-100 rounded-2xl p-6 hover:border-green-200 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50"
+                                                className="relative border-2 border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50"
                                             >
                                                 {addr.isDefault && (
-                                                    <span className="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-teal-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-sm">
+                                                    <span className="absolute top-4 right-4 bg-black text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-sm">
                                                         DEFAULT
                                                     </span>
                                                 )}
@@ -420,10 +419,10 @@ export default function AccountPage() {
                                                     </p>
                                                 </div>
                                                 <div className="flex gap-3 pt-4 border-t border-gray-200">
-                                                    <button className="flex-1 py-2.5 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-all duration-200 text-sm font-semibold border border-green-200">
+                                                    <button className="flex-1 py-2.5 bg-black text-white rounded-xl  transition-all duration-200 text-sm font-semibold ">
                                                         Edit
                                                     </button>
-                                                    <button className="flex-1 py-2.5 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-all duration-200 text-sm font-semibold border border-red-200">
+                                                    <button className="flex-1 py-2.5 bg-red-600 text-white rounded-xl transition-all duration-200 text-sm font-semibold">
                                                         Delete
                                                     </button>
                                                 </div>
@@ -434,7 +433,7 @@ export default function AccountPage() {
                             )}
 
                             {/* Wishlist Tab */}
-                            {activeTab === 'wishlist' && (
+                            {/* {activeTab === 'wishlist' && (
                                 <div className="p-6 lg:p-8">
                                     <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">Saved Items</h2>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -465,7 +464,7 @@ export default function AccountPage() {
                                         ))}
                                     </div>
                                 </div>
-                            )}
+                            )} */}
 
                             {/* Settings Tab */}
                             {activeTab === 'settings' && (

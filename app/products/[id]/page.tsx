@@ -35,6 +35,94 @@ interface Product {
     category: string;
     reviews: number;
     longDescription: string;
+    description: string;
+}
+
+/* ---------------- PRODUCT CARD COMPONENT ---------------- */
+
+function ProductCard({ product }: { product: Product }) {
+    const [isWishlisted, setIsWishlisted] = useState(false);
+    const { addToCart } = useCart();
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            image: product.image,
+        });
+    };
+
+    return (
+        <Link href={`/products/${product.id}`} className="group block">
+            {/* Image Container */}
+            <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+                {/* Wishlist Icon - Top Right */}
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsWishlisted(!isWishlisted);
+                    }}
+                    className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+                >
+                    <Heart
+                        size={18}
+                        className={isWishlisted ? "fill-current text-red-500" : ""}
+                    />
+                </button>
+
+                {/* Quick Add Button */}
+                {/* Mobile: Small circular button bottom-right, always visible */}
+                <button
+                    onClick={handleAddToCart}
+                    className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+                >
+                    <ShoppingCart size={18} />
+                </button>
+
+                {/* Desktop: Full button at bottom on hover */}
+                <button
+                    onClick={handleAddToCart}
+                    className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                >
+                    <ShoppingCart size={16} />
+                    Quick Add
+                </button>
+
+                {/* Product Image */}
+                <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+            </div>
+
+            {/* Product Info */}
+            <h3 className="text-sm md:text-base font-serif font-light text-gray-900 mb-1">
+                {product.name}
+            </h3>
+
+            <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                {product.description}
+            </p>
+
+            <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-gray-900">
+                    From ${product.price}
+                </span>
+
+                {product.originalPrice && (
+                    <span className="text-gray-400 line-through">
+                        ${product.originalPrice}
+                    </span>
+                )}
+            </div>
+        </Link>
+    );
 }
 
 /* ---------------- PAGE ---------------- */
@@ -161,12 +249,24 @@ export default function ProductDetailPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     {/* LEFT */}
                     <div className="lg:sticky lg:top-24 space-y-4">
-                        <div className="bg-gray-50 rounded-xl overflow-hidden">
+                        <div className="bg-gray-50 rounded-xl overflow-hidden relative">
                             <img
                                 src={product.images[mainImage]}
                                 alt={product.name}
                                 className="w-full h-[500px] object-cover"
                             />
+                            {/* Wishlist Icon on Image */}
+                            <button
+                                onClick={handleWishlistToggle}
+                                className={`absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg ${isInWishlist(product.id)
+                                    ? 'bg-red-500 text-white hover:bg-red-600'
+                                    : 'bg-white text-gray-700 hover:bg-red-50 hover:text-red-500'
+                                    }`}
+                            >
+                                <Heart
+                                    className={`w-6 h-6 ${isInWishlist(product.id) ? 'fill-current' : ''}`}
+                                />
+                            </button>
                         </div>
 
                         <div className="grid grid-cols-4 gap-3">
@@ -285,15 +385,6 @@ export default function ProductDetailPage() {
                                 <ShoppingCart className="w-5 h-5" />
                                 Add to Cart
                             </button>
-                            <button
-                                onClick={handleWishlistToggle}
-                                className={`p-4 rounded-lg border-2 flex items-center justify-center ${isInWishlist(product.id)
-                                    ? 'border-red-300 bg-red-50 text-red-600'
-                                    : 'border-gray-300 bg-white text-gray-600 hover:border-red-300 hover:bg-red-50'
-                                    }`}
-                            >
-                                <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
-                            </button>
                         </div>
 
                         {/* BENEFITS */}
@@ -322,8 +413,8 @@ export default function ProductDetailPage() {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`relative pb-4 font-medium text-sm uppercase tracking-wide transition-colors ${activeTab === tab
-                                        ? 'text-black'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                    ? 'text-black'
+                                    : 'text-gray-500 hover:text-gray-700'
                                     }`}
                             >
                                 {tab}
@@ -372,17 +463,9 @@ export default function ProductDetailPage() {
                         <h2 className="text-2xl font-semibold mb-6">
                             You May Also Like
                         </h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             {relatedProducts.map((item) => (
-                                <Link key={item.id} href={`/products/${item.id}`}>
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="rounded-lg h-48 w-full object-cover"
-                                    />
-                                    <p className="mt-2 font-medium">{item.name}</p>
-                                    <p className="text-teal-600">${item.price}</p>
-                                </Link>
+                                <ProductCard key={item.id} product={item} />
                             ))}
                         </div>
                     </div>

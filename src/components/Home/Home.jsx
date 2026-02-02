@@ -291,26 +291,34 @@ export default function HomePage() {
     bg-cover bg-center
 
     /* MOBILE background */
-    bg-[url('/images/2151022076.jpg')]
+    bg-[url('/images/2149155732.jpg')]
 
     /* DESKTOP background */
     sm:bg-[url('/images/2151022072.jpg')]
   "
       >
-        {/* Optional overlay */}
-        <div className="absolute inset-0"></div>
+        {/* ✅ MOBILE DARK OVERLAY (image only) */}
+        <div
+          className="
+      absolute inset-0
+      bg-black/50
+      sm:hidden
+    "
+        />
 
-        <div className="
-  relative w-full
-  max-w-7xl 2xl:max-w-[1600px]
-  -mt-80 sm:-mt-40 lg:-mt-0
-">
-
+        {/* CONTENT */}
+        <div
+          className="
+      relative z-10 w-full
+      max-w-7xl 2xl:max-w-[1600px]
+      -mt-10 sm:-mt-40 lg:-mt-0
+    "
+        >
           <div className="max-w-xl sm:max-w-2xl ml-auto">
 
             <h1
               className="
-          font-sans font-light text-[#2a2d24]
+          font-sans font-lexend text-white
           text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl
           leading-tight mb-6 sm:mb-8
         "
@@ -320,15 +328,15 @@ export default function HomePage() {
 
             <p
               className="
-          text-[#2a2d24]
-    text-xs sm:text-sm lg:text-base
-    mb-6 sm:mb-10
+          text-white
+          text-xs sm:text-sm lg:text-base
+          mb-6 sm:mb-10
         "
             >
               Expert Guidance • Connect & Grow • Judgement-Free Service
             </p>
 
-            {/* BUTTONS – SIDE BY SIDE EVEN ON MOBILE */}
+            {/* BUTTONS */}
             <div className="flex flex-row gap-3 sm:gap-6">
               <Link
                 href="/collections"
@@ -362,6 +370,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
 
 
       {/* MOST POPULAR PLANTS */}

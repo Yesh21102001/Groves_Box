@@ -717,7 +717,7 @@ export default function HomePage() {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`transition-all ${index === currentSlide
-                    ? 'w-6 md:w-8 h-2 md:h-3 bg-teal-600'
+                    ? 'w-6 md:w-8 h-2 md:h-3 bg-black'
                     : 'w-2 md:w-3 h-2 md:h-3 bg-gray-300 hover:bg-gray-400'
                     } rounded-full`}
                   aria-label={`Go to slide ${index + 1}`}

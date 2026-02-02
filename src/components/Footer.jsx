@@ -32,7 +32,7 @@ export default function Footer() {
                     />
                     <button
                         type="submit"
-                        className="w-full bg-emerald-600 text-white px-6 py-3 font-medium hover:bg-emerald-700 transition rounded text-sm"
+                        className="w-full bg-black text-white px-6 py-3 font-medium transition rounded text-sm"
                     >
                         Subscribe
                     </button>
@@ -324,7 +324,7 @@ export default function Footer() {
                                 />
                                 <button
                                     type="submit"
-                                    className="w-full bg-emerald-600 text-white px-6 py-3 xl:py-3.5 font-medium hover:bg-emerald-700 transition rounded text-sm xl:text-base"
+                                    className="w-full bg-black text-white px-6 py-3 xl:py-3.5 font-medium transition rounded text-sm xl:text-base"
                                 >
                                     Subscribe
                                 </button>

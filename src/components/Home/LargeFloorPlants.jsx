@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export default function LargeFloorPlants() {
     const products = [
@@ -120,7 +121,7 @@ export default function LargeFloorPlants() {
                 {/* Product Grid - Changed from grid-cols-1 to grid-cols-2 for mobile */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                     {products.map((product) => (
-                        <div key={product.id} className="group cursor-pointer">
+                        <Link key={product.id} href={`/products/${product.id}`} className="group cursor-pointer block">
                             {/* Image Container */}
                             <div className="relative aspect-[3/4] mb-4 overflow-hidden bg-gray-100">
                                 <img
@@ -168,7 +169,7 @@ export default function LargeFloorPlants() {
                                     )}
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

@@ -188,7 +188,7 @@ export default function HomePage() {
     const [isWishlisted, setIsWishlisted] = useState(false);
 
     return (
-      <div className="group">
+      <Link href={`/products/${product.id}`} className="group block">
         {/* Image Container */}
         <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
           {/* Badge */}
@@ -202,7 +202,11 @@ export default function HomePage() {
 
           {/* Wishlist Icon - Top Right */}
           <button
-            onClick={() => setIsWishlisted(!isWishlisted)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setIsWishlisted(!isWishlisted);
+            }}
             className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
           >
             <Heart
@@ -214,7 +218,11 @@ export default function HomePage() {
           {/* Quick Add Button */}
           {/* Mobile: Small circular button bottom-right, always visible */}
           <button
-            onClick={() => handleAddToCart(product)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAddToCart(product);
+            }}
             className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
           >
             <ShoppingCart size={18} />
@@ -222,7 +230,11 @@ export default function HomePage() {
 
           {/* Desktop: Full button at bottom on hover */}
           <button
-            onClick={() => handleAddToCart(product)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAddToCart(product);
+            }}
             className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
             <ShoppingCart size={16} />
@@ -257,7 +269,7 @@ export default function HomePage() {
             </span>
           )}
         </div>
-      </div>
+      </Link>
     );
   };
 

@@ -157,17 +157,12 @@ export default function ProductsPage() {
                             </nav>
                         </div>
 
-                        {/* Back Link */}
-                        {/* <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 text-base">
-                            <ChevronLeft className="w-5 h-5 mr-2" />
-                            Back to Home
-                        </Link> */}
-
                         {/* Header */}
                         <div className="mb-12 md:mb-16">
-                            <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-sans font-light text-gray-900 mb-4">
+                            <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-lexend font-semibold text-gray-900 mb-4">
                                 All Products
                             </h1>
+
                             <p className="text-gray-600 text-base md:text-l lg:text-l">
                                 Explore our complete collection of beautiful plants and find your favorites.
                             </p>

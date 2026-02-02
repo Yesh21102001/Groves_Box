@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Phone, MessageSquare, Mail, ChevronRight, Star, Heart, Eye, ShoppingCart, X } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Star, Heart, Eye, ShoppingCart, X } from "lucide-react";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { useCart } from "../../context/CartContext";
@@ -21,6 +21,8 @@ function IconButton({ icon, onClick }) {
 
 export default function HomePage() {
   const [quickView, setQuickView] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { cartItems, addToCart } = useCart();
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -101,44 +103,20 @@ export default function HomePage() {
 
   const testimonials = [
     {
-      quote: "I love The Sill! It's a nice way to send plants to people you love who live far away. Thanks for helping me stay connected!",
-      author: "Hillary",
-      location: "TX"
+      text: "I have ordered several times and each time I get the healthiest, prettiest plants very quickly. I have been extremely satisfied with The Sill.",
+      image: "/images/2151022072.jpg"
     },
     {
-      quote: "My Monstera arrived gorgeous and healthy!!! Best looking plant I've ever pulled out of a box!!",
-      author: "Melanie",
-      location: "IL"
+      text: "Amazing quality plants! The packaging was perfect and my plants arrived in excellent condition. Highly recommend!",
+      image: "/images/133143.jpg"
     },
     {
-      quote: "I have ordered several times and each time I get the healthiest, prettiest plants very quickly. I have been extremely satisfied with The Sill.",
-      author: "Kelsey",
-      location: "CA"
+      text: "The best plant shopping experience I've ever had. Beautiful selections and wonderful customer service.",
+      image: "/images/2151022100.jpg"
     },
     {
-      quote: "Thank you so much for getting back to me about my plant concern! I'm grateful that customer service does still exist. Can't wait to recommend The Sill to others!",
-      author: "Molly",
-      location: "CO"
-    },
-    {
-      quote: "I love The Sill! It's a nice way to send plants to people you love who live far away. Thanks for helping me stay connected!",
-      author: "Hillary",
-      location: "TX"
-    },
-    {
-      quote: "My Monstera arrived gorgeous and healthy!!! Best looking plant I've ever pulled out of a box!!",
-      author: "Melanie",
-      location: "IL"
-    },
-    {
-      quote: "I have ordered several times and each time I get the healthiest, prettiest plants very quickly. I have been extremely satisfied with The Sill.",
-      author: "Kelsey",
-      location: "CA"
-    },
-    {
-      quote: "Thank you so much for getting back to me about my plant concern! I'm grateful that customer service does still exist. Can't wait to recommend The Sill to others!",
-      author: "Molly",
-      location: "CO"
+      text: "Love my new plants! They've transformed my living space and bring so much joy every day.",
+      image: "/images/desktop2.png"
     }
   ];
 
@@ -171,6 +149,31 @@ export default function HomePage() {
       imageAlt: 'Bright plant-filled room with natural light'
     }
   ];
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, testimonials.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % testimonials.length);
+    setIsAutoPlaying(false);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setIsAutoPlaying(false);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+    setIsAutoPlaying(false);
+  };
 
   // Function to add product to cart
   const handleAddToCart = (product) => {
@@ -367,7 +370,7 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
               Our Most Popular Plants
             </h2>
 
@@ -448,7 +451,7 @@ export default function HomePage() {
                 Speak to a Plant Specialist
               </p>
 
-              <h2 className="text-3xl md:text-3xl lg:text-4xl font-sans font-light text-gray-900 mb-8">
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
                 Need Help?
               </h2>
 
@@ -507,7 +510,7 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
               Large Floor Plants
             </h2>
 
@@ -545,7 +548,7 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
               New Arrivals
             </h2>
 
@@ -583,7 +586,7 @@ export default function HomePage() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-8 md:mb-12 lg:mb-16">
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
                 Plant Care & Workshops
               </h2>
               <p className="text-base sm:text-l md:text-l lg:text-l text-gray-600 max-w-2xl">
@@ -636,52 +639,93 @@ export default function HomePage() {
 
 
       {/* TESTIMONIALS */}
-      <section className="w-full px-4 md:px-6 lg:px-8 py-16 md:py-24 lg:py-28 bg-gray-50">
+      <section className="w-full bg-white py-16 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
-              What our customers are saying
+          <div className="mb-12">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-gray-800 mb-4">
+              #PlantsMakePeopleHappy
             </h2>
+            <p className="text-gray-600 text-base md:text-lg">What our customers are saying</p>
           </div>
 
-          {/* Masonry Grid */}
-          <div className="columns-1 md:columns-2 lg:columns-4 gap-6 space-y-6">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={index}
-                className="break-inside-avoid bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300 mb-6"
-              >
-                {/* Quote Icon */}
-                <div className="mb-6">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="text-blue-200">
-                    <path d="M10 26h5l3-6V12H8v8h5l-3 6zm14 0h5l3-6V12h-10v8h5l-3 6z" fill="currentColor" />
-                  </svg>
-                </div>
-
-                {/* Quote Text */}
-                <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-8">
-                  {testimonial.quote}
-                </p>
-
-                {/* Author Info */}
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                      <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">
-                      {testimonial.author}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {testimonial.location}
-                    </p>
-                  </div>
+          {/* Slider Container */}
+          <div className="relative">
+            <div className="flex flex-col md:flex-row gap-0 overflow-hidden h-auto md:h-[500px]">
+              {/* Left Container - Text */}
+              <div className="w-full md:w-1/5 md:min-w-[200px] bg-gray-50 flex items-center justify-center p-6 md:p-8 relative min-h-[150px] md:min-h-0 md:h-full">
+                <div className="relative w-full h-full flex items-center">
+                  {testimonials.map((testimonial, index) => (
+                    <div
+                      key={index}
+                      className={`absolute inset-0 flex items-center justify-center p-4 md:p-6 transition-all duration-700 ${index === currentSlide
+                          ? 'opacity-100 translate-x-0'
+                          : index < currentSlide
+                            ? 'opacity-0 -translate-x-full'
+                            : 'opacity-0 translate-x-full'
+                        }`}
+                    >
+                      <p className="text-center text-gray-800 text-sm md:text-base leading-relaxed">
+                        "{testimonial.text}"
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
+
+              {/* Right Container - Image */}
+              <div className="w-full md:w-4/5 relative overflow-hidden bg-gray-100 h-[300px] md:h-full">
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 transition-all duration-700 ${index === currentSlide
+                        ? 'opacity-100 translate-x-0'
+                        : index < currentSlide
+                          ? 'opacity-0 -translate-x-full'
+                          : 'opacity-0 translate-x-full'
+                      }`}
+                  >
+                    <img
+                      src={testimonial.image}
+                      alt={`Testimonial ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+
+                {/* Navigation Buttons */}
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
+                  aria-label="Previous slide"
+                >
+                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
+                </button>
+
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
+                  aria-label="Next slide"
+                >
+                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
+                </button>
+              </div>
+            </div>
+
+            {/* Dots Navigation */}
+            <div className="flex justify-center gap-2 mt-6 md:mt-8">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`transition-all ${index === currentSlide
+                      ? 'w-6 md:w-8 h-2 md:h-3 bg-teal-600'
+                      : 'w-2 md:w-3 h-2 md:h-3 bg-gray-300 hover:bg-gray-400'
+                    } rounded-full`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>

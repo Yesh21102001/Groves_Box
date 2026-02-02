@@ -731,17 +731,31 @@ export default function HomePage() {
 
       {/* Bottom Cart Navigator */}
       {totalItems > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
+        <div
+          className="
+    fixed left-0 right-0
+    bg-white border-t border-gray-200 shadow-lg z-50
+
+    bottom-[70px] left-3 right-3       /* mobile */
+    sm:bottom-0              /* desktop */
+
+    p-5 rounded-[20px]
+    sm:p-4 sm:rounded-none
+  "
+        >
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                 {totalItems}
               </div>
               <div>
-                <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
+                <p className="text-sm text-gray-600">
+                  {totalItems} item{totalItems > 1 ? "s" : ""}
+                </p>
                 <p className="font-semibold">${totalPrice.toFixed(2)}</p>
               </div>
             </div>
+
             <Link
               href="/cart"
               className="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition"
@@ -750,6 +764,8 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
+
+
       )}
 
       <Footer />

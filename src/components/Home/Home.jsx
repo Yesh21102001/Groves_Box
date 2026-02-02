@@ -643,17 +643,14 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-gray-800 mb-4">
-              #PlantsMakePeopleHappy
-            </h2>
-            <p className="text-gray-600 text-base md:text-lg">What our customers are saying</p>
+            <p className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">What our customers are saying</p>
           </div>
 
           {/* Slider Container */}
           <div className="relative">
             <div className="flex flex-col md:flex-row gap-0 overflow-hidden h-auto md:h-[500px]">
               {/* Left Container - Text */}
-              <div className="w-full md:w-1/5 md:min-w-[200px] bg-gray-50 flex items-center justify-center p-6 md:p-8 relative min-h-[150px] md:min-h-0 md:h-full">
+              <div className="w-full md:w-1/5 md:min-w-[200px] bg-gray-100 flex items-center justify-center p-6 md:p-8 relative min-h-[150px] md:min-h-0 md:h-full">
                 <div className="relative w-full h-full flex items-center">
                   {testimonials.map((testimonial, index) => (
                     <div

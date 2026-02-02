@@ -95,7 +95,7 @@ export default function ProductsPage() {
                 </div>
 
                 {/* Product Info */}
-                <h3 className="text-sm md:text-base font-serif font-light text-gray-900 mb-1">
+                <h3 className="text-sm md:text-base font-sans font-light text-gray-900 mb-1">
                     {product.name}
                 </h3>
 
@@ -154,7 +154,7 @@ export default function ProductsPage() {
 
                         {/* Header */}
                         <div className="mb-12 md:mb-16">
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-serif font-light text-gray-900 mb-4">
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-sans font-light text-gray-900 mb-4">
                                 All Products
                             </h1>
                             <p className="text-gray-600 text-base md:text-lg lg:text-xl">

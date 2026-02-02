@@ -102,7 +102,7 @@ function ProductCard({ product }: { product: Product }) {
             </div>
 
             {/* Product Info */}
-            <h3 className="text-sm md:text-base font-serif font-light text-gray-900 mb-1">
+            <h3 className="text-sm md:text-base font-sans font-light text-gray-900 mb-1">
                 {product.name}
             </h3>
 

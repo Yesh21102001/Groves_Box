@@ -50,7 +50,7 @@ export default function BlogArticlesSection() {
                                 </p>
 
                                 {/* Title */}
-                                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif text-gray-900 mb-3 sm:mb-4 group-hover:text-emerald-600 transition-colors">
+                                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-sans text-gray-900 mb-3 sm:mb-4 group-hover:text-emerald-600 transition-colors">
                                     {article.title}
                                 </h3>
 

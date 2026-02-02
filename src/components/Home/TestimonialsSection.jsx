@@ -27,7 +27,7 @@ export default function TestimonialsSection() {
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-12">
-                    <h2 className="text-4xl lg:text-5xl font-serif text-gray-900 mb-2">
+                    <h2 className="text-4xl lg:text-5xl font-sans text-gray-900 mb-2">
                         #PlantsMakePeopleHappy
                     </h2>
                     <p className="text-gray-600">What our customers are saying</p>

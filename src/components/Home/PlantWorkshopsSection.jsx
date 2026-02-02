@@ -37,7 +37,7 @@ export default function PlantWorkshopsSection() {
                 {/* Header Section */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
                     <div>
-                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-gray-900 mb-3 sm:mb-4">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans text-gray-900 mb-3 sm:mb-4">
                             Plant Care & Workshops
                         </h2>
                         <p className="text-sm sm:text-base text-gray-600">
@@ -90,7 +90,7 @@ export default function PlantWorkshopsSection() {
                                 <span className="text-xs font-semibold text-emerald-600 mb-2 block">
                                     {workshop.tag}
                                 </span>
-                                <h3 className="text-xl sm:text-2xl font-serif text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors">
+                                <h3 className="text-xl sm:text-2xl font-sans text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors">
                                     {workshop.title}
                                 </h3>
                                 <p className="text-sm sm:text-base text-gray-600 leading-relaxed">

@@ -109,7 +109,7 @@ export default function CollectionDetailPage() {
 
                     {/* Header */}
                     <div className="mb-12">
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-light text-gray-900 mb-4">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-sans font-light text-gray-900 mb-4">
                             {collectionInfo.name}
                         </h1>
                         <p className="text-gray-600 text-base md:text-l max-w-xl">
@@ -370,7 +370,7 @@ export default function CollectionDetailPage() {
 
                                         {/* Content */}
                                         <div className="space-y-1">
-                                            <h3 className="font-serif text-[17px] text-gray-900">
+                                            <h3 className="font-sans text-[17px] text-gray-900">
                                                 {product.name}
                                             </h3>
 

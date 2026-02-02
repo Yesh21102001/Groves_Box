@@ -112,7 +112,7 @@ export default function LargeFloorPlants() {
 
                 {/* Header */}
                 <div className="flex justify-between items-baseline mb-10">
-                    <h1 className="text-4xl font-serif text-gray-900">Large Floor Plants</h1>
+                    <h1 className="text-4xl font-sans text-gray-900">Large Floor Plants</h1>
                     <button className="bg-black text-white px-6 sm:px-7 py-3 sm:py-3.5 text-sm transition hover:bg-stone-800">
                         Shop all large plants
                     </button>
@@ -146,7 +146,7 @@ export default function LargeFloorPlants() {
 
                             {/* Product Info */}
                             <div className="space-y-2">
-                                <h3 className="text-base sm:text-lg font-serif text-gray-900">{product.name}</h3>
+                                <h3 className="text-base sm:text-lg font-sans text-gray-900">{product.name}</h3>
                                 <p className="text-xs sm:text-sm text-gray-600 italic">{product.subtitle}</p>
 
                                 {/* Rating */}

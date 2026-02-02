@@ -56,7 +56,7 @@ export default function PlantsForEveryone() {
             `}</style>
             <div className="container-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-8 sm:py-12 lg:py-16 xl:py-20 2xl:py-24">
                 {/* Header */}
-                <h1 className="font-serif text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-5xl text-stone-900 mb-8 ">
+                <h1 className="font-sans text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-5xl text-stone-900 mb-8 ">
                     Bring Home Green
                 </h1>
 

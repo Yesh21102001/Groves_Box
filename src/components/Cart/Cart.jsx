@@ -58,7 +58,7 @@ export default function CartPage() {
                     {/* Left Column - Cart Items */}
                     <div className="lg:col-span-8">
                         <div className="flex items-center justify-between mb-6">
-                            <h1 className="text-3xl lg:text-4xl font-serif text-gray-900">Shopping Cart</h1>
+                            <h1 className="text-3xl lg:text-4xl font-sans text-gray-900">Shopping Cart</h1>
                             <span className="text-sm text-gray-500">{cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}</span>
                         </div>
 
@@ -157,7 +157,7 @@ export default function CartPage() {
 
                         {/* Recommendations */}
                         <div className="mt-12">
-                            <h2 className="text-2xl font-serif text-gray-900 mb-2">You Might Also Like</h2>
+                            <h2 className="text-2xl font-sans text-gray-900 mb-2">You Might Also Like</h2>
                             <p className="text-gray-600 mb-6">
                                 Complete your plant collection with these essentials
                             </p>
@@ -197,7 +197,7 @@ export default function CartPage() {
                     {/* Right Column - Order Summary */}
                     <div className="lg:col-span-4">
                         <div className="bg-white rounded-xl border border-gray-200 p-6 lg:sticky lg:top-8">
-                            <h2 className="text-xl font-serif text-gray-900 mb-6">Order Summary</h2>
+                            <h2 className="text-xl font-sans text-gray-900 mb-6">Order Summary</h2>
 
                             {/* Free Shipping Progress */}
                             {amountUntilFreeShipping > 0 ? (

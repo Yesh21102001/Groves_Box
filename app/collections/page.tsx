@@ -62,7 +62,7 @@ export default function CollectionsPage() {
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
                         <div className=" md:mb-12 lg:mb-16">
-                            <h1 className="font-serif font-light text-[#2a2d24] text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl leading-tight sm:mb-4">
+                            <h1 className="font-sans font-light text-[#2a2d24] text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl leading-tight sm:mb-4">
                                 Collections
                             </h1>
                             <p className="text-gray-600 text-base md:text-l lg:text-l">
@@ -90,7 +90,7 @@ export default function CollectionsPage() {
 
                                     {/* Content */}
                                     <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8">
-                                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-serif font-light text-white mb-2">
+                                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-sans font-light text-white mb-2">
                                             {collection.name}
                                         </h3>
                                         <p className="text-gray-100 text-sm md:text-base mb-4">

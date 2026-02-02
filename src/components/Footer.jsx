@@ -19,7 +19,7 @@ export default function Footer() {
         <footer className="bg-[#f9f8f6]">
             {/* Mobile Newsletter - Visible only on mobile */}
             <div className="lg:hidden w-full px-4 py-8 bg-white border-b border-gray-200">
-                <h2 className="text-3xl font-serif font-light mb-3 text-gray-900">Get the Dirt.</h2>
+                <h2 className="text-3xl font-sans font-light mb-3 text-gray-900">Get the Dirt.</h2>
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
                     Get plant care tips, exclusive offers, & 10% off your first order straight to your inbox. No spam, ever.
                 </p>
@@ -311,7 +311,7 @@ export default function Footer() {
 
                         {/* Newsletter Section - Desktop */}
                         <div className="col-span-2 md:col-span-4 lg:col-span-1 xl:min-w-[400px]">
-                            <h2 className="text-3xl md:text-4xl xl:text-5xl font-serif font-light mb-3 xl:mb-4 text-gray-900">Get the Dirt.</h2>
+                            <h2 className="text-3xl md:text-4xl xl:text-5xl font-sans font-light mb-3 xl:mb-4 text-gray-900">Get the Dirt.</h2>
                             <p className="text-sm xl:text-base text-gray-700 mb-4 xl:mb-5 leading-relaxed">
                                 Get plant care tips, exclusive offers, & 10% off your first order straight to your inbox. No spam, ever.
                             </p>
@@ -358,8 +358,8 @@ export default function Footer() {
                     {/* The Sill Logo */}
                     <div className="border-t border-gray-300 pt-6 xl:pt-8">
                         <div className="flex items-center justify-between mb-6 xl:mb-8">
-                            <div className="text-5xl md:text-6xl xl:text-7xl font-serif text-gray-900">
-                                <span className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">Groves Box</span>
+                            <div className="text-5xl md:text-6xl xl:text-7xl font-sans text-gray-900">
+                                <span className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">Groves Box</span>
                             </div>
                         </div>
                     </div>
@@ -368,7 +368,7 @@ export default function Footer() {
 
             {/* The Sill Logo - Mobile */}
             <div className="lg:hidden w-full px-4 py-8">
-                <div className="text-5xl font-serif text-gray-900 mb-6">
+                <div className="text-5xl font-sans text-gray-900 mb-6">
                     <span className="font-light">Groves Box</span>
                 </div>
                 <p className="text-xs text-gray-600 mb-6">

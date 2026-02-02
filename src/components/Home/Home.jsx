@@ -250,7 +250,7 @@ export default function HomePage() {
         </div>
 
         {/* Product Info */}
-        <h3 className="text-sm md:text-base font-serif font-light text-gray-900 mb-1">
+        <h3 className="text-sm md:text-base font-sans font-light text-gray-900 mb-1">
           {product.name}
         </h3>
 
@@ -307,7 +307,7 @@ export default function HomePage() {
 
             <h1
               className="
-          font-serif font-light text-[#2a2d24]
+          font-sans font-light text-[#2a2d24]
           text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl
           leading-tight mb-6 sm:mb-8
         "
@@ -367,7 +367,7 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
               Our Most Popular Plants
             </h2>
 
@@ -415,7 +415,7 @@ export default function HomePage() {
               className="w-full h-64 object-cover rounded mb-4"
             />
 
-            <h3 className="text-xl font-serif mb-2">
+            <h3 className="text-xl font-sans mb-2">
               {quickView.name}
             </h3>
 
@@ -448,7 +448,7 @@ export default function HomePage() {
                 Speak to a Plant Specialist
               </p>
 
-              <h2 className="text-3xl md:text-3xl lg:text-4xl font-serif font-light text-gray-900 mb-8">
+              <h2 className="text-3xl md:text-3xl lg:text-4xl font-sans font-light text-gray-900 mb-8">
                 Need Help?
               </h2>
 
@@ -507,7 +507,7 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
               Large Floor Plants
             </h2>
 
@@ -545,7 +545,7 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
               New Arrivals
             </h2>
 
@@ -583,7 +583,7 @@ export default function HomePage() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-8 md:mb-12 lg:mb-16">
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+              <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
                 Plant Care & Workshops
               </h2>
               <p className="text-base sm:text-l md:text-l lg:text-l text-gray-600 max-w-2xl">
@@ -621,7 +621,7 @@ export default function HomePage() {
 
                 {/* Content */}
                 <div className="p-5 md:p-6 lg:p-7">
-                  <h3 className="text-xl md:text-xl lg:text-xl font-serif font-normal text-gray-900 mb-3 md:mb-4 leading-tight group-hover:text-gray-700 transition-colors">
+                  <h3 className="text-xl md:text-xl lg:text-xl font-sans font-normal text-gray-900 mb-3 md:mb-4 leading-tight group-hover:text-gray-700 transition-colors">
                     {workshop.title}
                   </h3>
                   <p className="text-sm md:text-base lg:text-l text-gray-600 leading-relaxed">
@@ -640,7 +640,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-serif font-light text-gray-900">
+            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl 2xl:text-5xl font-sans font-light text-gray-900">
               What our customers are saying
             </h2>
           </div>

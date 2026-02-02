@@ -9,6 +9,7 @@ import {
     RotateCcw,
     ShoppingCart,
     Heart,
+    ChevronRight,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -216,12 +217,12 @@ export default function ProductDetailPage() {
         return (
             <>
                 <Navbar />
-                <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+                {/* <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
                     <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
                     <Link href="/collections" className="text-teal-600 font-semibold">
                         Back to Collections
                     </Link>
-                </div>
+                </div> */}
                 <Footer />
             </>
         );
@@ -236,6 +237,28 @@ export default function ProductDetailPage() {
     return (
         <div className={`bg-white ${totalItems > 0 ? 'pb-20' : ''}`}>
             <Navbar />
+
+            {/* BREADCRUMBS */}
+            <div className="max-w-7xl mx-auto px-4 py-4">
+                <nav className="flex items-center justify-center space-x-2 text-sm text-gray-600">
+                    <Link href="/" className="hover:text-gray-900">
+                        Home
+                    </Link>
+
+                    <ChevronRight className="w-4 h-4" />
+
+                    <Link href="/products" className="hover:text-gray-900">
+                        Products
+                    </Link>
+
+                    <ChevronRight className="w-4 h-4" />
+
+                    <span className="text-gray-900 font-medium">
+                        {product.name}
+                    </span>
+                </nav>
+            </div>
+
 
             <div className="max-w-7xl mx-auto px-4 py-8">
                 <Link

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { ChevronLeft, Filter, X, Heart, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, Filter, X, Heart, ShoppingCart, ChevronRight } from 'lucide-react';
 import { products } from '@/src/data/products';
 import { useCart } from '@/src/context/CartContext';
 
@@ -146,6 +146,17 @@ export default function ProductsPage() {
             <div className="min-h-screen bg-white py-8 md:py-12 lg:py-16">
                 <div className="w-full px-4 md:px-6 lg:px-8">
                     <div className="max-w-7xl mx-auto">
+                        {/* BREADCRUMBS */}
+                        <div className="py-4">
+                            <nav className="flex items-center justify-center space-x-2 text-sm text-gray-600">
+                                <Link href="/" className="hover:text-gray-900">
+                                    Home
+                                </Link>
+                                <ChevronRight className="w-4 h-4" />
+                                <span className="text-gray-900 font-medium">Products</span>
+                            </nav>
+                        </div>
+
                         {/* Back Link */}
                         <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 text-base">
                             <ChevronLeft className="w-5 h-5 mr-2" />

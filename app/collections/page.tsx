@@ -60,6 +60,17 @@ export default function CollectionsPage() {
             <div className="min-h-screen bg-white py-8 md:py-12 lg:py-16">
                 <div className="w-full px-4 md:px-6 lg:px-8">
                     <div className="max-w-7xl mx-auto">
+                        {/* BREADCRUMBS */}
+                        <div className="py-4">
+                            <nav className="flex items-center justify-center space-x-2 text-sm text-gray-600">
+                                <Link href="/" className="hover:text-gray-900">
+                                    Home
+                                </Link>
+                                <ChevronRight className="w-4 h-4" />
+                                <span className="text-gray-900 font-medium">Collections</span>
+                            </nav>
+                        </div>
+
                         {/* Header */}
                         <div className=" md:mb-12 lg:mb-16">
                             <h1 className="font-sans font-light text-[#2a2d24] text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl leading-tight sm:mb-4">

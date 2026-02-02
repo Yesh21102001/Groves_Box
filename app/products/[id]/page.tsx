@@ -217,15 +217,19 @@ export default function ProductDetailPage() {
                         {product.sizes.length > 0 && (
                             <div>
                                 <p className="font-semibold mb-2">Size</p>
+
                                 <div className="flex gap-2 flex-wrap">
                                     {product.sizes.map((size: string) => (
                                         <button
                                             key={size}
                                             onClick={() => setSelectedSize(size)}
-                                            className={`px-4 py-2 rounded-lg border ${selectedSize === size
-                                                ? 'border-black bg-black-50'
-                                                : 'border-gray-300'
-                                                }`}
+                                            className={`
+            px-4 py-2 rounded-lg border transition-all duration-200
+            ${selectedSize === size
+                                                    ? 'bg-black text-white border-black'
+                                                    : 'border-gray-300 text-black  hover:border-black'
+                                                }
+          `}
                                         >
                                             {size}
                                         </button>
@@ -233,6 +237,7 @@ export default function ProductDetailPage() {
                                 </div>
                             </div>
                         )}
+
 
                         {/* COLOR */}
                         {product.colors.length > 0 && (
@@ -244,8 +249,8 @@ export default function ProductDetailPage() {
                                             key={color}
                                             onClick={() => setSelectedColor(color)}
                                             className={`px-4 py-2 rounded-lg border ${selectedColor === color
-                                                ? 'border-black bg-black-50'
-                                                : 'border-gray-300'
+                                                ? 'bg-black text-white border-black'
+                                                : 'border-gray-300 text-black  hover:border-black'
                                                 }`}
                                         >
                                             {color}
@@ -259,14 +264,14 @@ export default function ProductDetailPage() {
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="px-3 py-1 border rounded"
+                                className="px-3 py-1 bg-gray-100 rounded"
                             >
                                 −
                             </button>
                             <span>{quantity}</span>
                             <button
                                 onClick={() => setQuantity(quantity + 1)}
-                                className="px-3 py-1 border rounded"
+                                className="px-3 py-1 bg-gray-100 rounded"
                             >
                                 +
                             </button>
@@ -310,32 +315,54 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* TABS */}
-                <div className="mt-16 border rounded-xl">
-                    <div className="flex border-b">
+                <div className="mt-16">
+                    <div className="flex gap-8 border-b border-gray-200">
                         {(['description', 'care', 'reviews'] as const).map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`flex-1 py-4 font-semibold ${activeTab === tab
-                                    ? 'text-teal-600 border-b-2 border-teal-600'
-                                    : 'text-gray-600'
+                                className={`relative pb-4 font-medium text-sm uppercase tracking-wide transition-colors ${activeTab === tab
+                                        ? 'text-black'
+                                        : 'text-gray-500 hover:text-gray-700'
                                     }`}
                             >
-                                {tab.toUpperCase()}
+                                {tab}
+                                {activeTab === tab && (
+                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-black rounded-full" />
+                                )}
                             </button>
                         ))}
                     </div>
 
-                    <div className="p-6">
-                        {activeTab === 'description' && <p>{product.longDescription}</p>}
-                        {activeTab === 'care' && (
-                            <ul className="list-disc pl-5">
-                                {product.careInstructions.map((c, i) => (
-                                    <li key={i}>{c}</li>
-                                ))}
-                            </ul>
+                    <div className="py-8">
+                        {activeTab === 'description' && (
+                            <div className="prose max-w-none">
+                                <p className="text-gray-700 leading-relaxed">{product.longDescription}</p>
+                            </div>
                         )}
-                        {activeTab === 'reviews' && <p>No reviews yet.</p>}
+
+                        {activeTab === 'care' && (
+                            <div className="space-y-3">
+                                {product.careInstructions.map((instruction, i) => (
+                                    <div key={i} className="flex items-start gap-3">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 flex-shrink-0" />
+                                        <p className="text-gray-700">{instruction}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {activeTab === 'reviews' && (
+                            <div className="text-center py-12">
+                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                    </svg>
+                                </div>
+                                <p className="text-gray-500 font-medium">No reviews yet</p>
+                                <p className="text-gray-400 text-sm mt-1">Be the first to review this product</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 

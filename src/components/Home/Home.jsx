@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from 'react';
-import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Star, Heart, Eye, ShoppingCart, X } from "lucide-react";
+import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingCart, X, ArrowRight } from "lucide-react";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { useCart } from "../../context/CartContext";
@@ -148,6 +148,33 @@ export default function HomePage() {
       isFree: true,
       imageAlt: 'Bright plant-filled room with natural light'
     }
+  ];
+
+  const categories = [
+    {
+      id: 'houseplants',
+      name: 'Indoor Plants',
+      image: '/images/AAWUweUuuDHmoD_OM_-TeWfUV7bBgPsN7Wj9ZsUlJHeuMO6I57PbwQbdCc6uMRzs049NBp8srPzltOwpp-EGM1p102xPgEhNCDZ0-2jnYAmDY8qxmAoPhOMtoXO3oHDZWMH-dqPuNCwpPbb4xMQj9AYs4hVNXISTBAiZ0O94p9a4ltizDMn1K5m.webp',
+      link: '/collections/houseplants'
+    },
+    {
+      id: 'outdoor-patio',
+      name: 'Outdoor Plants',
+      image: '/images/B_W_5.webp',
+      link: '/collections/outdoor-patio'
+    },
+    {
+      id: 'pet-friendly',
+      name: 'Pet-Friendly Plants',
+      image: '/images/Blue_3.webp',
+      link: '/collections/pet-friendly'
+    },
+    {
+      id: 'easy-care',
+      name: 'Easy-Care Plants',
+      image: '/images/Green_1.webp',
+      link: '/collections/easy-care'
+    },
   ];
 
   useEffect(() => {
@@ -391,9 +418,13 @@ export default function HomePage() {
 
             <Link
               href="/products"
-              className="hidden md:flex items-center gap-2 text-white bg-black py-2.5 px-4 text-lg"
+              className="group inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap"
             >
-              Shop all <ChevronRight size={20} />
+              <span>View All</span>
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform duration-300"
+              />
             </Link>
           </div>
 
@@ -532,9 +563,13 @@ export default function HomePage() {
 
             <Link
               href="/products"
-              className="hidden md:flex items-center gap-2 text-white bg-black py-2.5 px-4 text-lg"
+              className="group inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap"
             >
-              Shop all <ChevronRight size={20} />
+              <span>View All</span>
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform duration-300"
+              />
             </Link>
           </div>
 
@@ -571,9 +606,13 @@ export default function HomePage() {
 
             <Link
               href="/products"
-              className="hidden md:flex items-center gap-2 text-white bg-black py-2.5 px-4 text-lg"
+              className="group inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap"
             >
-              Shop all <ChevronRight size={20} />
+              <span>View All</span>
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform duration-300"
+              />
             </Link>
           </div>
 
@@ -596,6 +635,65 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      {/* Categories */}
+      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+        <div className="w-full px-4 md:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto">
+            {/* Section Header with View All Button - Side by Side on Mobile */}
+            <div className="flex items-center justify-between gap-3 mb-8 md:mb-10 lg:mb-12 xl:mb-14">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
+                Plants For Everyone
+              </h2>
+
+              {/* View All Button - Compact on Mobile */}
+              <Link
+                href="/collections"
+                className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
+              >
+                <span>View All</span>
+                <ArrowRight
+                  size={16}
+                  className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
+                />
+              </Link>
+            </div>
+
+            {/* Categories Grid - 2 per row on mobile */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+              {categories.map((category, index) => (
+                <Link
+                  key={category.id}
+                  href={category.link}
+                  className="group relative overflow-hidden rounded-none aspect-[3/4] transition-all duration-300"
+                >
+                  {/* Background Image */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300" />
+
+                  {/* Content Container at Bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-serif font-light">
+                        {category.name} →
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* WORKSHOPS & BLOG */}
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-12 sm:py-16 md:py-20 lg:py-24 bg-gray-50">

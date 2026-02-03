@@ -417,13 +417,13 @@ export default function HomePage() {
             </h2>
 
             <Link
-              href="/products"
-              className="group inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap"
+              href="/collections"
+              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
             >
               <span>View All</span>
               <ArrowRight
-                size={20}
-                className="group-hover:translate-x-1 transition-transform duration-300"
+                size={16}
+                className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
               />
             </Link>
           </div>
@@ -436,14 +436,7 @@ export default function HomePage() {
           </div>
 
           {/* Mobile CTA */}
-          <div className="md:hidden mt-10 text-center">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 text-white bg-black py-2.5 px-5 font-medium"
-            >
-              Shop all <ChevronRight size={18} />
-            </Link>
-          </div>
+
         </div>
       </section>
 
@@ -562,13 +555,13 @@ export default function HomePage() {
             </h2>
 
             <Link
-              href="/products"
-              className="group inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap"
+              href="/collections"
+              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
             >
               <span>View All</span>
               <ArrowRight
-                size={20}
-                className="group-hover:translate-x-1 transition-transform duration-300"
+                size={16}
+                className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
               />
             </Link>
           </div>
@@ -581,14 +574,7 @@ export default function HomePage() {
           </div>
 
           {/* Mobile CTA */}
-          <div className="md:hidden mt-10 text-center">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 text-white bg-black py-2.5 px-5 font-medium"
-            >
-              Shop all <ChevronRight size={18} />
-            </Link>
-          </div>
+
         </div>
       </section>
 
@@ -606,12 +592,12 @@ export default function HomePage() {
 
             <Link
               href="/products"
-              className="group inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap"
+              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
             >
               <span>View All</span>
               <ArrowRight
-                size={20}
-                className="group-hover:translate-x-1 transition-transform duration-300"
+                size={16}
+                className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
               />
             </Link>
           </div>
@@ -624,14 +610,7 @@ export default function HomePage() {
           </div>
 
           {/* Mobile CTA */}
-          <div className="md:hidden mt-10 text-center">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 text-white bg-black py-2.5 px-5 font-medium"
-            >
-              Shop all <ChevronRight size={18} />
-            </Link>
-          </div>
+
         </div>
       </section>
 

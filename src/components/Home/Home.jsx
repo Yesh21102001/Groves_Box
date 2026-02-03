@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingCart, X, ArrowRight, GraduationCap, Users, Shield } from "lucide-react";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
 import { useCart } from "../../context/CartContext";
 
 /* ------------------ ICON BUTTON ------------------ */
@@ -323,7 +321,6 @@ export default function HomePage() {
 
   return (
     <div className={`bg-white ${totalItems > 0 ? 'pb-20' : ''}`}>
-      <Navbar />
 
       {/* HERO SECTION */}
       <section
@@ -904,7 +901,6 @@ export default function HomePage() {
 
       )}
 
-      <Footer />
     </div >
   );
 }

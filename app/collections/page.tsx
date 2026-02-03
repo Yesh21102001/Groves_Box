@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Navbar from '@/src/components/Navbar';
-import Footer from '@/src/components/Footer';
 import { ChevronRight, Star } from 'lucide-react';
 import { products } from '@/src/data/products';
 
@@ -56,7 +54,6 @@ export default function CollectionsPage() {
 
     return (
         <div>
-            <Navbar />
             <div className="min-h-screen bg-white py-8 md:py-12 lg:py-16">
                 <div className="w-full px-4 md:px-6 lg:px-8">
                     <div className="max-w-7xl mx-auto">
@@ -118,7 +115,6 @@ export default function CollectionsPage() {
                     </div>
                 </div>
 
-                <Footer />
             </div>
         </div>
     );

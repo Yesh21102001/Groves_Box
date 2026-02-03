@@ -13,9 +13,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-
-import Navbar from '@/src/components/Navbar';
-import Footer from '@/src/components/Footer';
 import { products, getProductById } from '@/src/data/products';
 import { useCart } from '@/src/context/CartContext';
 import { useWishlist } from '@/src/context/WishlistContext';
@@ -204,11 +201,9 @@ export default function ProductDetailPage() {
     if (loading) {
         return (
             <>
-                <Navbar />
                 <div className="min-h-screen flex items-center justify-center bg-gray-50">
                     <p className="text-lg text-gray-600">Loading product...</p>
                 </div>
-                <Footer />
             </>
         );
     }
@@ -216,14 +211,12 @@ export default function ProductDetailPage() {
     if (!product) {
         return (
             <>
-                <Navbar />
                 {/* <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
                     <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
                     <Link href="/collections" className="text-teal-600 font-semibold">
                         Back to Collections
                     </Link>
                 </div> */}
-                <Footer />
             </>
         );
     }
@@ -236,7 +229,6 @@ export default function ProductDetailPage() {
 
     return (
         <div className={`bg-white ${totalItems > 0 ? 'pb-20' : ''}`}>
-            <Navbar />
 
             {/* BREADCRUMBS */}
             <div className="max-w-7xl mx-auto px-4 py-4">
@@ -518,7 +510,6 @@ export default function ProductDetailPage() {
                 </div>
             )}
 
-            <Footer />
         </div>
     );
 }

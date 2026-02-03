@@ -4,6 +4,8 @@ import "./globals.css";
 import { CartProvider } from "@/src/context/CartContext";
 import { WishlistProvider } from "@/src/context/WishlistContext";
 import CartSidebar from "@/src/components/CartSidebar";
+import Navbar from "@/src/components/Navbar";
+import Footer from "@/src/components/Footer";
 
 const lexend = Lexend({
   variable: "--font-lexend",
@@ -20,12 +22,14 @@ export default function RootLayout({
       <body
         className={`${lexend.variable} antialiased`}
       >
+        <Navbar />
         <WishlistProvider>
           <CartProvider>
             {children}
             <CartSidebar />
           </CartProvider>
         </WishlistProvider>
+        <Footer />
       </body>
     </html>
   );

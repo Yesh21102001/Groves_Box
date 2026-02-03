@@ -3,10 +3,8 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Trash2, Minus, Plus, AlertCircle, Package, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '../Navbar';
 import { products } from '../../data/products';
 import { useCart } from '../../context/CartContext';
-import Footer from '../Footer';
 
 export default function CartPage() {
     const [isGift, setIsGift] = useState(false);
@@ -150,7 +148,6 @@ export default function CartPage() {
 
     return (
         <div className="bg-gray-50 min-h-screen">
-            <Navbar />
 
             <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
                 {/* Back Button */}
@@ -385,7 +382,6 @@ export default function CartPage() {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 }

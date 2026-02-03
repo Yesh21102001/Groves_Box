@@ -97,7 +97,7 @@ export default function Footer() {
                     </button>
                     {openSection === 'policy' && (
                         <ul className="px-6 pb-4 space-y-2.5">
-                            <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Privacy Policy</Link></li>
+                            <li><Link href="/privacy-policy" className="text-sm text-gray-600 hover:text-gray-900">Privacy Policy</Link></li>
                             <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Terms of Service</Link></li>
                             <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Cookie Policy</Link></li>
                             <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Refund Policy</Link></li>
@@ -147,7 +147,7 @@ export default function Footer() {
                         <div>
                             <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
                             <ul className="space-y-2.5">
-                                <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Privacy Policy</Link></li>
+                                <li><Link href="/privacy-policy" className="text-sm text-gray-600 hover:text-gray-900 transition">Privacy Policy</Link></li>
                                 <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Terms of Service</Link></li>
                                 <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Cookie Policy</Link></li>
                                 <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Refund Policy</Link></li>

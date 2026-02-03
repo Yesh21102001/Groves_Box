@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import Navbar from '@/src/components/Navbar';
-import Footer from '@/src/components/Footer';
 import { ChevronLeft, Star, Filter, X, Heart, ShoppingCart, ChevronRight } from 'lucide-react';
 import { products } from '@/src/data/products';
 import { useCart } from '@/src/context/CartContext';
@@ -93,7 +91,6 @@ export default function CollectionDetailPage() {
 
     return (
         <div className={`flex flex-col min-h-screen ${totalItems > 0 ? 'pb-20' : ''}`}>
-            <Navbar />
 
             <main className="flex-1 bg-white py-8 md:py-12 lg:py-16">
                 <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -427,7 +424,6 @@ export default function CollectionDetailPage() {
                 </div>
             )}
 
-            <Footer />
         </div>
     );
 }

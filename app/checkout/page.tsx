@@ -51,7 +51,6 @@ export default function CheckoutPage() {
     if (orderPlaced) {
         return (
             <div>
-                <Navbar />
                 <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 flex items-center justify-center px-4 py-12">
                     <div className="max-w-lg w-full">
                         {/* Success Animation Container */}
@@ -125,14 +124,12 @@ export default function CheckoutPage() {
                         </div>
                     </div>
                 </div>
-                <Footer />
             </div>
         );
     }
 
     return (
         <div>
-            <Navbar />
             <div className="min-h-screen bg-gray-50">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {/* Header */}
@@ -310,7 +307,6 @@ export default function CheckoutPage() {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 }

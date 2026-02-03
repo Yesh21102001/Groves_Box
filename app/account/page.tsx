@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import { LogOut, Edit2, Heart, Package, MapPin, Lock, Bell, Check, Plus, Eye, User, ChevronDown } from 'lucide-react';
-import Navbar from '@/src/components/Navbar';
-import Footer from '@/src/components/Footer';
 
 export default function AccountPage() {
     const [activeTab, setActiveTab] = useState('profile');
@@ -102,7 +100,7 @@ export default function AccountPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Navbar />
+
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12">
                 {/* Header */}
@@ -532,7 +530,6 @@ export default function AccountPage() {
                 </div>
             </div>
 
-            <Footer />
         </div>
     );
 }

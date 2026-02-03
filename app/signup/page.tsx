@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Check } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/src/components/Navbar';
-import Footer from '@/src/components/Footer';
 
 export default function SignUpPage() {
     const [formData, setFormData] = useState({
@@ -73,7 +71,6 @@ export default function SignUpPage() {
 
     return (
         <div>
-            <Navbar />
             <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-20">
                 <div className="w-full max-w-md">
                     {/* Header */}
@@ -169,8 +166,8 @@ export default function SignUpPage() {
                                 {formData.password && (
                                     <div className="mt-2 flex items-center">
                                         <div className={`h-1 w-full rounded ${passwordStrength === 'strong' ? 'bg-green-500' :
-                                                passwordStrength === 'medium' ? 'bg-yellow-500' :
-                                                    'bg-red-500'
+                                            passwordStrength === 'medium' ? 'bg-yellow-500' :
+                                                'bg-red-500'
                                             }`}></div>
                                         <span className="ml-2 text-xs text-gray-600">{passwordStrength}</span>
                                     </div>
@@ -254,7 +251,6 @@ export default function SignUpPage() {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 }

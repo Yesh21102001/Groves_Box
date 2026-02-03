@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/src/components/Navbar';
-import Footer from '@/src/components/Footer';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -37,7 +35,6 @@ export default function LoginPage() {
 
     return (
         <div>
-            <Navbar />
             <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-20">
                 <div className="w-full max-w-md">
                     {/* Header */}
@@ -152,7 +149,6 @@ export default function LoginPage() {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 }

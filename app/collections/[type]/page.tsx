@@ -99,7 +99,7 @@ export default function CollectionDetailPage() {
                 <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
                     {/* BREADCRUMBS */}
                     <div className="py-4">
-                        <nav className="flex items-center justify-center space-x-2 text-sm text-gray-600">
+                        <nav className="flex items-center justify-center  space-x-2 text-sm text-gray-600">
                             <Link href="/" className="hover:text-gray-900">
                                 Home
                             </Link>

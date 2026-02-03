@@ -20,9 +20,9 @@ export default function Navbar() {
 
     const navItems = [
         { name: 'Large Plants', href: '/collections/large-plants' },
-        { name: 'Houseplants', href: '/collections/houseplants', hasArrow: true },
-        { name: 'Outdoor & Patio', href: '/collections/outdoor-patio', hasArrow: true },
-        { name: 'Planters & Care', href: '/collections/planters-care', hasArrow: true },
+        { name: 'Houseplants', href: '/collections/houseplants' },
+        { name: 'Outdoor & Patio', href: '/collections/outdoor-patio' },
+        { name: 'Planters & Care', href: '/collections/planters-care' },
     ];
 
     const handleOpenMenu = () => {
@@ -108,7 +108,6 @@ export default function Navbar() {
                         {/* Right Actions */}
                         <div className="flex items-center gap-3 sm:gap-4">
                             {/* Growing Zone - Desktop Only */}
-
 
                             {/* Heart - Wishlist - Desktop Only */}
                             <Link href="/wishlist" className="hidden lg:block p-2 text-gray-700 hover:text-gray-900 transition-colors">

@@ -55,7 +55,7 @@ export default function Footer() {
                     </button>
                     {openSection === 'customer' && (
                         <ul className="px-6 pb-4 space-y-2.5">
-                            <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">FAQ</Link></li>
+                            <li><Link href="/faq" className="text-sm text-gray-600 hover:text-gray-900">FAQ</Link></li>
                             <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Shipping & Returns</Link></li>
                             <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Track Order</Link></li>
                         </ul>
@@ -126,7 +126,7 @@ export default function Footer() {
                         <div>
                             <h3 className="font-semibold text-gray-900 mb-4">Customer Service</h3>
                             <ul className="space-y-2.5">
-                                <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">FAQ</Link></li>
+                                <li><Link href="/faq" className="text-sm text-gray-600 hover:text-gray-900 transition">FAQ</Link></li>
                                 <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Shipping & Returns</Link></li>
                                 <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Track Order</Link></li>
                             </ul>

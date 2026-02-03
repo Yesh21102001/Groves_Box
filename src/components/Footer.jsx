@@ -76,8 +76,8 @@ export default function Footer() {
                     </button>
                     {openSection === 'company' && (
                         <ul className="px-6 pb-4 space-y-2.5">
-                            <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">About Us</Link></li>
-                            <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Contact Us</Link></li>
+                            <li><Link href="/about-us" className="text-sm text-gray-600 hover:text-gray-900">About Us</Link></li>
+                            <li><Link href="/contact-us" className="text-sm text-gray-600 hover:text-gray-900">Contact Us</Link></li>
                             <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Blog</Link></li>
                         </ul>
                     )}
@@ -98,9 +98,8 @@ export default function Footer() {
                     {openSection === 'policy' && (
                         <ul className="px-6 pb-4 space-y-2.5">
                             <li><Link href="/privacy-policy" className="text-sm text-gray-600 hover:text-gray-900">Privacy Policy</Link></li>
-                            <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Terms of Service</Link></li>
-                            <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Cookie Policy</Link></li>
-                            <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900">Refund Policy</Link></li>
+                            <li><Link href="/terms-service" className="text-sm text-gray-600 hover:text-gray-900">Terms of Service</Link></li>
+                            <li><Link href="/refund-policy" className="text-sm text-gray-600 hover:text-gray-900">Refund Policy</Link></li>
                         </ul>
                     )}
                 </div>
@@ -137,8 +136,8 @@ export default function Footer() {
                         <div>
                             <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
                             <ul className="space-y-2.5">
-                                <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">About Us</Link></li>
-                                <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Contact Us</Link></li>
+                                <li><Link href="/about-us" className="text-sm text-gray-600 hover:text-gray-900 transition">About Us</Link></li>
+                                <li><Link href="/contact-us" className="text-sm text-gray-600 hover:text-gray-900 transition">Contact Us</Link></li>
                                 <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Blog</Link></li>
                             </ul>
                         </div>
@@ -148,9 +147,8 @@ export default function Footer() {
                             <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
                             <ul className="space-y-2.5">
                                 <li><Link href="/privacy-policy" className="text-sm text-gray-600 hover:text-gray-900 transition">Privacy Policy</Link></li>
-                                <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Terms of Service</Link></li>
-                                <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Cookie Policy</Link></li>
-                                <li><Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition">Refund Policy</Link></li>
+                                <li><Link href="/terms-service" className="text-sm text-gray-600 hover:text-gray-900 transition">Terms of Service</Link></li>
+                                <li><Link href="/refund-policy" className="text-sm text-gray-600 hover:text-gray-900 transition">Refund Policy</Link></li>
                             </ul>
                         </div>
 

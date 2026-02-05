@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store } from 'lucide-react';
@@ -9,7 +9,9 @@ export default function Navbar() {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
     const [cartCount, setCartCount] = useState(3);
+    const accountDropdownRef = useRef(null);
 
     // Sample cart items - replace with your actual cart data
     const [cartItems, setCartItems] = useState([
@@ -42,6 +44,10 @@ export default function Navbar() {
         setIsCartOpen(false);
     };
 
+    const toggleAccountDropdown = () => {
+        setIsAccountDropdownOpen(!isAccountDropdownOpen);
+    };
+
     const updateQuantity = (id, newQuantity) => {
         if (newQuantity < 1) return;
         setCartItems(cartItems.map(item =>
@@ -57,6 +63,23 @@ export default function Navbar() {
     const calculateSubtotal = () => {
         return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
     };
+
+    // Close account dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (accountDropdownRef.current && !accountDropdownRef.current.contains(event.target)) {
+                setIsAccountDropdownOpen(false);
+            }
+        };
+
+        if (isAccountDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isAccountDropdownOpen]);
 
     // Prevent scroll when menu or cart is open
     useEffect(() => {
@@ -107,17 +130,53 @@ export default function Navbar() {
 
                         {/* Right Actions */}
                         <div className="flex items-center gap-3 sm:gap-4">
-                            {/* Growing Zone - Desktop Only */}
-
                             {/* Heart - Wishlist - Desktop Only */}
                             <Link href="/wishlist" className="hidden lg:block p-2 text-gray-700 hover:text-gray-900 transition-colors">
                                 <Heart size={22} />
                             </Link>
 
-                            {/* User Account - Desktop Only */}
-                            <Link href="/account" className="hidden lg:block p-2 text-gray-700 hover:text-gray-900 transition-colors">
-                                <User size={22} />
-                            </Link>
+                            {/* User Account Dropdown - Desktop Only */}
+                            <div className="hidden lg:block relative group" ref={accountDropdownRef}>
+                                <button className="p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                                    <User size={22} />
+                                </button>
+
+                                <div
+                                    className="
+            absolute right-0 mt-2
+            w-64
+            bg-white
+            rounded-lg
+            shadow-lg
+            border border-gray-200
+            py-2
+            z-50
+
+            whitespace-nowrap
+            opacity-0 invisible translate-y-1
+            group-hover:opacity-100
+            group-hover:visible
+            group-hover:translate-y-0
+            transition-all duration-200
+        "
+                                >
+                                    <Link
+                                        href="/login"
+                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                                    >
+                                        Log In
+                                    </Link>
+
+                                    <Link
+                                        href="/signup"
+                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                                    >
+                                        Sign Up
+                                    </Link>
+                                </div>
+                            </div>
+
+
 
                             {/* Shopping Cart with badge */}
                             <button
@@ -267,7 +326,6 @@ export default function Navbar() {
                                             }}
                                         >
                                             <span className="text-white text-sm text-center px-2 relative z-10">
-
                                                 Large Plants
                                             </span>
                                         </div>
@@ -296,7 +354,6 @@ export default function Navbar() {
                                             }}
                                         >
                                             <span className="text-white text-sm text-center px-2 relative z-10">
-
                                                 Houseplants
                                             </span>
                                         </div>
@@ -325,7 +382,6 @@ export default function Navbar() {
                                             }}
                                         >
                                             <span className="text-white text-sm text-center px-2 relative z-10">
-
                                                 Outdoor & Patio
                                             </span>
                                         </div>
@@ -354,7 +410,6 @@ export default function Navbar() {
                                             }}
                                         >
                                             <span className="text-white text-sm text-center px-2 relative z-10">
-
                                                 Planters & Care
                                             </span>
                                         </div>
@@ -380,18 +435,18 @@ export default function Navbar() {
                     {/* Bottom Actions - Fixed at Bottom */}
                     <div className="border-t border-gray-200 p-4 space-y-3">
                         <Link
-                            href="/account"
+                            href="/login"
                             onClick={handleCloseMenu}
-                            className="block w-full py-3 px-4 bg-black text-white text-center font-semibold rounded-lg hover:bg-black transition-colors"
+                            className="block w-full py-3 px-4 bg-black text-white text-center font-semibold rounded-lg hover:bg-gray-800 transition-colors"
                         >
-                            Log in
+                            Log In
                         </Link>
                         <Link
-                            href="/resources"
+                            href="/signup"
                             onClick={handleCloseMenu}
-                            className="block w-full py-3 px-4 border-2 border-black text-black text-center font-semibold rounded-lg hover:bg-green-50 transition-colors"
+                            className="block w-full py-3 px-4 border-2 border-black text-black text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors"
                         >
-                            Resources
+                            Sign Up
                         </Link>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import { WishlistProvider } from "@/src/context/WishlistContext";
 import CartSidebar from "@/src/components/CartSidebar";
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
+import LoginPage from "./login/page";
 
 const lexend = Lexend({
   variable: "--font-lexend",

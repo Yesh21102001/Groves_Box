@@ -220,11 +220,11 @@ export default function SignUpPage() {
                                     />
                                     <span className="ml-2 text-sm text-gray-600">
                                         I agree to the{' '}
-                                        <Link href="#" className="text-teal-600 hover:text-teal-700 font-semibold">
+                                        <Link href="#" className="text-black font-semibold">
                                             Terms of Service
                                         </Link>{' '}
                                         and{' '}
-                                        <Link href="#" className="text-teal-600 hover:text-teal-700 font-semibold">
+                                        <Link href="#" className="text-black font-semibold">
                                             Privacy Policy
                                         </Link>
                                     </span>
@@ -235,7 +235,7 @@ export default function SignUpPage() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full bg-black text-white py-3 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isLoading ? 'Creating Account...' : 'Create Account'}
                             </button>
@@ -244,7 +244,7 @@ export default function SignUpPage() {
                         {/* Sign In Link */}
                         <p className="text-center text-gray-600 mt-8">
                             Already have an account?{' '}
-                            <Link href="/login" className="text-teal-600 hover:text-teal-700 font-semibold">
+                            <Link href="/login" className="text-black font-semibold">
                                 Sign in
                             </Link>
                         </p>

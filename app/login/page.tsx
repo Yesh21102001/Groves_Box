@@ -104,7 +104,7 @@ export default function LoginPage() {
                                     />
                                     <span className="ml-2 text-sm text-gray-600">Remember me</span>
                                 </label>
-                                <Link href="#" className="text-sm text-teal-600 hover:text-teal-700">
+                                <Link href="#" className="text-sm text-black">
                                     Forgot password?
                                 </Link>
                             </div>
@@ -113,36 +113,36 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full bg-black text-white py-3 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isLoading ? 'Signing in...' : 'Sign In'}
                             </button>
                         </form>
 
                         {/* Divider */}
-                        <div className="my-6 relative">
+                        {/* <div className="my-6 relative">
                             <div className="absolute inset-0 flex items-center">
                                 <div className="w-full border-t border-gray-300"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
                                 <span className="px-2 bg-white text-gray-500">Or continue with</span>
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Social Login */}
-                        <div className="grid grid-cols-2 gap-4">
+                        {/* <div className="grid grid-cols-2 gap-4">
                             <button className="flex items-center justify-center py-3 border border-gray-300 rounded-lg hover:border-gray-400 transition">
                                 <span className="text-xl">👍</span>
                             </button>
                             <button className="flex items-center justify-center py-3 border border-gray-300 rounded-lg hover:border-gray-400 transition">
                                 <span className="text-xl">🍎</span>
                             </button>
-                        </div>
+                        </div> */}
 
                         {/* Sign Up Link */}
                         <p className="text-center text-gray-600 mt-8">
                             Don't have an account?{' '}
-                            <Link href="/signup" className="text-teal-600 hover:text-teal-700 font-semibold">
+                            <Link href="/signup" className="text-black font-semibold">
                                 Sign up
                             </Link>
                         </p>

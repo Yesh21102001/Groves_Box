@@ -245,7 +245,7 @@ export default function ProductDetailPage() {
 
                     <ChevronRight className="w-4 h-4" />
 
-                    <span className="text-gray-900 font-medium">
+                    <span className="text-[#2F4F3E] font-medium">
                         {product.name}
                     </span>
                 </nav>
@@ -306,7 +306,7 @@ export default function ProductDetailPage() {
 
                     {/* RIGHT */}
                     <div className="space-y-6">
-                        <h1 className="text-4xl font-light">{product.name}</h1>
+                        <h1 className="text-xl md:text-2xl lg:text-3xl 2xl:text-4xl font-semibold text-[#2F4F3E]">{product.name}</h1>
 
                         <div className="flex items-center gap-2">
                             <div className="flex text-yellow-400">
@@ -320,7 +320,7 @@ export default function ProductDetailPage() {
                         </div>
 
                         <div className="flex gap-4 items-end">
-                            <span className="text-3xl font-semibold">${product.price}</span>
+                            <span className="text-3xl text-[#2F4F3E] font-semibold">${product.price}</span>
                             {product.originalPrice && (
                                 <span className="line-through text-gray-400">
                                     ${product.originalPrice}
@@ -341,8 +341,8 @@ export default function ProductDetailPage() {
                                             className={`
             px-4 py-2 rounded-lg border transition-all duration-200
             ${selectedSize === size
-                                                    ? 'bg-black text-white border-black'
-                                                    : 'border-gray-300 text-black  hover:border-black'
+                                                    ? 'bg-[#244033] text-white border-[#244033]'
+                                                    : 'border-[#244033] text-[#244033]'
                                                 }
           `}
                                         >
@@ -364,8 +364,8 @@ export default function ProductDetailPage() {
                                             key={color}
                                             onClick={() => setSelectedColor(color)}
                                             className={`px-4 py-2 rounded-lg border ${selectedColor === color
-                                                ? 'bg-black text-white border-black'
-                                                : 'border-gray-300 text-black  hover:border-black'
+                                                ? 'bg-[#244033] text-white border-[#244033]'
+                                                : 'border-[#244033] text-[#244033]'
                                                 }`}
                                         >
                                             {color}
@@ -379,14 +379,14 @@ export default function ProductDetailPage() {
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="px-3 py-1 bg-gray-100 rounded"
+                                className="px-3 py-1 bg-[#F0F4F1] rounded"
                             >
                                 −
                             </button>
                             <span>{quantity}</span>
                             <button
                                 onClick={() => setQuantity(quantity + 1)}
-                                className="px-3 py-1 bg-gray-100 rounded"
+                                className="px-3 py-1 bg-[#F0F4F1] rounded"
                             >
                                 +
                             </button>
@@ -395,7 +395,7 @@ export default function ProductDetailPage() {
                         <div className="flex gap-3">
                             <button
                                 onClick={handleAddToCart}
-                                className="flex-1 bg-black text-white py-4 rounded-lg flex justify-center items-center gap-2"
+                                className="flex-1 bg-[#244033] text-white py-4 rounded-lg flex justify-center items-center gap-2"
                             >
                                 <ShoppingCart className="w-5 h-5" />
                                 Add to Cart
@@ -475,7 +475,7 @@ export default function ProductDetailPage() {
                 {/* RELATED */}
                 {relatedProducts.length > 0 && (
                     <div className="mt-16">
-                        <h2 className="text-2xl font-semibold mb-6">
+                        <h2 className="text-2xl text-[#2F4F3E] font-semibold mb-6">
                             You May Also Like
                         </h2>
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

@@ -269,7 +269,7 @@ export default function HomePage() {
               e.stopPropagation();
               handleAddToCart(product);
             }}
-            className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+            className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
           >
             <ShoppingCart size={18} />
           </button>
@@ -281,7 +281,7 @@ export default function HomePage() {
               e.stopPropagation();
               handleAddToCart(product);
             }}
-            className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+            className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
             <ShoppingCart size={16} />
             Quick Add
@@ -389,7 +389,7 @@ export default function HomePage() {
               <Link
                 href="/collections"
                 className="
-          bg-black text-white
+          bg-[#244033] text-white
           px-4 sm:px-8 lg:px-10
           py-2.5 sm:py-3 lg:py-4
           text-xs sm:text-base
@@ -408,7 +408,7 @@ export default function HomePage() {
           py-2.5 sm:py-3 lg:py-4
           text-xs sm:text-base
           font-medium
-          hover:bg-black hover:text-white
+          hover:bg-[#244033] hover:text-white
           transition
         "
               >
@@ -422,7 +422,7 @@ export default function HomePage() {
 
 
       {/* FEATURES SECTION */}
-      <section className="w-full bg-[#f5f5f0] py-16 md:py-20">
+      <section className="w-full bg-[#F0F4F1] py-16 md:py-20">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-12">
             {features.map((feature, index) => {
@@ -430,9 +430,9 @@ export default function HomePage() {
               return (
                 <div key={index} className="flex flex-col items-center text-center">
                   <div className="mb-4">
-                    <Icon className="w-10 h-10 text-gray-800" strokeWidth={1.5} />
+                    <Icon className="w-10 h-10 text-[#2F4F3E]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-l font-semibold text-gray-900 mb-4">
+                  <h3 className="text-l font-semibold text-[#2F4F3E] mb-4">
                     {feature.title}
                   </h3>
                   <p className="text-gray-600 leading-relaxed max-w-s">
@@ -452,13 +452,13 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
               Our Most Popular Plants
             </h2>
 
             <Link
               href="/collections"
-              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
+              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
             >
               <span>View All</span>
               <ArrowRight
@@ -511,7 +511,7 @@ export default function HomePage() {
                 handleAddToCart(quickView);
                 setQuickView(null);
               }}
-              className="w-full bg-black text-white py-3"
+              className="w-full bg-[#244033] text-white py-3"
             >
               Add to Cart — ${quickView.price}
             </button>
@@ -521,7 +521,7 @@ export default function HomePage() {
 
 
       {/* HELP SECTION */}
-      <section className="w-full px-4 sm:px-6 lg:px-12 py-20 lg:py-28 bg-[#fafaf8]">
+      <section className="w-full px-4 sm:px-6 lg:px-12 py-20 lg:py-28 bg-[#F0F4F1]">
         <div className="max-w-[1400px] mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
@@ -531,7 +531,7 @@ export default function HomePage() {
                 Speak to a Plant Specialist
               </p>
 
-              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
                 Need Help?
               </h2>
 
@@ -547,8 +547,8 @@ export default function HomePage() {
 
               {/* CHAT */}
               <div className="bg-white text-center p-10">
-                <MessageSquare size={36} className="mx-auto mb-6 text-black" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <MessageSquare size={36} className="mx-auto mb-6 text-[#2F4F3E]" />
+                <h3 className="text-lg font-medium text-[#2F4F3E] mb-2">
                   Chat
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -558,8 +558,8 @@ export default function HomePage() {
 
               {/* CALL */}
               <div className="bg-white text-center p-10">
-                <Phone size={36} className="mx-auto mb-6 text-black" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <Phone size={36} className="mx-auto mb-6 text-[#2F4F3E]" />
+                <h3 className="text-lg font-medium text-[#2F4F3E] mb-2">
                   Call
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -569,8 +569,8 @@ export default function HomePage() {
 
               {/* EMAIL */}
               <div className="bg-white text-center p-10">
-                <Mail size={36} className="mx-auto mb-6 text-black" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <Mail size={36} className="mx-auto mb-6 text-[#2F4F3E]" />
+                <h3 className="text-lg font-medium text-[#2F4F3E] mb-2">
                   Email
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -589,14 +589,14 @@ export default function HomePage() {
           <div className="max-w-[1600px] mx-auto">
             {/* Section Header with View All Button - Side by Side on Mobile */}
             <div className="flex items-center justify-between gap-3 mb-8 md:mb-10 lg:mb-12 xl:mb-14">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
                 Plants For Everyone
               </h2>
 
               {/* View All Button - Compact on Mobile */}
               <Link
                 href="/collections"
-                className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
+                className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
               >
                 <span>View All</span>
                 <ArrowRight
@@ -649,13 +649,13 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
               Large Floor Plants
             </h2>
 
             <Link
               href="/collections"
-              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
+              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
             >
               <span>View All</span>
               <ArrowRight
@@ -685,13 +685,13 @@ export default function HomePage() {
 
           {/* Heading */}
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
+            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
               New Arrivals
             </h2>
 
             <Link
               href="/products"
-              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-black text-black font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-black hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
+              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
             >
               <span>View All</span>
               <ArrowRight
@@ -715,12 +715,12 @@ export default function HomePage() {
 
 
       {/* WORKSHOPS & BLOG */}
-      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-12 sm:py-16 md:py-20 lg:py-24 bg-gray-50">
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-12 sm:py-16 md:py-20 lg:py-24 bg-[#F0F4F1]">
         <div className="max-w-[1600px] mx-auto">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-8 md:mb-12 lg:mb-16">
             <div>
-              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
                 Plant Care & Workshops
               </h2>
               <p className="text-base sm:text-l md:text-l lg:text-l text-gray-600 max-w-2xl">
@@ -758,7 +758,7 @@ export default function HomePage() {
 
                 {/* Content */}
                 <div className="p-5 md:p-6 lg:p-7">
-                  <h3 className="text-xl md:text-xl lg:text-xl font-sans font-normal text-gray-900 mb-3 md:mb-4 leading-tight group-hover:text-gray-700 transition-colors">
+                  <h3 className="text-xl md:text-xl lg:text-xl  font-normal text-[#2F4F3E] font-bold mb-3 md:mb-4 leading-tight group-hover:text-gray-700 transition-colors">
                     {workshop.title}
                   </h3>
                   <p className="text-sm md:text-base lg:text-l text-gray-600 leading-relaxed">
@@ -777,14 +777,14 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-12">
-            <p className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-gray-900">What our customers are saying</p>
+            <p className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">What our customers are saying</p>
           </div>
 
           {/* Slider Container */}
           <div className="relative">
             <div className="flex flex-col md:flex-row gap-0 overflow-hidden h-auto md:h-[500px]">
               {/* Left Container - Text */}
-              <div className="w-full md:w-1/5 md:min-w-[200px] bg-gray-100 flex items-center justify-center p-6 md:p-8 relative min-h-[150px] md:min-h-0 md:h-full">
+              <div className="w-full md:w-1/5 md:min-w-[200px] bg-[#F0F4F1] flex items-center justify-center p-6 md:p-8 relative min-h-[150px] md:min-h-0 md:h-full">
                 <div className="relative w-full h-full flex items-center">
                   {testimonials.map((testimonial, index) => (
                     <div
@@ -830,7 +830,7 @@ export default function HomePage() {
                   className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
                   aria-label="Previous slide"
                 >
-                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
+                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
                 </button>
 
                 <button
@@ -838,7 +838,7 @@ export default function HomePage() {
                   className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
                   aria-label="Next slide"
                 >
-                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
+                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
                 </button>
               </div>
             </div>
@@ -873,12 +873,12 @@ export default function HomePage() {
     sm:bottom-0              /* desktop */
 
     p-5 rounded-[20px]
-    sm:p-4 sm:rounded-none
+    sm:p-4 sm:rounded-none bg-[#F0F4F1]
   "
         >
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+              <div className="bg-[#244033] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                 {totalItems}
               </div>
               <div>
@@ -891,7 +891,7 @@ export default function HomePage() {
 
             <Link
               href="/cart"
-              className="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+              className="bg-[#244033] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#2F4F3E] transition"
             >
               View Cart
             </Link>

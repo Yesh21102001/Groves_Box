@@ -95,7 +95,7 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+            <nav className="bg-[#F0F4F1] border-b border-gray-200 sticky top-0 z-40">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Top section with logo, search and icons */}
                     <div className="flex items-center justify-between h-16 lg:h-20">
@@ -109,7 +109,7 @@ export default function Navbar() {
 
                         {/* Logo */}
                         <Link href="/" className="flex-shrink-0">
-                            <div className="text-2xl md:text-3xl font-bold text-black flex items-center gap-2">
+                            <div className="text-2xl md:text-3xl font-bold text-[#2F4F3E] flex items-center gap-2">
                                 <span className="text-3xl md:text-4xl">🌿</span>
                                 <span className="hidden sm:inline">Groves Box</span>
                                 <span className="sm:hidden">GB</span>
@@ -122,7 +122,7 @@ export default function Navbar() {
                                 <input
                                     type="text"
                                     placeholder="Search plants, planters, and more..."
-                                    className="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                                    className="w-full px-4 py-2.5 pl-10  border border-[#2F4F3E]-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent"
                                 />
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                             </div>
@@ -185,7 +185,7 @@ export default function Navbar() {
                             >
                                 <ShoppingCart size={22} />
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-black text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    <span className="absolute -top-1 -right-1 bg-[#244033] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                         {cartCount}
                                     </span>
                                 )}
@@ -286,7 +286,7 @@ export default function Navbar() {
                 >
                     {/* Sidebar Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                        <div className="text-2xl font-bold text-black flex items-center gap-2">
+                        <div className="text-2xl font-bold text-[#2F4F3E] flex items-center gap-2">
                             <span className="text-3xl">🌿</span>
                             Groves Box
                         </div>
@@ -302,7 +302,7 @@ export default function Navbar() {
                     <div className="flex-1 overflow-y-auto">
                         {/* Collections Section */}
                         <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-4 text-gray-900">Collections</h3>
+                            <h3 className="text-lg font-semibold mb-4 text-[#2F4F3E]">Collections</h3>
                             <div className="grid grid-cols-2 gap-3">
                                 {/* Large Plants - Arch shape */}
                                 <Link
@@ -437,14 +437,14 @@ export default function Navbar() {
                         <Link
                             href="/login"
                             onClick={handleCloseMenu}
-                            className="block w-full py-3 px-4 bg-black text-white text-center font-semibold rounded-lg hover:bg-gray-800 transition-colors"
+                            className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-gray-800 transition-colors"
                         >
                             Log In
                         </Link>
                         <Link
                             href="/signup"
                             onClick={handleCloseMenu}
-                            className="block w-full py-3 px-4 border-2 border-black text-black text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+                            className="block w-full py-3 px-4 border-2 border-[#244033] text-[#244033] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors"
                         >
                             Sign Up
                         </Link>
@@ -468,7 +468,7 @@ export default function Navbar() {
                 >
                     {/* Cart Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                        <h2 className="text-xl font-bold text-gray-900">Shopping Cart ({cartCount})</h2>
+                        <h2 className="text-xl font-bold text-[#2F4F3E]">Shopping Cart ({cartCount})</h2>
                         <button
                             onClick={handleCloseCart}
                             className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -482,10 +482,10 @@ export default function Navbar() {
                         {cartItems.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-center">
                                 <ShoppingCart size={64} className="text-gray-300 mb-4" />
-                                <p className="text-gray-500 mb-4">Your cart is empty</p>
+                                <p className="text-[#2F4F3E]-500 mb-4">Your cart is empty</p>
                                 <button
                                     onClick={handleCloseCart}
-                                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-black transition-colors"
+                                    className="px-6 py-2 bg-[#244033] text-white rounded-lg hover:bg-[#2F4F3E] transition-colors"
                                 >
                                     Continue Shopping
                                 </button>
@@ -503,9 +503,9 @@ export default function Navbar() {
 
                                         {/* Product Details */}
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="font-semibold text-gray-900 truncate">{item.name}</h3>
+                                            <h3 className="font-semibold text-[#2F4F3E] truncate">{item.name}</h3>
                                             <p className="text-sm text-gray-500">Size: {item.size}</p>
-                                            <p className="text-black font-semibold mt-1">${item.price.toFixed(2)}</p>
+                                            <p className="text-[#2F4F3E] font-semibold mt-1">${item.price.toFixed(2)}</p>
 
                                             {/* Quantity Controls */}
                                             <div className="flex items-center gap-2 mt-2">
@@ -543,8 +543,8 @@ export default function Navbar() {
                         <div className="border-t border-gray-200 p-4 space-y-4">
                             {/* Subtotal */}
                             <div className="flex justify-between items-center">
-                                <span className="text-lg font-semibold text-gray-900">Subtotal</span>
-                                <span className="text-2xl font-bold text-black">${calculateSubtotal()}</span>
+                                <span className="text-lg font-semibold text-[#2F4F3E]">Subtotal</span>
+                                <span className="text-2xl font-bold text-[#2F4F3E]">${calculateSubtotal()}</span>
                             </div>
                             <p className="text-sm text-gray-500">Shipping and taxes calculated at checkout</p>
 
@@ -552,13 +552,13 @@ export default function Navbar() {
                             <button
                                 onClick={handleCloseCart}
                                 href="/cart"
-                                className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-black-700 transition-colors"
+                                className="w-full py-3 bg-[#244033] text-white font-semibold rounded-lg hover:bg-black-700 transition-colors"
                             >
                                 View Cart
                             </button>
                             <button
                                 onClick={handleCloseCart}
-                                className="w-full py-3 border-2 border-black text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                                className="w-full py-3 border-2 border-[#244033] text-[#244033] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
                             >
                                 Continue Shopping
                             </button>

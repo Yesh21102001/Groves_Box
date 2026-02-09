@@ -58,7 +58,7 @@ export default function ProductsPage() {
                     {/* Wishlist Icon - Top Right */}
                     <button
                         onClick={() => setIsWishlisted(!isWishlisted)}
-                        className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+                        className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
                     >
                         <Heart
                             size={18}
@@ -70,7 +70,7 @@ export default function ProductsPage() {
                     {/* Mobile: Small circular button bottom-right, always visible */}
                     <button
                         onClick={() => handleAddToCart(product)}
-                        className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+                        className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
                     >
                         <ShoppingCart size={18} />
                     </button>
@@ -78,7 +78,7 @@ export default function ProductsPage() {
                     {/* Desktop: Full button at bottom on hover */}
                     <button
                         onClick={() => handleAddToCart(product)}
-                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                     >
                         <ShoppingCart size={16} />
                         Quick Add
@@ -102,7 +102,7 @@ export default function ProductsPage() {
                 </p>
 
                 <div className="flex items-center gap-2 text-sm">
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-[#244033]">
                         From ${product.price}
                     </span>
 
@@ -146,17 +146,17 @@ export default function ProductsPage() {
                         {/* BREADCRUMBS */}
                         <div className="py-4">
                             <nav className="flex items-center justify-center  space-x-2 text-sm text-gray-600">
-                                <Link href="/" className="hover:text-gray-900">
+                                <Link href="/" className="hover:text-[#2F4F3E]">
                                     Home
                                 </Link>
                                 <ChevronRight className="w-4 h-4" />
-                                <span className="text-gray-900 font-medium">Products</span>
+                                <span className="text-[#2F4F3E] font-medium">Products</span>
                             </nav>
                         </div>
 
                         {/* Header */}
                         <div className="mb-12 md:mb-16">
-                            <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-lexend font-semibold text-gray-900 mb-4">
+                            <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-lexend font-semibold text-[#2F4F3E] mb-4">
                                 All Products
                             </h1>
 
@@ -168,7 +168,7 @@ export default function ProductsPage() {
                         <div className="mb-8">
                             <button
                                 onClick={() => setShowFiltersSidebar(true)}
-                                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-md text-gray-900 hover:bg-gray-50 transition font-medium"
+                                className="inline-flex items-center gap-2 px-6 py-3 border border-[#244033] rounded-md text-[#244033] hover:bg-[#2F4F3E] hover:text-white transition font-medium"
                             >
                                 <Filter size={20} />
                                 Filter and sort

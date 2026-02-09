@@ -253,7 +253,7 @@ export default function HomePage() {
               e.stopPropagation();
               setIsWishlisted(!isWishlisted);
             }}
-            className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+            className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
           >
             <Heart
               size={18}

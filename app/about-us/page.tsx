@@ -43,7 +43,7 @@ export default function AboutUs() {
                 <div className="flex items-center justify-center px-6 sm:px-8 lg:px-16 xl:px-24 py-16 lg:py-24 order-2 lg:order-2 bg-gradient-to-br from-gray-50 via-white to-gray-50">
                     <div className="max-w-xl">
 
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-light text-gray-900 leading-tight mb-8">
+                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2F4F3E] leading-tight mb-8">
                             We believe Plants Make People Happy
                             <sup className="text-2xl lg:text-3xl">®</sup>
                         </h1>
@@ -103,7 +103,7 @@ export default function AboutUs() {
                     {/* Founder's Note */}
                     <div className="prose prose-lg max-w-none">
 
-                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-gray-900 mb-12">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-[#2F4F3E] mb-12">
                             A Note from Our Founder
                         </h2>
 
@@ -151,9 +151,9 @@ export default function AboutUs() {
             </section>
 
             {/* Optional CTA Section */}
-            <section className="py-20 px-6 sm:px-8 lg:px-16 bg-gray-100 text-white">
+            <section className="py-20 px-6 sm:px-8 lg:px-16 bg-[#F0F4F1] text-white">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black mb-6 text-gray-900">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black mb-6 text-[#2F4F3E]">
                         Ready to start your plant journey?
                     </h2>
 
@@ -164,7 +164,7 @@ export default function AboutUs() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Link
                             href="/"
-                            className="bg-black text-white  px-8 py-4 rounded-lg font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5 w-full sm:w-auto inline-block text-center"
+                            className="bg-[#244033] text-white  px-8 py-4 rounded-lg font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5 w-full sm:w-auto inline-block text-center"
                         >
                             Shop Plants
                         </Link>

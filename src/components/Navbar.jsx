@@ -202,7 +202,7 @@ export default function Navbar() {
                                     key={item.name}
                                     href={item.href}
                                     className={`flex items-center gap-1 px-4 py-1.5 rounded-full font-medium transition-all duration-200 ${isActive
-                                        ? 'bg-black text-white'
+                                        ? 'bg-[#244033] text-white'
                                         : 'text-gray-700 hover:bg-gray-100'
                                         }`}
                                 >

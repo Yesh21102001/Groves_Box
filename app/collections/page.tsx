@@ -60,17 +60,17 @@ export default function CollectionsPage() {
                         {/* BREADCRUMBS */}
                         <div className="py-4">
                             <nav className="flex items-center justify-center  space-x-2 text-sm text-gray-600">
-                                <Link href="/" className="hover:text-gray-900">
+                                <Link href="/" className="hover:text-[#2F4F3E]">
                                     Home
                                 </Link>
                                 <ChevronRight className="w-4 h-4" />
-                                <span className="text-gray-900 font-medium">Collections</span>
+                                <span className="text-[#2F4F3E] font-medium">Collections</span>
                             </nav>
                         </div>
 
                         {/* Header */}
                         <div className=" md:mb-12 lg:mb-16">
-                            <h1 className="font-sans font-light text-[#2a2d24] text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl leading-tight sm:mb-4">
+                            <h1 className="font-sans font-light text-[#2F4F3E] text-3xl sm:text-3xl lg:text-3xl 2xl:text-5xl leading-tight sm:mb-4">
                                 Collections
                             </h1>
                             <p className="text-gray-600 text-base md:text-l lg:text-l">

@@ -1,32 +1,79 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Filter, X, Heart, ShoppingCart, ChevronRight } from 'lucide-react';
-import { products } from '@/src/data/products';
 import { useCart } from '@/src/context/CartContext';
+import { getProducts, getNewArrivals } from '@/src/lib/shopify_utilis';
+import { useSearchParams } from 'next/navigation';
 
 interface Product {
     id: string;
     name: string;
     price: number;
     originalPrice?: number;
-    rating: number;
-    reviews: number;
     description: string;
     image: string;
     badge?: string;
     badgeColor?: string;
+    handle: string;
+    tags?: string[];
 }
 
 export default function ProductsPage() {
+    const searchParams = useSearchParams();
+    const filterParam = searchParams.get('filter'); // Get 'filter' from URL
+
     const [showFiltersSidebar, setShowFiltersSidebar] = useState(false);
     const [sortBy, setSortBy] = useState('popular');
-    const [priceRange, setPriceRange] = useState([0, 200]);
+    const [priceRange, setPriceRange] = useState([0, 500]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const { addToCart, cartItems } = useCart();
 
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    // Determine if showing new arrivals
+    const isShowingNewArrivals = filterParam === 'new';
+
+    // Fetch products from Shopify
+    useEffect(() => {
+        async function fetchAllProducts() {
+            try {
+                setLoading(true);
+                setError(null);
+
+                let productsData;
+
+                // If filter=new, fetch only new arrivals
+                if (isShowingNewArrivals) {
+                    productsData = await getNewArrivals(100); // Fetch all new arrivals
+                } else {
+                    productsData = await getProducts(100); // Fetch all products
+                }
+
+                setProducts(productsData);
+
+                // Update price range based on actual products
+                if (productsData.length > 0) {
+                    const prices = productsData.map(p => p.price);
+                    const maxPrice = Math.max(...prices);
+                    setPriceRange([0, Math.ceil(maxPrice / 100) * 100]); // Round up to nearest 100
+                }
+
+            } catch (err) {
+                console.error('Error fetching products:', err);
+                setError(err instanceof Error ? err.message : 'Failed to load products');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchAllProducts();
+    }, [isShowingNewArrivals]); // Re-fetch when filter changes
 
     const handleAddToCart = (product: Product) => {
         addToCart({
@@ -57,7 +104,11 @@ export default function ProductsPage() {
 
                     {/* Wishlist Icon - Top Right */}
                     <button
-                        onClick={() => setIsWishlisted(!isWishlisted)}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setIsWishlisted(!isWishlisted);
+                        }}
                         className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
                     >
                         <Heart
@@ -69,7 +120,11 @@ export default function ProductsPage() {
                     {/* Quick Add Button */}
                     {/* Mobile: Small circular button bottom-right, always visible */}
                     <button
-                        onClick={() => handleAddToCart(product)}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                        }}
                         className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
                     >
                         <ShoppingCart size={18} />
@@ -77,7 +132,11 @@ export default function ProductsPage() {
 
                     {/* Desktop: Full button at bottom on hover */}
                     <button
-                        onClick={() => handleAddToCart(product)}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                        }}
                         className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                     >
                         <ShoppingCart size={16} />
@@ -126,17 +185,45 @@ export default function ProductsPage() {
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         if (sortBy === 'price-low') return a.price - b.price;
         if (sortBy === 'price-high') return b.price - a.price;
-        if (sortBy === 'rating') return b.rating - a.rating;
-        if (sortBy === 'newest') return b.id.localeCompare(a.id);
-        return 0;
+        if (sortBy === 'newest') {
+            // Check if products have "new" tag
+            const aIsNew = a.tags?.some(tag => tag.toLowerCase().includes('new'));
+            const bIsNew = b.tags?.some(tag => tag.toLowerCase().includes('new'));
+            if (aIsNew && !bIsNew) return -1;
+            if (!aIsNew && bIsNew) return 1;
+            return 0;
+        }
+        return 0; // Default/popular - keep original order
     });
 
-    // Transform products to match ProductCard format
-    const transformedProducts = sortedProducts.map(product => ({
-        ...product,
-        badge: product.price < 50 ? 'Best Seller' : product.rating >= 4.8 ? 'Top Rated' : undefined,
-        badgeColor: product.price < 50 ? 'bg-gray-800' : product.rating >= 4.8 ? 'bg-green-600' : undefined,
-    }));
+    // Loading state
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading products...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">Error: {error}</p>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="bg-[#244033] text-white px-6 py-3 rounded"
+                    >
+                        Retry
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={`${totalItems > 0 ? 'pb-20' : ''}`}>
@@ -145,24 +232,51 @@ export default function ProductsPage() {
                     <div className="max-w-7xl mx-auto">
                         {/* BREADCRUMBS */}
                         <div className="py-4">
-                            <nav className="flex items-center justify-center  space-x-2 text-sm text-gray-600">
+                            <nav className="flex items-center justify-center space-x-2 text-sm text-gray-600">
                                 <Link href="/" className="hover:text-[#2F4F3E]">
                                     Home
                                 </Link>
                                 <ChevronRight className="w-4 h-4" />
-                                <span className="text-[#2F4F3E] font-medium">Products</span>
+                                <Link href="/products" className="hover:text-[#2F4F3E]">
+                                    Products
+                                </Link>
+                                {isShowingNewArrivals && (
+                                    <>
+                                        <ChevronRight className="w-4 h-4" />
+                                        <span className="text-[#2F4F3E] font-medium">New Arrivals</span>
+                                    </>
+                                )}
+                                {!isShowingNewArrivals && (
+                                    <>
+                                        <ChevronRight className="w-4 h-4" />
+                                        <span className="text-[#2F4F3E] font-medium">All Products</span>
+                                    </>
+                                )}
                             </nav>
                         </div>
 
                         {/* Header */}
                         <div className="mb-12 md:mb-16">
                             <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-lexend font-semibold text-[#2F4F3E] mb-4">
-                                All Products
+                                {isShowingNewArrivals ? 'New Arrivals' : 'All Products'}
                             </h1>
 
                             <p className="text-gray-600 text-base md:text-l lg:text-l">
-                                Explore our complete collection of beautiful plants and find your favorites.
+                                {isShowingNewArrivals
+                                    ? 'Check out our latest additions to the collection.'
+                                    : 'Explore our complete collection of beautiful plants and find your favorites.'
+                                }
                             </p>
+
+                            {/* Show "View All Products" link when filtering */}
+                            {isShowingNewArrivals && (
+                                <Link
+                                    href="/products"
+                                    className="inline-block mt-4 text-[#244033] hover:text-[#2F4F3E] font-medium underline"
+                                >
+                                    View All Products
+                                </Link>
+                            )}
                         </div>
 
                         <div className="mb-8">
@@ -221,7 +335,6 @@ export default function ProductsPage() {
                                         <option value="newest">Newest</option>
                                         <option value="price-low">Price: Low to High</option>
                                         <option value="price-high">Price: High to Low</option>
-                                        <option value="rating">Highest Rated</option>
                                     </select>
                                 </div>
 
@@ -236,7 +349,7 @@ export default function ProductsPage() {
                                             <input
                                                 type="range"
                                                 min="0"
-                                                max="200"
+                                                max={products.length > 0 ? Math.ceil(Math.max(...products.map(p => p.price)) / 100) * 100 : 500}
                                                 value={priceRange[0]}
                                                 onChange={(e) =>
                                                     setPriceRange([parseInt(e.target.value), priceRange[1]])
@@ -251,7 +364,7 @@ export default function ProductsPage() {
                                             <input
                                                 type="range"
                                                 min="0"
-                                                max="200"
+                                                max={products.length > 0 ? Math.ceil(Math.max(...products.map(p => p.price)) / 100) * 100 : 500}
                                                 value={priceRange[1]}
                                                 onChange={(e) =>
                                                     setPriceRange([priceRange[0], parseInt(e.target.value)])
@@ -296,7 +409,10 @@ export default function ProductsPage() {
                             {/* Sidebar Footer - Sticky */}
                             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6 flex gap-4">
                                 <button
-                                    onClick={() => setPriceRange([0, 200])}
+                                    onClick={() => {
+                                        const maxPrice = products.length > 0 ? Math.ceil(Math.max(...products.map(p => p.price)) / 100) * 100 : 500;
+                                        setPriceRange([0, maxPrice]);
+                                    }}
                                     className="flex-1 text-center text-gray-900 hover:text-gray-600 font-medium text-base"
                                 >
                                     Remove All
@@ -312,12 +428,12 @@ export default function ProductsPage() {
 
                         {/* Products Grid */}
                         <div className="w-full">
-                            {transformedProducts.length > 0 ? (
+                            {sortedProducts.length > 0 ? (
                                 <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-                                    {transformedProducts.map((product) => (
+                                    {sortedProducts.map((product) => (
                                         <Link
                                             key={product.id}
-                                            href={`/products/${product.id}`}
+                                            href={`/products/${product.handle}`}
                                             className="group"
                                         >
                                             <ProductCard product={product} />
@@ -327,11 +443,20 @@ export default function ProductsPage() {
                             ) : (
                                 <div className="text-center py-16 lg:py-24">
                                     <p className="text-gray-600 text-lg lg:text-xl mb-4">
-                                        No products found.
+                                        {isShowingNewArrivals
+                                            ? 'No new arrivals found.'
+                                            : 'No products found in this price range.'
+                                        }
                                     </p>
-                                    <Link href="/" className="text-teal-600 hover:text-teal-700 font-semibold">
-                                        Back to Home
-                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            const maxPrice = products.length > 0 ? Math.ceil(Math.max(...products.map(p => p.price)) / 100) * 100 : 500;
+                                            setPriceRange([0, maxPrice]);
+                                        }}
+                                        className="text-teal-600 hover:text-teal-700 font-semibold"
+                                    >
+                                        Reset Filters
+                                    </button>
                                 </div>
                             )}
                         </div>

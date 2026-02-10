@@ -175,6 +175,72 @@ export async function getNewArrivals(limit = 8) {
   );
 }
 
+export async function getProductsByCollection(
+  handle: string,
+  first = 100
+) {
+  const query = `
+    query getProductsByCollection($handle: String!, $first: Int!) {
+      collectionByHandle(handle: $handle) {
+        title
+        handle
+        products(first: $first) {
+          edges {
+            node {
+              id
+              title
+              handle
+              description
+              tags
+              images(first: 1) {
+                edges {
+                  node {
+                    url
+                  }
+                }
+              }
+              priceRange {
+                minVariantPrice {
+                  amount
+                }
+              }
+              compareAtPriceRange {
+                minVariantPrice {
+                  amount
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  // ✅ FIX IS HERE
+  const data = await shopifyFetch({
+    query,
+    variables: { handle, first }
+  });
+
+  if (!data?.data?.collectionByHandle) return [];
+
+  return data.data.collectionByHandle.products.edges.map(
+    ({ node }: any) => ({
+      id: node.id,
+      name: node.title,
+      handle: node.handle,
+      description: node.description,
+      price: Number(node.priceRange.minVariantPrice.amount),
+      originalPrice: node.compareAtPriceRange?.minVariantPrice?.amount
+        ? Number(node.compareAtPriceRange.minVariantPrice.amount)
+        : null,
+      image: node.images.edges[0]?.node.url || '/placeholder.png',
+      tags: node.tags,
+    })
+  );
+}
+
+
 
 /**
  * Get single product by handle

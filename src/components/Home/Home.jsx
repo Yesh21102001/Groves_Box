@@ -523,6 +523,7 @@ export default function HomePage() {
         </div>
       </section>
 
+
       {/* Categories (Collections from Shopify) */}
       {categories.length > 0 && (
         <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
@@ -583,6 +584,7 @@ export default function HomePage() {
           </div>
         </section>
       )}
+
 
       {/* New Arrivals - Separate Section with its own data */}
       {newArrivals.length > 0 && (
@@ -807,7 +809,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
-
+      
     </div>
   );
 }

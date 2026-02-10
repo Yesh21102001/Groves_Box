@@ -9,6 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@apollo/client": "^4.1.4",
+    "@shopify/hydrogen-react": "^2026.1.0",
+    "@shopify/storefront-api-client": "^1.0.9",
+    "graphql": "^16.12.0",
     "lucide-react": "^0.562.0",
     "next": "16.1.4",
     "react": "19.2.3",

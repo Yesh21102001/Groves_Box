@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingCart, X, ArrowRight, GraduationCap, Users, Shield } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+import { getProducts, getCollections } from "../../lib/shopify_utilis";
 
 /* ------------------ ICON BUTTON ------------------ */
 function IconButton({ icon, onClick }) {
@@ -23,158 +24,18 @@ export default function HomePage() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { cartItems, addToCart } = useCart();
 
+  // State for Shopify data
+  const [products, setProducts] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [workshops, setWorkshops] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  const products = [
-    {
-      id: 1,
-      name: "Money Tree Plant",
-      description: "The OG good-luck tree",
-      price: 39,
-      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/the-sill_Small-Money-Tree_Small_Marcelle-Gold_Variant.jpg",
-      badge: "Best Seller",
-      badgeColor: "bg-gray-800"
-    },
-    {
-      id: 2,
-      name: "Olive Tree",
-      description: "Free gift with purchase",
-      price: 40,
-      originalPrice: 70,
-      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/Olivetree-Isabella_Black_Variant.png",
-      badge: "On Sale",
-      badgeColor: "bg-red-600"
-    },
-    {
-      id: 3,
-      name: "Musa Nono Pink Variegated Banana",
-      description: "Pretty in pink streaks",
-      price: 249,
-      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/PinkBananaMusa-PDP-Wall1.png",
-      badge: "Rare Plant",
-      badgeColor: "bg-purple-600"
-    },
-    {
-      id: 4,
-      name: "Plant Of The Month Club",
-      description: "Use code NEWLEAF10 for $10 off",
-      price: 60,
-      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/small-subscriptions_gift-card.jpg",
-    },
-    {
-      id: 5,
-      name: "Money Tree Plant",
-      description: "The OG good-luck tree",
-      price: 39,
-      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/the-sill_Small-Money-Tree_Small_Marcelle-Gold_Variant.jpg",
-      badge: "Best Seller",
-      badgeColor: "bg-gray-800"
-    },
-    {
-      id: 6,
-      name: "Olive Tree",
-      description: "Free gift with purchase",
-      price: 40,
-      originalPrice: 70,
-      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/Olivetree-Isabella_Black_Variant.png",
-      badge: "On Sale",
-      badgeColor: "bg-red-600"
-    },
-    {
-      id: 7,
-      name: "Musa Nono Pink Variegated Banana",
-      description: "Pretty in pink streaks",
-      price: 249,
-      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/PinkBananaMusa-PDP-Wall1.png",
-      badge: "Rare Plant",
-      badgeColor: "bg-purple-600"
-    },
-    {
-      id: 8,
-      name: "Plant Of The Month Club",
-      description: "Use code NEWLEAF10 for $10 off",
-      price: 60,
-      image: "https://cdn.shopify.com/s/files/1/0150/6262/files/small-subscriptions_gift-card.jpg",
-    }
-  ];
-
-  const testimonials = [
-    {
-      text: "I have ordered several times and each time I get the healthiest, prettiest plants very quickly. I have been extremely satisfied with The Sill.",
-      image: "/images/2151022072.jpg"
-    },
-    {
-      text: "Amazing quality plants! The packaging was perfect and my plants arrived in excellent condition. Highly recommend!",
-      image: "/images/133143.jpg"
-    },
-    {
-      text: "The best plant shopping experience I've ever had. Beautiful selections and wonderful customer service.",
-      image: "/images/2151022100.jpg"
-    },
-    {
-      text: "Love my new plants! They've transformed my living space and bring so much joy every day.",
-      image: "/images/desktop2.png"
-    }
-  ];
-
-  const workshops = [
-    {
-      id: 1,
-      date: 'February 4',
-      image: '/images/Blue_3.webp',
-      title: 'Diagnosing Plant Problems',
-      description: 'Learn how to properly diagnose your plants symptoms early and provide the care when it matters most!',
-      isFree: false,
-      imageAlt: 'Close-up of yellow plant leaves showing potential issues'
-    },
-    {
-      id: 2,
-      date: 'February 11',
-      image: '/images/Green_1 (1).webp',
-      title: 'The Complete Hoya Care Guide',
-      description: 'Master the art of Hoya care! Learn essential tips on light, water, and soil to help your Hoyas thrive and bloom in this hands-on workshop.',
-      isFree: true,
-      imageAlt: 'Pink pots with various Hoya plants'
-    },
-    {
-      id: 3,
-      date: 'February 18',
-      image: '/images/Group_coasters.webp',
-      title: 'Ask An Expert: Mastering Natural Light & Grow Lights',
-      description: 'Join our Lighting AMA! We\'ll start with a lighting crash course, then answer all your specific plant lighting questions.',
-      isFree: true,
-      imageAlt: 'Bright plant-filled room with natural light'
-    }
-  ];
-
-  const categories = [
-    {
-      id: 'houseplants',
-      name: 'Indoor Plants',
-      image: '/images/AAWUweUuuDHmoD_OM_-TeWfUV7bBgPsN7Wj9ZsUlJHeuMO6I57PbwQbdCc6uMRzs049NBp8srPzltOwpp-EGM1p102xPgEhNCDZ0-2jnYAmDY8qxmAoPhOMtoXO3oHDZWMH-dqPuNCwpPbb4xMQj9AYs4hVNXISTBAiZ0O94p9a4ltizDMn1K5m.webp',
-      link: '/collections/houseplants'
-    },
-    {
-      id: 'outdoor-patio',
-      name: 'Outdoor Plants',
-      image: '/images/B_W_5.webp',
-      link: '/collections/outdoor-patio'
-    },
-    {
-      id: 'pet-friendly',
-      name: 'Pet-Friendly Plants',
-      image: '/images/Blue_3.webp',
-      link: '/collections/pet-friendly'
-    },
-    {
-      id: 'easy-care',
-      name: 'Easy-Care Plants',
-      image: '/images/Green_1.webp',
-      link: '/collections/easy-care'
-    },
-  ];
-
+  // Static features data (unlikely to change frequently)
   const features = [
     {
       icon: GraduationCap,
@@ -193,8 +54,56 @@ export default function HomePage() {
     },
   ];
 
+  // Fetch all data on component mount
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    async function fetchAllData() {
+      try {
+        setLoading(true);
+
+        // Fetch products and collections in parallel
+        const [productsData, collectionsData] = await Promise.all([
+          getProducts(8), // Get 8 products
+          getCollections(4) // Get 4 collections
+        ]);
+
+        setProducts(productsData);
+        setCategories(collectionsData);
+
+        // Also fetch testimonials and workshops from JSON files
+        try {
+          const [testimonialsRes, workshopsRes] = await Promise.all([
+            fetch('/data/testimonials.json'),
+            fetch('/data/workshops.json')
+          ]);
+
+          if (testimonialsRes.ok) {
+            const testimonialsData = await testimonialsRes.json();
+            setTestimonials(testimonialsData);
+          }
+
+          if (workshopsRes.ok) {
+            const workshopsData = await workshopsRes.json();
+            setWorkshops(workshopsData);
+          }
+        } catch (jsonError) {
+          console.log('Optional data not available:', jsonError);
+          // These are optional, so we don't set error state
+        }
+
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAllData();
+  }, []);
+
+  // Testimonial slider auto-play
+  useEffect(() => {
+    if (!isAutoPlaying || testimonials.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % testimonials.length);
@@ -234,7 +143,7 @@ export default function HomePage() {
     const [isWishlisted, setIsWishlisted] = useState(false);
 
     return (
-      <Link href={`/products/${product.id}`} className="group block">
+      <Link href={`/products/${product.handle}`} className="group block">
         {/* Image Container */}
         <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
           {/* Badge */}
@@ -318,6 +227,35 @@ export default function HomePage() {
       </Link>
     );
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error loading data: {error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-[#244033] text-white px-6 py-3 rounded"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`bg-white ${totalItems > 0 ? 'pb-20' : ''}`}>
@@ -447,38 +385,38 @@ export default function HomePage() {
 
 
       {/* MOST POPULAR PLANTS */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
-        <div className="max-w-[1600px] mx-auto">
+      {products.length > 0 && (
+        <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+          <div className="max-w-[1600px] mx-auto">
 
-          {/* Heading */}
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
-              Our Most Popular Plants
-            </h2>
+            {/* Heading */}
+            <div className="flex justify-between items-center mb-12">
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
+                Our Most Popular Plants
+              </h2>
 
-            <Link
-              href="/collections"
-              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
-            >
-              <span>View All</span>
-              <ArrowRight
-                size={16}
-                className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
-              />
-            </Link>
+              <Link
+                href="/collections"
+                className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
+              >
+                <span>View All</span>
+                <ArrowRight
+                  size={16}
+                  className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
+                />
+              </Link>
+            </div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+              {products.slice(0, 8).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
           </div>
-
-          {/* Products Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-
-          {/* Mobile CTA */}
-
-        </div>
-      </section>
+        </section>
+      )}
 
 
       {/* QUICK VIEW MODAL */}
@@ -583,283 +521,218 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
-        <div className="w-full px-4 md:px-6 lg:px-8">
-          <div className="max-w-[1600px] mx-auto">
-            {/* Section Header with View All Button - Side by Side on Mobile */}
-            <div className="flex items-center justify-between gap-3 mb-8 md:mb-10 lg:mb-12 xl:mb-14">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
-                Plants For Everyone
-              </h2>
+      {/* Categories (Collections from Shopify) */}
+      {categories.length > 0 && (
+        <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+          <div className="w-full px-4 md:px-6 lg:px-8">
+            <div className="max-w-[1600px] mx-auto">
+              {/* Section Header with View All Button - Side by Side on Mobile */}
+              <div className="flex items-center justify-between gap-3 mb-8 md:mb-10 lg:mb-12 xl:mb-14">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
+                  Plants For Everyone
+                </h2>
 
-              {/* View All Button - Compact on Mobile */}
-              <Link
-                href="/collections"
-                className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
-              >
-                <span>View All</span>
-                <ArrowRight
-                  size={16}
-                  className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
-                />
-              </Link>
-            </div>
-
-            {/* Categories Grid - 2 per row on mobile */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-              {categories.map((category, index) => (
+                {/* View All Button - Compact on Mobile */}
                 <Link
-                  key={category.id}
-                  href={category.link}
-                  className="group relative overflow-hidden rounded-none aspect-[3/4] transition-all duration-300"
+                  href="/collections"
+                  className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
                 >
-                  {/* Background Image */}
-                  <div className="absolute inset-0 overflow-hidden">
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                      loading="lazy"
-                    />
-                  </div>
-
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300" />
-
-                  {/* Content Container at Bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
-                    <div className="flex items-center justify-between gap-2">
-                      <h3 className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-serif font-light">
-                        {category.name} →
-                      </h3>
-                    </div>
-                  </div>
+                  <span>View All</span>
+                  <ArrowRight
+                    size={16}
+                    className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
+                  />
                 </Link>
-              ))}
+              </div>
+
+              {/* Categories Grid - 2 per row on mobile */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+                {categories.map((category, index) => (
+                  <Link
+                    key={category.id}
+                    href={category.link}
+                    className="group relative overflow-hidden rounded-none aspect-[3/4] transition-all duration-300"
+                  >
+                    {/* Background Image */}
+                    <div className="absolute inset-0 overflow-hidden">
+                      <img
+                        src={category.image}
+                        alt={category.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                        loading="lazy"
+                      />
+                    </div>
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300" />
+
+                    {/* Content Container at Bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-serif font-light">
+                          {category.name} →
+                        </h3>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-
-      {/* LARGE FLOOR PLANTS */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
-        <div className="max-w-[1600px] mx-auto">
-
-          {/* Heading */}
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
-              Large Floor Plants
-            </h2>
-
-            <Link
-              href="/collections"
-              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
-            >
-              <span>View All</span>
-              <ArrowRight
-                size={16}
-                className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
-              />
-            </Link>
-          </div>
-
-          {/* Products Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-            {products.map((product) => (
-              <ProductCard key={`floor-${product.id}`} product={product} />
-            ))}
-          </div>
-
-          {/* Mobile CTA */}
-
-        </div>
-      </section>
-
-
-
-      {/* NEW ARRIVALS */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
-        <div className="max-w-[1600px] mx-auto">
-
-          {/* Heading */}
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
-              New Arrivals
-            </h2>
-
-            <Link
-              href="/products"
-              className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
-            >
-              <span>View All</span>
-              <ArrowRight
-                size={16}
-                className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
-              />
-            </Link>
-          </div>
-
-          {/* Products Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-            {products.map((product) => (
-              <ProductCard key={`new-${product.id}`} product={product} />
-            ))}
-          </div>
-
-          {/* Mobile CTA */}
-
-        </div>
-      </section>
+        </section>
+      )}
 
 
       {/* WORKSHOPS & BLOG */}
-      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-12 sm:py-16 md:py-20 lg:py-24 bg-[#F0F4F1]">
-        <div className="max-w-[1600px] mx-auto">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-8 md:mb-12 lg:mb-16">
-            <div>
-              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
-                Plant Care & Workshops
-              </h2>
-              <p className="text-base sm:text-l md:text-l lg:text-l text-gray-600 max-w-2xl">
-                Empowering all people to be plant people. Welcome to Plant Parenthood®.
-              </p>
+      {workshops.length > 0 && (
+        <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-12 sm:py-16 md:py-20 lg:py-24 bg-[#F0F4F1]">
+          <div className="max-w-[1600px] mx-auto">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-8 md:mb-12 lg:mb-16">
+              <div>
+                <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
+                  Plant Care & Workshops
+                </h2>
+                <p className="text-base sm:text-l md:text-l lg:text-l text-gray-600 max-w-2xl">
+                  Empowering all people to be plant people. Welcome to Plant Parenthood®.
+                </p>
+              </div>
+            </div>
+
+            {/* Workshop Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 xl:gap-12">
+              {workshops.map((workshop) => (
+                <a
+                  key={workshop.id}
+                  href="#"
+                  className="group block bg-white rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                >
+                  {/* Image Container */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                    <img
+                      src={workshop.image}
+                      alt={workshop.imageAlt}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Date Badge */}
+                    <div className="absolute top-4 left-4 bg-teal-400 text-white px-3 py-1.5 text-sm font-medium rounded">
+                      {workshop.date}
+                    </div>
+                    {/* Free Badge */}
+                    {workshop.isFree && (
+                      <div className="absolute bottom-4 left-4 bg-white text-teal-600 px-3 py-1 text-xs font-semibold rounded">
+                        FREE
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5 md:p-6 lg:p-7">
+                    <h3 className="text-xl md:text-xl lg:text-xl  font-normal text-[#2F4F3E] font-bold mb-3 md:mb-4 leading-tight group-hover:text-gray-700 transition-colors">
+                      {workshop.title}
+                    </h3>
+                    <p className="text-sm md:text-base lg:text-l text-gray-600 leading-relaxed">
+                      {workshop.description}
+                    </p>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
-
-          {/* Workshop Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 xl:gap-12">
-            {workshops.map((workshop) => (
-              <a
-                key={workshop.id}
-                href="#"
-                className="group block bg-white rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300"
-              >
-                {/* Image Container */}
-                <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-                  <img
-                    src={workshop.image}
-                    alt={workshop.imageAlt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {/* Date Badge */}
-                  <div className="absolute top-4 left-4 bg-teal-400 text-white px-3 py-1.5 text-sm font-medium rounded">
-                    {workshop.date}
-                  </div>
-                  {/* Free Badge */}
-                  {workshop.isFree && (
-                    <div className="absolute bottom-4 left-4 bg-white text-teal-600 px-3 py-1 text-xs font-semibold rounded">
-                      FREE
-                    </div>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="p-5 md:p-6 lg:p-7">
-                  <h3 className="text-xl md:text-xl lg:text-xl  font-normal text-[#2F4F3E] font-bold mb-3 md:mb-4 leading-tight group-hover:text-gray-700 transition-colors">
-                    {workshop.title}
-                  </h3>
-                  <p className="text-sm md:text-base lg:text-l text-gray-600 leading-relaxed">
-                    {workshop.description}
-                  </p>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
       {/* TESTIMONIALS */}
-      <section className="w-full bg-white py-16 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-12">
-            <p className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">What our customers are saying</p>
-          </div>
+      {testimonials.length > 0 && (
+        <section className="w-full bg-white py-16 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-12">
+              <p className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">What our customers are saying</p>
+            </div>
 
-          {/* Slider Container */}
-          <div className="relative">
-            <div className="flex flex-col md:flex-row gap-0 overflow-hidden h-auto md:h-[500px]">
-              {/* Left Container - Text */}
-              <div className="w-full md:w-1/5 md:min-w-[200px] bg-[#F0F4F1] flex items-center justify-center p-6 md:p-8 relative min-h-[150px] md:min-h-0 md:h-full">
-                <div className="relative w-full h-full flex items-center">
+            {/* Slider Container */}
+            <div className="relative">
+              <div className="flex flex-col md:flex-row gap-0 overflow-hidden h-auto md:h-[500px]">
+                {/* Left Container - Text */}
+                <div className="w-full md:w-1/5 md:min-w-[200px] bg-[#F0F4F1] flex items-center justify-center p-6 md:p-8 relative min-h-[150px] md:min-h-0 md:h-full">
+                  <div className="relative w-full h-full flex items-center">
+                    {testimonials.map((testimonial, index) => (
+                      <div
+                        key={index}
+                        className={`absolute inset-0 flex items-center justify-center p-4 md:p-6 transition-all duration-700 ${index === currentSlide
+                          ? 'opacity-100 translate-x-0'
+                          : index < currentSlide
+                            ? 'opacity-0 -translate-x-full'
+                            : 'opacity-0 translate-x-full'
+                          }`}
+                      >
+                        <p className="text-center text-gray-800 text-sm md:text-base leading-relaxed">
+                          "{testimonial.text}"
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Container - Image */}
+                <div className="w-full md:w-4/5 relative overflow-hidden bg-gray-100 h-[300px] md:h-full">
                   {testimonials.map((testimonial, index) => (
                     <div
                       key={index}
-                      className={`absolute inset-0 flex items-center justify-center p-4 md:p-6 transition-all duration-700 ${index === currentSlide
+                      className={`absolute inset-0 transition-all duration-700 ${index === currentSlide
                         ? 'opacity-100 translate-x-0'
                         : index < currentSlide
                           ? 'opacity-0 -translate-x-full'
                           : 'opacity-0 translate-x-full'
                         }`}
                     >
-                      <p className="text-center text-gray-800 text-sm md:text-base leading-relaxed">
-                        "{testimonial.text}"
-                      </p>
+                      <img
+                        src={testimonial.image}
+                        alt={`Testimonial ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   ))}
+
+                  {/* Navigation Buttons */}
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
+                    aria-label="Previous slide"
+                  >
+                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
+                  </button>
+
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
+                    aria-label="Next slide"
+                  >
+                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
+                  </button>
                 </div>
               </div>
 
-              {/* Right Container - Image */}
-              <div className="w-full md:w-4/5 relative overflow-hidden bg-gray-100 h-[300px] md:h-full">
-                {testimonials.map((testimonial, index) => (
-                  <div
+              {/* Dots Navigation */}
+              <div className="flex justify-center gap-2 mt-6 md:mt-8">
+                {testimonials.map((_, index) => (
+                  <button
                     key={index}
-                    className={`absolute inset-0 transition-all duration-700 ${index === currentSlide
-                      ? 'opacity-100 translate-x-0'
-                      : index < currentSlide
-                        ? 'opacity-0 -translate-x-full'
-                        : 'opacity-0 translate-x-full'
-                      }`}
-                  >
-                    <img
-                      src={testimonial.image}
-                      alt={`Testimonial ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                    onClick={() => goToSlide(index)}
+                    className={`transition-all ${index === currentSlide
+                      ? 'w-6 md:w-8 h-2 md:h-3 bg-black'
+                      : 'w-2 md:w-3 h-2 md:h-3 bg-gray-300 hover:bg-gray-400'
+                      } rounded-full`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
                 ))}
-
-                {/* Navigation Buttons */}
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
-                  aria-label="Previous slide"
-                >
-                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
-                </button>
-
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
-                  aria-label="Next slide"
-                >
-                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
-                </button>
               </div>
             </div>
-
-            {/* Dots Navigation */}
-            <div className="flex justify-center gap-2 mt-6 md:mt-8">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`transition-all ${index === currentSlide
-                    ? 'w-6 md:w-8 h-2 md:h-3 bg-black'
-                    : 'w-2 md:w-3 h-2 md:h-3 bg-gray-300 hover:bg-gray-400'
-                    } rounded-full`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
       {/* Bottom Cart Navigator */}
@@ -897,10 +770,8 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-
-
       )}
 
-    </div >
+    </div>
   );
 }

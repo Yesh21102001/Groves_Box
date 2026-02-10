@@ -103,6 +103,79 @@ export async function getProducts(limit = 20) {
   return data.data.products.edges.map(edge => formatProduct(edge.node));
 }
 
+// Get New Arrivals
+export async function getNewArrivals(limit = 8) {
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const query = `
+    query getNewArrivals($first: Int!, $query: String!) {
+      products(
+        first: $first
+        query: $query
+        sortKey: CREATED_AT
+        reverse: true
+      ) {
+        edges {
+          node {
+            id
+            title
+            description
+            handle
+            tags
+            availableForSale
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            compareAtPriceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            images(first: 5) {
+              edges {
+                node {
+                  url
+                  altText
+                }
+              }
+            }
+            variants(first: 10) {
+              edges {
+                node {
+                  id
+                  title
+                  availableForSale
+                  price {
+                    amount
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyFetch({
+    query,
+    variables: {
+      first: limit,
+      query: `created_at:>${thirtyDaysAgo.toISOString()}`
+    }
+  });
+
+  return data.data.products.edges.map(edge =>
+    formatProduct(edge.node)
+  );
+}
+
+
 /**
  * Get single product by handle
  */

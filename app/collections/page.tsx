@@ -73,7 +73,7 @@ export default function CollectionsPage() {
                             <h1 className="font-sans font-light text-[#2F4F3E] text-3xl sm:text-3xl lg:text-3xl 2xl:text-5xl leading-tight sm:mb-4">
                                 Collections
                             </h1>
-                            <p className="text-gray-600 text-base text-sm md:text-sm lg:text-sm">
+                            <p className="text-gray-600 text-base text-sm md:text-sm lg:text-sm mb-4">
                                 Explore our curated plant collections and find the perfect plants for your space.
                             </p>
                         </div>

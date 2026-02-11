@@ -25,12 +25,11 @@ export default function RootLayout({
       >
         <Initializer />
         <Navbar />
-        <WishlistProvider>
-          <CartProvider>
+        <CartProvider>
+          <WishlistProvider>
             {children}
-            <CartSidebar />
-          </CartProvider>
-        </WishlistProvider>
+          </WishlistProvider>
+        </CartProvider>
         <Footer />
       </body>
     </html>

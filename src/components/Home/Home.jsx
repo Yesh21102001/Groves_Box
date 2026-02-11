@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingCart, X, ArrowRight, GraduationCap, Users, Shield } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 import { getProducts, getCollections, getNewArrivals, getProductsByCollection } from "../../lib/shopify_utilis";
 
 function IconButton({ icon, onClick }) {
@@ -23,7 +24,6 @@ export default function HomePage() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { cartItems, addToCart } = useCart();
   const [saleProducts, setSaleProducts] = useState([]);
-
 
   // State for Shopify data
   const [products, setProducts] = useState([]);
@@ -145,11 +145,11 @@ export default function HomePage() {
     });
   };
 
-
-
   // Product Card Component
   const ProductCard = ({ product }) => {
-    const [isWishlisted, setIsWishlisted] = useState(false);
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+    const wishlisted = isInWishlist(product.id.toString());
+
 
     return (
       <Link href={`/products/${product.handle}`} className="group block">
@@ -169,13 +169,24 @@ export default function HomePage() {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setIsWishlisted(!isWishlisted);
+              if (wishlisted) {
+                removeFromWishlist(product.id.toString());
+              } else {
+                addToWishlist({
+                  id: product.id.toString(),
+                  name: product.name,
+                  price: product.price,
+                  image: product.image,
+                  handle: product.handle,
+                });
+              }
+
             }}
             className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
           >
             <Heart
               size={18}
-              className={isWishlisted ? "fill-current text-red-500" : ""}
+              className={wishlisted ? "fill-current text-red-500" : ""}
             />
           </button>
 
@@ -335,7 +346,7 @@ export default function HomePage() {
             {/* BUTTONS */}
             <div className="flex justify-center sm:justify-start gap-3 sm:gap-6">
               <Link
-                href="/collections"
+                href="/products"
                 className="
           bg-[#244033] text-white
           px-4 sm:px-8 lg:px-10
@@ -630,16 +641,19 @@ export default function HomePage() {
         </section>
       )}
 
+
       {/* MOST POPULAR PLANTS (BEST SELLERS) */}
       {products.length > 0 && (
         <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="max-w-[1600px] mx-auto">
+
 
             {/* Heading */}
             <div className="flex justify-between items-center mb-12">
               <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
                 On Sale
               </h2>
+
 
               {/* ✅ FIXED: Changed to filter=bestseller */}
               <Link
@@ -654,12 +668,14 @@ export default function HomePage() {
               </Link>
             </div>
 
+
             {/* Products Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {saleProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
+
 
           </div>
         </section>

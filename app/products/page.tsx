@@ -118,7 +118,7 @@ export default function ProductsPage() {
         }
 
         fetchAllProducts();
-    }, [filterParam]); // Re-fetch when filter changes
+    }, [filterParam]);
 
     const handleAddToCart = (product: Product) => {
         addToCart({
@@ -162,7 +162,6 @@ export default function ProductsPage() {
                         />
                     </button>
 
-                    {/* Quick Add Button */}
                     {/* Mobile: Small circular button bottom-right, always visible */}
                     <button
                         onClick={(e) => {
@@ -207,12 +206,12 @@ export default function ProductsPage() {
 
                 <div className="flex items-center gap-2 text-sm">
                     <span className="font-medium text-[#244033]">
-                        From ${product.price}
+                        Rs. {product.price}
                     </span>
 
                     {product.originalPrice && (
                         <span className="text-gray-400 line-through">
-                            ${product.originalPrice}
+                            Rs. {product.originalPrice}
                         </span>
                     )}
                 </div>
@@ -379,7 +378,7 @@ export default function ProductsPage() {
                                     <div className="space-y-4">
                                         <div>
                                             <label className="text-sm text-gray-600 block mb-2">
-                                                Min: ${priceRange[0]}
+                                                Min: {priceRange[0]}
                                             </label>
                                             <input
                                                 type="range"
@@ -394,7 +393,7 @@ export default function ProductsPage() {
                                         </div>
                                         <div>
                                             <label className="text-sm text-gray-600 block mb-2">
-                                                Max: ${priceRange[1]}
+                                                Max: {priceRange[1]}
                                             </label>
                                             <input
                                                 type="range"
@@ -475,7 +474,7 @@ export default function ProductsPage() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
-                                    <p className="font-semibold">${totalPrice.toFixed(2)}</p>
+                                    <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
                                 </div>
                             </div>
                             <Link

@@ -180,11 +180,11 @@ export default function ProductDetailPage() {
                                 <h1 className="text-4xl font-light text-gray-900 mb-3">{product.name}</h1>
                                 <div className="flex items-center gap-4">
                                     <span className="text-3xl font-semibold text-[#244033]">
-                                        ${product.price}
+                                        {product.price}
                                     </span>
                                     {product.originalPrice && (
                                         <span className="text-lg text-gray-400 line-through">
-                                            ${product.originalPrice}
+                                            {product.originalPrice}
                                         </span>
                                     )}
                                 </div>
@@ -246,7 +246,7 @@ export default function ProductDetailPage() {
                                     <Truck className="text-[#244033] flex-shrink-0 mt-1" size={20} />
                                     <div>
                                         <h4 className="font-semibold text-gray-900">Free Shipping</h4>
-                                        <p className="text-sm text-gray-600">On orders over $50</p>
+                                        <p className="text-sm text-gray-600">On orders over 50</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
@@ -372,7 +372,7 @@ export default function ProductDetailPage() {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
-                                <p className="text-lg font-semibold text-[#244033]">${totalPrice.toFixed(2)}</p>
+                                <p className="text-lg font-semibold text-[#244033]">{totalPrice.toFixed(2)}</p>
                             </div>
                         </div>
                         <Link

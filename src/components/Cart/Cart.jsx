@@ -166,12 +166,12 @@ export default function CartPage() {
 
                 <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
                     <span className="font-medium text-gray-900">
-                        {product.price}
+                        Rs. {product.price}
                     </span>
 
                     {product.originalPrice && (
                         <span className="text-gray-400 line-through text-[10px] sm:text-xs">
-                            {product.originalPrice}
+                            Rs. {product.originalPrice}
                         </span>
                     )}
                 </div>

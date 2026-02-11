@@ -22,6 +22,8 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { cartItems, addToCart } = useCart();
+  const [saleProducts, setSaleProducts] = useState([]);
+
 
   // State for Shopify data
   const [products, setProducts] = useState([]);
@@ -61,16 +63,20 @@ export default function HomePage() {
         setLoading(true);
 
         // Fetch products, collections, and new arrivals in parallel
-        const [productsData, collectionsData, newArrivalsData] = await Promise.all([
+        const [bestSellersData, saleData, collectionsData, newArrivalsData] = await Promise.all([
           getProductsByCollection('best-sellers', 8),
+          getProductsByCollection('on-sale', 8),
           getCollections(4),
           getNewArrivals(8)
         ]);
 
 
-        setProducts(productsData);
+
+        setProducts(bestSellersData);
+        setSaleProducts(saleData);
         setCategories(collectionsData);
         setNewArrivals(newArrivalsData);
+
 
         // Also fetch testimonials and workshops from JSON files
         try {
@@ -220,12 +226,12 @@ export default function HomePage() {
 
         <div className="flex items-center gap-2 text-sm">
           <span className="font-medium text-gray-900">
-            From ${product.price}
+            Rs. {product.price}
           </span>
 
           {product.originalPrice && (
             <span className="text-gray-400 line-through">
-              ${product.originalPrice}
+              Rs. {product.originalPrice}
             </span>
           )}
         </div>
@@ -619,6 +625,41 @@ export default function HomePage() {
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {newArrivals.map((product) => (
                 <ProductCard key={`new-${product.id}`} product={product} />
+              ))}
+            </div>
+
+          </div>
+        </section>
+      )}
+
+      {/* MOST POPULAR PLANTS (BEST SELLERS) */}
+      {products.length > 0 && (
+        <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+          <div className="max-w-[1600px] mx-auto">
+
+            {/* Heading */}
+            <div className="flex justify-between items-center mb-12">
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">
+                On Sale
+              </h2>
+
+              {/* ✅ FIXED: Changed to filter=bestseller */}
+              <Link
+                href="/products?filter=sale"
+                className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
+              >
+                <span>View All</span>
+                <ArrowRight
+                  size={16}
+                  className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
+                />
+              </Link>
+            </div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+              {saleProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
 

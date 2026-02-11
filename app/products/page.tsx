@@ -59,7 +59,7 @@ export default function ProductsPage() {
                 return 'Check out our latest additions to the collection.';
             case 'bestseller':
                 return 'Our most popular plants, loved by plant parents everywhere.';
-            case 'sale':
+            case 'on-sale':
                 return 'Great deals on beautiful plants.';
             case 'rare':
                 return 'Unique and hard-to-find plants for collectors.';
@@ -88,7 +88,7 @@ export default function ProductsPage() {
                         break;
 
                     case 'sale':
-                        productsData = await getProductsByCollection('sale', 100);
+                        productsData = await getProductsByCollection('on-sale', 100);
                         break;
 
                     case 'rare':

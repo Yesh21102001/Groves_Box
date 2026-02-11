@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingCart, X, ArrowRight, GraduationCap, Users, Shield } from "lucide-react";
 import { useCart } from "../../context/CartContext";
-import { getProducts, getCollections, getNewArrivals } from "../../lib/shopify_utilis";
+import { getProducts, getCollections, getNewArrivals, getProductsByCollection } from "../../lib/shopify_utilis";
 
 function IconButton({ icon, onClick }) {
   return (
@@ -62,10 +62,11 @@ export default function HomePage() {
 
         // Fetch products, collections, and new arrivals in parallel
         const [productsData, collectionsData, newArrivalsData] = await Promise.all([
-          getProducts(8),        // Get 8 best-selling products
-          getCollections(4),     // Get 4 collections
-          getNewArrivals(8)      // Get 8 new arrival products
+          getProductsByCollection('best-sellers', 8),
+          getCollections(4),
+          getNewArrivals(8)
         ]);
+
 
         setProducts(productsData);
         setCategories(collectionsData);
@@ -139,6 +140,8 @@ export default function HomePage() {
       image: product.image,
     });
   };
+
+
 
   // Product Card Component
   const ProductCard = ({ product }) => {
@@ -217,12 +220,12 @@ export default function HomePage() {
 
         <div className="flex items-center gap-2 text-sm">
           <span className="font-medium text-gray-900">
-            From {product.price}
+            From ${product.price}
           </span>
 
           {product.originalPrice && (
             <span className="text-gray-400 line-through">
-              {product.originalPrice}
+              ${product.originalPrice}
             </span>
           )}
         </div>
@@ -261,6 +264,7 @@ export default function HomePage() {
 
   return (
     <div className={`bg-white ${totalItems > 0 ? 'pb-20' : ''}`}>
+
 
       {/* HERO SECTION */}
       <section
@@ -386,7 +390,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* MOST POPULAR PLANTS */}
+      {/* MOST POPULAR PLANTS (BEST SELLERS) */}
       {products.length > 0 && (
         <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="max-w-[1600px] mx-auto">
@@ -397,8 +401,9 @@ export default function HomePage() {
                 Our Most Popular Plants
               </h2>
 
+              {/* ✅ FIXED: Changed to filter=bestseller */}
               <Link
-                href="/products?filter=new"
+                href="/products?filter=bestseller"
                 className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
               >
                 <span>View All</span>
@@ -597,6 +602,7 @@ export default function HomePage() {
                 New Arrivals
               </h2>
 
+              {/* ✅ Correct - Already has filter=new */}
               <Link
                 href="/products?filter=new"
                 className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
@@ -809,7 +815,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 }

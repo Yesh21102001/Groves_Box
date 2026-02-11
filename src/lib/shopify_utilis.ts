@@ -1,11 +1,8 @@
-// lib/shopify.js
+// lib/shopify_utilis.js
 // Utility functions for Shopify Storefront API
 
 const SHOPIFY_STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
 const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
-
-// ⚠️ IMPORTANT: Make sure your .env.local file uses:
-// NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN (not _TOKEN at the end)
 
 /**
  * Fetch data from Shopify Storefront API
@@ -21,8 +18,7 @@ export async function shopifyFetch({ query, variables = {} }) {
         'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_ACCESS_TOKEN,
       },
       body: JSON.stringify({ query, variables }),
-      // Add caching for better performance
-      next: { revalidate: 3600 } // Revalidate every hour
+      next: { revalidate: 3600 }
     });
 
     if (!result.ok) {
@@ -103,19 +99,81 @@ export async function getProducts(limit = 20) {
   return data.data.products.edges.map(edge => formatProduct(edge.node));
 }
 
-// Get New Arrivals
+/**
+ * Get new arrival products
+ */
 export async function getNewArrivals(limit = 8) {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
   const query = `
     query getNewArrivals($first: Int!, $query: String!) {
-      products(
-        first: $first
-        query: $query
-        sortKey: CREATED_AT
-        reverse: true
-      ) {
+      products(first: $first, query: $query, sortKey: CREATED_AT, reverse: true) {
+        edges {
+          node {
+            id
+            title
+            description
+            handle
+            tags
+            availableForSale
+            createdAt
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            compareAtPriceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            images(first: 5) {
+              edges {
+                node {
+                  url
+                  altText
+                }
+              }
+            }
+            variants(first: 10) {
+              edges {
+                node {
+                  id
+                  title
+                  availableForSale
+                  price {
+                    amount
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyFetch({
+    query,
+    variables: {
+      first: limit,
+      query: `created_at:>${thirtyDaysAgo.toISOString()}`
+    }
+  });
+
+  return data.data.products.edges.map(edge => formatProduct(edge.node));
+}
+
+/**
+ * Get products by tag - SINGLE DEFINITION
+ */
+export async function getProductsByTag(tag, limit = 100) {
+  const query = `
+    query getProductsByTag($first: Int!, $query: String!) {
+      products(first: $first, query: $query) {
         edges {
           node {
             id
@@ -166,19 +224,17 @@ export async function getNewArrivals(limit = 8) {
     query,
     variables: {
       first: limit,
-      query: `created_at:>${thirtyDaysAgo.toISOString()}`
+      query: `tag:${tag}`
     }
   });
 
-  return data.data.products.edges.map(edge =>
-    formatProduct(edge.node)
-  );
+  return data.data.products.edges.map(edge => formatProduct(edge.node));
 }
 
-export async function getProductsByCollection(
-  handle: string,
-  first = 100
-) {
+/**
+ * Get products by collection
+ */
+export async function getProductsByCollection(handle, first = 100) {
   const query = `
     query getProductsByCollection($handle: String!, $first: Int!) {
       collectionByHandle(handle: $handle) {
@@ -216,7 +272,6 @@ export async function getProductsByCollection(
     }
   `;
 
-  // ✅ FIX IS HERE
   const data = await shopifyFetch({
     query,
     variables: { handle, first }
@@ -224,23 +279,19 @@ export async function getProductsByCollection(
 
   if (!data?.data?.collectionByHandle) return [];
 
-  return data.data.collectionByHandle.products.edges.map(
-    ({ node }: any) => ({
-      id: node.id,
-      name: node.title,
-      handle: node.handle,
-      description: node.description,
-      price: Number(node.priceRange.minVariantPrice.amount),
-      originalPrice: node.compareAtPriceRange?.minVariantPrice?.amount
-        ? Number(node.compareAtPriceRange.minVariantPrice.amount)
-        : null,
-      image: node.images.edges[0]?.node.url || '/placeholder.png',
-      tags: node.tags,
-    })
-  );
+  return data.data.collectionByHandle.products.edges.map(({ node }) => ({
+    id: node.id,
+    name: node.title,
+    handle: node.handle,
+    description: node.description,
+    price: Number(node.priceRange.minVariantPrice.amount),
+    originalPrice: node.compareAtPriceRange?.minVariantPrice?.amount
+      ? Number(node.compareAtPriceRange.minVariantPrice.amount)
+      : null,
+    image: node.images.edges[0]?.node.url || '/placeholder.png',
+    tags: node.tags,
+  }));
 }
-
-
 
 /**
  * Get single product by handle

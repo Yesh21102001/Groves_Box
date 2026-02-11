@@ -166,12 +166,12 @@ export default function CartPage() {
 
                 <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
                     <span className="font-medium text-gray-900">
-                        ${product.price}
+                        {product.price}
                     </span>
 
                     {product.originalPrice && (
                         <span className="text-gray-400 line-through text-[10px] sm:text-xs">
-                            ${product.originalPrice}
+                            {product.originalPrice}
                         </span>
                     )}
                 </div>
@@ -241,7 +241,7 @@ export default function CartPage() {
                                 <div>
                                     <p className="text-xs sm:text-sm text-blue-900 font-medium mb-0.5 sm:mb-1">Cold Weather Protection</p>
                                     <p className="text-xs sm:text-sm text-blue-800 leading-relaxed">
-                                        A $50 surcharge applies for special packaging to protect your plants during cold weather transit.
+                                        A 50 surcharge applies for special packaging to protect your plants during cold weather transit.
                                     </p>
                                 </div>
                             </div>
@@ -283,7 +283,7 @@ export default function CartPage() {
                                                     )}
                                                 </div>
                                                 <span className="text-base sm:text-lg md:text-xl font-semibold text-[#2F4F3E] flex-shrink-0">
-                                                    ${item.price.toFixed(2)}
+                                                    {item.price.toFixed(2)}
                                                 </span>
                                             </div>
 
@@ -348,7 +348,7 @@ export default function CartPage() {
                             {amountUntilFreeShipping > 0 ? (
                                 <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
                                     <p className="text-xs sm:text-sm text-gray-700 mb-2 sm:mb-3">
-                                        Add <span className="font-bold text-[#244033]">${amountUntilFreeShipping.toFixed(2)}</span> more for free shipping!
+                                        Add <span className="font-bold text-[#244033]">{amountUntilFreeShipping.toFixed(2)}</span> more for free shipping!
                                     </p>
                                     <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
                                         <div
@@ -357,8 +357,8 @@ export default function CartPage() {
                                         />
                                     </div>
                                     <div className="flex justify-between items-center mt-1.5 sm:mt-2">
-                                        <span className="text-[10px] sm:text-xs text-gray-600">${subtotal.toFixed(2)}</span>
-                                        <span className="text-[10px] sm:text-xs font-semibold text-[#244033]">$79 Free Shipping</span>
+                                        <span className="text-[10px] sm:text-xs text-gray-600">{subtotal.toFixed(2)}</span>
+                                        <span className="text-[10px] sm:text-xs font-semibold text-[#244033]">79 Free Shipping</span>
                                     </div>
                                 </div>
                             ) : (
@@ -376,14 +376,14 @@ export default function CartPage() {
                             <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
                                     <span className="text-gray-600">Subtotal</span>
-                                    <span className="font-medium text-gray-900">${subtotal.toFixed(2)}</span>
+                                    <span className="font-medium text-gray-900">{subtotal.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
                                     <span className="text-gray-600">Shipping</span>
                                     {shipping === 0 ? (
                                         <span className="font-medium text-green-600">FREE</span>
                                     ) : (
-                                        <span className="font-medium text-gray-900">${shipping.toFixed(2)}</span>
+                                        <span className="font-medium text-gray-900">{shipping.toFixed(2)}</span>
                                     )}
                                 </div>
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
@@ -396,7 +396,7 @@ export default function CartPage() {
                             <div className="border-t border-gray-200 pt-3 sm:pt-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center">
                                     <span className="text-base sm:text-lg font-semibold text-[#244033]">Total</span>
-                                    <span className="text-xl sm:text-2xl font-bold text-[#244033]">${estimatedTotal.toFixed(2)}</span>
+                                    <span className="text-xl sm:text-2xl font-bold text-[#244033]">{estimatedTotal.toFixed(2)}</span>
                                 </div>
                                 <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2">
                                     Final amount calculated at checkout

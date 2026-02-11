@@ -30,7 +30,6 @@ export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
     const { addToCart, cartItems } = useCart();
 
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -466,20 +465,34 @@ export default function ProductsPage() {
 
                 {/* Bottom Cart Navigator */}
                 {totalItems > 0 && (
-                    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
+                    <div
+                        className="
+    fixed left-0 right-0
+    bg-white border-t border-gray-200 shadow-lg z-50
+
+    bottom-[70px] left-3 right-3       /* mobile */
+    sm:bottom-0              /* desktop */
+
+    p-5 rounded-[20px]
+    sm:p-4 sm:rounded-none bg-[#F0F4F1]
+  "
+                    >
                         <div className="max-w-7xl mx-auto flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                <div className="bg-[#244033] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                     {totalItems}
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
-                                    <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
+                                    <p className="text-sm text-gray-600">
+                                        {totalItems} item{totalItems > 1 ? "s" : ""}
+                                    </p>
+                                    <p className="font-semibold">${totalPrice.toFixed(2)}</p>
                                 </div>
                             </div>
+
                             <Link
                                 href="/cart"
-                                className="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+                                className="bg-[#244033] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#2F4F3E] transition"
                             >
                                 View Cart
                             </Link>

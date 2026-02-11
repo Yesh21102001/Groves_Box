@@ -8,18 +8,7 @@ import { useCart } from '../../context/CartContext';
 
 export default function CartPage() {
     const [isGift, setIsGift] = useState(false);
-    const { addToCart } = useCart();
-    const [cartItems, setCartItems] = useState([
-        {
-            id: '1',
-            name: 'Money Tree Plant',
-            price: 59,
-            quantity: 1,
-            image: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=400&h=400&fit=crop',
-            size: 'Medium (16"-19" tall)',
-            variant: 'Isabella (6.25" wide) / White',
-        },
-    ]);
+    const { cartItems, removeFromCart, updateQuantity, addToCart } = useCart();
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shipping = subtotal >= 79 ? 0 : 15;
@@ -28,7 +17,6 @@ export default function CartPage() {
     const estimatedTotal = subtotal + shipping;
     const shippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 
-    // Get recommended products (excluding items already in cart)
     const recommendedProducts = products
         .filter(product => !cartItems.some(cartItem => cartItem.id === product.id))
         .slice(0, 4)
@@ -37,20 +25,6 @@ export default function CartPage() {
             badge: product.price < 50 ? 'Best Seller' : product.rating >= 4.8 ? 'Top Rated' : undefined,
             badgeColor: product.price < 50 ? 'bg-gray-800' : product.rating >= 4.8 ? 'bg-green-600' : undefined,
         }));
-
-    const updateQuantity = (id, change) => {
-        setCartItems(
-            cartItems.map((item) =>
-                item.id === id
-                    ? { ...item, quantity: Math.max(1, item.quantity + change) }
-                    : item
-            )
-        );
-    };
-
-    const removeItem = (id) => {
-        setCartItems(cartItems.filter((item) => item.id !== id));
-    };
 
     // Product Card Component
     const ProductCard = ({ product }) => {
@@ -92,7 +66,7 @@ export default function CartPage() {
                     >
                         <Heart
                             size={16}
-                            className={`sm:w-[18px] sm:h-[18px] ${isWishlisted ? "fill-current text-red-500" : ""}`}
+                            className={`sm:w-[18px] sm:h-[18px] {isWishlisted ? "fill-current text-red-500" : ""}`}
                         />
                     </button>
 
@@ -133,12 +107,12 @@ export default function CartPage() {
 
                 <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
                     <span className="font-medium text-gray-900">
-                        From ${product.price}
+                        Rs. {product.price}
                     </span>
 
                     {product.originalPrice && (
                         <span className="text-gray-400 line-through text-[10px] sm:text-xs">
-                            ${product.originalPrice}
+                            Rs. {product.originalPrice}
                         </span>
                     )}
                 </div>
@@ -177,7 +151,7 @@ export default function CartPage() {
                                 <div>
                                     <p className="text-xs sm:text-sm text-blue-900 font-medium mb-0.5 sm:mb-1">Cold Weather Protection</p>
                                     <p className="text-xs sm:text-sm text-blue-800 leading-relaxed">
-                                        A $5 surcharge applies for special packaging to protect your plants during cold weather transit.
+                                        A 50 surcharge applies for special packaging to protect your plants during cold weather transit.
                                     </p>
                                 </div>
                             </div>
@@ -215,14 +189,15 @@ export default function CartPage() {
                                                     </p>
                                                 </div>
                                                 <span className="text-base sm:text-lg md:text-xl font-semibold text-[#2F4F3E] flex-shrink-0">
-                                                    ${item.price}
+                                                    Rs .{item.price}
                                                 </span>
                                             </div>
 
                                             {/* Quantity and Remove */}
                                             <div className="flex items-center justify-between mt-auto pt-3 sm:pt-4 gap-2">
                                                 <button
-                                                    onClick={() => removeItem(item.id)}
+                                                    onClick={() => removeFromCart(item.id)}
+
                                                     className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-red-600 hover:text-red-700 font-medium transition-colors active:scale-95"
                                                 >
                                                     <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -278,17 +253,17 @@ export default function CartPage() {
                             {amountUntilFreeShipping > 0 ? (
                                 <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
                                     <p className="text-xs sm:text-sm text-gray-700 mb-2 sm:mb-3">
-                                        Add <span className="font-bold text-teal-700">${amountUntilFreeShipping}</span> more for free shipping!
+                                        Add <span className="font-bold text-teal-700">{amountUntilFreeShipping}</span> more for free shipping!
                                     </p>
                                     <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
                                         <div
                                             className="absolute top-0 left-0 h-full bg-gradient-to-r from-teal-500 to-teal-600 transition-all duration-500 ease-out"
-                                            style={{ width: `${shippingProgress}%` }}
+                                            style={{ width: `{shippingProgress}%` }}
                                         />
                                     </div>
                                     <div className="flex justify-between items-center mt-1.5 sm:mt-2">
-                                        <span className="text-[10px] sm:text-xs text-gray-600">${subtotal}</span>
-                                        <span className="text-[10px] sm:text-xs font-semibold text-teal-700">$79 Free Shipping</span>
+                                        <span className="text-[10px] sm:text-xs text-gray-600">{subtotal}</span>
+                                        <span className="text-[10px] sm:text-xs font-semibold text-teal-700">79 Free Shipping</span>
                                     </div>
                                 </div>
                             ) : (
@@ -306,14 +281,14 @@ export default function CartPage() {
                             <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
                                     <span className="text-gray-600">Subtotal</span>
-                                    <span className="font-medium text-gray-900">${subtotal.toFixed(2)}</span>
+                                    <span className="font-medium text-gray-900">{subtotal.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
                                     <span className="text-gray-600">Shipping</span>
                                     {shipping === 0 ? (
                                         <span className="font-medium text-green-600">FREE</span>
                                     ) : (
-                                        <span className="font-medium text-gray-900">${shipping.toFixed(2)}</span>
+                                        <span className="font-medium text-gray-900">{shipping.toFixed(2)}</span>
                                     )}
                                 </div>
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
@@ -326,7 +301,7 @@ export default function CartPage() {
                             <div className="border-t border-gray-200 pt-3 sm:pt-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center">
                                     <span className="text-base sm:text-lg font-semibold text-[#244033]">Total</span>
-                                    <span className="text-xl sm:text-2xl font-bold text-[#244033]">${estimatedTotal.toFixed(2)}</span>
+                                    <span className="text-xl sm:text-2xl font-bold text-[#244033]">{estimatedTotal.toFixed(2)}</span>
                                 </div>
                                 <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2">
                                     Final amount calculated at checkout

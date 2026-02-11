@@ -26,9 +26,12 @@ export default function CollectionsPage() {
     const fetchCollections = async () => {
         try {
             const data = await getCollections(20);
-            setCollections(data);
+            // Filter out empty collections and set state
+            const validCollections = data.filter((c: any) => c.name && c.id);
+            setCollections(validCollections.length > 0 ? validCollections : data);
         } catch (error) {
             console.error('Failed to fetch collections:', error);
+            setCollections([]);
         } finally {
             setLoading(false);
         }

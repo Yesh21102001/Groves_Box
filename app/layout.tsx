@@ -3,10 +3,10 @@ import { Lexend } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/src/context/CartContext";
 import { WishlistProvider } from "@/src/context/WishlistContext";
+import { Initializer } from "@/src/components/Initializer";
 import CartSidebar from "@/src/components/CartSidebar";
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
-import LoginPage from "./login/page";
 
 const lexend = Lexend({
   variable: "--font-lexend",
@@ -23,6 +23,7 @@ export default function RootLayout({
       <body
         className={`${lexend.variable} antialiased`}
       >
+        <Initializer />
         <Navbar />
         <WishlistProvider>
           <CartProvider>

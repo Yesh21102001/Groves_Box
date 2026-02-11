@@ -22,7 +22,7 @@ interface Product {
 
 export default function ProductsPage() {
     const searchParams = useSearchParams();
-    const filterParam = searchParams.get('filter'); // Gets filter type from URL
+    const filterParam = searchParams.get('filter');
 
     const [showFiltersSidebar, setShowFiltersSidebar] = useState(false);
     const [sortBy, setSortBy] = useState('popular');
@@ -104,7 +104,7 @@ export default function ProductsPage() {
 
                 // Update price range based on actual products
                 if (productsData.length > 0) {
-                    const prices = productsData.map(p => p.price);
+                    const prices = productsData.map((p: any) => p.price);
                     const maxPrice = Math.max(...prices);
                     setPriceRange([0, Math.ceil(maxPrice / 100) * 100]);
                 }

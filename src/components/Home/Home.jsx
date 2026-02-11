@@ -63,20 +63,18 @@ export default function HomePage() {
         setLoading(true);
 
         // Fetch products, collections, and new arrivals in parallel
+        // Uses fallback approach - if collection doesn't exist, use all products
         const [bestSellersData, saleData, collectionsData, newArrivalsData] = await Promise.all([
-          getProductsByCollection('best-sellers', 8),
-          getProductsByCollection('on-sale', 8),
+          getProductsByCollection('best-sellers', 8).then(data => data.length > 0 ? data : getProducts(8)),
+          getProductsByCollection('on-sale', 8).then(data => data.length > 0 ? data : getProducts(8)),
           getCollections(4),
           getNewArrivals(8)
         ]);
 
-
-
-        setProducts(bestSellersData);
-        setSaleProducts(saleData);
-        setCategories(collectionsData);
-        setNewArrivals(newArrivalsData);
-
+        setProducts(bestSellersData || []);
+        setSaleProducts(saleData || []);
+        setCategories(collectionsData || []);
+        setNewArrivals(newArrivalsData || []);
 
         // Also fetch testimonials and workshops from JSON files
         try {

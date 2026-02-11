@@ -1,16 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LogOut, Edit2, Heart, Package, MapPin, Lock, Bell, Check, Plus, Eye, User, ChevronDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+interface CurrentUser {
+    id: string;
+    email: string;
+    name: string;
+}
 
 export default function AccountPage() {
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditing, setIsEditing] = useState(false);
     const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+    const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        // Check if user is logged in
+        const userStr = localStorage.getItem('plants-current-user');
+        if (!userStr) {
+            // Redirect to login if not authenticated
+            router.push('/login');
+            return;
+        }
+
+        setCurrentUser(JSON.parse(userStr));
+        setIsLoading(false);
+    }, [router]);
+
     const [userData, setUserData] = useState({
         firstName: 'John',
         lastName: 'Doe',
-        email: 'john@example.com',
+        email: currentUser?.email || 'john@example.com',
         phone: '+1 (555) 123-4567',
         address: '123 Plant Street',
         city: 'Green City',
@@ -80,16 +104,27 @@ export default function AccountPage() {
 
     const handleSaveChanges = () => {
         setIsEditing(false);
-
     };
 
     const handleLogout = () => {
-        window.location.href = '/';
+        localStorage.removeItem('plants-current-user');
+        router.push('/');
     };
 
     const toggleOrder = (orderId: string) => {
         setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
     };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading...</p>
+                </div>
+            </div>
+        );
+    }
 
     const tabs = [
         { id: 'profile', name: 'Profile', icon: User },

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface CartItem {
     id: string;
@@ -16,7 +16,7 @@ interface CartContextType {
     cartItems: CartItem[];
     addToCart: (item: CartItem) => void;
     removeFromCart: (id: string) => void;
-    updateQuantity: (id: string, quantity: number) => void;
+    updateQuantity: (id: string, change: number) => void;
     clearCart: () => void;
     showCart: boolean;
     setShowCart: (show: boolean) => void;
@@ -28,6 +28,31 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [showCart, setShowCart] = useState(false);
+    const [isClient, setIsClient] = useState(false);
+
+    // Load cart from localStorage on mount
+    useEffect(() => {
+        setIsClient(true);
+        try {
+            const savedCart = localStorage.getItem('plants-cart');
+            if (savedCart) {
+                setCartItems(JSON.parse(savedCart));
+            }
+        } catch (error) {
+            console.error('Error loading cart from localStorage:', error);
+        }
+    }, []);
+
+    // Save cart to localStorage whenever it changes
+    useEffect(() => {
+        if (isClient) {
+            try {
+                localStorage.setItem('plants-cart', JSON.stringify(cartItems));
+            } catch (error) {
+                console.error('Error saving cart to localStorage:', error);
+            }
+        }
+    }, [cartItems, isClient]);
 
     const addToCart = (item: CartItem) => {
         setCartItems((prevItems) => {
@@ -45,17 +70,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     };
 
-    const updateQuantity = (id: string, quantity: number) => {
-        if (quantity <= 0) {
-            removeFromCart(id);
-            return;
-        }
+    const updateQuantity = (id: string, change: number) => {
         setCartItems((prevItems) =>
             prevItems.map((item) =>
-                item.id === id ? { ...item, quantity } : item
+                item.id === id
+                    ? {
+                        ...item,
+                        quantity: Math.max(1, item.quantity + change),
+                    }
+                    : item
             )
         );
     };
+
+
 
     const clearCart = () => {
         setCartItems([]);

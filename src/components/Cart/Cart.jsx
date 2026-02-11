@@ -1,15 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Trash2, Minus, Plus, AlertCircle, Package, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
-import { products } from '../../data/products';
 import { useCart } from '../../context/CartContext';
+import { getProducts } from "../../lib/shopify_utilis";
 
 export default function CartPage() {
     const [isGift, setIsGift] = useState(false);
-    const { cartItems, removeFromCart, updateQuantity, addToCart } = useCart();
+    const [products, setProducts] = useState([]);
 
+    // ✅ Use unified CartContext
+    const {
+        cartItems,
+        loading,
+        updateQuantity,
+        removeFromCart,
+        addToCart,
+        checkoutUrl
+    } = useCart();
+
+    // Calculate totals
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shipping = subtotal >= 79 ? 0 : 15;
     const freeShippingThreshold = 79;
@@ -17,8 +28,56 @@ export default function CartPage() {
     const estimatedTotal = subtotal + shipping;
     const shippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 
+    // Load recommended products
+    useEffect(() => {
+        async function loadProducts() {
+            try {
+                const productsData = await getProducts(8);
+                setProducts(productsData);
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+        loadProducts();
+    }, []);
+
+    const increaseQty = (lineId, currentQty) => {
+        updateQuantity(lineId, currentQty + 1);
+    };
+
+    const decreaseQty = (lineId, currentQty) => {
+        updateQuantity(lineId, currentQty - 1);
+    };
+
+    const removeItem = (lineId) => {
+        removeFromCart(lineId);
+    };
+
+    const handleAddToCart = (product) => {
+        const variantId = product.variants && product.variants.length > 0
+            ? product.variants[0].id
+            : null;
+
+        if (!variantId) {
+            console.error('No variant found for product:', product);
+            return;
+        }
+
+        addToCart({
+            id: product.id,
+            variantId: variantId,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            image: product.image,
+            handle: product.handle,
+            variants: product.variants
+        });
+    };
+
+    // Recommended products (filter out items already in cart)
     const recommendedProducts = products
-        .filter(product => !cartItems.some(cartItem => cartItem.id === product.id))
+        .filter(product => !cartItems.some(cartItem => cartItem.name === product.name))
         .slice(0, 4)
         .map(product => ({
             ...product,
@@ -43,7 +102,7 @@ export default function CartPage() {
         };
 
         return (
-            <Link href={`/products/${product.id}`} className="group block">
+            <Link href={`/products/${product.handle}`} className="group block">
                 {/* Image Container */}
                 <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3">
                     {/* Badge */}
@@ -66,7 +125,7 @@ export default function CartPage() {
                     >
                         <Heart
                             size={16}
-                            className={`sm:w-[18px] sm:h-[18px] {isWishlisted ? "fill-current text-red-500" : ""}`}
+                            className={`sm:w-[18px] sm:h-[18px] ${isWishlisted ? "fill-current text-red-500" : ""}`}
                         />
                     </button>
 
@@ -82,7 +141,7 @@ export default function CartPage() {
                     {/* Desktop: Full button at bottom on hover */}
                     <button
                         onClick={handleAddToCart}
-                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E]-800 transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                     >
                         <ShoppingCart size={16} />
                         Quick Add
@@ -107,12 +166,12 @@ export default function CartPage() {
 
                 <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
                     <span className="font-medium text-gray-900">
-                        Rs. {product.price}
+                        ${product.price}
                     </span>
 
                     {product.originalPrice && (
                         <span className="text-gray-400 line-through text-[10px] sm:text-xs">
-                            Rs. {product.originalPrice}
+                            ${product.originalPrice}
                         </span>
                     )}
                 </div>
@@ -120,14 +179,46 @@ export default function CartPage() {
         );
     };
 
+    // Loading state
+    if (loading) {
+        return (
+            <div className="bg-[#F0F4F1] min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading cart...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Empty cart state
+    if (cartItems.length === 0) {
+        return (
+            <div className="bg-[#F0F4F1] min-h-screen">
+                <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
+                    <div className="text-center py-16">
+                        <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your cart is empty</h2>
+                        <p className="text-gray-600 mb-6">Add some plants to get started!</p>
+                        <Link
+                            href="/products"
+                            className="inline-block bg-[#244033] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#2F4F3E] transition"
+                        >
+                            Continue Shopping
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-[#F0F4F1] min-h-screen">
-
             <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
                 {/* Back Button */}
                 <Link
-                    href="/collections"
-                    className="inline-flex items-center text-gray-600 hover:text-teal-600 transition-colors mb-4 sm:mb-6 group active:scale-95"
+                    href="/products"
+                    className="inline-flex items-center text-gray-600 hover:text-[#244033] transition-colors mb-4 sm:mb-6 group active:scale-95"
                 >
                     <ChevronLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
                     <span className="text-xs sm:text-sm font-medium">Continue Shopping</span>
@@ -143,7 +234,6 @@ export default function CartPage() {
                             </span>
                         </div>
 
-
                         {/* Cold Weather Notice */}
                         <div className="bg-blue-50 border border-blue-200 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
                             <div className="flex gap-2 sm:gap-3">
@@ -151,7 +241,7 @@ export default function CartPage() {
                                 <div>
                                     <p className="text-xs sm:text-sm text-blue-900 font-medium mb-0.5 sm:mb-1">Cold Weather Protection</p>
                                     <p className="text-xs sm:text-sm text-blue-800 leading-relaxed">
-                                        A 50 surcharge applies for special packaging to protect your plants during cold weather transit.
+                                        A $50 surcharge applies for special packaging to protect your plants during cold weather transit.
                                     </p>
                                 </div>
                             </div>
@@ -181,23 +271,26 @@ export default function CartPage() {
                                                     <h3 className="text-sm sm:text-base md:text-lg font-semibold text-[#2F4F3E] mb-1 line-clamp-2">
                                                         {item.name}
                                                     </h3>
-                                                    <p className="text-xs sm:text-sm text-gray-600 mb-0.5 sm:mb-1 line-clamp-1">
-                                                        {item.size}
-                                                    </p>
-                                                    <p className="text-xs sm:text-sm text-gray-500 line-clamp-1">
-                                                        {item.variant}
-                                                    </p>
+                                                    {item.size && (
+                                                        <p className="text-xs sm:text-sm text-gray-600 mb-0.5 sm:mb-1 line-clamp-1">
+                                                            {item.size}
+                                                        </p>
+                                                    )}
+                                                    {item.variant && item.variant !== 'Default Title' && (
+                                                        <p className="text-xs sm:text-sm text-gray-500 line-clamp-1">
+                                                            {item.variant}
+                                                        </p>
+                                                    )}
                                                 </div>
                                                 <span className="text-base sm:text-lg md:text-xl font-semibold text-[#2F4F3E] flex-shrink-0">
-                                                    Rs .{item.price}
+                                                    ${item.price.toFixed(2)}
                                                 </span>
                                             </div>
 
                                             {/* Quantity and Remove */}
                                             <div className="flex items-center justify-between mt-auto pt-3 sm:pt-4 gap-2">
                                                 <button
-                                                    onClick={() => removeFromCart(item.id)}
-
+                                                    onClick={() => removeItem(item.id)}
                                                     className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-red-600 hover:text-red-700 font-medium transition-colors active:scale-95"
                                                 >
                                                     <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -206,7 +299,7 @@ export default function CartPage() {
 
                                                 <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                                                     <button
-                                                        onClick={() => updateQuantity(item.id, -1)}
+                                                        onClick={() => decreaseQty(item.id, item.quantity)}
                                                         className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 active:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                                                         disabled={item.quantity <= 1}
                                                     >
@@ -216,7 +309,7 @@ export default function CartPage() {
                                                         {item.quantity}
                                                     </span>
                                                     <button
-                                                        onClick={() => updateQuantity(item.id, 1)}
+                                                        onClick={() => increaseQty(item.id, item.quantity)}
                                                         className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 active:bg-gray-200 transition-colors touch-manipulation"
                                                     >
                                                         <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" />
@@ -230,18 +323,20 @@ export default function CartPage() {
                         </div>
 
                         {/* Recommendations - Desktop Only */}
-                        <div className="mt-8 sm:mt-10 md:mt-12 hidden lg:block">
-                            <h2 className="text-xl sm:text-2xl font-sans text-[#2F4F3E] mb-1 sm:mb-2">You Might Also Like</h2>
-                            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-                                Complete your plant collection with these essentials
-                            </p>
+                        {recommendedProducts.length > 0 && (
+                            <div className="mt-8 sm:mt-10 md:mt-12 hidden lg:block">
+                                <h2 className="text-xl sm:text-2xl font-sans text-[#2F4F3E] mb-1 sm:mb-2">You Might Also Like</h2>
+                                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+                                    Complete your plant collection with these essentials
+                                </p>
 
-                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                                {recommendedProducts.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                ))}
+                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+                                    {recommendedProducts.map((product) => (
+                                        <ProductCard key={product.id} product={product} />
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     {/* Right Column - Order Summary */}
@@ -253,17 +348,17 @@ export default function CartPage() {
                             {amountUntilFreeShipping > 0 ? (
                                 <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
                                     <p className="text-xs sm:text-sm text-gray-700 mb-2 sm:mb-3">
-                                        Add <span className="font-bold text-teal-700">{amountUntilFreeShipping}</span> more for free shipping!
+                                        Add <span className="font-bold text-[#244033]">${amountUntilFreeShipping.toFixed(2)}</span> more for free shipping!
                                     </p>
                                     <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
                                         <div
-                                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-teal-500 to-teal-600 transition-all duration-500 ease-out"
-                                            style={{ width: `{shippingProgress}%` }}
+                                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#244033] to-[#2F4F3E] transition-all duration-500 ease-out"
+                                            style={{ width: `${shippingProgress}%` }}
                                         />
                                     </div>
                                     <div className="flex justify-between items-center mt-1.5 sm:mt-2">
-                                        <span className="text-[10px] sm:text-xs text-gray-600">{subtotal}</span>
-                                        <span className="text-[10px] sm:text-xs font-semibold text-teal-700">79 Free Shipping</span>
+                                        <span className="text-[10px] sm:text-xs text-gray-600">${subtotal.toFixed(2)}</span>
+                                        <span className="text-[10px] sm:text-xs font-semibold text-[#244033]">$79 Free Shipping</span>
                                     </div>
                                 </div>
                             ) : (
@@ -281,14 +376,14 @@ export default function CartPage() {
                             <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
                                     <span className="text-gray-600">Subtotal</span>
-                                    <span className="font-medium text-gray-900">{subtotal.toFixed(2)}</span>
+                                    <span className="font-medium text-gray-900">${subtotal.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
                                     <span className="text-gray-600">Shipping</span>
                                     {shipping === 0 ? (
                                         <span className="font-medium text-green-600">FREE</span>
                                     ) : (
-                                        <span className="font-medium text-gray-900">{shipping.toFixed(2)}</span>
+                                        <span className="font-medium text-gray-900">${shipping.toFixed(2)}</span>
                                     )}
                                 </div>
                                 <div className="flex justify-between items-center text-xs sm:text-sm">
@@ -301,7 +396,7 @@ export default function CartPage() {
                             <div className="border-t border-gray-200 pt-3 sm:pt-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center">
                                     <span className="text-base sm:text-lg font-semibold text-[#244033]">Total</span>
-                                    <span className="text-xl sm:text-2xl font-bold text-[#244033]">{estimatedTotal.toFixed(2)}</span>
+                                    <span className="text-xl sm:text-2xl font-bold text-[#244033]">${estimatedTotal.toFixed(2)}</span>
                                 </div>
                                 <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2">
                                     Final amount calculated at checkout
@@ -311,7 +406,7 @@ export default function CartPage() {
                             {/* Checkout Button */}
                             <Link
                                 href="/checkout"
-                                className="block w-full bg-[#244033] text-white font-semibold py-3 sm:py-3.5 md:py-4 rounded-lg transition-all text-center text-sm sm:text-base shadow-sm hover:shadow-md active:scale-[0.98] touch-manipulation"
+                                className="block w-full bg-[#244033] text-white font-semibold py-3 sm:py-3.5 md:py-4 rounded-lg hover:bg-[#2F4F3E] transition-all text-center text-sm sm:text-base shadow-sm hover:shadow-md active:scale-[0.98] touch-manipulation"
                             >
                                 Proceed to Checkout
                             </Link>
@@ -328,18 +423,20 @@ export default function CartPage() {
                 </div>
 
                 {/* Recommendations - Mobile Only (appears after Order Summary) */}
-                <div className="mt-8 sm:mt-10 lg:hidden order-3">
-                    <h2 className="text-xl sm:text-2xl font-sans text-gray-900 mb-1 sm:mb-2">You Might Also Like</h2>
-                    <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-                        Complete your plant collection with these essentials
-                    </p>
+                {recommendedProducts.length > 0 && (
+                    <div className="mt-8 sm:mt-10 lg:hidden order-3">
+                        <h2 className="text-xl sm:text-2xl font-sans text-gray-900 mb-1 sm:mb-2">You Might Also Like</h2>
+                        <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+                            Complete your plant collection with these essentials
+                        </p>
 
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                        {recommendedProducts.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                            {recommendedProducts.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

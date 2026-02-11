@@ -134,22 +134,39 @@ export default function HomePage() {
     setIsAutoPlaying(false);
   };
 
-  // Function to add product to cart
-  const handleAddToCart = (product) => {
-    addToCart({
-      id: product.id.toString(),
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      image: product.image,
-    });
-  };
-
   // Product Card Component
   const ProductCard = ({ product }) => {
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const wishlisted = isInWishlist(product.id.toString());
 
+    // Helper function to handle quick add
+    const handleQuickAdd = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      console.log('Quick Add clicked for product:', product);
+
+      const variantId = product.variants?.[0]?.id;
+
+      if (!variantId) {
+        console.error('No variant available for product:', product);
+        alert('This product is currently unavailable');
+        return;
+      }
+
+      console.log('Adding to cart with variant:', variantId);
+
+      addToCart({
+        id: product.id,
+        variantId: variantId,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+        image: product.image,
+        handle: product.handle,
+        variants: product.variants
+      });
+    };
 
     return (
       <Link href={`/products/${product.handle}`} className="group block">
@@ -180,7 +197,6 @@ export default function HomePage() {
                   handle: product.handle,
                 });
               }
-
             }}
             className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
           >
@@ -193,11 +209,7 @@ export default function HomePage() {
           {/* Quick Add Button */}
           {/* Mobile: Small circular button bottom-right, always visible */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleAddToCart(product);
-            }}
+            onClick={handleQuickAdd}
             className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
           >
             <ShoppingCart size={18} />
@@ -205,11 +217,7 @@ export default function HomePage() {
 
           {/* Desktop: Full button at bottom on hover */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleAddToCart(product);
-            }}
+            onClick={handleQuickAdd}
             className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
             <ShoppingCart size={16} />
@@ -416,7 +424,6 @@ export default function HomePage() {
                 Our Most Popular Plants
               </h2>
 
-              {/* ✅ FIXED: Changed to filter=bestseller */}
               <Link
                 href="/products?filter=bestseller"
                 className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
@@ -468,7 +475,20 @@ export default function HomePage() {
 
             <button
               onClick={() => {
-                handleAddToCart(quickView);
+                const variantId = quickView.variants?.[0]?.id;
+
+                if (variantId) {
+                  addToCart({
+                    id: quickView.id,
+                    variantId: variantId,
+                    name: quickView.name,
+                    price: quickView.price,
+                    quantity: 1,
+                    image: quickView.image,
+                    handle: quickView.handle,
+                    variants: quickView.variants
+                  });
+                }
                 setQuickView(null);
               }}
               className="w-full bg-[#244033] text-white py-3"
@@ -617,7 +637,6 @@ export default function HomePage() {
                 New Arrivals
               </h2>
 
-              {/* ✅ Correct - Already has filter=new */}
               <Link
                 href="/products?filter=new"
                 className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
@@ -642,11 +661,10 @@ export default function HomePage() {
       )}
 
 
-      {/* MOST POPULAR PLANTS (BEST SELLERS) */}
-      {products.length > 0 && (
+      {/* On Sale Section */}
+      {saleProducts.length > 0 && (
         <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="max-w-[1600px] mx-auto">
-
 
             {/* Heading */}
             <div className="flex justify-between items-center mb-12">
@@ -654,8 +672,6 @@ export default function HomePage() {
                 On Sale
               </h2>
 
-
-              {/* ✅ FIXED: Changed to filter=bestseller */}
               <Link
                 href="/products?filter=sale"
                 className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#244033] text-[#244033] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#244033] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0"
@@ -668,14 +684,12 @@ export default function HomePage() {
               </Link>
             </div>
 
-
             {/* Products Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {saleProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-
 
           </div>
         </section>
@@ -870,6 +884,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
+
 
     </div>
   );

@@ -43,6 +43,117 @@ export async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams
   }
 }
 
+/* =====================================================
+   SHOPIFY CART QUERIES & MUTATIONS
+===================================================== */
+
+/* ===============================
+   CREATE CART
+================================ */
+export const CREATE_CART = `
+  mutation createCart {
+    cartCreate {
+      cart {
+        id
+        checkoutUrl
+        totalQuantity
+      }
+    }
+  }
+`;
+
+/* ===============================
+   GET CART
+================================ */
+export const GET_CART = `
+  query getCart($cartId: ID!) {
+    cart(id: $cartId) {
+      id
+      checkoutUrl
+      totalQuantity
+      cost {
+        subtotalAmount {
+          amount
+          currencyCode
+        }
+        totalAmount {
+          amount
+          currencyCode
+        }
+      }
+      lines(first: 100) {
+        edges {
+          node {
+            id
+            quantity
+            merchandise {
+              ... on ProductVariant {
+                id
+                title
+                price {
+                  amount
+                  currencyCode
+                }
+                product {
+                  id
+                  title
+                  handle
+                  featuredImage {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/* ===============================
+   ADD TO CART
+================================ */
+export const ADD_TO_CART = `
+  mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart {
+        id
+        totalQuantity
+      }
+    }
+  }
+`;
+
+/* ===============================
+   UPDATE CART LINE ( + / - )
+================================ */
+export const UPDATE_CART_LINE = `
+  mutation updateCartLine($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+    cartLinesUpdate(cartId: $cartId, lines: $lines) {
+      cart {
+        id
+        totalQuantity
+      }
+    }
+  }
+`;
+
+/* ===============================
+   REMOVE CART LINE
+================================ */
+export const REMOVE_CART_LINE = `
+  mutation removeCartLine($cartId: ID!, $lineIds: [ID!]!) {
+    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+      cart {
+        id
+        totalQuantity
+      }
+    }
+  }
+`;
+
+
 /**
  * Get all products
  */
@@ -237,7 +348,7 @@ export async function getProductsByTag(tag: string, limit = 100) {
 }
 
 /**
- * Get products by collection
+ * Get products by collection - FIXED TO INCLUDE VARIANTS
  */
 export async function getProductsByCollection(handle: string, first = 100) {
   const query = `
@@ -269,6 +380,18 @@ export async function getProductsByCollection(handle: string, first = 100) {
                   node {
                     url
                     altText
+                  }
+                }
+              }
+              variants(first: 10) {
+                edges {
+                  node {
+                    id
+                    title
+                    availableForSale
+                    price {
+                      amount
+                    }
                   }
                 }
               }
@@ -436,6 +559,18 @@ export async function getCollection(handle: string) {
                   }
                 }
               }
+              variants(first: 10) {
+                edges {
+                  node {
+                    id
+                    title
+                    availableForSale
+                    price {
+                      amount
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -581,6 +716,18 @@ export async function searchProducts(searchTerm: string, limit = 20) {
                 node {
                   url
                   altText
+                }
+              }
+            }
+            variants(first: 10) {
+              edges {
+                node {
+                  id
+                  title
+                  availableForSale
+                  price {
+                    amount
+                  }
                 }
               }
             }

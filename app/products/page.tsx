@@ -493,7 +493,7 @@ sm:rounded-b-none
                                     <p className="text-sm text-gray-600">
                                         {totalItems} item{totalItems > 1 ? "s" : ""}
                                     </p>
-                                    <p className="font-semibold">${totalPrice.toFixed(2)}</p>
+                                    <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
                                 </div>
                             </div>
 

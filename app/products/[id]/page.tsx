@@ -388,7 +388,7 @@ sm:rounded-b-none
                             </div>
                             <div>
                                 <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
-                                <p className="text-lg font-semibold text-[#244033]">{totalPrice.toFixed(2)}</p>
+                                <p className="text-lg font-semibold text-[#244033]">Rs. {totalPrice.toFixed(2)}</p>
                             </div>
                         </div>
                         <Link

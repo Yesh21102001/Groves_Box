@@ -191,11 +191,14 @@ export default function HomePage() {
               } else {
                 addToWishlist({
                   id: product.id.toString(),
+                  variantId: product.variants?.[0]?.id,
                   name: product.name,
                   price: product.price,
                   image: product.image,
                   handle: product.handle,
+                  variants: product.variants
                 });
+
               }
             }}
             className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
@@ -878,7 +881,7 @@ sm:rounded-b-none
                 <p className="text-sm text-gray-600">
                   {totalItems} item{totalItems > 1 ? "s" : ""}
                 </p>
-                <p className="font-semibold">${totalPrice.toFixed(2)}</p>
+                <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
               </div>
             </div>
 

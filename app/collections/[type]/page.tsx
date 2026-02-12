@@ -12,45 +12,37 @@ export default function CollectionDetailPage() {
     const params = useParams();
     const [showFiltersSidebar, setShowFiltersSidebar] = useState(false);
     const [sortBy, setSortBy] = useState('popular');
-    const [priceRange, setPriceRange] = useState([0, 5000]);
     const { cartItems, addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
-    // ✅ NEW: Shopify data
     const [collection, setCollection] = useState(null);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [priceRange, setPriceRange] = useState([0, Infinity]); // Show all products by default
 
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     const collectionHandle = params?.type as string;
 
-    // ✅ Fetch collection and products from Shopify
+    // Fetch collection and products from Shopify
     useEffect(() => {
         async function fetchCollectionData() {
             try {
                 setLoading(true);
-                console.log('📦 Fetching collection:', collectionHandle);
+                setError(null);
 
                 const collectionData = await getCollection(collectionHandle);
-
-                console.log('📦 Collection data received:', collectionData);
-                console.log('📦 Products in collection:', collectionData?.products);
-                console.log('📦 Number of products:', collectionData?.products?.length);
 
                 if (collectionData) {
                     setCollection(collectionData);
                     setProducts(collectionData.products || []);
-                    console.log('✅ Collection loaded:', collectionData);
-                    console.log('✅ Products set to state:', collectionData.products || []);
                 } else {
-                    console.log('❌ No collection data received');
                     setError('Collection not found');
                 }
             } catch (err) {
-                console.error('❌ Error fetching collection:', err);
+                console.error('Error fetching collection:', err);
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -62,37 +54,23 @@ export default function CollectionDetailPage() {
         }
     }, [collectionHandle]);
 
-    // Debug: Log products state changes
-    useEffect(() => {
-        console.log('🔍 Products state updated:', products);
-        console.log('🔍 Products length:', products.length);
-    }, [products]);
-
-    // ✅ Filter products by price range
+    // Filter products by price range
     const filteredProducts = products.filter(product => {
-        if (product.price < priceRange[0] || product.price > priceRange[1]) return false;
-        return true;
+        const price = product.price;
+        return price >= priceRange[0] && (priceRange[1] === Infinity || price <= priceRange[1]);
     });
 
-    console.log('🔍 Filtered products:', filteredProducts);
-    console.log('🔍 Filtered products length:', filteredProducts.length);
-
-    // ✅ Handle add to cart with variant ID
+    // Handle add to cart
     const handleAddToCart = (e: React.MouseEvent, product: any) => {
         e.preventDefault();
         e.stopPropagation();
 
-        console.log('🛒 Quick Add clicked:', product);
-
         const variantId = product.variants?.[0]?.id;
 
         if (!variantId) {
-            console.error('❌ No variant available for product:', product);
             alert('This product is currently unavailable');
             return;
         }
-
-        console.log('✅ Adding to cart with variant:', variantId);
 
         addToCart({
             id: product.id,
@@ -106,7 +84,7 @@ export default function CollectionDetailPage() {
         });
     };
 
-    // ✅ Handle wishlist toggle
+    // Handle wishlist toggle
     const toggleWishlist = (e: React.MouseEvent, product: any) => {
         e.preventDefault();
         e.stopPropagation();
@@ -126,16 +104,13 @@ export default function CollectionDetailPage() {
         }
     };
 
-    // ✅ Sort products
+    // Sort products
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         if (sortBy === 'price-low') return a.price - b.price;
         if (sortBy === 'price-high') return b.price - a.price;
         if (sortBy === 'newest') return b.id.localeCompare(a.id);
-        return 0; // Default: featured
+        return 0;
     });
-
-    console.log('🔍 Sorted products:', sortedProducts);
-    console.log('🔍 Sorted products length:', sortedProducts.length);
 
     // Prevent body scroll when sidebar is open
     useEffect(() => {
@@ -149,7 +124,7 @@ export default function CollectionDetailPage() {
         };
     }, [showFiltersSidebar]);
 
-    // ✅ Loading state
+    // Loading state
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -161,7 +136,7 @@ export default function CollectionDetailPage() {
         );
     }
 
-    // ✅ Error state
+    // Error state
     if (error) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -175,7 +150,7 @@ export default function CollectionDetailPage() {
         );
     }
 
-    // ✅ Collection not found
+    // Collection not found
     if (!collection) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -213,8 +188,11 @@ export default function CollectionDetailPage() {
                         <h1 className="text-2xl md:text-3xl lg:text-4xl font-sans font-light text-[#2F4F3E] mb-4">
                             {collection.name}
                         </h1>
-                        <p className="text-gray-600 text-base md:text-l max-w-xl">
+                        <p className="text-gray-600 text-base md:text-lg max-w-xl">
                             {collection.description || `Explore our ${collection.name} collection`}
+                        </p>
+                        <p className="text-sm text-gray-500 mt-2">
+                            {products.length} product{products.length !== 1 ? 's' : ''} in this collection
                         </p>
                     </div>
 
@@ -228,7 +206,7 @@ export default function CollectionDetailPage() {
                             Filter and sort
                         </button>
                         <span className="text-gray-600 font-medium">
-                            {sortedProducts.length} {sortedProducts.length === 1 ? 'product' : 'products'}
+                            {products.length} product{products.length !== 1 ? 's' : ''}
                         </span>
                     </div>
 
@@ -279,16 +257,17 @@ export default function CollectionDetailPage() {
                                 <div className="space-y-6">
                                     <div>
                                         <label className="text-sm text-gray-600 block mb-2">
-                                            Min: ${priceRange[0]}
+                                            Min: Rs. {priceRange[0]}
                                         </label>
                                         <input
                                             type="range"
                                             min="0"
-                                            max="5000"
+                                            max={products.length > 0 ? Math.max(...products.map(p => p.price)) : 100000}
+                                            step="100"
                                             value={priceRange[0]}
                                             onChange={(e) => {
                                                 const newMin = parseInt(e.target.value);
-                                                if (newMin <= priceRange[1]) {
+                                                if (priceRange[1] === Infinity || newMin <= priceRange[1]) {
                                                     setPriceRange([newMin, priceRange[1]]);
                                                 }
                                             }}
@@ -297,13 +276,14 @@ export default function CollectionDetailPage() {
                                     </div>
                                     <div>
                                         <label className="text-sm text-gray-600 block mb-2">
-                                            Max: ${priceRange[1]}
+                                            Max: {priceRange[1] === Infinity ? 'No limit' : `Rs. ${priceRange[1]}`}
                                         </label>
                                         <input
                                             type="range"
                                             min="0"
-                                            max="5000"
-                                            value={priceRange[1]}
+                                            max={products.length > 0 ? Math.max(...products.map(p => p.price)) : 100000}
+                                            step="100"
+                                            value={priceRange[1] === Infinity ? (products.length > 0 ? Math.max(...products.map(p => p.price)) : 100000) : priceRange[1]}
                                             onChange={(e) => {
                                                 const newMax = parseInt(e.target.value);
                                                 if (newMax >= priceRange[0]) {
@@ -314,9 +294,9 @@ export default function CollectionDetailPage() {
                                         />
                                     </div>
                                     <div className="flex items-center justify-between text-sm text-gray-600 pt-2">
-                                        <span>${priceRange[0]}</span>
+                                        <span>Rs. {priceRange[0]}</span>
                                         <span>-</span>
-                                        <span>${priceRange[1]}</span>
+                                        <span>{priceRange[1] === Infinity ? 'No limit' : `Rs. ${priceRange[1]}`}</span>
                                     </div>
                                 </div>
                             </div>
@@ -326,7 +306,7 @@ export default function CollectionDetailPage() {
                         <div className="bg-white border-t border-gray-200 p-6 flex gap-4 flex-shrink-0">
                             <button
                                 onClick={() => {
-                                    setPriceRange([0, 5000]);
+                                    setPriceRange([0, Infinity]);
                                     setSortBy('popular');
                                 }}
                                 className="flex-1 text-center px-6 py-3 border border-gray-300 rounded-md text-gray-900 hover:bg-gray-50 font-medium transition-colors"
@@ -407,11 +387,11 @@ export default function CollectionDetailPage() {
 
                                         <div className="flex items-center gap-2 text-sm">
                                             <span className="font-medium text-gray-900">
-                                                ${product.price}
+                                                Rs. {product.price}
                                             </span>
                                             {product.originalPrice && (
                                                 <span className="text-gray-400 line-through">
-                                                    ${product.originalPrice}
+                                                    Rs. {product.originalPrice}
                                                 </span>
                                             )}
                                         </div>
@@ -421,19 +401,19 @@ export default function CollectionDetailPage() {
                         ) : (
                             <div className="text-center py-16">
                                 <p className="text-gray-600 text-lg mb-4">
-                                    No products found in this collection.
+                                    No products match your filters.
                                 </p>
                                 <p className="text-sm text-gray-500 mb-4">
-                                    Products in state: {products.length} | Filtered: {filteredProducts.length}
+                                    Try adjusting your price range or clearing filters.
                                 </p>
                                 <button
                                     onClick={() => {
-                                        setPriceRange([0, 5000]);
+                                        setPriceRange([0, Infinity]);
                                         setSortBy('popular');
                                     }}
                                     className="text-[#244033] hover:text-[#2F4F3E] font-semibold underline"
                                 >
-                                    Clear filters
+                                    Clear all filters
                                 </button>
                             </div>
                         )}
@@ -453,7 +433,7 @@ export default function CollectionDetailPage() {
                                 <p className="text-sm text-gray-600">
                                     {totalItems} item{totalItems > 1 ? 's' : ''}
                                 </p>
-                                <p className="font-semibold">${totalPrice.toFixed(2)}</p>
+                                <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
                             </div>
                         </div>
                         <Link

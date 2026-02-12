@@ -589,13 +589,28 @@ export async function getCollection(handle: string) {
     variables: { handle }
   });
 
-  if (!data.data.collectionByHandle) return null;
+  console.log('🔍 Shopify API Response for collection:', handle);
+  console.log('🔍 Full response:', JSON.stringify(data, null, 2));
+
+  if (!data.data.collectionByHandle) {
+    console.log('❌ collectionByHandle is null or undefined');
+    return null;
+  }
 
   const collection = data.data.collectionByHandle;
 
+  console.log('🔍 Collection title:', collection.title);
+  console.log('🔍 Collection handle:', collection.handle);
+  console.log('🔍 Products edges:', collection.products.edges);
+  console.log('🔍 Number of product edges:', collection.products.edges.length);
+
+  const formattedProducts = collection.products.edges.map((edge: any) => formatProduct(edge.node));
+  console.log('🔍 Formatted products:', formattedProducts);
+  console.log('🔍 Number of formatted products:', formattedProducts.length);
+
   return {
     ...formatCollection(collection),
-    products: collection.products.edges.map((edge: any) => formatProduct(edge.node))
+    products: formattedProducts
   };
 }
 

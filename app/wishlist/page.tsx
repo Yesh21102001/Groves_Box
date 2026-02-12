@@ -26,10 +26,10 @@ export default function WishlistPage() {
 
                 {/* Header */}
                 <div className="text-center mb-10">
-                    <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-4">
+                    <h1 className="text-3xl lg:text-4xl font-bold text-[#2F4F3E] mb-4">
                         My Wishlist
                     </h1>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-l text-gray-600 max-w-xl mx-auto">
                         Your saved plants and favorites. Keep track of items you love and add them to your cart when ready.
                     </p>
                 </div>
@@ -37,15 +37,15 @@ export default function WishlistPage() {
                 {/* Empty State */}
                 {wishlistItems.length === 0 ? (
                     <div className="text-center py-16">
-                        <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="w-24 h-24 bg-[#244033] rounded-full flex items-center justify-center mx-auto mb-6">
                             <Heart className="w-12 h-12 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                        <h2 className="text-2xl font-bold text-[#2F4F3E] mb-4">
                             Your wishlist is empty
                         </h2>
                         <Link
                             href="/products"
-                            className="inline-flex items-center px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition"
+                            className="inline-flex items-center px-6 py-3 bg-[#244033] text-white rounded-xl font-semibold transition"
                         >
                             Browse Products
                         </Link>

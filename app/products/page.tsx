@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Filter, X, Heart, ShoppingCart, ChevronRight } from 'lucide-react';
 import { useCart } from '@/src/context/CartContext';
+import { useWishlist } from '@/src/context/WishlistContext'; // ← ADD THIS
 import { getProducts, getNewArrivals, getProductsByTag, getProductsByCollection } from '@/src/lib/shopify_utilis';
 import { useSearchParams } from 'next/navigation';
 
@@ -18,6 +19,8 @@ interface Product {
     badgeColor?: string;
     handle: string;
     tags?: string[];
+    variants?: any[]; // ← ADD THIS
+    variantId?: string; // ← ADD THIS
 }
 
 export default function ProductsPage() {
@@ -120,18 +123,30 @@ export default function ProductsPage() {
     }, [filterParam]);
 
     const handleAddToCart = (product: Product) => {
+        const variantId = product.variants?.[0]?.id;
+
+        if (!variantId) {
+            console.error('No variant available for product:', product);
+            alert('This product is currently unavailable');
+            return;
+        }
+
         addToCart({
             id: product.id,
+            variantId: variantId,
             name: product.name,
             price: product.price,
             quantity: 1,
             image: product.image,
+            handle: product.handle,
+            variants: product.variants
         });
     };
 
-    // Product Card Component
+    // Product Card Component - FIXED VERSION
     const ProductCard = ({ product }: { product: Product }) => {
-        const [isWishlisted, setIsWishlisted] = useState(false);
+        const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist(); // ← USE WISHLIST CONTEXT
+        const wishlisted = isInWishlist(product.id.toString()); // ← CHECK IF IN WISHLIST
 
         return (
             <div className="group">
@@ -146,18 +161,33 @@ export default function ProductsPage() {
                         </div>
                     )}
 
-                    {/* Wishlist Icon - Top Right */}
+                    {/* Wishlist Icon - Top Right - FIXED */}
                     <button
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            setIsWishlisted(!isWishlisted);
+
+                            if (wishlisted) {
+                                // Remove from wishlist
+                                removeFromWishlist(product.id.toString());
+                            } else {
+                                // Add to wishlist
+                                addToWishlist({
+                                    id: product.id.toString(),
+                                    variantId: product.variants?.[0]?.id || '',
+                                    name: product.name,
+                                    price: product.price,
+                                    image: product.image,
+                                    handle: product.handle,
+                                    variants: product.variants
+                                });
+                            }
                         }}
                         className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
                     >
                         <Heart
                             size={18}
-                            className={isWishlisted ? "fill-current text-red-500" : ""}
+                            className={wishlisted ? "fill-current text-red-500" : ""}
                         />
                     </button>
 

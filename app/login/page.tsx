@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useWishlist } from '@/src/context/WishlistContext';
 
 export default function LoginPage() {
     const router = useRouter();
+    const { syncWishlistOnLogin } = useWishlist(); // ← Add this
+    
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -44,6 +47,10 @@ export default function LoginPage() {
                 email: user.email,
                 name: user.name
             }));
+
+            // ✅ SYNC WISHLIST AFTER LOGIN
+            // This merges any guest wishlist items with the user's saved wishlist
+            syncWishlistOnLogin();
 
             router.push('/account');
         } catch (err) {

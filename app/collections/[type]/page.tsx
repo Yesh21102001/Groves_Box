@@ -381,9 +381,9 @@ export default function CollectionDetailPage() {
                                             {product.name}
                                         </h3>
 
-                                        <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
+                                        {/* <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
                                             {product.description}
-                                        </p>
+                                        </p> */}
 
                                         <div className="flex items-center gap-2 text-sm">
                                             <span className="font-medium text-gray-900">

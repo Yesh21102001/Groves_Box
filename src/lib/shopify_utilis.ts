@@ -837,3 +837,162 @@ export async function getProductDetails(handle: string) {
     return null;
   }
 }
+
+/* =====================================================
+   CUSTOMER AUTHENTICATION & WISHLIST
+===================================================== */
+
+/**
+ * Customer Login
+ */
+export async function customerLogin(email: string, password: string) {
+  const mutation = `
+    mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+      customerAccessTokenCreate(input: $input) {
+        customerAccessToken {
+          accessToken
+          expiresAt
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyFetch({
+    query: mutation,
+    variables: {
+      input: {
+        email,
+        password
+      }
+    }
+  });
+
+  return data.data.customerAccessTokenCreate;
+}
+
+/**
+ * Get Customer Data (including wishlist from metafield)
+ */
+export async function getCustomerData(accessToken: string) {
+  const query = `
+    query getCustomer($customerAccessToken: String!) {
+      customer(customerAccessToken: $customerAccessToken) {
+        id
+        email
+        firstName
+        lastName
+        metafield(namespace: "custom", key: "wishlist") {
+          value
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query,
+      variables: { customerAccessToken: accessToken }
+    });
+
+    if (!data.data.customer) {
+      return null;
+    }
+
+    const customer = data.data.customer;
+    const wishlistData = customer.metafield?.value;
+
+    return {
+      id: customer.id,
+      email: customer.email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      wishlist: wishlistData ? JSON.parse(wishlistData) : []
+    };
+  } catch (error) {
+    console.error('Error fetching customer data:', error);
+    return null;
+  }
+}
+
+/**
+ * Update Customer Wishlist
+ * Note: This uses the Customer Update API which requires proper metafield setup in Shopify Admin
+ */
+export async function updateCustomerWishlist(accessToken: string, wishlistItems: any[]) {
+  const mutation = `
+    mutation customerUpdate($customerAccessToken: String!, $customer: CustomerUpdateInput!) {
+      customerUpdate(customerAccessToken: $customerAccessToken, customer: $customer) {
+        customer {
+          id
+          metafield(namespace: "custom", key: "wishlist") {
+            value
+          }
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query: mutation,
+      variables: {
+        customerAccessToken: accessToken,
+        customer: {
+          metafields: [
+            {
+              namespace: "custom",
+              key: "wishlist",
+              value: JSON.stringify(wishlistItems),
+              type: "json"
+            }
+          ]
+        }
+      }
+    });
+
+    if (data.data.customerUpdate.customerUserErrors.length > 0) {
+      console.error('Customer update errors:', data.data.customerUpdate.customerUserErrors);
+      throw new Error(data.data.customerUpdate.customerUserErrors[0].message);
+    }
+
+    return data.data.customerUpdate.customer;
+  } catch (error) {
+    console.error('Error updating wishlist:', error);
+    throw error;
+  }
+}
+
+/**
+ * Logout Customer
+ */
+export async function customerLogout(accessToken: string) {
+  const mutation = `
+    mutation customerAccessTokenDelete($customerAccessToken: String!) {
+      customerAccessTokenDelete(customerAccessToken: $customerAccessToken) {
+        deletedAccessToken
+        deletedCustomerAccessTokenId
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyFetch({
+    query: mutation,
+    variables: { customerAccessToken: accessToken }
+  });
+
+  return data.data.customerAccessTokenDelete;
+}

@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store } from 'lucide-react';
-import { useCart } from '../context/CartContext'; // ✅ Import CartContext
+import { useCart } from '../context/CartContext';
+import { getCollections } from '../lib/shopify_utilis'; // ✅ Import getCollections
 
 export default function Navbar() {
     const pathname = usePathname();
@@ -13,18 +14,50 @@ export default function Navbar() {
     const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
     const accountDropdownRef = useRef(null);
 
+    // ✅ State for dynamic collections
+    const [navCollections, setNavCollections] = useState([]);
+    const [loadingCollections, setLoadingCollections] = useState(true);
+
     // ✅ Use real cart data from CartContext
     const { cartItems, updateQuantity, removeFromCart, loading } = useCart();
 
     // ✅ Calculate total items from real cart
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-    const navItems = [
-        { name: 'Large Plants', href: '/collections/large-plants' },
-        { name: 'Houseplants', href: '/collections/houseplants' },
-        { name: 'Outdoor & Patio', href: '/collections/outdoor-patio' },
-        { name: 'Planters & Care', href: '/collections/planters-care' },
-    ];
+    // ✅ Fetch top 4 collections (excluding best-sellers, new-arrivals, on-sale)
+    useEffect(() => {
+        async function fetchNavCollections() {
+            try {
+                setLoadingCollections(true);
+                const collections = await getCollections(20); // Fetch more to filter
+
+                // Filter out the excluded collections
+                const filtered = collections.filter(collection => {
+                    const handle = collection.handle.toLowerCase();
+                    return handle !== 'best-sellers' &&
+                        handle !== 'new-arrivals' &&
+                        handle !== 'on-sale';
+                });
+
+                // Take first 4 collections
+                const topFour = filtered.slice(0, 4);
+                setNavCollections(topFour);
+            } catch (error) {
+                console.error('Error fetching nav collections:', error);
+                // Fallback to default collections if fetch fails
+                setNavCollections([
+                    { name: 'Large Plants', handle: 'large-plants', link: '/collections/large-plants' },
+                    { name: 'Houseplants', handle: 'houseplants', link: '/collections/houseplants' },
+                    { name: 'Outdoor & Patio', handle: 'outdoor-patio', link: '/collections/outdoor-patio' },
+                    { name: 'Planters & Care', handle: 'planters-care', link: '/collections/planters-care' },
+                ]);
+            } finally {
+                setLoadingCollections(false);
+            }
+        }
+
+        fetchNavCollections();
+    }, []);
 
     const handleOpenMenu = () => {
         setIsMenuOpen(true);
@@ -165,26 +198,32 @@ export default function Navbar() {
                         </div>
                     </div>
 
-                    {/* Navigation Links - Desktop Only */}
+                    {/* Navigation Links - Desktop Only - ✅ DYNAMIC COLLECTIONS */}
                     <div className="hidden lg:flex justify-center items-center gap-2 pb-4">
-                        {navItems.map((item) => {
-                            const isActive = pathname === item.href || pathname?.startsWith(item.href);
-                            return (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className={`flex items-center gap-1 px-4 py-1.5 rounded-full font-medium transition-all duration-200 ${isActive
-                                        ? 'bg-[#244033] text-white'
-                                        : 'text-gray-700 hover:bg-gray-100'
-                                        }`}
-                                >
-                                    {item.name}
-                                    {item.hasArrow && (
-                                        <ChevronDown size={16} className={isActive ? 'text-white' : 'text-gray-500'} />
-                                    )}
-                                </Link>
-                            );
-                        })}
+                        {loadingCollections ? (
+                            // Show loading skeleton
+                            <div className="flex gap-2">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="h-8 w-32 bg-gray-200 rounded-full animate-pulse"></div>
+                                ))}
+                            </div>
+                        ) : (
+                            navCollections.map((collection) => {
+                                const isActive = pathname === collection.link || pathname?.startsWith(collection.link);
+                                return (
+                                    <Link
+                                        key={collection.handle}
+                                        href={collection.link}
+                                        className={`flex items-center gap-1 px-4 py-1.5 rounded-full font-medium transition-all duration-200 ${isActive
+                                            ? 'bg-[#244033] text-white'
+                                            : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
+                                    >
+                                        {collection.name}
+                                    </Link>
+                                );
+                            })
+                        )}
                     </div>
                 </div>
             </nav>
@@ -214,7 +253,7 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Sidebar Menu */}
+            {/* Mobile Sidebar Menu - ✅ DYNAMIC COLLECTIONS */}
             <>
                 {/* Backdrop */}
                 <div
@@ -240,43 +279,56 @@ export default function Navbar() {
                         {/* Collections Section */}
                         <div className="p-4">
                             <h3 className="text-lg font-semibold mb-4 text-[#2F4F3E]">Collections</h3>
-                            <div className="grid grid-cols-2 gap-3">
-                                {/* Large Plants */}
-                                <Link href="/collections/large-plants" onClick={handleCloseMenu} className="group">
-                                    <div className="relative p-3 bg-orange-50 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
-                                        <div className="absolute inset-3 flex items-center justify-center" style={{ backgroundColor: '#fb923c', maskImage: 'url(/images/mask1.svg)', WebkitMaskImage: 'url(/images/mask1.svg)', maskSize: '100% 100%', WebkitMaskSize: '100% 100%', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}>
-                                            <span className="text-white text-sm text-center px-2 relative z-10">Large Plants</span>
-                                        </div>
-                                    </div>
-                                </Link>
+                            {loadingCollections ? (
+                                <div className="grid grid-cols-2 gap-3">
+                                    {[1, 2, 3, 4].map((i) => (
+                                        <div key={i} className="h-32 bg-gray-200 rounded animate-pulse"></div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-2 gap-3">
+                                    {navCollections.map((collection, index) => {
+                                        // Color schemes for each collection
+                                        const colors = [
+                                            { bg: 'bg-orange-50', color: '#fb923c' },
+                                            { bg: 'bg-teal-100', color: '#15803d' },
+                                            { bg: 'bg-purple-100', color: '#2563eb' },
+                                            { bg: 'bg-red-50', color: '#ef4444' },
+                                        ];
+                                        const colorScheme = colors[index % colors.length];
 
-                                {/* Houseplants */}
-                                <Link href="/collections/houseplants" onClick={handleCloseMenu} className="group">
-                                    <div className="relative p-3 bg-teal-100 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
-                                        <div className="absolute inset-3 flex items-center justify-center" style={{ backgroundColor: '#15803d', maskImage: 'url(/images/mask2.svg)', WebkitMaskImage: 'url(/images/mask2.svg)', maskSize: '100% 100%', WebkitMaskSize: '100% 100%', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}>
-                                            <span className="text-white text-sm text-center px-2 relative z-10">Houseplants</span>
-                                        </div>
-                                    </div>
-                                </Link>
-
-                                {/* Outdoor & Patio */}
-                                <Link href="/collections/outdoor-patio" onClick={handleCloseMenu} className="group">
-                                    <div className="relative p-3 bg-purple-100 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
-                                        <div className="absolute inset-3 flex items-center justify-center" style={{ backgroundColor: '#2563eb', maskImage: 'url(/images/mask3.svg)', WebkitMaskImage: 'url(/images/mask3.svg)', maskSize: '100% 100%', WebkitMaskSize: '100% 100%', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}>
-                                            <span className="text-white text-sm text-center px-2 relative z-10">Outdoor & Patio</span>
-                                        </div>
-                                    </div>
-                                </Link>
-
-                                {/* Planters & Care */}
-                                <Link href="/collections/planters-care" onClick={handleCloseMenu} className="group">
-                                    <div className="relative p-3 bg-red-50 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
-                                        <div className="absolute inset-3 flex items-center justify-center" style={{ backgroundColor: '#ef4444', maskImage: 'url(/images/mask4.svg)', WebkitMaskImage: 'url(/images/mask4.svg)', maskSize: '100% 100%', WebkitMaskSize: '100% 100%', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}>
-                                            <span className="text-white text-sm text-center px-2 relative z-10">Planters & Care</span>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
+                                        return (
+                                            <Link
+                                                key={collection.handle}
+                                                href={collection.link}
+                                                onClick={handleCloseMenu}
+                                                className="group"
+                                            >
+                                                <div className={`relative p-3 ${colorScheme.bg} overflow-hidden transition-transform group-hover:scale-105`} style={{ aspectRatio: '1' }}>
+                                                    <div
+                                                        className="absolute inset-3 flex items-center justify-center"
+                                                        style={{
+                                                            backgroundColor: colorScheme.color,
+                                                            maskImage: `url(/images/mask${(index % 4) + 1}.svg)`,
+                                                            WebkitMaskImage: `url(/images/mask${(index % 4) + 1}.svg)`,
+                                                            maskSize: '100% 100%',
+                                                            WebkitMaskSize: '100% 100%',
+                                                            maskRepeat: 'no-repeat',
+                                                            WebkitMaskRepeat: 'no-repeat',
+                                                            maskPosition: 'center',
+                                                            WebkitMaskPosition: 'center'
+                                                        }}
+                                                    >
+                                                        <span className="text-white text-sm text-center px-2 relative z-10">
+                                                            {collection.name}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
 
                         {/* View Wishlist */}
@@ -356,7 +408,7 @@ export default function Navbar() {
                                             {item.variant && item.variant !== 'Default Title' && (
                                                 <p className="text-sm text-gray-500">Variant: {item.variant}</p>
                                             )}
-                                            <p className="text-[#2F4F3E] font-semibold mt-1">${item.price.toFixed(2)}</p>
+                                            <p className="text-[#2F4F3E] font-semibold mt-1">Rs. {item.price.toFixed(2)}</p>
 
                                             {/* Quantity Controls */}
                                             <div className="flex items-center gap-2 mt-2">
@@ -396,7 +448,7 @@ export default function Navbar() {
                             {/* Subtotal */}
                             <div className="flex justify-between items-center">
                                 <span className="text-lg font-semibold text-[#2F4F3E]">Subtotal</span>
-                                <span className="text-2xl font-bold text-[#2F4F3E]">${calculateSubtotal()}</span>
+                                <span className="text-2xl font-bold text-[#2F4F3E]">Rs. {calculateSubtotal()}</span>
                             </div>
                             <p className="text-sm text-gray-500">Shipping and taxes calculated at checkout</p>
 

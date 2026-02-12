@@ -4,7 +4,6 @@ import "./globals.css";
 import { CartProvider } from "@/src/context/CartContext";
 import { WishlistProvider } from "@/src/context/WishlistContext";
 import { Initializer } from "@/src/components/Initializer";
-import CartSidebar from "@/src/components/CartSidebar";
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
 
@@ -24,9 +23,9 @@ export default function RootLayout({
         className={`${lexend.variable} antialiased`}
       >
         <Initializer />
-        <Navbar />
         <CartProvider>
           <WishlistProvider>
+            <Navbar />  {/* ← INSIDE CartProvider - has cart access! */}
             {children}
           </WishlistProvider>
         </CartProvider>

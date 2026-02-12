@@ -4,21 +4,20 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store } from 'lucide-react';
+import { useCart } from '../context/CartContext'; // ✅ Import CartContext
 
 export default function Navbar() {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
-    const [cartCount, setCartCount] = useState(3);
     const accountDropdownRef = useRef(null);
 
-    // Sample cart items - replace with your actual cart data
-    const [cartItems, setCartItems] = useState([
-        { id: 1, name: 'Monstera Deliciosa', price: 45.00, quantity: 1, image: '/placeholder-plant.jpg', size: 'Medium' },
-        { id: 2, name: 'Snake Plant', price: 32.00, quantity: 2, image: '/placeholder-plant.jpg', size: 'Small' },
-        { id: 3, name: 'Pothos', price: 28.00, quantity: 1, image: '/placeholder-plant.jpg', size: 'Medium' }
-    ]);
+    // ✅ Use real cart data from CartContext
+    const { cartItems, updateQuantity, removeFromCart, loading } = useCart();
+
+    // ✅ Calculate total items from real cart
+    const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
     const navItems = [
         { name: 'Large Plants', href: '/collections/large-plants' },
@@ -48,18 +47,18 @@ export default function Navbar() {
         setIsAccountDropdownOpen(!isAccountDropdownOpen);
     };
 
-    const updateQuantity = (id, newQuantity) => {
+    // ✅ Update quantity using CartContext
+    const handleUpdateQuantity = (lineId, newQuantity) => {
         if (newQuantity < 1) return;
-        setCartItems(cartItems.map(item =>
-            item.id === id ? { ...item, quantity: newQuantity } : item
-        ));
+        updateQuantity(lineId, newQuantity);
     };
 
-    const removeItem = (id) => {
-        setCartItems(cartItems.filter(item => item.id !== id));
-        setCartCount(prev => prev - 1);
+    // ✅ Remove item using CartContext
+    const handleRemoveItem = (lineId) => {
+        removeFromCart(lineId);
     };
 
+    // ✅ Calculate subtotal from real cart items
     const calculateSubtotal = () => {
         return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
     };
@@ -122,7 +121,7 @@ export default function Navbar() {
                                 <input
                                     type="text"
                                     placeholder="Search plants, planters, and more..."
-                                    className="w-full px-4 py-2.5 pl-10  border border-[#2F4F3E]-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent"
+                                    className="w-full px-4 py-2.5 pl-10 border border-[#2F4F3E]-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent"
                                 />
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                             </div>
@@ -141,42 +140,15 @@ export default function Navbar() {
                                     <User size={22} />
                                 </button>
 
-                                <div
-                                    className="
-            absolute right-0 mt-2
-            w-64
-            bg-white
-            rounded-lg
-            shadow-lg
-            border border-gray-200
-            py-2
-            z-50
-
-            whitespace-nowrap
-            opacity-0 invisible translate-y-1
-            group-hover:opacity-100
-            group-hover:visible
-            group-hover:translate-y-0
-            transition-all duration-200
-        "
-                                >
-                                    <Link
-                                        href="/login"
-                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                                    >
+                                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 whitespace-nowrap opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
+                                    <Link href="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 whitespace-nowrap">
                                         Log In
                                     </Link>
-
-                                    <Link
-                                        href="/signup"
-                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                                    >
+                                    <Link href="/signup" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 whitespace-nowrap">
                                         Sign Up
                                     </Link>
                                 </div>
                             </div>
-
-
 
                             {/* Shopping Cart with badge */}
                             <button
@@ -220,50 +192,22 @@ export default function Navbar() {
             {/* Mobile Bottom Navigation Bar */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 shadow-lg">
                 <div className="flex items-center justify-around h-16 px-2">
-                    {/* Home */}
-                    <Link
-                        href="/"
-                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/'
-                            ? 'text-black'
-                            : 'text-gray-400 hover:text-black'
-                            }`}
-                    >
+                    <Link href="/" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/' ? 'text-black' : 'text-gray-400 hover:text-black'}`}>
                         <Home size={24} />
                         <span className="text-xs mt-1 font-medium">Home</span>
                     </Link>
 
-                    {/* Shop */}
-                    <Link
-                        href="/collections"
-                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/collections')
-                            ? 'text-black'
-                            : 'text-gray-400 hover:text-black'
-                            }`}
-                    >
+                    <Link href="/collections" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/collections') ? 'text-black' : 'text-gray-400 hover:text-black'}`}>
                         <Store size={24} />
                         <span className="text-xs mt-1 font-medium">Shop</span>
                     </Link>
 
-                    {/* Wishlist */}
-                    <Link
-                        href="/wishlist"
-                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist'
-                            ? 'text-black'
-                            : 'text-gray-400 hover:text-black'
-                            }`}
-                    >
+                    <Link href="/wishlist" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist' ? 'text-black' : 'text-gray-400 hover:text-black'}`}>
                         <Heart size={24} />
                         <span className="text-xs mt-1 font-medium">Wishlist</span>
                     </Link>
 
-                    {/* Account */}
-                    <Link
-                        href="/account"
-                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account'
-                            ? 'text-black'
-                            : 'text-gray-400 hover:text-black'
-                            }`}
-                    >
+                    <Link href="/account" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account' ? 'text-black' : 'text-gray-400 hover:text-black'}`}>
                         <User size={24} />
                         <span className="text-xs mt-1 font-medium">Account</span>
                     </Link>
@@ -274,26 +218,19 @@ export default function Navbar() {
             <>
                 {/* Backdrop */}
                 <div
-                    className={`lg:hidden fixed inset-0 bg-black z-50 transition-opacity duration-300 ${isMenuOpen ? 'opacity-50 pointer-events-auto' : 'opacity-0 pointer-events-none'
-                        }`}
+                    className={`lg:hidden fixed inset-0 bg-black z-50 transition-opacity duration-300 ${isMenuOpen ? 'opacity-50 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
                     onClick={handleCloseMenu}
                 />
 
                 {/* Sidebar */}
-                <div
-                    className={`lg:hidden fixed inset-y-0 left-0 w-80 bg-white shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-                        }`}
-                >
+                <div className={`lg:hidden fixed inset-y-0 left-0 w-80 bg-white shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     {/* Sidebar Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
                         <div className="text-2xl font-bold text-[#2F4F3E] flex items-center gap-2">
                             <span className="text-3xl">🌿</span>
                             Groves Box
                         </div>
-                        <button
-                            onClick={handleCloseMenu}
-                            className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
-                        >
+                        <button onClick={handleCloseMenu} className="p-2 text-gray-500 hover:text-gray-700 transition-colors">
                             <X size={24} />
                         </button>
                     </div>
@@ -304,114 +241,38 @@ export default function Navbar() {
                         <div className="p-4">
                             <h3 className="text-lg font-semibold mb-4 text-[#2F4F3E]">Collections</h3>
                             <div className="grid grid-cols-2 gap-3">
-                                {/* Large Plants - Arch shape */}
-                                <Link
-                                    href="/collections/large-plants"
-                                    onClick={handleCloseMenu}
-                                    className="group"
-                                >
+                                {/* Large Plants */}
+                                <Link href="/collections/large-plants" onClick={handleCloseMenu} className="group">
                                     <div className="relative p-3 bg-orange-50 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
-                                        <div
-                                            className="absolute inset-3 flex items-center justify-center"
-                                            style={{
-                                                backgroundColor: '#fb923c',
-                                                maskImage: 'url(/images/mask1.svg)',
-                                                WebkitMaskImage: 'url(/images/mask1.svg)',
-                                                maskSize: '100% 100%',
-                                                WebkitMaskSize: '100% 100%',
-                                                maskRepeat: 'no-repeat',
-                                                WebkitMaskRepeat: 'no-repeat',
-                                                maskPosition: 'center',
-                                                WebkitMaskPosition: 'center'
-                                            }}
-                                        >
-                                            <span className="text-white text-sm text-center px-2 relative z-10">
-                                                Large Plants
-                                            </span>
+                                        <div className="absolute inset-3 flex items-center justify-center" style={{ backgroundColor: '#fb923c', maskImage: 'url(/images/mask1.svg)', WebkitMaskImage: 'url(/images/mask1.svg)', maskSize: '100% 100%', WebkitMaskSize: '100% 100%', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}>
+                                            <span className="text-white text-sm text-center px-2 relative z-10">Large Plants</span>
                                         </div>
                                     </div>
                                 </Link>
 
-                                {/* Houseplants - Rounded rectangle */}
-                                <Link
-                                    href="/collections/houseplants"
-                                    onClick={handleCloseMenu}
-                                    className="group"
-                                >
+                                {/* Houseplants */}
+                                <Link href="/collections/houseplants" onClick={handleCloseMenu} className="group">
                                     <div className="relative p-3 bg-teal-100 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
-                                        <div
-                                            className="absolute inset-3 flex items-center justify-center"
-                                            style={{
-                                                backgroundColor: '#15803d',
-                                                maskImage: 'url(/images/mask2.svg)',
-                                                WebkitMaskImage: 'url(/images/mask2.svg)',
-                                                maskSize: '100% 100%',
-                                                WebkitMaskSize: '100% 100%',
-                                                maskRepeat: 'no-repeat',
-                                                WebkitMaskRepeat: 'no-repeat',
-                                                maskPosition: 'center',
-                                                WebkitMaskPosition: 'center'
-                                            }}
-                                        >
-                                            <span className="text-white text-sm text-center px-2 relative z-10">
-                                                Houseplants
-                                            </span>
+                                        <div className="absolute inset-3 flex items-center justify-center" style={{ backgroundColor: '#15803d', maskImage: 'url(/images/mask2.svg)', WebkitMaskImage: 'url(/images/mask2.svg)', maskSize: '100% 100%', WebkitMaskSize: '100% 100%', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}>
+                                            <span className="text-white text-sm text-center px-2 relative z-10">Houseplants</span>
                                         </div>
                                     </div>
                                 </Link>
 
-                                {/* Outdoor & Patio - Hourglass shape */}
-                                <Link
-                                    href="/collections/outdoor-patio"
-                                    onClick={handleCloseMenu}
-                                    className="group"
-                                >
+                                {/* Outdoor & Patio */}
+                                <Link href="/collections/outdoor-patio" onClick={handleCloseMenu} className="group">
                                     <div className="relative p-3 bg-purple-100 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
-                                        <div
-                                            className="absolute inset-3 flex items-center justify-center"
-                                            style={{
-                                                backgroundColor: '#2563eb',
-                                                maskImage: 'url(/images/mask3.svg)',
-                                                WebkitMaskImage: 'url(/images/mask3.svg)',
-                                                maskSize: '100% 100%',
-                                                WebkitMaskSize: '100% 100%',
-                                                maskRepeat: 'no-repeat',
-                                                WebkitMaskRepeat: 'no-repeat',
-                                                maskPosition: 'center',
-                                                WebkitMaskPosition: 'center'
-                                            }}
-                                        >
-                                            <span className="text-white text-sm text-center px-2 relative z-10">
-                                                Outdoor & Patio
-                                            </span>
+                                        <div className="absolute inset-3 flex items-center justify-center" style={{ backgroundColor: '#2563eb', maskImage: 'url(/images/mask3.svg)', WebkitMaskImage: 'url(/images/mask3.svg)', maskSize: '100% 100%', WebkitMaskSize: '100% 100%', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}>
+                                            <span className="text-white text-sm text-center px-2 relative z-10">Outdoor & Patio</span>
                                         </div>
                                     </div>
                                 </Link>
 
-                                {/* Planters & Care - Blob/organic shape */}
-                                <Link
-                                    href="/collections/planters-care"
-                                    onClick={handleCloseMenu}
-                                    className="group"
-                                >
+                                {/* Planters & Care */}
+                                <Link href="/collections/planters-care" onClick={handleCloseMenu} className="group">
                                     <div className="relative p-3 bg-red-50 overflow-hidden transition-transform group-hover:scale-105" style={{ aspectRatio: '1' }}>
-                                        <div
-                                            className="absolute inset-3 flex items-center justify-center"
-                                            style={{
-                                                backgroundColor: '#ef4444',
-                                                maskImage: 'url(/images/mask4.svg)',
-                                                WebkitMaskImage: 'url(/images/mask4.svg)',
-                                                maskSize: '100% 100%',
-                                                WebkitMaskSize: '100% 100%',
-                                                maskRepeat: 'no-repeat',
-                                                WebkitMaskRepeat: 'no-repeat',
-                                                maskPosition: 'center',
-                                                WebkitMaskPosition: 'center'
-                                            }}
-                                        >
-                                            <span className="text-white text-sm text-center px-2 relative z-10">
-                                                Planters & Care
-                                            </span>
+                                        <div className="absolute inset-3 flex items-center justify-center" style={{ backgroundColor: '#ef4444', maskImage: 'url(/images/mask4.svg)', WebkitMaskImage: 'url(/images/mask4.svg)', maskSize: '100% 100%', WebkitMaskSize: '100% 100%', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}>
+                                            <span className="text-white text-sm text-center px-2 relative z-10">Planters & Care</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -419,11 +280,7 @@ export default function Navbar() {
                         </div>
 
                         {/* View Wishlist */}
-                        <Link
-                            href="/wishlist"
-                            onClick={handleCloseMenu}
-                            className="flex items-center justify-between px-4 py-4 border-t border-gray-200 hover:bg-gray-50 transition-colors"
-                        >
+                        <Link href="/wishlist" onClick={handleCloseMenu} className="flex items-center justify-between px-4 py-4 border-t border-gray-200 hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-3">
                                 <Heart size={20} className="text-gray-700" />
                                 <span className="font-medium text-gray-900">Wishlist</span>
@@ -432,57 +289,47 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    {/* Bottom Actions - Fixed at Bottom */}
+                    {/* Bottom Actions */}
                     <div className="border-t border-gray-200 p-4 space-y-3">
-                        <Link
-                            href="/login"
-                            onClick={handleCloseMenu}
-                            className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-gray-800 transition-colors"
-                        >
+                        <Link href="/login" onClick={handleCloseMenu} className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-gray-800 transition-colors">
                             Log In
                         </Link>
-                        <Link
-                            href="/signup"
-                            onClick={handleCloseMenu}
-                            className="block w-full py-3 px-4 border-2 border-[#244033] text-[#244033] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors"
-                        >
+                        <Link href="/signup" onClick={handleCloseMenu} className="block w-full py-3 px-4 border-2 border-[#244033] text-[#244033] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors">
                             Sign Up
                         </Link>
                     </div>
                 </div>
             </>
 
-            {/* Side Cart */}
+            {/* ✅ Side Cart - NOW WITH REAL DATA */}
             <>
                 {/* Backdrop */}
                 <div
-                    className={`fixed inset-0 bg-black z-50 transition-opacity duration-300 ${isCartOpen ? 'opacity-50 pointer-events-auto' : 'opacity-0 pointer-events-none'
-                        }`}
+                    className={`fixed inset-0 bg-black z-50 transition-opacity duration-300 ${isCartOpen ? 'opacity-50 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
                     onClick={handleCloseCart}
                 />
 
-                {/* Cart Sidebar - Slides from Right */}
-                <div
-                    className={`fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isCartOpen ? 'translate-x-0' : 'translate-x-full'
-                        }`}
-                >
+                {/* Cart Sidebar */}
+                <div className={`fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     {/* Cart Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
                         <h2 className="text-xl font-bold text-[#2F4F3E]">Shopping Cart ({cartCount})</h2>
-                        <button
-                            onClick={handleCloseCart}
-                            className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
-                        >
+                        <button onClick={handleCloseCart} className="p-2 text-gray-500 hover:text-gray-700 transition-colors">
                             <X size={24} />
                         </button>
                     </div>
 
                     {/* Cart Items - Scrollable */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {cartItems.length === 0 ? (
+                        {loading ? (
+                            <div className="flex flex-col items-center justify-center h-full">
+                                <div className="w-12 h-12 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mb-4"></div>
+                                <p className="text-gray-600">Loading cart...</p>
+                            </div>
+                        ) : cartItems.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-center">
                                 <ShoppingCart size={64} className="text-gray-300 mb-4" />
-                                <p className="text-[#2F4F3E]-500 mb-4">Your cart is empty</p>
+                                <p className="text-gray-500 mb-4">Your cart is empty</p>
                                 <button
                                     onClick={handleCloseCart}
                                     className="px-6 py-2 bg-[#244033] text-white rounded-lg hover:bg-[#2F4F3E] transition-colors"
@@ -495,37 +342,42 @@ export default function Navbar() {
                                 {cartItems.map((item) => (
                                     <div key={item.id} className="flex gap-4 p-3 border border-gray-200 rounded-lg">
                                         {/* Product Image */}
-                                        <div className="w-20 h-20 bg-gray-100 rounded-lg flex-shrink-0">
-                                            <div className="w-full h-full flex items-center justify-center text-4xl">
-                                                🌿
-                                            </div>
+                                        <div className="w-20 h-20 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
+                                            <img
+                                                src={item.image}
+                                                alt={item.name}
+                                                className="w-full h-full object-cover"
+                                            />
                                         </div>
 
                                         {/* Product Details */}
                                         <div className="flex-1 min-w-0">
                                             <h3 className="font-semibold text-[#2F4F3E] truncate">{item.name}</h3>
-                                            <p className="text-sm text-gray-500">Size: {item.size}</p>
+                                            {item.variant && item.variant !== 'Default Title' && (
+                                                <p className="text-sm text-gray-500">Variant: {item.variant}</p>
+                                            )}
                                             <p className="text-[#2F4F3E] font-semibold mt-1">${item.price.toFixed(2)}</p>
 
                                             {/* Quantity Controls */}
                                             <div className="flex items-center gap-2 mt-2">
                                                 <div className="flex items-center border border-gray-300 rounded-md">
                                                     <button
-                                                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                        onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                                                         className="p-1 hover:bg-gray-100 transition-colors"
+                                                        disabled={item.quantity <= 1}
                                                     >
                                                         <Minus size={16} />
                                                     </button>
                                                     <span className="px-3 text-sm font-medium">{item.quantity}</span>
                                                     <button
-                                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                        onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                                                         className="p-1 hover:bg-gray-100 transition-colors"
                                                     >
                                                         <Plus size={16} />
                                                     </button>
                                                 </div>
                                                 <button
-                                                    onClick={() => removeItem(item.id)}
+                                                    onClick={() => handleRemoveItem(item.id)}
                                                     className="p-1 text-red-500 hover:bg-red-50 rounded-md transition-colors"
                                                 >
                                                     <Trash2 size={18} />
@@ -538,7 +390,7 @@ export default function Navbar() {
                         )}
                     </div>
 
-                    {/* Cart Footer - Fixed at Bottom */}
+                    {/* Cart Footer */}
                     {cartItems.length > 0 && (
                         <div className="border-t border-gray-200 p-4 space-y-4">
                             {/* Subtotal */}
@@ -549,13 +401,13 @@ export default function Navbar() {
                             <p className="text-sm text-gray-500">Shipping and taxes calculated at checkout</p>
 
                             {/* View Cart Button */}
-                            <button
-                                onClick={handleCloseCart}
+                            <Link
                                 href="/cart"
-                                className="w-full py-3 bg-[#244033] text-white font-semibold rounded-lg hover:bg-black-700 transition-colors"
+                                onClick={handleCloseCart}
+                                className="block w-full py-3 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-black-700 transition-colors"
                             >
                                 View Cart
-                            </button>
+                            </Link>
                             <button
                                 onClick={handleCloseCart}
                                 className="w-full py-3 border-2 border-[#244033] text-[#244033] font-semibold rounded-lg hover:bg-gray-100 transition-colors"

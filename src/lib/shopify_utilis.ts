@@ -522,7 +522,7 @@ export async function getCollections(limit = 10) {
 }
 
 /**
- * Get collection by handle
+ * Get collection by handle - FIXED VERSION
  */
 export async function getCollection(handle: string) {
   const query = `
@@ -551,7 +551,13 @@ export async function getCollection(handle: string) {
                   currencyCode
                 }
               }
-              images(first: 1) {
+              compareAtPriceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+              images(first: 5) {
                 edges {
                   node {
                     url

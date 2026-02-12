@@ -19,19 +19,19 @@ const shippingMethods: ShippingMethod[] = [
     {
         name: 'Standard Shipping',
         duration: '5-7 Business Days',
-        cost: 'Free on orders over $50',
+        cost: 'Free on orders over 50',
         description: 'Our standard shipping option is reliable and cost-effective for most deliveries.'
     },
     {
         name: 'Express Shipping',
         duration: '2-3 Business Days',
-        cost: '$9.99',
+        cost: '9.99',
         description: 'Get your order faster with our express shipping service.'
     },
     {
         name: 'Overnight Shipping',
         duration: '1 Business Day',
-        cost: '$24.99',
+        cost: '24.99',
         description: 'Need it urgently? Choose overnight delivery for next-day arrival.'
     },
     {
@@ -105,27 +105,21 @@ export default function ShippingReturnsPage() {
         <div className="min-h-screen bg-white">
 
             {/* Hero Section */}
-            <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
-
-
-                <div className="absolute inset-0 opacity-20">
-                    <div className="absolute top-10 left-1/4 w-72 h-72 bg-blue-600 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-emerald-600 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-                </div>
+            <section className="py-16 sm:py-20 lg:py-24 bg-[#F0F4F1] relative overflow-hidden">
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="inline-block mb-6 px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white">
-                        <p className="text-sm font-semibold text-white tracking-wide">DELIVERY & RETURNS</p>
+                    <div className="inline-block mb-6 px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-[#244033]">
+                        <p className="text-sm font-semibold text-[#244033] tracking-wide">DELIVERY & RETURNS</p>
                     </div>
 
-                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light text-white mb-6 tracking-tight">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#2F4F3E] mb-6 tracking-tight">
                         Shipping &
 
                         Returns Policy
 
                     </h1>
 
-                    <p className="text-lg sm:text-xl text-black max-w-3xl mx-auto">
+                    <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
                         Fast, reliable shipping and hassle-free returns. Your satisfaction is our priority.
                     </p>
                 </div>
@@ -138,7 +132,7 @@ export default function ShippingReturnsPage() {
                         <button
                             onClick={() => setActiveTab('shipping')}
                             className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'shipping'
-                                ? 'bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg'
+                                ? 'bg-[#244033] text-white shadow-lg'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                         >
@@ -152,7 +146,7 @@ export default function ShippingReturnsPage() {
                         <button
                             onClick={() => setActiveTab('returns')}
                             className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'returns'
-                                ? 'bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg'
+                                ? 'bg-[#244033] text-white shadow-lg'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                         >
@@ -174,7 +168,7 @@ export default function ShippingReturnsPage() {
                     <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-white to-gray-50">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="text-center mb-16">
-                                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-900 mb-4">
+                                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#2F4F3E] mb-4">
                                     Shipping Options
                                 </h2>
                                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -186,10 +180,10 @@ export default function ShippingReturnsPage() {
                                 {shippingMethods.map((method, index) => (
                                     <div
                                         key={index}
-                                        className="group bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-gray-900 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                                        className="group bg-[#F0F4F1] rounded-2xl  p-8 hover:border-gray-900 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                                     >
                                         <div className="flex items-center justify-between mb-4">
-                                            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-900 transition-colors">
+                                            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-[#244033] transition-colors">
                                                 <svg className="w-6 h-6 text-gray-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                                 </svg>
@@ -217,7 +211,7 @@ export default function ShippingReturnsPage() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3">Order Tracking</h3>
+                                    <h3 className="text-xl font-bold text-[#2F4F3E] mb-3">Order Tracking</h3>
                                     <p className="text-gray-600">Track your package in real-time from our warehouse to your doorstep.</p>
                                 </div>
 
@@ -227,7 +221,7 @@ export default function ShippingReturnsPage() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                         </svg>
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3">Secure Packaging</h3>
+                                    <h3 className="text-xl font-bold text-[#2F4F3E] mb-3">Secure Packaging</h3>
                                     <p className="text-gray-600">All orders are carefully packed to ensure safe delivery of your items.</p>
                                 </div>
 
@@ -237,7 +231,7 @@ export default function ShippingReturnsPage() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3">Global Shipping</h3>
+                                    <h3 className="text-xl font-bold text-[#2F4F3E] mb-3">Global Shipping</h3>
                                     <p className="text-gray-600">We deliver to over 50 countries worldwide with reliable carriers.</p>
                                 </div>
                             </div>
@@ -359,7 +353,7 @@ export default function ShippingReturnsPage() {
             <section className="py-16 sm:py-20 lg:py-24 bg-gray-50">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl sm:text-4xl font-light text-gray-900 mb-4">
+                        <h2 className="text-3xl sm:text-4xl font-light text-[#2F4F3E] mb-4">
                             Common Questions
                         </h2>
                         <p className="text-gray-600">
@@ -380,8 +374,11 @@ export default function ShippingReturnsPage() {
                                     <h3 className="text-lg font-semibold text-gray-900 pr-4">
                                         {faq.question}
                                     </h3>
-                                    <div className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 transition-all duration-300 ${expandedFaq === index ? 'rotate-180 bg-gray-900' : ''
-                                        }`}>
+
+                                    <div
+                                        className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 transition-all duration-300 ${expandedFaq === index ? 'rotate-180 bg-[#244033]' : ''
+                                            }`}
+                                    >
                                         <svg
                                             className={`w-5 h-5 transition-colors ${expandedFaq === index ? 'text-white' : 'text-gray-600'
                                                 }`}
@@ -389,10 +386,16 @@ export default function ShippingReturnsPage() {
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
                                         >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M19 9l-7 7-7-7"
+                                            />
                                         </svg>
                                     </div>
                                 </button>
+
 
                                 <div className={`transition-all duration-300 ease-in-out ${expandedFaq === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                                     }`}>
@@ -411,30 +414,22 @@ export default function ShippingReturnsPage() {
             </section>
 
             {/* Contact Support CTA */}
-            <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20">
-                    <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-blue-600 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-emerald-600 rounded-full blur-3xl"></div>
-                </div>
+            <section className="py-16 sm:py-20 lg:py-24 bg-[#F0F4F1] relative overflow-hidden">
 
                 <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    {/* <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full mb-6">
-                        <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                    </div> */}
 
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-4">
+
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#2F4F3E] mb-4">
                         Need Help?
                     </h2>
-                    <p className="text-lg text-black mb-8 max-w-2xl mx-auto">
+                    <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
                         Our customer support team is ready to assist you with any shipping or return questions.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
                             href="/contact"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#244033] text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-2xl hover:scale-105"
                         >
                             Contact Support
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

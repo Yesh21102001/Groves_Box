@@ -94,20 +94,16 @@ export default function FAQPage() {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black py-20 sm:py-28 lg:py-36">
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
-                </div>
+            <section className="relative overflow-hidden bg-[#F0F4F1] py-10 sm:py-12 lg:py-16">
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="inline-block mb-6 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white">
-                        <span className="text-sm font-medium text-white">Help Center</span>
+                    <div className="inline-block mb-6 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-[#244033]">
+                        <span className="text-sm font-medium text-[#244033]">Help Center</span>
                     </div>
 
-                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light text-white mb-6 tracking-tight">
+                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light text-[#2F4F3E] mb-6 tracking-tight">
                         Frequently Asked
-                        <span className="block mt-2 bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent font-normal">
+                        <span className="block mt-2 bg-[#2F4F3E] bg-clip-text text-transparent font-normal">
                             Questions
                         </span>
                     </h1>
@@ -131,7 +127,7 @@ export default function FAQPage() {
                                 key={category}
                                 onClick={() => setActiveCategory(category)}
                                 className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${activeCategory === category
-                                    ? 'bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg scale-105'
+                                    ? 'bg-[#244033] text-white shadow-lg scale-105'
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-105'
                                     }`}
                             >
@@ -168,7 +164,7 @@ export default function FAQPage() {
                                         className="w-full flex items-center justify-between p-6 sm:p-8 text-left transition-colors"
                                     >
                                         <div className="flex-1 pr-4">
-                                            <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full mb-3">
+                                            <span className="inline-block px-3 py-1 bg-[#244033] text-white text-xs font-semibold rounded-full mb-3">
                                                 {faq.category}
                                             </span>
                                             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
@@ -207,11 +203,7 @@ export default function FAQPage() {
             </section>
 
             {/* Contact CTA Section */}
-            <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-1/2 left-1/3 w-96 h-96 bg-emerald-500 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
-                </div>
+            <section className="py-16 sm:py-20 lg:py-24 bg-[#F0F4F1] relative overflow-hidden">
 
                 <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full mb-6">
@@ -220,7 +212,7 @@ export default function FAQPage() {
                         </svg>
                     </div>
 
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-4">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#2F4F3E] mb-4">
                         Still have questions?
                     </h2>
                     <p className="text-lg text-black mb-8 max-w-2xl mx-auto">
@@ -231,7 +223,7 @@ export default function FAQPage() {
 
                         <a
                             href="mailto:support@grovesbox.com"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-black backdrop-blur-sm text-white  rounded-xl font-semibold transition-all duration-300 hover:bg-white/20 hover:scale-105"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#244033] backdrop-blur-sm text-white  rounded-xl font-semibold transition-all duration-300 hover:scale-105"
                         >
                             Email Us
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

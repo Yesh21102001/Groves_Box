@@ -1,3 +1,4 @@
+// Product Detail Page
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -14,6 +15,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { getProduct, getProducts } from '@/src/lib/shopify_utilis';
 import { useCart } from '@/src/context/CartContext';
+import { useWishlist } from '@/src/context/WishlistContext';
 
 
 interface Product {
@@ -30,23 +32,144 @@ interface Product {
     badge?: string | null;
     badgeColor?: string;
     handle: string;
+    variants?: any[];
 }
+
+/* ---------------- PRODUCT CARD COMPONENT (matching home page) ---------------- */
+const ProductCard = ({ product }: { product: Product }) => {
+    const { addToCart } = useCart();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+    const wishlisted = isInWishlist(product.id.toString());
+
+    const handleQuickAdd = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const variantId = product.variants?.[0]?.id;
+
+        if (!variantId) {
+            alert('This product is currently unavailable');
+            return;
+        }
+
+        addToCart({
+            id: product.id,
+            variantId: variantId,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            image: product.image,
+            handle: product.handle,
+            variants: product.variants
+        });
+    };
+
+    const handleWishlistToggle = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (wishlisted) {
+            removeFromWishlist(product.id.toString());
+        } else {
+            addToWishlist({
+                id: product.id.toString(),
+                variantId: product.variants?.[0]?.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                handle: product.handle,
+                variants: product.variants
+            });
+        }
+    };
+
+    return (
+        <Link href={`/products/${product.handle}`} className="group block">
+            {/* Image Container */}
+            <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+                {/* Badge */}
+                {product.badge && (
+                    <div
+                        className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs rounded-full`}
+                    >
+                        {product.badge}
+                    </div>
+                )}
+
+                {/* Wishlist Icon - Top Right */}
+                <button
+                    onClick={handleWishlistToggle}
+                    className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
+                >
+                    <Heart
+                        size={18}
+                        className={wishlisted ? "fill-current text-red-500" : ""}
+                    />
+                </button>
+
+                {/* Quick Add Button - Mobile: Small circular button bottom-right */}
+                <button
+                    onClick={handleQuickAdd}
+                    className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+                >
+                    <ShoppingCart size={18} />
+                </button>
+
+                {/* Quick Add Button - Desktop: Full button at bottom on hover */}
+                <button
+                    onClick={handleQuickAdd}
+                    className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                >
+                    <ShoppingCart size={16} />
+                    Quick Add
+                </button>
+
+                {/* Product Image */}
+                <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+            </div>
+
+            {/* Product Info */}
+            <h3 className="text-sm md:text-base font-sans font-light text-gray-900 mb-1">
+                {product.name}
+            </h3>
+
+            <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-gray-900">
+                    Rs. {product.price}
+                </span>
+
+                {product.originalPrice && (
+                    <span className="text-gray-400 line-through">
+                        Rs. {product.originalPrice}
+                    </span>
+                )}
+            </div>
+        </Link>
+    );
+};
 
 /* ---------------- PAGE COMPONENT ---------------- */
 
 export default function ProductDetailPage() {
     const params = useParams();
     const { addToCart, cartItems } = useCart();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const [product, setProduct] = useState<Product | null>(null);
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const [mainImage, setMainImage] = useState(0);
-    const [isWishlisted, setIsWishlisted] = useState(false);
     const [activeTab, setActiveTab] = useState<'description' | 'care'>('description');
 
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    // Check if current product is wishlisted
+    const isProductWishlisted = product ? isInWishlist(product.id.toString()) : false;
 
     // Fetch product from Shopify
     useEffect(() => {
@@ -80,13 +203,41 @@ export default function ProductDetailPage() {
     const handleAddToCart = () => {
         if (!product) return;
 
+        const variantId = product.variants?.[0]?.id;
+
+        if (!variantId) {
+            alert('This product is currently unavailable');
+            return;
+        }
+
         addToCart({
             id: product.id,
+            variantId: variantId,
             name: product.name,
             price: product.price,
             quantity,
             image: product.image,
+            handle: product.handle,
+            variants: product.variants
         });
+    };
+
+    const handleWishlistToggle = () => {
+        if (!product) return;
+
+        if (isProductWishlisted) {
+            removeFromWishlist(product.id.toString());
+        } else {
+            addToWishlist({
+                id: product.id.toString(),
+                variantId: product.variants?.[0]?.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                handle: product.handle,
+                variants: product.variants
+            });
+        }
     };
 
     const productImages = product?.images || [{ url: product?.image || '' }];
@@ -147,6 +298,18 @@ export default function ProductDetailPage() {
                                         {product.badge}
                                     </div>
                                 )}
+
+                                {/* Wishlist Heart Icon - Top Right */}
+                                <button
+                                    onClick={handleWishlistToggle}
+                                    className="absolute top-4 right-4 z-10 w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#244033] hover:text-white transition-all duration-300"
+                                >
+                                    <Heart
+                                        size={22}
+                                        className={isProductWishlisted ? "fill-current text-red-500" : ""}
+                                    />
+                                </button>
+
                                 <img
                                     src={productImages[mainImage]?.url || product.image}
                                     alt={product.name}
@@ -218,8 +381,8 @@ export default function ProductDetailPage() {
                                 </div>
                             </div>
 
-                            {/* Add to Cart and Wishlist */}
-                            <div className="space-y-3 pt-4">
+                            {/* Add to Cart */}
+                            <div className="pt-4">
                                 <button
                                     onClick={handleAddToCart}
                                     disabled={!product.availableForSale}
@@ -227,16 +390,6 @@ export default function ProductDetailPage() {
                                 >
                                     <ShoppingCart size={20} />
                                     Add to Cart
-                                </button>
-                                <button
-                                    onClick={() => setIsWishlisted(!isWishlisted)}
-                                    className={`w-full py-3 rounded-lg border-2 font-semibold transition flex items-center justify-center gap-2 ${isWishlisted
-                                        ? 'border-red-500 text-red-500'
-                                        : 'border-gray-300 text-gray-900 hover:border-red-500 hover:text-red-500'
-                                        }`}
-                                >
-                                    <Heart size={20} className={isWishlisted ? 'fill-current' : ''} />
-                                    {isWishlisted ? 'Added to Wishlist' : 'Add to Wishlist'}
                                 </button>
                             </div>
 
@@ -334,27 +487,13 @@ export default function ProductDetailPage() {
                         </div>
                     </div>
 
-                    {/* Related Products */}
+                    {/* Related Products - Using ProductCard component like home page */}
                     {relatedProducts.length > 0 && (
                         <div className="mt-16 pt-8 border-t border-gray-200">
                             <h2 className="text-2xl font-light text-gray-900 mb-8">Related Products</h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
                                 {relatedProducts.map((p) => (
-                                    <Link
-                                        key={p.id}
-                                        href={`/products/${p.handle}`}
-                                        className="group block"
-                                    >
-                                        <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
-                                            <img
-                                                src={p.image}
-                                                alt={p.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                                            />
-                                        </div>
-                                        <h3 className="text-sm font-light text-gray-900 mb-1">{p.name}</h3>
-                                        <p className="text-sm font-medium text-[#244033]">From ${p.price}</p>
-                                    </Link>
+                                    <ProductCard key={p.id} product={p} />
                                 ))}
                             </div>
                         </div>
@@ -402,16 +541,5 @@ sm:rounded-b-none
             )
             }
         </div >
-    );
-}
-
-function Info({ icon, title }: { icon: React.ReactNode; title: string }) {
-    return (
-        <div className="flex items-center gap-3 text-sm text-gray-700">
-            <div className="w-10 h-10 bg-teal-50 rounded-full flex items-center justify-center text-teal-600">
-                {icon}
-            </div>
-            {title}
-        </div>
     );
 }

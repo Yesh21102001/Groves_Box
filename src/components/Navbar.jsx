@@ -2,36 +2,73 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store, LogOut, Package, Settings } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { getCollections } from '../lib/shopify_utilis'; // ✅ Import getCollections
+import { getCollections } from '../lib/shopify_utilis';
 
 export default function Navbar() {
     const pathname = usePathname();
+    const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
     const accountDropdownRef = useRef(null);
 
-    // ✅ State for dynamic collections
+    // Authentication state
+    const [currentUser, setCurrentUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    // State for dynamic collections
     const [navCollections, setNavCollections] = useState([]);
     const [loadingCollections, setLoadingCollections] = useState(true);
 
-    // ✅ Use real cart data from CartContext
+    // Use real cart data from CartContext
     const { cartItems, updateQuantity, removeFromCart, loading } = useCart();
 
-    // ✅ Calculate total items from real cart
+    // Calculate total items from real cart
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-    // ✅ Fetch top 4 collections (excluding best-sellers, new-arrivals, on-sale)
+    // Check authentication status
+    useEffect(() => {
+        const checkAuth = () => {
+            const user = localStorage.getItem('plants-current-user');
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    setCurrentUser(userData);
+                    setIsLoggedIn(true);
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    setIsLoggedIn(false);
+                }
+            } else {
+                setIsLoggedIn(false);
+                setCurrentUser(null);
+            }
+        };
+
+        checkAuth();
+
+        // Listen for storage changes (login/logout from other tabs)
+        window.addEventListener('storage', checkAuth);
+
+        // Custom event for login/logout in same tab
+        window.addEventListener('auth-change', checkAuth);
+
+        return () => {
+            window.removeEventListener('storage', checkAuth);
+            window.removeEventListener('auth-change', checkAuth);
+        };
+    }, []);
+
+    // Fetch top 4 collections
     useEffect(() => {
         async function fetchNavCollections() {
             try {
                 setLoadingCollections(true);
-                const collections = await getCollections(20); // Fetch more to filter
+                const collections = await getCollections(20);
 
-                // Filter out the excluded collections
                 const filtered = collections.filter(collection => {
                     const handle = collection.handle.toLowerCase();
                     return handle !== 'best-sellers' &&
@@ -39,12 +76,10 @@ export default function Navbar() {
                         handle !== 'on-sale';
                 });
 
-                // Take first 4 collections
                 const topFour = filtered.slice(0, 4);
                 setNavCollections(topFour);
             } catch (error) {
                 console.error('Error fetching nav collections:', error);
-                // Fallback to default collections if fetch fails
                 setNavCollections([
                     { name: 'Large Plants', handle: 'large-plants', link: '/collections/large-plants' },
                     { name: 'Houseplants', handle: 'houseplants', link: '/collections/houseplants' },
@@ -80,18 +115,36 @@ export default function Navbar() {
         setIsAccountDropdownOpen(!isAccountDropdownOpen);
     };
 
-    // ✅ Update quantity using CartContext
+    // Handle logout
+    const handleLogout = () => {
+        localStorage.removeItem('plants-current-user');
+        setIsLoggedIn(false);
+        setCurrentUser(null);
+        setIsAccountDropdownOpen(false);
+
+        // Dispatch custom event
+        window.dispatchEvent(new Event('auth-change'));
+
+        router.push('/');
+    };
+
+    // Handle mobile account click
+    const handleMobileAccountClick = (e) => {
+        if (!isLoggedIn) {
+            e.preventDefault();
+            router.push('/login');
+        }
+    };
+
     const handleUpdateQuantity = (lineId, newQuantity) => {
         if (newQuantity < 1) return;
         updateQuantity(lineId, newQuantity);
     };
 
-    // ✅ Remove item using CartContext
     const handleRemoveItem = (lineId) => {
         removeFromCart(lineId);
     };
 
-    // ✅ Calculate subtotal from real cart items
     const calculateSubtotal = () => {
         return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
     };
@@ -168,18 +221,84 @@ export default function Navbar() {
                             </Link>
 
                             {/* User Account Dropdown - Desktop Only */}
-                            <div className="hidden lg:block relative group" ref={accountDropdownRef}>
-                                <button className="p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                            <div className="hidden lg:block relative" ref={accountDropdownRef}>
+                                <button
+                                    onClick={toggleAccountDropdown}
+                                    className="p-2 text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1"
+                                >
                                     <User size={22} />
+                                    {isLoggedIn && (
+                                        <ChevronDown size={16} className={`transition-transform ${isAccountDropdownOpen ? 'rotate-180' : ''}`} />
+                                    )}
                                 </button>
 
-                                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 whitespace-nowrap opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
-                                    <Link href="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 whitespace-nowrap">
-                                        Log In
-                                    </Link>
-                                    <Link href="/signup" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 whitespace-nowrap">
-                                        Sign Up
-                                    </Link>
+                                {/* Dropdown Menu */}
+                                <div className={`absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 transition-all duration-200 ${isAccountDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+                                    }`}>
+                                    {isLoggedIn ? (
+                                        <>
+                                            {/* User Info */}
+                                            <div className="px-4 py-3 border-b border-gray-200">
+                                                <p className="text-sm font-semibold text-gray-900">{currentUser?.name}</p>
+                                                <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>
+                                            </div>
+
+                                            {/* Menu Items */}
+                                            <Link
+                                                href="/account"
+                                                onClick={() => setIsAccountDropdownOpen(false)}
+                                                className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                            >
+                                                <User size={18} />
+                                                <span>My Account</span>
+                                            </Link>
+
+                                            <Link
+                                                href="/account/orders"
+                                                onClick={() => setIsAccountDropdownOpen(false)}
+                                                className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                            >
+                                                <Package size={18} />
+                                                <span>My Orders</span>
+                                            </Link>
+
+                                            <Link
+                                                href="/wishlist"
+                                                onClick={() => setIsAccountDropdownOpen(false)}
+                                                className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                            >
+                                                <Heart size={18} />
+                                                <span>Wishlist</span>
+                                            </Link>
+
+                                            <div className="border-t border-gray-200 my-2"></div>
+
+                                            <button
+                                                onClick={handleLogout}
+                                                className="flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors w-full"
+                                            >
+                                                <LogOut size={18} />
+                                                <span>Logout</span>
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Link
+                                                href="/login"
+                                                onClick={() => setIsAccountDropdownOpen(false)}
+                                                className="block px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                            >
+                                                Log In
+                                            </Link>
+                                            <Link
+                                                href="/signup"
+                                                onClick={() => setIsAccountDropdownOpen(false)}
+                                                className="block px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                            >
+                                                Sign Up
+                                            </Link>
+                                        </>
+                                    )}
                                 </div>
                             </div>
 
@@ -198,10 +317,9 @@ export default function Navbar() {
                         </div>
                     </div>
 
-                    {/* Navigation Links - Desktop Only - ✅ DYNAMIC COLLECTIONS */}
+                    {/* Navigation Links - Desktop Only */}
                     <div className="hidden lg:flex justify-center items-center gap-2 pb-4">
                         {loadingCollections ? (
-                            // Show loading skeleton
                             <div className="flex gap-2">
                                 {[1, 2, 3, 4].map((i) => (
                                     <div key={i} className="h-8 w-32 bg-gray-200 rounded-full animate-pulse"></div>
@@ -231,29 +349,33 @@ export default function Navbar() {
             {/* Mobile Bottom Navigation Bar */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 shadow-lg">
                 <div className="flex items-center justify-around h-16 px-2">
-                    <Link href="/" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/' ? 'text-black' : 'text-gray-400 hover:text-black'}`}>
+                    <Link href="/" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/' ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}>
                         <Home size={24} />
                         <span className="text-xs mt-1 font-medium">Home</span>
                     </Link>
 
-                    <Link href="/collections" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/collections') ? 'text-black' : 'text-gray-400 hover:text-black'}`}>
+                    <Link href="/collections" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/products') ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}>
                         <Store size={24} />
                         <span className="text-xs mt-1 font-medium">Shop</span>
                     </Link>
 
-                    <Link href="/wishlist" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist' ? 'text-black' : 'text-gray-400 hover:text-black'}`}>
+                    <Link href="/wishlist" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist' ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}>
                         <Heart size={24} />
                         <span className="text-xs mt-1 font-medium">Wishlist</span>
                     </Link>
 
-                    <Link href="/account" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account' ? 'text-black' : 'text-gray-400 hover:text-black'}`}>
+                    <Link
+                        href={isLoggedIn ? "/account" : "/login"}
+                        onClick={handleMobileAccountClick}
+                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account' ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}
+                    >
                         <User size={24} />
                         <span className="text-xs mt-1 font-medium">Account</span>
                     </Link>
                 </div>
             </div>
 
-            {/* Mobile Sidebar Menu - ✅ DYNAMIC COLLECTIONS */}
+            {/* Mobile Sidebar Menu */}
             <>
                 {/* Backdrop */}
                 <div
@@ -274,6 +396,21 @@ export default function Navbar() {
                         </button>
                     </div>
 
+                    {/* User Info Section (if logged in) */}
+                    {isLoggedIn && currentUser && (
+                        <div className="p-4 bg-[#F0F4F1] border-b border-gray-200">
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-[#244033] rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                                    {currentUser.name?.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-gray-900">{currentUser.name}</p>
+                                    <p className="text-sm text-gray-600 truncate">{currentUser.email}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Scrollable Content */}
                     <div className="flex-1 overflow-y-auto">
                         {/* Collections Section */}
@@ -288,7 +425,6 @@ export default function Navbar() {
                             ) : (
                                 <div className="grid grid-cols-2 gap-3">
                                     {navCollections.map((collection, index) => {
-                                        // Color schemes for each collection
                                         const colors = [
                                             { bg: 'bg-orange-50', color: '#fb923c' },
                                             { bg: 'bg-teal-100', color: '#15803d' },
@@ -331,6 +467,19 @@ export default function Navbar() {
                             )}
                         </div>
 
+                        {/* Menu Links */}
+                        {isLoggedIn && (
+                            <>
+                                <Link href="/account/orders" onClick={handleCloseMenu} className="flex items-center justify-between px-4 py-4 border-t border-gray-200 hover:bg-gray-50 transition-colors">
+                                    <div className="flex items-center gap-3">
+                                        <Package size={20} className="text-gray-700" />
+                                        <span className="font-medium text-gray-900">My Orders</span>
+                                    </div>
+                                    <ChevronRight size={20} className="text-gray-400" />
+                                </Link>
+                            </>
+                        )}
+
                         {/* View Wishlist */}
                         <Link href="/wishlist" onClick={handleCloseMenu} className="flex items-center justify-between px-4 py-4 border-t border-gray-200 hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-3">
@@ -343,17 +492,36 @@ export default function Navbar() {
 
                     {/* Bottom Actions */}
                     <div className="border-t border-gray-200 p-4 space-y-3">
-                        <Link href="/login" onClick={handleCloseMenu} className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-gray-800 transition-colors">
-                            Log In
-                        </Link>
-                        <Link href="/signup" onClick={handleCloseMenu} className="block w-full py-3 px-4 border-2 border-[#244033] text-[#244033] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors">
-                            Sign Up
-                        </Link>
+                        {isLoggedIn ? (
+                            <>
+                                <Link href="/account" onClick={handleCloseMenu} className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors">
+                                    My Account
+                                </Link>
+                                <button
+                                    onClick={() => {
+                                        handleLogout();
+                                        handleCloseMenu();
+                                    }}
+                                    className="block w-full py-3 px-4 border-2 border-red-500 text-red-500 text-center font-semibold rounded-lg hover:bg-red-50 transition-colors"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login" onClick={handleCloseMenu} className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors">
+                                    Log In
+                                </Link>
+                                <Link href="/signup" onClick={handleCloseMenu} className="block w-full py-3 px-4 border-2 border-[#244033] text-[#244033] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors">
+                                    Sign Up
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </>
 
-            {/* ✅ Side Cart - NOW WITH REAL DATA */}
+            {/* Side Cart */}
             <>
                 {/* Backdrop */}
                 <div
@@ -456,7 +624,7 @@ export default function Navbar() {
                             <Link
                                 href="/cart"
                                 onClick={handleCloseCart}
-                                className="block w-full py-3 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-black-700 transition-colors"
+                                className="block w-full py-3 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors"
                             >
                                 View Cart
                             </Link>

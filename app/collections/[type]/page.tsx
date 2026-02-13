@@ -224,41 +224,70 @@ export default function CollectionDetailPage() {
                             } flex flex-col`}
                     >
                         {/* Sidebar Header */}
-                        <div className="bg-white border-b border-gray-200 p-6 flex items-center justify-between flex-shrink-0">
-                            <h2 className="text-lg font-semibold text-gray-900">Filter and sort</h2>
+                        <div className="bg-gradient-to-r from-[#244033] to-[#2F4F3E] p-6 flex items-center justify-between flex-shrink-0">
+                            <div>
+                                <h2 className="text-xl font-semibold text-white">Filters & Sort</h2>
+                                <p className="text-sm text-white/80 mt-1">Customize your search</p>
+                            </div>
                             <button
                                 onClick={() => setShowFiltersSidebar(false)}
-                                className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                                className="p-2 hover:bg-white/20 rounded-full transition-colors"
                             >
-                                <X className="w-6 h-6" />
+                                <X className="w-6 h-6 text-white" />
                             </button>
                         </div>
 
                         {/* Sidebar Content */}
-                        <div className="flex-1 overflow-y-auto p-6 space-y-8">
+                        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50">
                             {/* Sort By */}
-                            <div>
-                                <h3 className="text-base font-semibold text-gray-900 mb-4">Sort by</h3>
+                            <div className="bg-white rounded-xl p-5 shadow-sm">
+                                <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 bg-[#244033] rounded-full"></span>
+                                    Sort by
+                                </h3>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#244033] bg-white"
+                                    className="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent bg-white text-gray-900 font-medium cursor-pointer"
                                 >
-                                    <option value="popular">Featured</option>
-                                    <option value="newest">Newest</option>
-                                    <option value="price-low">Price: Low to High</option>
-                                    <option value="price-high">Price: High to Low</option>
+                                    <option value="popular">✨ Featured</option>
+                                    <option value="newest">🆕 Newest First</option>
+                                    <option value="price-low">💰 Price: Low to High</option>
+                                    <option value="price-high">💎 Price: High to Low</option>
                                 </select>
                             </div>
 
                             {/* Price Range */}
-                            <div>
-                                <h3 className="text-base font-semibold text-gray-900 mb-4">Price Range</h3>
-                                <div className="space-y-6">
+                            <div className="bg-white rounded-xl p-5 shadow-sm">
+                                <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 bg-[#244033] rounded-full"></span>
+                                    Price Range
+                                </h3>
+
+                                {/* Price Range Display */}
+                                <div className="bg-gradient-to-r from-[#244033]/5 to-[#2F4F3E]/5 rounded-lg p-4 mb-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="text-center flex-1">
+                                            <p className="text-xs text-gray-500 mb-1">Minimum</p>
+                                            <p className="text-lg font-bold text-[#244033]">₹{priceRange[0]}</p>
+                                        </div>
+                                        <div className="w-px h-8 bg-gray-300 mx-3"></div>
+                                        <div className="text-center flex-1">
+                                            <p className="text-xs text-gray-500 mb-1">Maximum</p>
+                                            <p className="text-lg font-bold text-[#244033]">
+                                                {priceRange[1] === Infinity ? '∞' : `₹${priceRange[1]}`}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Dual Range Slider */}
+                                <div className="space-y-4">
                                     <div>
-                                        <label className="text-sm text-gray-600 block mb-2">
-                                            Min: Rs. {priceRange[0]}
-                                        </label>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <label className="text-xs font-medium text-gray-600">Min Price</label>
+                                            <span className="text-xs text-[#244033] font-semibold">₹{priceRange[0]}</span>
+                                        </div>
                                         <input
                                             type="range"
                                             min="0"
@@ -271,13 +300,17 @@ export default function CollectionDetailPage() {
                                                     setPriceRange([newMin, priceRange[1]]);
                                                 }
                                             }}
-                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#244033]"
+                                            className="w-full h-2 bg-gradient-to-r from-[#244033] to-[#2F4F3E] rounded-full appearance-none cursor-pointer slider-thumb"
                                         />
                                     </div>
+
                                     <div>
-                                        <label className="text-sm text-gray-600 block mb-2">
-                                            Max: {priceRange[1] === Infinity ? 'No limit' : `Rs. ${priceRange[1]}`}
-                                        </label>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <label className="text-xs font-medium text-gray-600">Max Price</label>
+                                            <span className="text-xs text-[#244033] font-semibold">
+                                                {priceRange[1] === Infinity ? '∞' : `₹${priceRange[1]}`}
+                                            </span>
+                                        </div>
                                         <input
                                             type="range"
                                             min="0"
@@ -290,37 +323,72 @@ export default function CollectionDetailPage() {
                                                     setPriceRange([priceRange[0], newMax]);
                                                 }
                                             }}
-                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#244033]"
+                                            className="w-full h-2 bg-gradient-to-r from-[#244033] to-[#2F4F3E] rounded-full appearance-none cursor-pointer slider-thumb"
                                         />
                                     </div>
-                                    <div className="flex items-center justify-between text-sm text-gray-600 pt-2">
-                                        <span>Rs. {priceRange[0]}</span>
-                                        <span>-</span>
-                                        <span>{priceRange[1] === Infinity ? 'No limit' : `Rs. ${priceRange[1]}`}</span>
-                                    </div>
                                 </div>
+                            </div>
+
+                            {/* Active Filters Count */}
+                            <div className="bg-[#244033]/5 rounded-lg p-4 border border-[#244033]/10">
+                                <p className="text-sm text-gray-700">
+                                    <span className="font-semibold text-[#244033]">{filteredProducts.length}</span> products match your filters
+                                </p>
                             </div>
                         </div>
 
                         {/* Sidebar Footer */}
-                        <div className="bg-white border-t border-gray-200 p-6 flex gap-4 flex-shrink-0">
+                        <div className="bg-white border-t border-gray-200 p-6 flex gap-3 flex-shrink-0">
                             <button
                                 onClick={() => {
                                     setPriceRange([0, Infinity]);
                                     setSortBy('popular');
                                 }}
-                                className="flex-1 text-center px-6 py-3 border border-gray-300 rounded-md text-gray-900 hover:bg-gray-50 font-medium transition-colors"
+                                className="flex-1 text-center px-6 py-3 border-2 border-[#244033] rounded-lg text-[#244033] hover:bg-[#244033]/5 font-semibold transition-colors"
                             >
                                 Clear All
                             </button>
                             <button
                                 onClick={() => setShowFiltersSidebar(false)}
-                                className="flex-1 bg-[#244033] text-white font-medium rounded-md hover:bg-[#2F4F3E] transition-colors py-3"
+                                className="flex-1 bg-[#244033] text-white font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors py-3 shadow-lg"
                             >
-                                Apply Filters
+                                Apply
                             </button>
                         </div>
                     </div>
+
+                    {/* Custom Slider Styles */}
+                    <style jsx>{`
+                        .slider-thumb::-webkit-slider-thumb {
+                            appearance: none;
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 50%;
+                            background: white;
+                            border: 3px solid #244033;
+                            cursor: pointer;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                            transition: all 0.2s ease;
+                        }
+                        .slider-thumb::-webkit-slider-thumb:hover {
+                            transform: scale(1.1);
+                            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+                        }
+                        .slider-thumb::-moz-range-thumb {
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 50%;
+                            background: white;
+                            border: 3px solid #244033;
+                            cursor: pointer;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                            transition: all 0.2s ease;
+                        }
+                        .slider-thumb::-moz-range-thumb:hover {
+                            transform: scale(1.1);
+                            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+                        }
+                    `}</style>
 
                     {/* Products Grid */}
                     <div className="w-full">

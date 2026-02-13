@@ -163,16 +163,22 @@ export default function WishlistPage() {
             {totalItems > 0 && (
                 <div
                     className="
-            fixed z-50
-            bg-[#F0F4F1] border-t border-gray-200 shadow-lg
-            bottom-[70px] left-3 right-3
-            sm:bottom-0 
-            sm:left-1/2 
-            sm:-translate-x-1/2 
-            sm:w-[500px] 
-            sm:rounded-t-[20px] 
-            p-5 rounded-[20px]
-          "
+      fixed z-40
+      bg-[#F0F4F1] border-t border-gray-200 shadow-lg
+
+      bottom-[70px] left-3 right-3          /* mobile */
+      
+     sm:bottom-0 
+sm:left-1/2 
+sm:-translate-x-1/2 
+sm:w-[500px] 
+sm:rounded-t-[20px] 
+sm:rounded-b-none
+                    /* desktop width */
+
+      p-5 rounded-[20px]
+      sm:p-4 sm:rounded-[16px]
+    "
                 >
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -183,9 +189,7 @@ export default function WishlistPage() {
                                 <p className="text-sm text-gray-600">
                                     {totalItems} item{totalItems > 1 ? "s" : ""}
                                 </p>
-                                <p className="font-semibold">
-                                    Rs. {totalPrice.toFixed(2)}
-                                </p>
+                                <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
                             </div>
                         </div>
 

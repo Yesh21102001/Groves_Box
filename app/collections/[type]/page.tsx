@@ -423,8 +423,9 @@ export default function CollectionDetailPage() {
 
             {/* Bottom Cart Navigator */}
             {totalItems > 0 && (
-                <div className="
-      fixed z-50
+                <div
+                    className="
+      fixed z-40
       bg-[#F0F4F1] border-t border-gray-200 shadow-lg
 
       bottom-[70px] left-3 right-3          /* mobile */
@@ -439,7 +440,8 @@ sm:rounded-b-none
 
       p-5 rounded-[20px]
       sm:p-4 sm:rounded-[16px]
-    ">
+    "
+                >
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="bg-[#244033] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
@@ -447,11 +449,12 @@ sm:rounded-b-none
                             </div>
                             <div>
                                 <p className="text-sm text-gray-600">
-                                    {totalItems} item{totalItems > 1 ? 's' : ''}
+                                    {totalItems} item{totalItems > 1 ? "s" : ""}
                                 </p>
-                                <p className="font-semibold">Rs.{totalPrice.toFixed(2)}</p>
+                                <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
                             </div>
                         </div>
+
                         <Link
                             href="/cart"
                             className="bg-[#244033] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#2F4F3E] transition"

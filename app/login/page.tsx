@@ -4,11 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useWishlist } from '@/src/context/WishlistContext';
+import { customerLogin, getCustomerData } from '@/src/lib/shopify_utilis';
 
 export default function LoginPage() {
     const router = useRouter();
-    const { syncWishlistOnLogin } = useWishlist(); // ← Add this
-    
+    const { syncWishlistOnLogin } = useWishlist();
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -23,38 +24,65 @@ export default function LoginPage() {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
 
         try {
-            // Get stored users
-            const users = JSON.parse(localStorage.getItem('plants-users') || '[]');
+            // Call Shopify customer login API
+            const loginResponse = await customerLogin(formData.email, formData.password);
 
-            // Find user
-            const user = users.find((u: any) => u.email === formData.email && u.password === formData.password);
-
-            if (!user) {
-                setError('Invalid email or password');
+            // Check for errors
+            if (loginResponse.customerUserErrors && loginResponse.customerUserErrors.length > 0) {
+                const errorMessage = loginResponse.customerUserErrors[0].message;
+                setError(errorMessage || 'Invalid email or password');
                 setIsLoading(false);
                 return;
             }
 
-            // Store logged in user
-            localStorage.setItem('plants-current-user', JSON.stringify({
-                id: user.id,
-                email: user.email,
-                name: user.name
-            }));
+            // Get access token
+            const accessToken = loginResponse.customerAccessToken?.accessToken;
 
-            // ✅ SYNC WISHLIST AFTER LOGIN
-            // This merges any guest wishlist items with the user's saved wishlist
+            if (!accessToken) {
+                setError('Login failed. Please try again.');
+                setIsLoading(false);
+                return;
+            }
+
+            // Fetch customer data
+            const customerData = await getCustomerData(accessToken);
+
+            if (!customerData) {
+                setError('Failed to retrieve customer data');
+                setIsLoading(false);
+                return;
+            }
+
+            // Store customer data and access token
+            const userData = {
+                id: customerData.id,
+                email: customerData.email,
+                name: customerData.name,
+                firstName: customerData.firstName,
+                lastName: customerData.lastName,
+                accessToken: accessToken,
+                expiresAt: loginResponse.customerAccessToken.expiresAt
+            };
+
+            localStorage.setItem('plants-current-user', JSON.stringify(userData));
+
+            // Dispatch auth change event
+            window.dispatchEvent(new Event('auth-change'));
+
+            // Sync wishlist after login
             syncWishlistOnLogin();
 
+            // Redirect to account page
             router.push('/account');
         } catch (err) {
-            setError('An error occurred. Please try again.');
+            console.error('Login error:', err);
+            setError('An error occurred during login. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -109,6 +137,13 @@ export default function LoginPage() {
                         />
                     </div>
 
+                    {/* Forgot Password Link */}
+                    <div className="text-right">
+                        <Link href="/forgot-password" className="text-sm text-[#244033] hover:underline">
+                            Forgot password?
+                        </Link>
+                    </div>
+
                     {/* Submit Button */}
                     <button
                         type="submit"
@@ -127,13 +162,6 @@ export default function LoginPage() {
                             Sign up
                         </Link>
                     </p>
-                </div>
-
-                {/* Demo Credentials */}
-                <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-xs font-semibold text-blue-900 mb-2">Demo Credentials:</p>
-                    <p className="text-xs text-blue-800">Email: demo@example.com</p>
-                    <p className="text-xs text-blue-800">Password: demo123</p>
                 </div>
             </div>
         </div>

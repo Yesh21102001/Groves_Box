@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, Check } from 'lucide-react';
+import { Eye, EyeOff, Check, X } from 'lucide-react';
+import { customerCreate, customerLogin, getCustomerData } from '@/src/lib/shopify_utilis';
 
 export default function SignUpPage() {
     const router = useRouter();
@@ -11,6 +12,7 @@ export default function SignUpPage() {
         firstName: '',
         lastName: '',
         email: '',
+        phone: '',
         password: '',
         confirmPassword: '',
     });
@@ -25,8 +27,41 @@ export default function SignUpPage() {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+
+        // Limit to 10 digits for Indian mobile numbers
+        if (value.length > 10) {
+            value = value.slice(0, 10);
+        }
+
+        // Format as XXXXX-XXXXX (Indian format)
+        if (value.length > 5) {
+            value = `${value.slice(0, 5)}-${value.slice(5)}`;
+        }
+
+        setFormData(prev => ({ ...prev, phone: value }));
+    };
+
     const validatePassword = (password: string) => {
         return password.length >= 8;
+    };
+
+    const validateIndianPhone = (phone: string) => {
+        const digitsOnly = phone.replace(/\D/g, '');
+
+        // Must be exactly 10 digits
+        if (digitsOnly.length !== 10) {
+            return false;
+        }
+
+        // First digit must be 6, 7, 8, or 9 (valid Indian mobile prefixes)
+        const firstDigit = digitsOnly[0];
+        if (!['6', '7', '8', '9'].includes(firstDigit)) {
+            return false;
+        }
+
+        return true;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -34,8 +69,13 @@ export default function SignUpPage() {
         setError('');
 
         // Validation
-        if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
+        if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.password || !formData.confirmPassword) {
             setError('Please fill in all fields');
+            return;
+        }
+
+        if (!validateIndianPhone(formData.phone)) {
+            setError('Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9');
             return;
         }
 
@@ -57,40 +97,90 @@ export default function SignUpPage() {
         setIsLoading(true);
 
         try {
-            // Get existing users
-            const users = JSON.parse(localStorage.getItem('plants-users') || '[]');
+            // Format phone for Shopify (E.164 format: +91XXXXXXXXXX)
+            const phoneDigits = formData.phone.replace(/\D/g, '');
+            const formattedPhone = `+91${phoneDigits}`;
 
-            // Check if user already exists
-            if (users.some((u: any) => u.email === formData.email)) {
-                setError('Email already registered');
+            // Create customer in Shopify
+            const createResponse = await customerCreate(
+                formData.email,
+                formData.password,
+                formData.firstName,
+                formData.lastName,
+                formattedPhone
+            );
+
+            // Check for errors
+            if (createResponse.customerUserErrors && createResponse.customerUserErrors.length > 0) {
+                const errorMessage = createResponse.customerUserErrors[0].message;
+
+                // Handle specific error messages
+                if (errorMessage.toLowerCase().includes('taken') || errorMessage.toLowerCase().includes('already exists')) {
+                    setError('This email is already registered. Please sign in instead.');
+                } else {
+                    setError(errorMessage);
+                }
                 setIsLoading(false);
                 return;
             }
 
-            // Create new user
-            const newUser = {
-                id: Date.now().toString(),
-                name: `${formData.firstName} ${formData.lastName}`,
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                email: formData.email,
-                password: formData.password,
-                createdAt: new Date().toISOString()
+            // Check if customer was created successfully
+            if (!createResponse.customer) {
+                setError('Account creation failed. Please try again.');
+                setIsLoading(false);
+                return;
+            }
+
+            // Now log the user in automatically
+            const loginResponse = await customerLogin(formData.email, formData.password);
+
+            if (loginResponse.customerUserErrors && loginResponse.customerUserErrors.length > 0) {
+                setError('Account created but login failed. Please try signing in.');
+                setIsLoading(false);
+                router.push('/login');
+                return;
+            }
+
+            const accessToken = loginResponse.customerAccessToken?.accessToken;
+
+            if (!accessToken) {
+                setError('Account created but login failed. Please try signing in.');
+                setIsLoading(false);
+                router.push('/login');
+                return;
+            }
+
+            // Fetch customer data
+            const customerData = await getCustomerData(accessToken);
+
+            if (!customerData) {
+                setError('Account created but failed to retrieve data. Please try signing in.');
+                setIsLoading(false);
+                router.push('/login');
+                return;
+            }
+
+            // Store customer data and access token
+            const userData = {
+                id: customerData.id,
+                email: customerData.email,
+                name: customerData.name,
+                firstName: customerData.firstName,
+                lastName: customerData.lastName,
+                phone: customerData.phone || formattedPhone,
+                accessToken: accessToken,
+                expiresAt: loginResponse.customerAccessToken.expiresAt
             };
 
-            users.push(newUser);
-            localStorage.setItem('plants-users', JSON.stringify(users));
+            localStorage.setItem('plants-current-user', JSON.stringify(userData));
 
-            // Log the user in
-            localStorage.setItem('plants-current-user', JSON.stringify({
-                id: newUser.id,
-                email: newUser.email,
-                name: newUser.name
-            }));
+            // Dispatch auth change event
+            window.dispatchEvent(new Event('auth-change'));
 
             // Redirect to account page
             router.push('/account');
         } catch (err) {
+            console.error('Sign up error:', err);
             setError('Sign up failed. Please try again.');
         } finally {
             setIsLoading(false);
@@ -98,6 +188,11 @@ export default function SignUpPage() {
     };
 
     const passwordStrength = formData.password.length >= 8 ? 'strong' : formData.password.length >= 4 ? 'medium' : 'weak';
+
+    // Check if phone is valid for visual feedback
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    const isPhoneValid = validateIndianPhone(formData.phone);
+    const showPhoneValidation = phoneDigits.length === 10;
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-20">
@@ -117,36 +212,37 @@ export default function SignUpPage() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* First Name */}
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                First Name
-                            </label>
-                            <input
-                                type="text"
-                                name="firstName"
-                                value={formData.firstName}
-                                onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
-                                placeholder="John"
-                                required
-                            />
-                        </div>
+                        {/* Name Fields */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                    First Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    value={formData.firstName}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
+                                    placeholder="John"
+                                    required
+                                />
+                            </div>
 
-                        {/* Last Name */}
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                Last Name
-                            </label>
-                            <input
-                                type="text"
-                                name="lastName"
-                                value={formData.lastName}
-                                onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
-                                placeholder="Doe"
-                                required
-                            />
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                    Last Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
+                                    placeholder="Doe"
+                                    required
+                                />
+                            </div>
                         </div>
 
                         {/* Email */}
@@ -163,6 +259,51 @@ export default function SignUpPage() {
                                 placeholder="you@example.com"
                                 required
                             />
+                        </div>
+
+                        {/* Indian Phone Number */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                Mobile Number
+                            </label>
+                            <div className="relative">
+                                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center">
+                                    <span className="text-gray-600 font-semibold">+91</span>
+                                    <div className="w-px h-6 bg-gray-300 ml-2"></div>
+                                </div>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handlePhoneChange}
+                                    className={`w-full pl-16 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] ${showPhoneValidation
+                                        ? isPhoneValid
+                                            ? 'border-green-300 bg-green-50'
+                                            : 'border-red-300 bg-red-50'
+                                        : 'border-gray-300'
+                                        }`}
+                                    placeholder="98765-43210"
+                                    maxLength={11}
+                                    required
+                                />
+                                {showPhoneValidation && (
+                                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                                        {isPhoneValid ? (
+                                            <Check className="w-5 h-5 text-green-600" />
+                                        ) : (
+                                            <X className="w-5 h-5 text-red-600" />
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Enter a 10-digit Indian mobile number (starts with 6, 7, 8, or 9)
+                            </p>
+                            {showPhoneValidation && !isPhoneValid && (
+                                <p className="text-xs text-red-600 mt-1">
+                                    ⚠️ Invalid number. Must start with 6, 7, 8, or 9
+                                </p>
+                            )}
                         </div>
 
                         {/* Password */}
@@ -201,6 +342,9 @@ export default function SignUpPage() {
                                             }`}></div>
                                         <span className="text-xs text-gray-600 capitalize">{passwordStrength}</span>
                                     </div>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Minimum 8 characters required
+                                    </p>
                                 </div>
                             )}
                         </div>

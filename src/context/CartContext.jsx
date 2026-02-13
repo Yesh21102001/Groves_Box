@@ -17,21 +17,78 @@ export function CartProvider({ children }) {
     const [cartId, setCartId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [checkoutUrl, setCheckoutUrl] = useState(null);
+    const [currentUserId, setCurrentUserId] = useState('guest');
+
+    // Listen for auth changes and reinitialize cart
+    useEffect(() => {
+        const handleAuthChange = () => {
+            console.log('🔄 Auth changed, reinitializing cart...');
+            initializeCart();
+        };
+
+        window.addEventListener('auth-change', handleAuthChange);
+        window.addEventListener('storage', handleAuthChange);
+
+        return () => {
+            window.removeEventListener('auth-change', handleAuthChange);
+            window.removeEventListener('storage', handleAuthChange);
+        };
+    }, []);
 
     // Initialize cart on mount
     useEffect(() => {
         initializeCart();
     }, []);
 
+    // Helper function to get current user ID
+    const getCurrentUserId = () => {
+        if (typeof window === 'undefined') return 'guest';
+
+        const userStr = localStorage.getItem('plants-current-user');
+        if (!userStr) return 'guest';
+
+        try {
+            const user = JSON.parse(userStr);
+            return user.id || 'guest';
+        } catch (error) {
+            console.error('Error parsing user:', error);
+            return 'guest';
+        }
+    };
+
     // Initialize or get existing cart
     const initializeCart = async () => {
         try {
             setLoading(true);
 
-            // Try to get cart ID from localStorage
+            // Get current user from localStorage
+            let currentUser = null;
+            let userId = 'guest'; // Default to guest
+
+            if (typeof window !== 'undefined') {
+                const userStr = localStorage.getItem('plants-current-user');
+                if (userStr) {
+                    try {
+                        currentUser = JSON.parse(userStr);
+                        userId = currentUser.id; // Use user's unique ID
+                        console.log('👤 Current user:', currentUser.email, '| ID:', userId);
+                    } catch (error) {
+                        console.error('Error parsing user:', error);
+                    }
+                }
+            }
+
+            setCurrentUserId(userId);
+
+            // Create user-specific cart key
+            const cartKey = `shopify_cart_id_${userId}`;
+            console.log('🔑 Using cart key:', cartKey);
+
+            // Try to get cart ID from localStorage (user-specific)
             let storedCartId = null;
             if (typeof window !== 'undefined') {
-                storedCartId = localStorage.getItem('shopify_cart_id');
+                storedCartId = localStorage.getItem(cartKey);
+                console.log('📦 Stored cart ID:', storedCartId || 'none');
             }
 
             if (storedCartId) {
@@ -46,18 +103,18 @@ export function CartProvider({ children }) {
                         setCartId(storedCartId);
                         setCheckoutUrl(cartData.data.cart.checkoutUrl);
                         updateCartItems(cartData.data.cart);
-                        console.log('✅ Cart loaded:', cartData.data.cart);
+                        console.log('✅ Cart loaded for user:', userId);
                     } else {
                         // Cart doesn't exist, create new one
-                        await createNewCart();
+                        await createNewCart(userId);
                     }
                 } catch (error) {
                     console.error('Error fetching cart:', error);
-                    await createNewCart();
+                    await createNewCart(userId);
                 }
             } else {
                 // No cart ID, create new cart
-                await createNewCart();
+                await createNewCart(userId);
             }
         } catch (error) {
             console.error('Error initializing cart:', error);
@@ -67,9 +124,15 @@ export function CartProvider({ children }) {
     };
 
     // Create a new cart
-    const createNewCart = async () => {
+    const createNewCart = async (userId = null) => {
         try {
             console.log('📝 Creating new cart...');
+
+            // Get user ID if not provided
+            if (!userId) {
+                userId = getCurrentUserId();
+            }
+
             const response = await shopifyFetch({
                 query: CREATE_CART
             });
@@ -80,12 +143,15 @@ export function CartProvider({ children }) {
             setCartId(newCartId);
             setCheckoutUrl(newCheckoutUrl);
             setCartItems([]);
+            setCurrentUserId(userId);
 
+            // Store cart ID with user-specific key
             if (typeof window !== 'undefined') {
-                localStorage.setItem('shopify_cart_id', newCartId);
+                const cartKey = `shopify_cart_id_${userId}`;
+                localStorage.setItem(cartKey, newCartId);
+                console.log(`✅ New cart created for user ${userId}:`, newCartId);
             }
 
-            console.log('✅ New cart created:', newCartId);
             return newCartId;
         } catch (error) {
             console.error('❌ Error creating cart:', error);
@@ -146,11 +212,12 @@ export function CartProvider({ children }) {
             console.log('🛒 Adding to cart:', product);
 
             let currentCartId = cartId;
+            let userId = getCurrentUserId();
 
             // Create cart if doesn't exist
             if (!currentCartId) {
                 console.log('📝 No cart exists, creating new one...');
-                currentCartId = await createNewCart();
+                currentCartId = await createNewCart(userId);
             }
 
             // Get the variant ID
@@ -263,7 +330,8 @@ export function CartProvider({ children }) {
     const clearCart = async () => {
         try {
             console.log('🗑️ Clearing cart...');
-            await createNewCart();
+            const userId = getCurrentUserId();
+            await createNewCart(userId);
             console.log('✅ Cart cleared');
         } catch (error) {
             console.error('❌ Error clearing cart:', error);
@@ -279,7 +347,8 @@ export function CartProvider({ children }) {
         updateQuantity,
         removeFromCart,
         clearCart,
-        refreshCart
+        refreshCart,
+        currentUserId
     };
 
     return (

@@ -43,6 +43,475 @@ export async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams
   }
 }
 
+// lib/shopify_customer_utils.ts
+// Extended Shopify customer utilities for account management
+
+/**
+ * Get Customer Orders
+ */
+export async function getCustomerOrders(accessToken: string, limit = 10) {
+  const query = `
+    query getCustomerOrders($customerAccessToken: String!, $first: Int!) {
+      customer(customerAccessToken: $customerAccessToken) {
+        orders(first: $first, sortKey: PROCESSED_AT, reverse: true) {
+          edges {
+            node {
+              id
+              orderNumber
+              name
+              processedAt
+              financialStatus
+              fulfillmentStatus
+              totalPrice {
+                amount
+                currencyCode
+              }
+              subtotalPrice {
+                amount
+                currencyCode
+              }
+              totalShippingPrice {
+                amount
+                currencyCode
+              }
+              totalTax {
+                amount
+                currencyCode
+              }
+              shippingAddress {
+                address1
+                address2
+                city
+                province
+                zip
+                country
+                phone
+              }
+              lineItems(first: 50) {
+                edges {
+                  node {
+                    title
+                    quantity
+                    variant {
+                      id
+                      title
+                      price {
+                        amount
+                        currencyCode
+                      }
+                      image {
+                        url
+                        altText
+                      }
+                      product {
+                        handle
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query,
+      variables: { customerAccessToken: accessToken, first: limit }
+    });
+
+    if (!data?.data?.customer) {
+      return [];
+    }
+
+    return data.data.customer.orders.edges.map(({ node }: any) => formatOrder(node));
+  } catch (error) {
+    console.error('Error fetching customer orders:', error);
+    return [];
+  }
+}
+
+/**
+ * Get Customer Addresses
+ */
+export async function getCustomerAddresses(accessToken: string) {
+  const query = `
+    query getCustomerAddresses($customerAccessToken: String!) {
+      customer(customerAccessToken: $customerAccessToken) {
+        addresses(first: 10) {
+          edges {
+            node {
+              id
+              firstName
+              lastName
+              address1
+              address2
+              city
+              province
+              zip
+              country
+              phone
+            }
+          }
+        }
+        defaultAddress {
+          id
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query,
+      variables: { customerAccessToken: accessToken }
+    });
+
+    if (!data?.data?.customer) {
+      return [];
+    }
+
+    const defaultAddressId = data.data.customer.defaultAddress?.id;
+    return data.data.customer.addresses.edges.map(({ node }: any) => ({
+      ...node,
+      isDefault: node.id === defaultAddressId
+    }));
+  } catch (error) {
+    console.error('Error fetching customer addresses:', error);
+    return [];
+  }
+}
+
+/**
+ * Create Customer Address
+ */
+export async function createCustomerAddress(
+  accessToken: string,
+  address: {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    address2?: string;
+    city: string;
+    province: string;
+    zip: string;
+    country: string;
+    phone?: string;
+  }
+) {
+  const mutation = `
+    mutation customerAddressCreate($customerAccessToken: String!, $address: MailingAddressInput!) {
+      customerAddressCreate(customerAccessToken: $customerAccessToken, address: $address) {
+        customerAddress {
+          id
+          firstName
+          lastName
+          address1
+          address2
+          city
+          province
+          zip
+          country
+          phone
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query: mutation,
+      variables: {
+        customerAccessToken: accessToken,
+        address: {
+          ...address,
+          address2: address.address2 || '',
+          phone: address.phone || ''
+        }
+      }
+    });
+
+    if (data.data.customerAddressCreate.customerUserErrors.length > 0) {
+      throw new Error(data.data.customerAddressCreate.customerUserErrors[0].message);
+    }
+
+    return data.data.customerAddressCreate.customerAddress;
+  } catch (error) {
+    console.error('Error creating address:', error);
+    throw error;
+  }
+}
+
+/**
+ * Update Customer Address
+ */
+export async function updateCustomerAddress(
+  accessToken: string,
+  addressId: string,
+  address: {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    address2?: string;
+    city: string;
+    province: string;
+    zip: string;
+    country: string;
+    phone?: string;
+  }
+) {
+  const mutation = `
+    mutation customerAddressUpdate($customerAccessToken: String!, $id: ID!, $address: MailingAddressInput!) {
+      customerAddressUpdate(customerAccessToken: $customerAccessToken, id: $id, address: $address) {
+        customerAddress {
+          id
+          firstName
+          lastName
+          address1
+          address2
+          city
+          province
+          zip
+          country
+          phone
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query: mutation,
+      variables: {
+        customerAccessToken: accessToken,
+        id: addressId,
+        address: {
+          ...address,
+          phone: address.phone || ''
+        }
+      }
+    });
+
+    if (data.data.customerAddressUpdate.customerUserErrors.length > 0) {
+      throw new Error(data.data.customerAddressUpdate.customerUserErrors[0].message);
+    }
+
+    return data.data.customerAddressUpdate.customerAddress;
+  } catch (error) {
+    console.error('Error updating address:', error);
+    throw error;
+  }
+}
+
+/**
+ * Delete Customer Address
+ */
+export async function deleteCustomerAddress(accessToken: string, addressId: string) {
+  const mutation = `
+    mutation customerAddressDelete($customerAccessToken: String!, $id: ID!) {
+      customerAddressDelete(customerAccessToken: $customerAccessToken, id: $id) {
+        deletedCustomerAddressId
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query: mutation,
+      variables: {
+        customerAccessToken: accessToken,
+        id: addressId
+      }
+    });
+
+    if (data.data.customerAddressDelete.customerUserErrors.length > 0) {
+      throw new Error(data.data.customerAddressDelete.customerUserErrors[0].message);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error deleting address:', error);
+    throw error;
+  }
+}
+
+/**
+ * Set Default Address
+ */
+export async function setDefaultAddress(accessToken: string, addressId: string) {
+  const mutation = `
+    mutation customerDefaultAddressUpdate($customerAccessToken: String!, $addressId: ID!) {
+      customerDefaultAddressUpdate(customerAccessToken: $customerAccessToken, addressId: $addressId) {
+        customer {
+          id
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query: mutation,
+      variables: {
+        customerAccessToken: accessToken,
+        addressId
+      }
+    });
+
+    if (data.data.customerDefaultAddressUpdate.customerUserErrors.length > 0) {
+      throw new Error(data.data.customerDefaultAddressUpdate.customerUserErrors[0].message);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error setting default address:', error);
+    throw error;
+  }
+}
+
+/**
+ * Update Customer Profile
+ */
+export async function updateCustomerProfile(
+  accessToken: string,
+  customer: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    acceptsMarketing?: boolean;
+  }
+) {
+  const mutation = `
+    mutation customerUpdate($customerAccessToken: String!, $customer: CustomerUpdateInput!) {
+      customerUpdate(customerAccessToken: $customerAccessToken, customer: $customer) {
+        customer {
+          id
+          firstName
+          lastName
+          email
+          phone
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyFetch({
+      query: mutation,
+      variables: {
+        customerAccessToken: accessToken,
+        customer
+      }
+    });
+
+    if (data.data.customerUpdate.customerUserErrors.length > 0) {
+      throw new Error(data.data.customerUpdate.customerUserErrors[0].message);
+    }
+
+    return data.data.customerUpdate.customer;
+  } catch (error) {
+    console.error('Error updating customer profile:', error);
+    throw error;
+  }
+}
+
+/**
+ * Format Order Data
+ */
+function formatOrder(order: any) {
+  const status = determineOrderStatus(order.fulfillmentStatus, order.financialStatus);
+
+  return {
+    id: order.name,
+    orderNumber: order.orderNumber,
+    date: new Date(order.processedAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }),
+    total: `$${parseFloat(order.totalPrice.amount).toFixed(2)}`,
+    totalAmount: parseFloat(order.totalPrice.amount),
+    subtotal: parseFloat(order.subtotalPrice.amount),
+    shipping: parseFloat(order.totalShippingPrice.amount),
+    tax: parseFloat(order.totalTax.amount),
+    status: status,
+    financialStatus: order.financialStatus,
+    fulfillmentStatus: order.fulfillmentStatus,
+    shippingAddress: order.shippingAddress,
+    items: order.lineItems.edges.map(({ node }: any) => ({
+      title: node.title,
+      quantity: node.quantity,
+      price: parseFloat(node.variant.price.amount),
+      image: node.variant.image?.url || '/images/placeholder.webp',
+      handle: node.variant.product.handle,
+      variantTitle: node.variant.title
+    })),
+    itemsText: order.lineItems.edges
+      .map(({ node }: any) => `${node.title}${node.quantity > 1 ? ` (×${node.quantity})` : ''}`)
+      .join(', ')
+  };
+}
+
+/**
+ * Determine Order Status
+ */
+function determineOrderStatus(fulfillmentStatus: string, financialStatus: string): string {
+  if (fulfillmentStatus === 'FULFILLED') {
+    return 'Delivered';
+  }
+  if (fulfillmentStatus === 'PARTIAL') {
+    return 'Partially Shipped';
+  }
+  if (fulfillmentStatus === 'IN_TRANSIT') {
+    return 'In Transit';
+  }
+  if (fulfillmentStatus === 'UNFULFILLED') {
+    if (financialStatus === 'PAID') {
+      return 'Processing';
+    }
+    if (financialStatus === 'PENDING') {
+      return 'Payment Pending';
+    }
+  }
+  if (financialStatus === 'REFUNDED') {
+    return 'Refunded';
+  }
+  if (financialStatus === 'PARTIALLY_REFUNDED') {
+    return 'Partially Refunded';
+  }
+
+  return 'Processing';
+}
+
 /* =====================================================
    SHOPIFY CART QUERIES & MUTATIONS
 ===================================================== */
@@ -843,6 +1312,57 @@ export async function getProductDetails(handle: string) {
 ===================================================== */
 
 /**
+ * Customer Signup/Registration
+ */
+export async function customerCreate(
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+  phone?: string
+) {
+  const mutation = `
+    mutation customerCreate($input: CustomerCreateInput!) {
+      customerCreate(input: $input) {
+        customer {
+          id
+          email
+          firstName
+          lastName
+          phone
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const input: any = {
+    email,
+    password,
+    firstName,
+    lastName,
+    acceptsMarketing: false
+  };
+
+  // Add phone if provided (must be in E.164 format: +1XXXXXXXXXX)
+  if (phone) {
+    input.phone = phone;
+  }
+
+  const data = await shopifyFetch({
+    query: mutation,
+    variables: { input }
+  });
+
+  return data.data.customerCreate;
+}
+
+
+/**
  * Customer Login
  */
 export async function customerLogin(email: string, password: string) {
@@ -886,6 +1406,7 @@ export async function getCustomerData(accessToken: string) {
         email
         firstName
         lastName
+        phone
         metafield(namespace: "custom", key: "wishlist") {
           value
         }
@@ -911,6 +1432,8 @@ export async function getCustomerData(accessToken: string) {
       email: customer.email,
       firstName: customer.firstName,
       lastName: customer.lastName,
+      phone: customer.phone || '',
+      name: `${customer.firstName} ${customer.lastName}`,
       wishlist: wishlistData ? JSON.parse(wishlistData) : []
     };
   } catch (error) {

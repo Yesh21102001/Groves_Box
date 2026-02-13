@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store, LogOut, Package, Settings } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { getCollections } from '../lib/shopify_utilis';
+import { getCollections, customerLogout } from '../lib/shopify_utilis';
 
 export default function Navbar() {
     const pathname = usePathname();
@@ -36,11 +36,31 @@ export default function Navbar() {
             if (user) {
                 try {
                     const userData = JSON.parse(user);
-                    setCurrentUser(userData);
-                    setIsLoggedIn(true);
+
+                    // Check if access token exists and hasn't expired
+                    if (userData.accessToken) {
+                        const expiresAt = new Date(userData.expiresAt);
+                        const now = new Date();
+
+                        if (expiresAt > now) {
+                            // Token is still valid
+                            setCurrentUser(userData);
+                            setIsLoggedIn(true);
+                        } else {
+                            // Token expired, clear data
+                            localStorage.removeItem('plants-current-user');
+                            setIsLoggedIn(false);
+                            setCurrentUser(null);
+                        }
+                    } else {
+                        setCurrentUser(userData);
+                        setIsLoggedIn(true);
+                    }
                 } catch (error) {
                     console.error('Error parsing user data:', error);
+                    localStorage.removeItem('plants-current-user');
                     setIsLoggedIn(false);
+                    setCurrentUser(null);
                 }
             } else {
                 setIsLoggedIn(false);
@@ -115,17 +135,32 @@ export default function Navbar() {
         setIsAccountDropdownOpen(!isAccountDropdownOpen);
     };
 
-    // Handle logout
-    const handleLogout = () => {
-        localStorage.removeItem('plants-current-user');
-        setIsLoggedIn(false);
-        setCurrentUser(null);
-        setIsAccountDropdownOpen(false);
+    // Handle logout with Shopify API
+    const handleLogout = async () => {
+        try {
+            // Get access token if it exists
+            const user = localStorage.getItem('plants-current-user');
+            if (user) {
+                const userData = JSON.parse(user);
+                if (userData.accessToken) {
+                    // Call Shopify logout API
+                    await customerLogout(userData.accessToken);
+                }
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+        } finally {
+            // Always clear local storage regardless of API call success
+            localStorage.removeItem('plants-current-user');
+            setIsLoggedIn(false);
+            setCurrentUser(null);
+            setIsAccountDropdownOpen(false);
 
-        // Dispatch custom event
-        window.dispatchEvent(new Event('auth-change'));
+            // Dispatch custom event
+            window.dispatchEvent(new Event('auth-change'));
 
-        router.push('/');
+            router.push('/');
+        }
     };
 
     // Handle mobile account click
@@ -260,15 +295,6 @@ export default function Navbar() {
                                             >
                                                 <Package size={18} />
                                                 <span>My Orders</span>
-                                            </Link>
-
-                                            <Link
-                                                href="/wishlist"
-                                                onClick={() => setIsAccountDropdownOpen(false)}
-                                                className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                                            >
-                                                <Heart size={18} />
-                                                <span>Wishlist</span>
                                             </Link>
 
                                             <div className="border-t border-gray-200 my-2"></div>
@@ -490,11 +516,16 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    {/* Bottom Actions */}
+                    {/* Bottom Actions - Login/Logout Buttons */}
                     <div className="border-t border-gray-200 p-4 space-y-3">
-                        {isLoggedIn ? (
+                        {isLoggedIn && currentUser ? (
+                            // USER IS LOGGED IN - Show Account and Logout buttons
                             <>
-                                <Link href="/account" onClick={handleCloseMenu} className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors">
+                                <Link
+                                    href="/account"
+                                    onClick={handleCloseMenu}
+                                    className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors"
+                                >
                                     My Account
                                 </Link>
                                 <button
@@ -508,11 +539,20 @@ export default function Navbar() {
                                 </button>
                             </>
                         ) : (
+                            // USER IS NOT LOGGED IN - Show Login and Sign Up buttons
                             <>
-                                <Link href="/login" onClick={handleCloseMenu} className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors">
+                                <Link
+                                    href="/login"
+                                    onClick={handleCloseMenu}
+                                    className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors"
+                                >
                                     Log In
                                 </Link>
-                                <Link href="/signup" onClick={handleCloseMenu} className="block w-full py-3 px-4 border-2 border-[#244033] text-[#244033] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors">
+                                <Link
+                                    href="/signup"
+                                    onClick={handleCloseMenu}
+                                    className="block w-full py-3 px-4 border-2 border-[#244033] text-[#244033] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+                                >
                                     Sign Up
                                 </Link>
                             </>

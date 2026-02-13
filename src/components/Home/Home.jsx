@@ -855,7 +855,7 @@ export default function HomePage() {
       {totalItems > 0 && (
         <div
           className="
-      fixed z-50
+      fixed z-40
       bg-[#F0F4F1] border-t border-gray-200 shadow-lg
 
       bottom-[70px] left-3 right-3          /* mobile */

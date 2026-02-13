@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, Check, X } from 'lucide-react';
+import { Eye, EyeOff, Check, X, CheckCircle } from 'lucide-react';
 import { customerCreate, customerLogin, getCustomerData } from '@/src/lib/shopify_utilis';
 
 export default function SignUpPage() {
@@ -21,6 +21,7 @@ export default function SignUpPage() {
     const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -28,7 +29,7 @@ export default function SignUpPage() {
     };
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        let value = e.target.value.replace(/\D/g, '');
 
         // Limit to 10 digits for Indian mobile numbers
         if (value.length > 10) {
@@ -177,8 +178,13 @@ export default function SignUpPage() {
             // Dispatch auth change event
             window.dispatchEvent(new Event('auth-change'));
 
-            // Redirect to account page
-            router.push('/');
+            // Show success popup
+            setShowSuccess(true);
+
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                router.push('/');
+            }, 2000);
         } catch (err) {
             console.error('Sign up error:', err);
             setError('Sign up failed. Please try again.');
@@ -196,6 +202,28 @@ export default function SignUpPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-20">
+            {/* Success Popup */}
+            {showSuccess && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/20">
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm mx-4 animate-fade-in">
+                        <div className="text-center">
+                            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <CheckCircle className="w-10 h-10 text-green-600" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                                Account Created Successfully!
+                            </h3>
+                            <p className="text-gray-600 mb-1">
+                                Welcome, {formData.firstName}!
+                            </p>
+                            <p className="text-sm text-gray-500">
+                                Redirecting you to your dashboard...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="w-full max-w-md">
                 {/* Header */}
                 <div className="text-center mb-8">
@@ -425,6 +453,22 @@ export default function SignUpPage() {
                     </p>
                 </div>
             </div>
+
+            <style jsx>{`
+                @keyframes fade-in {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.9);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+                .animate-fade-in {
+                    animation: fade-in 0.3s ease-out;
+                }
+            `}</style>
         </div>
     );
 }

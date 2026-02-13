@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useWishlist } from '@/src/context/WishlistContext';
 import { customerLogin, getCustomerData } from '@/src/lib/shopify_utilis';
+import { CheckCircle } from 'lucide-react';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -16,6 +17,7 @@ export default function LoginPage() {
     });
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -78,8 +80,13 @@ export default function LoginPage() {
             // Sync wishlist after login
             syncWishlistOnLogin();
 
-            // Redirect to account page
-            router.push('/');
+            // Show success popup
+            setShowSuccess(true);
+
+            // Redirect after 1.5 seconds
+            setTimeout(() => {
+                router.push('/');
+            }, 1500);
         } catch (err) {
             console.error('Login error:', err);
             setError('An error occurred during login. Please try again.');
@@ -90,6 +97,25 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+            {/* Success Popup */}
+            {showSuccess && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/20">
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm mx-4 animate-fade-in">
+                        <div className="text-center">
+                            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <CheckCircle className="w-10 h-10 text-green-600" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                                Login Successful!
+                            </h3>
+                            <p className="text-gray-600">
+                                Welcome back! Redirecting you now...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="max-w-md mx-auto px-4 py-12 sm:py-20">
                 {/* Logo/Header */}
                 <div className="text-center mb-8">
@@ -164,6 +190,22 @@ export default function LoginPage() {
                     </p>
                 </div>
             </div>
+
+            <style jsx>{`
+                @keyframes fade-in {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.9);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+                .animate-fade-in {
+                    animation: fade-in 0.3s ease-out;
+                }
+            `}</style>
         </div>
     );
 }

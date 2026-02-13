@@ -178,7 +178,7 @@ export default function SignUpPage() {
             window.dispatchEvent(new Event('auth-change'));
 
             // Redirect to account page
-            router.push('/account');
+            router.push('/');
         } catch (err) {
             console.error('Sign up error:', err);
             setError('Sign up failed. Please try again.');

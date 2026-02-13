@@ -288,14 +288,14 @@ export default function Navbar() {
                                                 <span>My Account</span>
                                             </Link>
 
-                                            <Link
+                                            {/* <Link
                                                 href="/account/orders"
                                                 onClick={() => setIsAccountDropdownOpen(false)}
                                                 className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
                                             >
                                                 <Package size={18} />
                                                 <span>My Orders</span>
-                                            </Link>
+                                            </Link> */}
 
                                             <div className="border-t border-gray-200 my-2"></div>
 
@@ -496,13 +496,13 @@ export default function Navbar() {
                         {/* Menu Links */}
                         {isLoggedIn && (
                             <>
-                                <Link href="/account/orders" onClick={handleCloseMenu} className="flex items-center justify-between px-4 py-4 border-t border-gray-200 hover:bg-gray-50 transition-colors">
+                                {/* <Link href="/account/orders" onClick={handleCloseMenu} className="flex items-center justify-between px-4 py-4 border-t border-gray-200 hover:bg-gray-50 transition-colors">
                                     <div className="flex items-center gap-3">
                                         <Package size={20} className="text-gray-700" />
                                         <span className="font-medium text-gray-900">My Orders</span>
                                     </div>
                                     <ChevronRight size={20} className="text-gray-400" />
-                                </Link>
+                                </Link> */}
                             </>
                         )}
 

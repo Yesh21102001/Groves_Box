@@ -79,7 +79,7 @@ export default function LoginPage() {
             syncWishlistOnLogin();
 
             // Redirect to account page
-            router.push('/account');
+            router.push('/');
         } catch (err) {
             console.error('Login error:', err);
             setError('An error occurred during login. Please try again.');

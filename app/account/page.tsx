@@ -673,7 +673,7 @@ export default function AccountPage() {
                                         <h3 className="text-lg font-semibold text-gray-900 mb-2">No orders yet</h3>
                                         <p className="text-gray-600 mb-6">Start shopping to see your orders here</p>
                                         <button
-                                            onClick={() => router.push('/collections/all')}
+                                            onClick={() => router.push('/products')}
                                             className="px-6 py-3 bg-[#244033] text-white rounded-xl hover:bg-[#1a2f26] transition-all duration-200 shadow-md"
                                         >
                                             Start Shopping

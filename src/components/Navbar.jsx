@@ -380,7 +380,7 @@ export default function Navbar() {
                         <span className="text-xs mt-1 font-medium">Home</span>
                     </Link>
 
-                    <Link href="/collections" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/products') ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}>
+                    <Link href="/products" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/products') ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}>
                         <Store size={24} />
                         <span className="text-xs mt-1 font-medium">Shop</span>
                     </Link>

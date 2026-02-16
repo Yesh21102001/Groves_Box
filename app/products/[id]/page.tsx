@@ -165,8 +165,8 @@ export default function ProductDetailPage() {
     const [mainImage, setMainImage] = useState(0);
     const [activeTab, setActiveTab] = useState<'description' | 'care'>('description');
 
-    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalItems = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
+    const totalPrice = cartItems.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
 
     // Check if current product is wishlisted
     const isProductWishlisted = product ? isInWishlist(product.id.toString()) : false;

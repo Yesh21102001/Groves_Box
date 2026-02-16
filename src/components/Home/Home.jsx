@@ -687,12 +687,14 @@ export default function HomePage() {
               </Link>
             </div>
 
+
             {/* Products Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {saleProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
+
 
           </div>
         </section>
@@ -714,6 +716,7 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
+
 
             {/* Workshop Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 xl:gap-12">
@@ -742,6 +745,7 @@ export default function HomePage() {
                     )}
                   </div>
 
+
                   {/* Content */}
                   <div className="p-5 md:p-6 lg:p-7">
                     <h3 className="text-xl md:text-xl lg:text-xl  font-normal text-[#2F4F3E] font-bold mb-3 md:mb-4 leading-tight group-hover:text-gray-700 transition-colors">
@@ -768,6 +772,7 @@ export default function HomePage() {
               <p className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#2F4F3E]">What our customers are saying</p>
             </div>
 
+
             {/* Slider Container */}
             <div className="relative">
               <div className="flex flex-col md:flex-row gap-0 overflow-hidden h-auto md:h-[500px]">
@@ -792,6 +797,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
+
                 {/* Right Container - Image */}
                 <div className="w-full md:w-4/5 relative overflow-hidden bg-gray-100 h-[300px] md:h-full">
                   {testimonials.map((testimonial, index) => (
@@ -812,6 +818,7 @@ export default function HomePage() {
                     </div>
                   ))}
 
+
                   {/* Navigation Buttons */}
                   <button
                     onClick={prevSlide}
@@ -820,6 +827,7 @@ export default function HomePage() {
                   >
                     <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
                   </button>
+
 
                   <button
                     onClick={nextSlide}
@@ -855,23 +863,18 @@ export default function HomePage() {
       {totalItems > 0 && (
         <div
           className="
-      fixed z-40
-      bg-[#F0F4F1] border-t border-gray-200 shadow-lg
-
-      bottom-[70px] left-3 right-3          /* mobile */
-      
-     sm:bottom-0 
-sm:left-1/2 
-sm:-translate-x-1/2 
-sm:w-[500px] 
-sm:rounded-t-[20px] 
-sm:rounded-b-none
-                    /* desktop width */
-
-      p-5 rounded-[20px]
-      sm:p-4 sm:rounded-[16px]
-    "
-        >
+              fixed z-40
+              bg-[#F0F4F1] border-t border-gray-200 shadow-lg
+              bottom-[70px] left-3 right-3          /* mobile */
+              sm:bottom-0
+              sm:left-1/2
+              sm:-translate-x-1/2
+              sm:w-[500px]
+              sm:rounded-t-[20px]
+              sm:rounded-b-none
+                                        /* desktop width */
+              p-5 rounded-[20px]
+              sm:p-4 sm:rounded-[16px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-[#244033] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">

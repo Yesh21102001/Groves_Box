@@ -171,7 +171,7 @@ export default function HomePage() {
     return (
       <Link href={`/products/${product.handle}`} className="group block">
         {/* Image Container */}
-        <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+        <div className="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-4">
           {/* Badge */}
           {product.badge && (
             <div
@@ -210,7 +210,6 @@ export default function HomePage() {
           </button>
 
           {/* Quick Add Button */}
-          {/* Mobile: Small circular button bottom-right, always visible */}
           <button
             onClick={handleQuickAdd}
             className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
@@ -239,10 +238,6 @@ export default function HomePage() {
         <h3 className="text-sm md:text-base font-sans font-light text-gray-900 mb-1">
           {product.name}
         </h3>
-
-        {/* <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
-          {product.description}
-        </p> */}
 
         <div className="flex items-center gap-2 text-sm">
           <span className="font-medium text-gray-900">
@@ -293,25 +288,26 @@ export default function HomePage() {
 
 
       {/* HERO SECTION */}
-      <section
-        className="
-    relative w-full
-    min-h-[70vh]
-    2xl:min-h-[85vh]
-    px-4 sm:px-6 lg:px-12 2xl:px-24
-    flex items-center justify-end
-    bg-cover bg-center
+      <Link href="/products">
+        <section
+          className="
+      relative w-full
+      min-h-[70vh]
+      2xl:min-h-[80vh]
+      px-4 sm:px-6 lg:px-12 2xl:px-24
+      flex items-center justify-end
+      bg-cover bg-center
+      cursor-pointer
 
-    /* MOBILE background */
-    bg-[url('/images/Groves_Box_mobile.png')]
+      /* MOBILE background */
+      bg-[url('/images/Groves_Box_mobile.png')]
 
-    /* DESKTOP background */
-    sm:bg-[url('/images/Groves%20Box.png')]
-  "
-      >
-        
-
-      </section>
+      /* DESKTOP background */
+      sm:bg-[url('/images/Groves%20Box.png')]
+    "
+        >
+        </section>
+      </Link>
 
 
       {/* FEATURES SECTION */}

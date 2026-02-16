@@ -36,8 +36,8 @@ export default function ProductsPage() {
     const [error, setError] = useState<string | null>(null);
     const { addToCart, cartItems } = useCart();
 
-    const totalItems = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
-    const totalPrice = cartItems.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     // Determine page title based on filter
     const getPageTitle = () => {

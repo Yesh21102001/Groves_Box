@@ -1,11 +1,11 @@
 // Product Page
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Filter, X, Heart, ShoppingCart, ChevronRight } from 'lucide-react';
 import { useCart } from '@/src/context/CartContext';
-import { useWishlist } from '@/src/context/WishlistContext'; // ← ADD THIS
+import { useWishlist } from '@/src/context/WishlistContext';
 import { getProducts, getNewArrivals, getProductsByTag, getProductsByCollection } from '@/src/lib/shopify_utilis';
 import { useSearchParams } from 'next/navigation';
 
@@ -20,11 +20,11 @@ interface Product {
     badgeColor?: string;
     handle: string;
     tags?: string[];
-    variants?: any[]; // ← ADD THIS
-    variantId?: string; // ← ADD THIS
+    variants?: any[];
+    variantId?: string;
 }
 
-export default function ProductsPage() {
+function ProductsPageContent() {
     const searchParams = useSearchParams();
     const filterParam = searchParams.get('filter');
 
@@ -144,10 +144,10 @@ export default function ProductsPage() {
         });
     };
 
-    // Product Card Component - FIXED VERSION
+    // Product Card Component
     const ProductCard = ({ product }: { product: Product }) => {
-        const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist(); // ← USE WISHLIST CONTEXT
-        const wishlisted = isInWishlist(product.id.toString()); // ← CHECK IF IN WISHLIST
+        const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+        const wishlisted = isInWishlist(product.id.toString());
 
         return (
             <div className="group">
@@ -162,17 +162,15 @@ export default function ProductsPage() {
                         </div>
                     )}
 
-                    {/* Wishlist Icon - Top Right - FIXED */}
+                    {/* Wishlist Icon - Top Right */}
                     <button
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
 
                             if (wishlisted) {
-                                // Remove from wishlist
                                 removeFromWishlist(product.id.toString());
                             } else {
-                                // Add to wishlist
                                 addToWishlist({
                                     id: product.id.toString(),
                                     variantId: product.variants?.[0]?.id || '',
@@ -613,5 +611,20 @@ sm:rounded-b-none
 
             </div>
         </div>
+    );
+}
+
+export default function ProductsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading products...</p>
+                </div>
+            </div>
+        }>
+            <ProductsPageContent />
+        </Suspense>
     );
 }

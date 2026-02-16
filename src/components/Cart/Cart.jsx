@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Trash2, Minus, Plus, AlertCircle, Package, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 import { getProducts } from "../../lib/shopify_utilis";
 
 export default function CartPage() {
@@ -87,18 +88,49 @@ export default function CartPage() {
 
     // Product Card Component
     const ProductCard = ({ product }) => {
-        const [isWishlisted, setIsWishlisted] = useState(false);
+        const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+        const wishlisted = isInWishlist(product.id.toString());
 
-        const handleAddToCart = (e) => {
+        const handleQuickAdd = (e) => {
             e.preventDefault();
             e.stopPropagation();
+
+            const variantId = product.variants?.[0]?.id;
+
+            if (!variantId) {
+                alert('This product is currently unavailable');
+                return;
+            }
+
             addToCart({
                 id: product.id,
+                variantId: variantId,
                 name: product.name,
                 price: product.price,
                 quantity: 1,
                 image: product.image,
+                handle: product.handle,
+                variants: product.variants
             });
+        };
+
+        const handleWishlistToggle = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (wishlisted) {
+                removeFromWishlist(product.id.toString());
+            } else {
+                addToWishlist({
+                    id: product.id.toString(),
+                    variantId: product.variants?.[0]?.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    handle: product.handle,
+                    variants: product.variants
+                });
+            }
         };
 
         return (
@@ -116,31 +148,26 @@ export default function CartPage() {
 
                     {/* Wishlist Icon - Top Right */}
                     <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsWishlisted(!isWishlisted);
-                        }}
+                        onClick={handleWishlistToggle}
                         className="absolute top-2 right-2 z-10 w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
                     >
                         <Heart
                             size={16}
-                            className={`sm:w-[18px] sm:h-[18px] ${isWishlisted ? "fill-current text-red-500" : ""}`}
+                            className={`sm:w-[18px] sm:h-[18px] ${wishlisted ? "fill-current text-red-500" : ""}`}
                         />
                     </button>
 
-                    {/* Quick Add Button */}
-                    {/* Mobile: Small circular button bottom-right, always visible */}
+                    {/* Quick Add Button - Mobile: Small circular button bottom-right */}
                     <button
-                        onClick={handleAddToCart}
-                        className="absolute bottom-2 right-2 z-10 w-9 h-9 sm:w-10 sm:h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition active:scale-95 md:hidden"
+                        onClick={handleQuickAdd}
+                        className="absolute bottom-2 right-2 z-10 w-9 h-9 sm:w-10 sm:h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition active:scale-95 md:hidden"
                     >
                         <ShoppingCart size={16} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
 
-                    {/* Desktop: Full button at bottom on hover */}
+                    {/* Quick Add Button - Desktop: Full button at bottom on hover */}
                     <button
-                        onClick={handleAddToCart}
+                        onClick={handleQuickAdd}
                         className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                     >
                         <ShoppingCart size={16} />

@@ -11,12 +11,12 @@ export default function WishlistPage() {
     const { addToCart, cartItems } = useCart();
 
     const totalItems = cartItems.reduce(
-        (sum, item) => sum + item.quantity,
+        (sum: number, item: any) => sum + item.quantity,
         0
     );
 
     const totalPrice = cartItems.reduce(
-        (sum, item) => sum + item.price * item.quantity,
+        (sum: number, item: any) => sum + item.price * item.quantity,
         0
     );
 

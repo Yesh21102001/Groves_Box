@@ -5,6 +5,20 @@ import Link from 'next/link';
 import { X, Trash2, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/src/context/CartContext';
 
+// Interface for Cart Item
+interface CartItem {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    image: string;
+    size?: string;
+    color?: string;
+    variantId?: string;
+    handle?: string;
+    variants?: any[];
+}
+
 export default function CartSidebar() {
     const { cartItems, showCart, setShowCart, removeFromCart, updateQuantity, totalPrice } = useCart();
 
@@ -38,7 +52,7 @@ export default function CartSidebar() {
                 {cartItems.length > 0 ? (
                     <>
                         <div className="p-6 space-y-6">
-                            {cartItems.map((item) => (
+                            {cartItems.map((item: CartItem) => (
                                 <div key={item.id} className="flex gap-4 border-b border-gray-200 pb-6">
                                     {/* Product Image */}
                                     <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">

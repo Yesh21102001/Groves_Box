@@ -8,6 +8,38 @@ import { useCart } from '@/src/context/CartContext';
 import { useWishlist } from '@/src/context/WishlistContext';
 import { getCollection } from '@/src/lib/shopify_utilis';
 
+// TypeScript Interfaces
+interface ProductVariant {
+    id: string;
+    title: string;
+    price: number;
+    availableForSale: boolean;
+}
+
+interface Product {
+    id: string;
+    name: string;
+    handle: string;
+    price: number;
+    originalPrice?: number;
+    image: string;
+    description?: string;
+    badge?: string;
+    badgeColor?: string;
+    variants?: ProductVariant[];
+}
+
+interface Collection {
+    id: string;
+    name: string;
+    description?: string;
+    handle: string;
+    image?: string;
+    imageAlt?: string;
+    link: string;
+    products: Product[];
+}
+
 export default function CollectionDetailPage() {
     const params = useParams();
     const [showFiltersSidebar, setShowFiltersSidebar] = useState(false);
@@ -15,14 +47,14 @@ export default function CollectionDetailPage() {
     const { cartItems, addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
-    const [collection, setCollection] = useState(null);
-    const [products, setProducts] = useState([]);
+    const [collection, setCollection] = useState<Collection | null>(null);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [priceRange, setPriceRange] = useState([0, Infinity]); // Show all products by default
+    const [error, setError] = useState<string | null>(null);
+    const [priceRange, setPriceRange] = useState<[number, number | typeof Infinity]>([0, Infinity]); // Show all products by default
 
-    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalItems = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
+    const totalPrice = cartItems.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
 
     const collectionHandle = params?.type as string;
 
@@ -36,14 +68,14 @@ export default function CollectionDetailPage() {
                 const collectionData = await getCollection(collectionHandle);
 
                 if (collectionData) {
-                    setCollection(collectionData);
-                    setProducts(collectionData.products || []);
+                    setCollection(collectionData as Collection);
+                    setProducts((collectionData as Collection).products || []);
                 } else {
                     setError('Collection not found');
                 }
             } catch (err) {
                 console.error('Error fetching collection:', err);
-                setError(err.message);
+                setError(err instanceof Error ? err.message : 'An error occurred');
             } finally {
                 setLoading(false);
             }
@@ -55,13 +87,13 @@ export default function CollectionDetailPage() {
     }, [collectionHandle]);
 
     // Filter products by price range
-    const filteredProducts = products.filter(product => {
+    const filteredProducts = products.filter((product: Product) => {
         const price = product.price;
         return price >= priceRange[0] && (priceRange[1] === Infinity || price <= priceRange[1]);
     });
 
     // Handle add to cart
-    const handleAddToCart = (e: React.MouseEvent, product: any) => {
+    const handleAddToCart = (e: React.MouseEvent, product: Product) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -85,17 +117,19 @@ export default function CollectionDetailPage() {
     };
 
     // Handle wishlist toggle
-    const toggleWishlist = (e: React.MouseEvent, product: any) => {
+    const toggleWishlist = (e: React.MouseEvent, product: Product) => {
         e.preventDefault();
         e.stopPropagation();
 
         const productId = product.id.toString();
+        const variantId = product.variants?.[0]?.id || product.id;
 
         if (isInWishlist(productId)) {
             removeFromWishlist(productId);
         } else {
             addToWishlist({
                 id: productId,
+                variantId: variantId,
                 name: product.name,
                 price: product.price,
                 image: product.image,
@@ -105,7 +139,7 @@ export default function CollectionDetailPage() {
     };
 
     // Sort products
-    const sortedProducts = [...filteredProducts].sort((a, b) => {
+    const sortedProducts = [...filteredProducts].sort((a: Product, b: Product) => {
         if (sortBy === 'price-low') return a.price - b.price;
         if (sortBy === 'price-high') return b.price - a.price;
         if (sortBy === 'newest') return b.id.localeCompare(a.id);
@@ -291,7 +325,7 @@ export default function CollectionDetailPage() {
                                         <input
                                             type="range"
                                             min="0"
-                                            max={products.length > 0 ? Math.max(...products.map(p => p.price)) : 100000}
+                                            max={products.length > 0 ? Math.max(...products.map((p: Product) => p.price)) : 100000}
                                             step="100"
                                             value={priceRange[0]}
                                             onChange={(e) => {
@@ -314,9 +348,9 @@ export default function CollectionDetailPage() {
                                         <input
                                             type="range"
                                             min="0"
-                                            max={products.length > 0 ? Math.max(...products.map(p => p.price)) : 100000}
+                                            max={products.length > 0 ? Math.max(...products.map((p: Product) => p.price)) : 100000}
                                             step="100"
-                                            value={priceRange[1] === Infinity ? (products.length > 0 ? Math.max(...products.map(p => p.price)) : 100000) : priceRange[1]}
+                                            value={priceRange[1] === Infinity ? (products.length > 0 ? Math.max(...products.map((p: Product) => p.price)) : 100000) : priceRange[1]}
                                             onChange={(e) => {
                                                 const newMax = parseInt(e.target.value);
                                                 if (newMax >= priceRange[0]) {
@@ -394,7 +428,7 @@ export default function CollectionDetailPage() {
                     <div className="w-full">
                         {sortedProducts.length > 0 ? (
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                                {sortedProducts.map((product) => (
+                                {sortedProducts.map((product: Product) => (
                                     <Link
                                         key={product.id}
                                         href={`/products/${product.handle}`}

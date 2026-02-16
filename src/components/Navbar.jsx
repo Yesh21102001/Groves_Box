@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store, LogOut, Package, Settings } from 'lucide-react';
+import { Search, Heart, User, ShoppingCart, ChevronDown, Menu, X, MapPin, ChevronRight, Minus, Plus, Trash2, Home, Store, LogOut, Package, Settings, CheckCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { getCollections, customerLogout } from '../lib/shopify_utilis';
 
@@ -13,6 +13,7 @@ export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+    const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
     const accountDropdownRef = useRef(null);
 
     // Authentication state
@@ -159,8 +160,21 @@ export default function Navbar() {
             // Dispatch custom event
             window.dispatchEvent(new Event('auth-change'));
 
-            router.push('/');
+            // Show success popup
+            setShowLogoutSuccess(true);
+
+            // Auto-close popup and redirect after 2 seconds
+            setTimeout(() => {
+                setShowLogoutSuccess(false);
+                router.push('/');
+            }, 2000);
         }
+    };
+
+    // Handle close logout success popup
+    const handleCloseLogoutSuccess = () => {
+        setShowLogoutSuccess(false);
+        router.push('/');
     };
 
     // Handle mobile account click
@@ -203,7 +217,7 @@ export default function Navbar() {
 
     // Prevent scroll when menu or cart is open
     useEffect(() => {
-        if (isMenuOpen || isCartOpen) {
+        if (isMenuOpen || isCartOpen || showLogoutSuccess) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
@@ -211,7 +225,7 @@ export default function Navbar() {
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [isMenuOpen, isCartOpen]);
+    }, [isMenuOpen, isCartOpen, showLogoutSuccess]);
 
     return (
         <>
@@ -268,61 +282,112 @@ export default function Navbar() {
                                 </button>
 
                                 {/* Dropdown Menu */}
-                                <div className={`absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 transition-all duration-200 ${isAccountDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+                                <div className={`absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50 transition-all duration-200 ${isAccountDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
                                     }`}>
                                     {isLoggedIn ? (
                                         <>
                                             {/* User Info */}
-                                            <div className="px-4 py-3 border-b border-gray-200">
-                                                <p className="text-sm font-semibold text-gray-900">{currentUser?.name}</p>
-                                                <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>
+                                            <div className="px-4 py-3 bg-gradient-to-r from-[#244033] to-[#2F4F3E] text-white">
+                                                <p className="text-sm font-semibold">{currentUser?.name}</p>
+                                                <p className="text-xs opacity-90 truncate">{currentUser?.email}</p>
                                             </div>
 
                                             {/* Menu Items */}
-                                            <Link
-                                                href="/account"
-                                                onClick={() => setIsAccountDropdownOpen(false)}
-                                                className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                                            >
-                                                <User size={18} />
-                                                <span>My Account</span>
-                                            </Link>
+                                            <div className="py-2">
+                                                <Link
+                                                    href="/account"
+                                                    onClick={() => setIsAccountDropdownOpen(false)}
+                                                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-[#F0F4F1] transition-colors group"
+                                                >
+                                                    <div className="w-8 h-8 bg-[#F0F4F1] rounded-lg flex items-center justify-center group-hover:bg-[#244033] transition-colors">
+                                                        <User size={18} className="text-[#244033] group-hover:text-white transition-colors" />
+                                                    </div>
+                                                    <span className="font-medium">My Account</span>
+                                                </Link>
 
-                                            {/* <Link
-                                                href="/account/orders"
-                                                onClick={() => setIsAccountDropdownOpen(false)}
-                                                className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                                            >
-                                                <Package size={18} />
-                                                <span>My Orders</span>
-                                            </Link> */}
+                                                {/* <Link
+                                                    href="/account/orders"
+                                                    onClick={() => setIsAccountDropdownOpen(false)}
+                                                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-[#F0F4F1] transition-colors group"
+                                                >
+                                                    <div className="w-8 h-8 bg-[#F0F4F1] rounded-lg flex items-center justify-center group-hover:bg-[#244033] transition-colors">
+                                                        <Package size={18} className="text-[#244033] group-hover:text-white transition-colors" />
+                                                    </div>
+                                                    <span className="font-medium">My Orders</span>
+                                                </Link> */}
+                                            </div>
 
-                                            <div className="border-t border-gray-200 my-2"></div>
+                                            <div className="border-t border-gray-100 my-1"></div>
 
-                                            <button
-                                                onClick={handleLogout}
-                                                className="flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors w-full"
-                                            >
-                                                <LogOut size={18} />
-                                                <span>Logout</span>
-                                            </button>
+                                            <div className="py-2">
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors w-full group"
+                                                >
+                                                    <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center group-hover:bg-red-100 transition-colors">
+                                                        <LogOut size={18} className="text-red-600" />
+                                                    </div>
+                                                    <span className="font-medium">Logout</span>
+                                                </button>
+                                            </div>
                                         </>
                                     ) : (
                                         <>
-                                            <Link
-                                                href="/login"
-                                                onClick={() => setIsAccountDropdownOpen(false)}
-                                                className="block px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                                            >
-                                                Log In
-                                            </Link>
-                                            <Link
-                                                href="/signup"
-                                                onClick={() => setIsAccountDropdownOpen(false)}
-                                                className="block px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                                            >
-                                                Sign Up
-                                            </Link>
+                                            {/* Welcome Header */}
+                                            <div className="px-6 py-5 bg-gradient-to-br from-[#F0F4F1] to-white border-b border-gray-100">
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <div className="w-10 h-10 bg-[#244033] rounded-full flex items-center justify-center">
+                                                        <User size={20} className="text-white" />
+                                                    </div>
+                                                    <div>
+                                                        {/* <h3 className="font-bold text-gray-900">Welcome Back!</h3> */}
+                                                        <p className="text-xs text-gray-600 font-bold">
+                                                            Sign in to your account
+                                                        </p>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Login/Signup Buttons */}
+                                            <div className="p-4 space-y-3">
+                                                <Link
+                                                    href="/login"
+                                                    onClick={() => setIsAccountDropdownOpen(false)}
+                                                    className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#244033] text-white font-semibold rounded-lg hover:bg-[#2F4F3E] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                                                >
+                                                    <LogOut size={18} className="rotate-360" />
+                                                    <span>Log In</span>
+                                                </Link>
+                                                <Link
+                                                    href="/signup"
+                                                    onClick={() => setIsAccountDropdownOpen(false)}
+                                                    className="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-[#244033] text-[#244033] font-semibold rounded-lg hover:bg-[#F0F4F1] transition-all duration-200"
+                                                >
+                                                    <span>Create Account</span>
+                                                </Link>
+                                            </div>
+
+                                            {/* Benefits Footer */}
+                                            {/* <div className="px-4 pb-4">
+                                                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-3 border border-green-100">
+                                                    <p className="text-xs font-semibold text-green-800 mb-1.5">Member Benefits</p>
+                                                    <ul className="space-y-1">
+                                                        <li className="flex items-center gap-2 text-xs text-green-700">
+                                                            <div className="w-1 h-1 bg-green-600 rounded-full"></div>
+                                                            <span>Track your orders</span>
+                                                        </li>
+                                                        <li className="flex items-center gap-2 text-xs text-green-700">
+                                                            <div className="w-1 h-1 bg-green-600 rounded-full"></div>
+                                                            <span>Save your wishlist</span>
+                                                        </li>
+                                                        <li className="flex items-center gap-2 text-xs text-green-700">
+                                                            <div className="w-1 h-1 bg-green-600 rounded-full"></div>
+                                                            <span>Faster checkout</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div> */}
                                         </>
                                     )}
                                 </div>
@@ -678,6 +743,63 @@ export default function Navbar() {
                     )}
                 </div>
             </>
+
+            {/* Logout Success Popup */}
+            {showLogoutSuccess && (
+                <>
+                    {/* Backdrop with blur */}
+                    <div
+                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+                        onClick={handleCloseLogoutSuccess}
+                    >
+                        {/* Success Modal */}
+                        <div
+                            className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full transform transition-all duration-300 scale-100 animate-fadeIn"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Success Icon */}
+                            <div className="flex justify-center mb-6">
+                                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                                    <CheckCircle className="text-green-600" size={48} />
+                                </div>
+                            </div>
+
+                            {/* Success Message */}
+                            <h2 className="text-2xl font-bold text-center text-gray-900 mb-3">
+                                Logged Out Successfully!
+                            </h2>
+                            <p className="text-center text-gray-600 mb-6">
+                                You have been successfully logged out. Thank you for visiting Groves Box!
+                            </p>
+
+                            {/* Close Button */}
+                            <button
+                                onClick={handleCloseLogoutSuccess}
+                                className="w-full py-3 bg-[#244033] text-white font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Add keyframe animation */}
+                    <style jsx>{`
+                        @keyframes fadeIn {
+                            from {
+                                opacity: 0;
+                                transform: scale(0.9);
+                            }
+                            to {
+                                opacity: 1;
+                                transform: scale(1);
+                            }
+                        }
+                        .animate-fadeIn {
+                            animation: fadeIn 0.3s ease-out;
+                        }
+                    `}</style>
+                </>
+            )}
         </>
     );
 }

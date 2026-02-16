@@ -77,7 +77,7 @@ export default function CollectionsPage() {
                             <Link
                                 key={collection.id}
                                 href={collection.link}
-                                className="group relative overflow-hidden rounded-lg h-64 sm:h-80 md:h-96"
+                                className="group relative overflow-hidden rounded-lg h-64 sm:h-80 md:h-136"
                             >
                                 {/* Image */}
                                 <img

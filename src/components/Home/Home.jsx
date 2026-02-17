@@ -134,96 +134,92 @@ export default function HomePage() {
     setIsAutoPlaying(false);
   };
 
+  // Star Rating mini component
+  const StarRatingMini = ({ rating = 4, count = 0 }) => {
+    return (
+      <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-0.5">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <svg key={star} width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                fill={star <= Math.round(rating) ? '#2F8C6E' : '#E5E7EB'}
+                stroke={star <= Math.round(rating) ? '#2F8C6E' : '#E5E7EB'}
+                strokeWidth="1"
+              />
+            </svg>
+          ))}
+        </div>
+        {count > 0 && (
+          <span className="text-xs text-gray-500">{count} review{count !== 1 ? 's' : ''}</span>
+        )}
+      </div>
+    );
+  };
+
   // Product Card Component
   const ProductCard = ({ product }) => {
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const wishlisted = isInWishlist(product.id.toString());
 
-    // Helper function to handle quick add
     const handleQuickAdd = (e) => {
       e.preventDefault();
       e.stopPropagation();
-
-      console.log('Quick Add clicked for product:', product);
-
       const variantId = product.variants?.[0]?.id;
-
-      if (!variantId) {
-        console.error('No variant available for product:', product);
-        alert('This product is currently unavailable');
-        return;
-      }
-
-      console.log('Adding to cart with variant:', variantId);
-
-      addToCart({
-        id: product.id,
-        variantId: variantId,
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-        image: product.image,
-        handle: product.handle,
-        variants: product.variants
-      });
+      if (!variantId) { alert('This product is currently unavailable'); return; }
+      addToCart({ id: product.id, variantId, name: product.name, price: product.price, quantity: 1, image: product.image, handle: product.handle, variants: product.variants });
     };
+
+    const handleWishlistToggle = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (wishlisted) { removeFromWishlist(product.id.toString()); }
+      else { addToWishlist({ id: product.id.toString(), variantId: product.variants?.[0]?.id, name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants }); }
+    };
+
+    const isOnSale = !!product.originalPrice;
+    // Derive a review count from tags or default to 0
+    const reviewCount = product.tags?.find(t => /\d+review/i.test(t.replace(/\s/g, '')))
+      ? parseInt(product.tags.find(t => /\d+review/i.test(t.replace(/\s/g, ''))))
+      : 0;
 
     return (
       <Link href={`/products/${product.handle}`} className="group block">
         {/* Image Container */}
-        <div className="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-4">
-          {/* Badge */}
+        <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-3">
+
+          {/* Badge top-left */}
           {product.badge && (
-            <div
-              className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs rounded-full`}
-            >
+            <div className="absolute top-3 left-3 z-10 flex items-center gap-1 bg-[#2BBFA4] text-white px-3 py-1 text-xs font-medium rounded-full shadow-sm">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="white">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
               {product.badge}
             </div>
           )}
 
-          {/* Wishlist Icon - Top Right */}
+          {/* Wishlist — top right, appears on hover */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (wishlisted) {
-                removeFromWishlist(product.id.toString());
-              } else {
-                addToWishlist({
-                  id: product.id.toString(),
-                  variantId: product.variants?.[0]?.id,
-                  name: product.name,
-                  price: product.price,
-                  image: product.image,
-                  handle: product.handle,
-                  variants: product.variants
-                });
-
-              }
-            }}
-            className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
+            onClick={handleWishlistToggle}
+            className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           >
-            <Heart
-              size={18}
-              className={wishlisted ? "fill-current text-red-500" : ""}
-            />
+            <Heart size={15} className={wishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
           </button>
 
-          {/* Quick Add Button */}
+          {/* Quick Add — desktop hover bar */}
           <button
             onClick={handleQuickAdd}
-            className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+            className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
-            <ShoppingCart size={18} />
+            <ShoppingCart size={13} /> Quick Add
           </button>
 
-          {/* Desktop: Full button at bottom on hover */}
+          {/* Mobile quick add */}
           <button
             onClick={handleQuickAdd}
-            className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+            className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#244033] text-white rounded-full flex items-center justify-center md:hidden"
           >
-            <ShoppingCart size={16} />
-            Quick Add
+            <ShoppingCart size={14} />
           </button>
 
           {/* Product Image */}
@@ -234,21 +230,32 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Product Info */}
-        <h3 className="text-sm md:text-base font-sans font-light text-gray-900 mb-1">
-          {product.name}
-        </h3>
+        {/* Info below image */}
+        <div className="space-y-1.5">
+          {/* Product Name */}
+          <h3 className={`text-sm md:text-base font-normal leading-snug ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>
+            {product.name}
+          </h3>
 
-        <div className="flex items-center gap-2 text-sm">
-          <span className="font-medium text-gray-900">
-            Rs. {product.price}
-          </span>
-
-          {product.originalPrice && (
-            <span className="text-gray-400 line-through">
-              Rs. {product.originalPrice}
-            </span>
+          {/* Short description */}
+          {product.description && (
+            <p className="text-xs text-gray-400 italic leading-tight line-clamp-1">
+              {product.description}
+            </p>
           )}
+
+          {/* Star Rating */}
+          <StarRatingMini rating={4.5} count={reviewCount} />
+
+          {/* Price */}
+          <div className="flex items-center gap-2 pt-0.5">
+            <span className={`text-sm font-medium ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>
+              {isOnSale ? `From Rs. ${product.price}` : `Rs. ${product.price}`}
+            </span>
+            {isOnSale && (
+              <span className="text-xs text-gray-400 line-through">Rs. {product.originalPrice}</span>
+            )}
+          </div>
         </div>
       </Link>
     );

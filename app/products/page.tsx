@@ -144,30 +144,54 @@ function ProductsPageContent() {
         });
     };
 
+    // Star Rating mini component
+    const StarRatingMini = ({ rating = 4, count = 0 }: { rating?: number; count?: number }) => (
+        <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <svg key={star} width="13" height="13" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                            fill={star <= Math.round(rating) ? '#2F8C6E' : '#E5E7EB'}
+                            stroke={star <= Math.round(rating) ? '#2F8C6E' : '#E5E7EB'}
+                            strokeWidth="1"
+                        />
+                    </svg>
+                ))}
+            </div>
+            {count > 0 && (
+                <span className="text-xs text-gray-500">{count} review{count !== 1 ? 's' : ''}</span>
+            )}
+        </div>
+    );
+
+
     // Product Card Component
     const ProductCard = ({ product }: { product: Product }) => {
         const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
         const wishlisted = isInWishlist(product.id.toString());
+        const isOnSale = !!product.originalPrice;
 
         return (
             <div className="group">
                 {/* Image Container */}
-                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
+                <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-3">
+
                     {/* Badge */}
                     {product.badge && (
-                        <div
-                            className={`absolute top-3 left-3 z-10 ${product.badgeColor} text-white px-3 py-1 text-xs rounded-full`}
-                        >
+                        <div className="absolute top-3 left-3 z-10 flex items-center gap-1 bg-[#2BBFA4] text-white px-3 py-1 text-xs font-medium rounded-full shadow-sm">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="white">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
                             {product.badge}
                         </div>
                     )}
 
-                    {/* Wishlist Icon - Top Right */}
+                    {/* Wishlist — fades in on hover */}
                     <button
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-
                             if (wishlisted) {
                                 removeFromWishlist(product.id.toString());
                             } else {
@@ -182,37 +206,33 @@ function ProductsPageContent() {
                                 });
                             }
                         }}
-                        className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
+                        className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                     >
-                        <Heart
-                            size={18}
-                            className={wishlisted ? "fill-current text-red-500" : ""}
-                        />
+                        <Heart size={15} className={wishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
                     </button>
 
-                    {/* Mobile: Small circular button bottom-right, always visible */}
+                    {/* Desktop: slide-up Quick Add bar */}
                     <button
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             handleAddToCart(product);
                         }}
-                        className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                     >
-                        <ShoppingCart size={18} />
+                        <ShoppingCart size={14} /> Quick Add
                     </button>
 
-                    {/* Desktop: Full button at bottom on hover */}
+                    {/* Mobile: circular button */}
                     <button
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             handleAddToCart(product);
                         }}
-                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                        className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#007B57] text-white rounded-full flex items-center justify-center md:hidden"
                     >
-                        <ShoppingCart size={16} />
-                        Quick Add
+                        <ShoppingCart size={14} />
                     </button>
 
                     {/* Product Image */}
@@ -223,25 +243,28 @@ function ProductsPageContent() {
                     />
                 </div>
 
-                {/* Product Info */}
-                <h3 className="text-sm md:text-base font-sans font-light text-gray-900 mb-1">
-                    {product.name}
-                </h3>
+                {/* Info below image */}
+                <div className="space-y-1.5">
+                    <h3 className={`text-sm md:text-base font-normal leading-snug ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>
+                        {product.name}
+                    </h3>
 
-                <p className="text-xs md:text-sm italic text-gray-500 mb-2 line-clamp-2">
-                    {product.description}
-                </p>
-
-                <div className="flex items-center gap-2 text-sm">
-                    <span className="font-medium text-[#244033]">
-                        Rs. {product.price}
-                    </span>
-
-                    {product.originalPrice && (
-                        <span className="text-gray-400 line-through">
-                            Rs. {product.originalPrice}
-                        </span>
+                    {product.description && (
+                        <p className="text-xs text-gray-400 italic leading-tight line-clamp-1">
+                            {product.description}
+                        </p>
                     )}
+
+                    <StarRatingMini rating={4.5} count={0} />
+
+                    <div className="flex items-center gap-2 pt-0.5">
+                        <span className={`text-sm font-medium ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>
+                            {isOnSale ? ` Rs. ${product.price}` : `Rs. ${product.price}`}
+                        </span>
+                        {isOnSale && (
+                            <span className="text-xs text-gray-400 line-through">Rs. {product.originalPrice}</span>
+                        )}
+                    </div>
                 </div>
             </div>
         );
@@ -272,7 +295,7 @@ function ProductsPageContent() {
         return (
             <div className="min-h-screen bg-white flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading products...</p>
                 </div>
             </div>
@@ -287,7 +310,7 @@ function ProductsPageContent() {
                     <p className="text-red-600 mb-4">Error: {error}</p>
                     <button
                         onClick={() => window.location.reload()}
-                        className="bg-[#244033] text-white px-6 py-3 rounded"
+                        className="bg-[#007B57] text-white px-6 py-3 rounded"
                     >
                         Retry
                     </button>
@@ -300,21 +323,21 @@ function ProductsPageContent() {
         <div className={`${totalItems > 0 ? 'pb-20' : ''}`}>
             <div className="min-h-screen bg-white py-8 md:py-12 lg:py-16">
                 <div className="w-full px-4 md:px-6 lg:px-8">
-                    <div className="max-w-7xl mx-auto">
+                    <div className="max-w-[1600px] mx-auto">
                         {/* BREADCRUMBS */}
                         <div className="py-4">
                             <nav className="flex items-center justify-center space-x-2 text-sm text-gray-600">
-                                <Link href="/" className="hover:text-[#2F4F3E]">
+                                <Link href="/" className="hover:text-[#007B57]">
                                     Home
                                 </Link>
                                 <ChevronRight className="w-4 h-4" />
-                                <Link href="/products" className="hover:text-[#2F4F3E]">
+                                <Link href="/products" className="hover:text-[#007B57]">
                                     Products
                                 </Link>
                                 {filterParam && (
                                     <>
                                         <ChevronRight className="w-4 h-4" />
-                                        <span className="text-[#2F4F3E] font-medium">{getPageTitle()}</span>
+                                        <span className="text-[#007B57] font-medium">{getPageTitle()}</span>
                                     </>
                                 )}
                             </nav>
@@ -322,7 +345,7 @@ function ProductsPageContent() {
 
                         {/* Header */}
                         <div className="mb-12 md:mb-16">
-                            <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-lexend font-semibold text-[#2F4F3E] mb-4">
+                            <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-lexend font-semibold text-[#007B57] mb-4">
                                 {getPageTitle()}
                             </h1>
 
@@ -334,7 +357,7 @@ function ProductsPageContent() {
                             {filterParam && (
                                 <Link
                                     href="/products"
-                                    className="inline-block mt-4 text-[#244033] hover:text-[#2F4F3E] font-medium underline"
+                                    className="inline-block mt-4 text-[#007B57] hover:text-[#007B57] font-medium underline"
                                 >
                                     View All Products
                                 </Link>
@@ -344,7 +367,7 @@ function ProductsPageContent() {
                         <div className="mb-8">
                             <button
                                 onClick={() => setShowFiltersSidebar(true)}
-                                className="inline-flex items-center gap-2 px-6 py-3 border border-[#244033] rounded-md text-[#244033] hover:bg-[#2F4F3E] hover:text-white transition font-medium"
+                                className="inline-flex items-center gap-2 px-6 py-3 border border-[#007B57] rounded-md text-[#007B57] hover:bg-[#007B57] hover:text-white transition font-medium"
                             >
                                 <Filter size={20} />
                                 Filter and sort
@@ -368,7 +391,7 @@ function ProductsPageContent() {
                                 } flex flex-col`}
                         >
                             {/* Sidebar Header */}
-                            <div className="bg-gradient-to-r from-[#244033] to-[#2F4F3E] p-6 flex items-center justify-between flex-shrink-0">
+                            <div className="bg-gradient-to-r from-[#007B57] to-[#007B57] p-6 flex items-center justify-between flex-shrink-0">
                                 <div>
                                     <h2 className="text-xl font-semibold text-white">Filters & Sort</h2>
                                     <p className="text-sm text-white/80 mt-1">Customize your search</p>
@@ -386,13 +409,13 @@ function ProductsPageContent() {
                                 {/* Sort By */}
                                 <div className="bg-white rounded-xl p-5 shadow-sm">
                                     <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-[#244033] rounded-full"></span>
+                                        <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full"></span>
                                         Sort by
                                     </h3>
                                     <select
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value)}
-                                        className="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent bg-white text-gray-900 font-medium cursor-pointer"
+                                        className="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent bg-white text-gray-900 font-medium cursor-pointer"
                                     >
                                         <option value="popular">✨ Featured</option>
                                         <option value="newest">🆕 Newest First</option>
@@ -404,21 +427,21 @@ function ProductsPageContent() {
                                 {/* Price Range */}
                                 <div className="bg-white rounded-xl p-5 shadow-sm">
                                     <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-[#244033] rounded-full"></span>
+                                        <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full"></span>
                                         Price Range
                                     </h3>
 
                                     {/* Price Range Display */}
-                                    <div className="bg-gradient-to-r from-[#244033]/5 to-[#2F4F3E]/5 rounded-lg p-4 mb-4">
+                                    <div className="bg-gradient-to-r from-[#007B57]/5 to-[#007B57]/5 rounded-lg p-4 mb-4">
                                         <div className="flex items-center justify-between">
                                             <div className="text-center flex-1">
                                                 <p className="text-xs text-gray-500 mb-1">Minimum</p>
-                                                <p className="text-lg font-bold text-[#244033]">₹{priceRange[0]}</p>
+                                                <p className="text-lg font-bold text-[#007B57]">₹{priceRange[0]}</p>
                                             </div>
                                             <div className="w-px h-8 bg-gray-300 mx-3"></div>
                                             <div className="text-center flex-1">
                                                 <p className="text-xs text-gray-500 mb-1">Maximum</p>
-                                                <p className="text-lg font-bold text-[#244033]">₹{priceRange[1]}</p>
+                                                <p className="text-lg font-bold text-[#007B57]">₹{priceRange[1]}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -428,7 +451,7 @@ function ProductsPageContent() {
                                         <div>
                                             <div className="flex items-center justify-between mb-2">
                                                 <label className="text-xs font-medium text-gray-600">Min Price</label>
-                                                <span className="text-xs text-[#244033] font-semibold">₹{priceRange[0]}</span>
+                                                <span className="text-xs text-[#007B57] font-semibold">₹{priceRange[0]}</span>
                                             </div>
                                             <input
                                                 type="range"
@@ -442,14 +465,14 @@ function ProductsPageContent() {
                                                         setPriceRange([newMin, priceRange[1]]);
                                                     }
                                                 }}
-                                                className="w-full h-2 bg-gradient-to-r from-[#244033] to-[#2F4F3E] rounded-full appearance-none cursor-pointer slider-thumb"
+                                                className="w-full h-2 bg-gradient-to-r from-[#007B57] to-[#007B57] rounded-full appearance-none cursor-pointer slider-thumb"
                                             />
                                         </div>
 
                                         <div>
                                             <div className="flex items-center justify-between mb-2">
                                                 <label className="text-xs font-medium text-gray-600">Max Price</label>
-                                                <span className="text-xs text-[#244033] font-semibold">₹{priceRange[1]}</span>
+                                                <span className="text-xs text-[#007B57] font-semibold">₹{priceRange[1]}</span>
                                             </div>
                                             <input
                                                 type="range"
@@ -463,16 +486,16 @@ function ProductsPageContent() {
                                                         setPriceRange([priceRange[0], newMax]);
                                                     }
                                                 }}
-                                                className="w-full h-2 bg-gradient-to-r from-[#244033] to-[#2F4F3E] rounded-full appearance-none cursor-pointer slider-thumb"
+                                                className="w-full h-2 bg-gradient-to-r from-[#007B57] to-[#007B57] rounded-full appearance-none cursor-pointer slider-thumb"
                                             />
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Active Filters Count */}
-                                <div className="bg-[#244033]/5 rounded-lg p-4 border border-[#244033]/10">
+                                <div className="bg-[#007B57]/5 rounded-lg p-4 border border-[#007B57]/10">
                                     <p className="text-sm text-gray-700">
-                                        <span className="font-semibold text-[#244033]">{filteredProducts.length}</span> products match your filters
+                                        <span className="font-semibold text-[#007B57]">{filteredProducts.length}</span> products match your filters
                                     </p>
                                 </div>
                             </div>
@@ -485,13 +508,13 @@ function ProductsPageContent() {
                                         setPriceRange([0, maxPrice]);
                                         setSortBy('popular');
                                     }}
-                                    className="flex-1 text-center px-6 py-3 border-2 border-[#244033] rounded-lg text-[#244033] hover:bg-[#244033]/5 font-semibold transition-colors"
+                                    className="flex-1 text-center px-6 py-3 border-2 border-[#007B57] rounded-lg text-[#007B57] hover:bg-[#007B57]/5 font-semibold transition-colors"
                                 >
                                     Clear All
                                 </button>
                                 <button
                                     onClick={() => setShowFiltersSidebar(false)}
-                                    className="flex-1 bg-[#244033] text-white font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors py-3 shadow-lg"
+                                    className="flex-1 bg-[#007B57] text-white font-semibold rounded-lg hover:bg-[#007B57] transition-colors py-3 shadow-lg"
                                 >
                                     Apply
                                 </button>
@@ -506,7 +529,7 @@ function ProductsPageContent() {
                                 height: 20px;
                                 border-radius: 50%;
                                 background: white;
-                                border: 3px solid #244033;
+                                border: 3px solid #007B57;
                                 cursor: pointer;
                                 box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                                 transition: all 0.2s ease;
@@ -520,7 +543,7 @@ function ProductsPageContent() {
                                 height: 20px;
                                 border-radius: 50%;
                                 background: white;
-                                border: 3px solid #244033;
+                                border: 3px solid #007B57;
                                 cursor: pointer;
                                 box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                                 transition: all 0.2s ease;
@@ -588,7 +611,7 @@ sm:rounded-b-none
                     >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="bg-[#244033] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                <div className="bg-[#007B57] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                     {totalItems}
                                 </div>
                                 <div>
@@ -601,7 +624,7 @@ sm:rounded-b-none
 
                             <Link
                                 href="/cart"
-                                className="bg-[#244033] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#2F4F3E] transition"
+                                className="bg-[#007B57] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#007B57] transition"
                             >
                                 View Cart
                             </Link>
@@ -619,7 +642,7 @@ export default function ProductsPage() {
         <Suspense fallback={
             <div className="min-h-screen bg-white flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading products...</p>
                 </div>
             </div>

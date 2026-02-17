@@ -217,7 +217,7 @@ export default function HomePage() {
           {/* Mobile quick add */}
           <button
             onClick={handleQuickAdd}
-            className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#244033] text-white rounded-full flex items-center justify-center md:hidden"
+            className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#007B57] text-white rounded-full flex items-center justify-center md:hidden"
           >
             <ShoppingCart size={14} />
           </button>

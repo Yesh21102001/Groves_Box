@@ -1,5 +1,4 @@
-
-import { Lexend } from "next/font/google";
+import { DM_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/src/context/CartContext";
 import { WishlistProvider } from "@/src/context/WishlistContext";
@@ -7,25 +6,32 @@ import { Initializer } from "@/src/components/Initializer";
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
 
-const lexend = Lexend({
-  variable: "--font-lexend",
+const dmSans = DM_Sans({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-dm-sans",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-inter",
 });
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
-        className={`${lexend.variable} antialiased`}
+        className={`${dmSans.variable} ${inter.variable} antialiased`}
       >
         <Initializer />
         <CartProvider>
           <WishlistProvider>
-            <Navbar />  {/* ← INSIDE CartProvider - has cart access! */}
+            <Navbar />
             {children}
           </WishlistProvider>
         </CartProvider>

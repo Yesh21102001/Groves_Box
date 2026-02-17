@@ -360,7 +360,7 @@ export default function HomePage() {
 
             {/* Products Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-              {products.slice(0, 8).map((product) => (
+              {products.slice(0, 4).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
@@ -512,36 +512,36 @@ export default function HomePage() {
 
               {/* Categories Grid - 2 per row on mobile */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-                {categories.map((category, index) => (
+                {categories.slice(0, 8).map((category) => (
                   <Link
                     key={category.id}
                     href={category.link}
-                    className="group relative overflow-hidden rounded-none aspect-[3/4] transition-all duration-300"
+                    className="group block"
                   >
-                    {/* Background Image */}
-                    <div className="absolute inset-0 overflow-hidden">
+                    {/* Image Container */}
+                    <div className="relative overflow-hidden aspect-[3/4]">
                       <img
                         src={category.image}
                         alt={category.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
-
                     </div>
 
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300" />
+                    {/* Title Section Below Image */}
+                    <div className="mt-3">
+                      <h3 className="inline-flex items-center gap-2 text-gray-800 text-sm sm:text-base md:text-lg lg:text-lg font-serif font-light leading-none transition-colors duration-300 group-hover:text-emerald-700">
+                        <span>{category.name}</span>
+                        <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
+                          →
+                        </span>
+                      </h3>
 
-                    {/* Content Container at Bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
-                      <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-serif font-light">
-                          {category.name} →
-                        </h3>
-                      </div>
                     </div>
                   </Link>
                 ))}
               </div>
+
+
             </div>
           </div>
         </section>
@@ -573,7 +573,7 @@ export default function HomePage() {
 
             {/* New Arrivals Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-              {newArrivals.map((product) => (
+              {newArrivals.slice(0, 4).map((product) => (
                 <ProductCard key={`new-${product.id}`} product={product} />
               ))}
             </div>
@@ -610,7 +610,7 @@ export default function HomePage() {
 
             {/* Products Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-              {saleProducts.map((product) => (
+              {saleProducts.slice(0, 4).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

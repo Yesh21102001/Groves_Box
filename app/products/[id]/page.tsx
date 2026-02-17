@@ -536,16 +536,16 @@ export default function ProductDetailPage() {
                             {/* ---- Variant Option Selectors ---- */}
                             {productOptions.map((option) => (
                                 <div key={option.name} className="space-y-2">
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex items-center mb-4 justify-between">
                                         <label className="text-sm font-semibold text-gray-900">
                                             {option.name}:{' '}
                                             <span className="font-normal text-gray-600">{selectedOptions[option.name]}</span>
                                         </label>
-                                        {/size/i.test(option.name) && (
+                                        {/* {/size/i.test(option.name) && (
                                             <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#244033] transition">
                                                 Size Guide
                                             </button>
-                                        )}
+                                        )} */}
                                         {/planter/i.test(option.name) && (
                                             <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#244033] transition">
                                                 Style Guide
@@ -564,7 +564,7 @@ export default function ProductDetailPage() {
                                                         key={value}
                                                         title={value}
                                                         onClick={() => setSelectedOptions((prev) => ({ ...prev, [option.name]: value }))}
-                                                        className={`relative w-9 h-9 rounded-full border-2 transition-all duration-200 ${selected ? 'border-[#244033] scale-110 ring-2 ring-offset-1 ring-[#244033]' : 'border-gray-300 hover:border-gray-500'}`}
+                                                        className={`relative w-9 h-9 rounded-full border-2 mb-4 transition-all duration-200 ${selected ? 'border-[#244033] scale-110 ring-2 ring-offset-1 ring-[#244033]' : 'border-gray-300 hover:border-gray-500'}`}
                                                         style={{ backgroundColor: bg }}
                                                     >
                                                         {selected && <Check size={14} className="absolute inset-0 m-auto text-white drop-shadow" />}
@@ -586,13 +586,14 @@ export default function ProductDetailPage() {
                                                     <button
                                                         key={value}
                                                         onClick={() => available !== false && setSelectedOptions((prev) => ({ ...prev, [option.name]: value }))}
-                                                        className={`relative px-4 py-2 text-sm border rounded-lg transition-all duration-200 ${selected
+                                                        className={`relative px-4 py-2 text-sm border rounded-lg mb-3 transition-all duration-200 ${selected
                                                             ? 'border-[#244033] bg-white text-[#244033] font-semibold ring-1 ring-[#244033]'
                                                             : available === false
                                                                 ? 'border-gray-200 text-gray-300 cursor-not-allowed line-through'
                                                                 : 'border-gray-300 text-gray-700 hover:border-[#2F8C6E] hover:text-[#244033]'
                                                             }`}
                                                     >
+
                                                         {selected && (
                                                             <span className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-[#2F8C6E] rounded-full flex items-center justify-center">
                                                                 <Check size={10} className="text-white" />
@@ -610,10 +611,10 @@ export default function ProductDetailPage() {
                             {/* Quantity */}
                             <div className="flex items-center gap-4">
                                 <span className="text-sm font-semibold text-gray-900">Qty:</span>
-                                <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 text-lg transition">−</button>
+                                <div className="flex items-center bg-gray-100 rounded-lg overflow-hidden">
+                                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center text-lg transition">−</button>
                                     <span className="w-10 text-center text-sm font-medium">{quantity}</span>
-                                    <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 text-lg transition">+</button>
+                                    <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 flex items-center justify-center text-lg transition">+</button>
                                 </div>
                             </div>
 
@@ -622,7 +623,7 @@ export default function ProductDetailPage() {
                                 <button
                                     onClick={handleAddToCart}
                                     disabled={!product.availableForSale}
-                                    className={`flex-1 py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 ${addedToCart
+                                    className={`flex-1 py-4 font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 ${addedToCart
                                         ? 'bg-[#2F8C6E] text-white'
                                         : 'bg-[#2F8C6E] hover:bg-[#244033] text-white'
                                         } disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -635,9 +636,9 @@ export default function ProductDetailPage() {
                                 </button>
                                 <button
                                     onClick={handleWishlistToggle}
-                                    className="w-14 h-14 border border-gray-300 rounded-xl flex items-center justify-center hover:border-red-400 hover:bg-red-50 transition-all duration-300"
+                                    className="w-14 h-14 border border-[#2F8C6E] rounded-4xl flex items-center justify-center hover:border-[#2F8C6E] hover:bg-green-50 transition-all duration-300"
                                 >
-                                    <Heart size={20} className={isProductWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
+                                    <Heart size={20} className={isProductWishlisted ? 'fill-red-500 text-red-500' : 'text-[#2F8C6E]'} />
                                 </button>
                             </div>
 
@@ -676,7 +677,6 @@ export default function ProductDetailPage() {
                         <div className="py-8 max-w-5xl">
                             {activeTab === 'description' && (
                                 <div className="space-y-4">
-                                    <p className="text-gray-600 leading-relaxed">{product.description}</p>
                                     {product.descriptionHtml && (
                                         <div
                                             className="prose prose-sm max-w-none text-gray-600 [&_ul]:list-none [&_li]:flex [&_li]:gap-3 [&_li]:before:content-['→'] [&_li]:before:text-[#2F8C6E] [&_li]:before:flex-shrink-0"

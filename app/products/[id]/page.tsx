@@ -141,7 +141,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 <button onClick={handleQuickAdd} className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden">
                     <ShoppingCart size={16} />
                 </button>
-                <button onClick={handleQuickAdd} className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 duration-300">
+                <button onClick={handleQuickAdd} className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007b5f] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 duration-300">
                     <ShoppingCart size={14} /> Quick Add
                 </button>
                 <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -448,7 +448,7 @@ export default function ProductDetailPage() {
 
                             {/* Main image */}
                             <div className="flex-1">
-                                <div className="relative bg-gray-100 overflow-hidden aspect-square">
+                                <div className="relative bg-gray-100 overflow-hidden aspect-[3/4]">
                                     {product.badge && (
                                         <div className={`absolute top-4 left-4 z-10 ${product.badgeColor} text-white px-4 py-1.5 text-xs rounded-full`}>
                                             {product.badge}
@@ -474,7 +474,7 @@ export default function ProductDetailPage() {
                         <div className="flex flex-col justify-start space-y-5">
 
                             {/* Title + Share */}
-                            <div className="flex items-start justify-between gap-4">
+                            <div className="flex items-start mt-6 justify-between gap-4">
                                 <h1 className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light text-gray-900 leading-tight flex-1">
                                     {product.name}
                                 </h1>
@@ -564,10 +564,10 @@ export default function ProductDetailPage() {
                                                         key={value}
                                                         title={value}
                                                         onClick={() => setSelectedOptions((prev) => ({ ...prev, [option.name]: value }))}
-                                                        className={`relative w-9 h-9 rounded-full border-2 mb-4 transition-all duration-200 ${selected ? 'border-[#244033] scale-110 ring-2 ring-offset-1 ring-[#244033]' : 'border-gray-300 hover:border-gray-500'}`}
+                                                        className={`relative w-9 h-9 rounded-full mb-4 transition-all duration-200 ${selected ? ' scale-110 ring-2 ring-[#007B57] ring-offset-1' : ''}`}
                                                         style={{ backgroundColor: bg }}
                                                     >
-                                                        {selected && <Check size={14} className="absolute inset-0 m-auto text-white drop-shadow" />}
+                                                        {selected}
                                                     </button>
                                                 );
                                             })}
@@ -589,8 +589,8 @@ export default function ProductDetailPage() {
                                                         className={`relative px-4 py-2 text-sm border rounded-lg mb-3 transition-all duration-200 ${selected
                                                             ? 'border-[#244033] bg-white text-[#244033] font-semibold ring-1 ring-[#244033]'
                                                             : available === false
-                                                                ? 'border-gray-200 text-gray-300 cursor-not-allowed line-through'
-                                                                : 'border-gray-300 text-gray-700 hover:border-[#2F8C6E] hover:text-[#244033]'
+                                                                ? 'border-[#007B57] text-gray-300 '
+                                                                : ' text-gray-700 hover:border-[#007B57] hover:text-[#007B57]'
                                                             }`}
                                                     >
 
@@ -624,8 +624,8 @@ export default function ProductDetailPage() {
                                     onClick={handleAddToCart}
                                     disabled={!product.availableForSale}
                                     className={`flex-1 py-4 font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 ${addedToCart
-                                        ? 'bg-[#2F8C6E] text-white'
-                                        : 'bg-[#2F8C6E] hover:bg-[#244033] text-white'
+                                        ? 'bg-[007b5f] text-white'
+                                        : 'bg-[#2F8C6E] hover:bg-[#009A7B] text-white'
                                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                                 >
                                     {addedToCart ? (

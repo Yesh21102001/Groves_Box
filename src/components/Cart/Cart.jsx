@@ -149,7 +149,7 @@ export default function CartPage() {
                     {/* Wishlist Icon - Top Right */}
                     <button
                         onClick={handleWishlistToggle}
-                        className="absolute top-2 right-2 z-10 w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
+                        className="absolute top-2 right-2 z-10 w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#007B57] hover:text-white transition"
                     >
                         <Heart
                             size={16}
@@ -160,7 +160,7 @@ export default function CartPage() {
                     {/* Quick Add Button - Mobile: Small circular button bottom-right */}
                     <button
                         onClick={handleQuickAdd}
-                        className="absolute bottom-2 right-2 z-10 w-9 h-9 sm:w-10 sm:h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition active:scale-95 md:hidden"
+                        className="absolute bottom-2 right-2 z-10 w-9 h-9 sm:w-10 sm:h-10 bg-[#007B57] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition active:scale-95 md:hidden"
                     >
                         <ShoppingCart size={16} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
@@ -168,7 +168,7 @@ export default function CartPage() {
                     {/* Quick Add Button - Desktop: Full button at bottom on hover */}
                     <button
                         onClick={handleQuickAdd}
-                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                     >
                         <ShoppingCart size={16} />
                         Quick Add
@@ -211,7 +211,7 @@ export default function CartPage() {
         return (
             <div className="bg-[#F0F4F1] min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading cart...</p>
                 </div>
             </div>
@@ -229,7 +229,7 @@ export default function CartPage() {
                         <p className="text-gray-600 mb-6">Add some plants to get started!</p>
                         <Link
                             href="/products"
-                            className="inline-block bg-[#244033] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#2F4F3E] transition"
+                            className="inline-block bg-[#007B57] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition"
                         >
                             Continue Shopping
                         </Link>
@@ -245,7 +245,7 @@ export default function CartPage() {
                 {/* Back Button */}
                 <Link
                     href="/products"
-                    className="inline-flex items-center text-gray-600 hover:text-[#244033] transition-colors mb-4 sm:mb-6 group active:scale-95"
+                    className="inline-flex items-center text-gray-600 hover:text-[#007B57] transition-colors mb-4 sm:mb-6 group active:scale-95"
                 >
                     <ChevronLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
                     <span className="text-xs sm:text-sm font-medium">Continue Shopping</span>
@@ -255,7 +255,7 @@ export default function CartPage() {
                     {/* Left Column - Cart Items */}
                     <div className="lg:col-span-8 order-1">
                         <div className="flex items-center justify-between mb-4 sm:mb-6">
-                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-sans text-[#2F4F3E]">Shopping Cart</h1>
+                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-sans text-[#009A7B]">Shopping Cart</h1>
                             <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap ml-2">
                                 {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
                             </span>
@@ -295,7 +295,7 @@ export default function CartPage() {
                                         <div className="flex-grow flex flex-col min-w-0">
                                             <div className="flex justify-between items-start mb-2 gap-2">
                                                 <div className="min-w-0 flex-1">
-                                                    <h3 className="text-sm sm:text-base md:text-lg font-semibold text-[#2F4F3E] mb-1 line-clamp-2">
+                                                    <h3 className="text-sm sm:text-base md:text-lg font-semibold text-[#009A7B] mb-1 line-clamp-2">
                                                         {item.name}
                                                     </h3>
                                                     {item.size && (
@@ -309,7 +309,7 @@ export default function CartPage() {
                                                         </p>
                                                     )}
                                                 </div>
-                                                <span className="text-base sm:text-lg md:text-xl font-semibold text-[#2F4F3E] flex-shrink-0">
+                                                <span className="text-base sm:text-lg md:text-xl font-semibold text-[#009A7B] flex-shrink-0">
                                                     {item.price.toFixed(2)}
                                                 </span>
                                             </div>
@@ -352,7 +352,7 @@ export default function CartPage() {
                         {/* Recommendations - Desktop Only */}
                         {recommendedProducts.length > 0 && (
                             <div className="mt-8 sm:mt-10 md:mt-12 hidden lg:block">
-                                <h2 className="text-xl sm:text-2xl font-sans text-[#2F4F3E] mb-1 sm:mb-2">You Might Also Like</h2>
+                                <h2 className="text-xl sm:text-2xl font-sans text-[#009A7B] mb-1 sm:mb-2">You Might Also Like</h2>
                                 <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                                     Complete your plant collection with these essentials
                                 </p>
@@ -369,23 +369,23 @@ export default function CartPage() {
                     {/* Right Column - Order Summary */}
                     <div className="lg:col-span-4 order-2">
                         <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-5 md:p-6 lg:sticky lg:top-8">
-                            <h2 className="text-lg sm:text-xl font-sans text-[#2F4F3E] mb-4 sm:mb-6">Order Summary</h2>
+                            <h2 className="text-lg sm:text-xl font-sans text-[#009A7B] mb-4 sm:mb-6">Order Summary</h2>
 
                             {/* Free Shipping Progress */}
                             {amountUntilFreeShipping > 0 ? (
                                 <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
                                     <p className="text-xs sm:text-sm text-gray-700 mb-2 sm:mb-3">
-                                        Add <span className="font-bold text-[#244033]">{amountUntilFreeShipping.toFixed(2)}</span> more for free shipping!
+                                        Add <span className="font-bold text-[#007B57]">{amountUntilFreeShipping.toFixed(2)}</span> more for free shipping!
                                     </p>
                                     <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
                                         <div
-                                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#244033] to-[#2F4F3E] transition-all duration-500 ease-out"
+                                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#007B57] to-[#009A7B] transition-all duration-500 ease-out"
                                             style={{ width: `${shippingProgress}%` }}
                                         />
                                     </div>
                                     <div className="flex justify-between items-center mt-1.5 sm:mt-2">
                                         <span className="text-[10px] sm:text-xs text-gray-600">{subtotal.toFixed(2)}</span>
-                                        <span className="text-[10px] sm:text-xs font-semibold text-[#244033]">79 Free Shipping</span>
+                                        <span className="text-[10px] sm:text-xs font-semibold text-[#007B57]">79 Free Shipping</span>
                                     </div>
                                 </div>
                             ) : (
@@ -422,8 +422,8 @@ export default function CartPage() {
                             {/* Total */}
                             <div className="border-t border-gray-200 pt-3 sm:pt-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-base sm:text-lg font-semibold text-[#244033]">Total</span>
-                                    <span className="text-xl sm:text-2xl font-bold text-[#244033]">{estimatedTotal.toFixed(2)}</span>
+                                    <span className="text-base sm:text-lg font-semibold text-[#007B57]">Total</span>
+                                    <span className="text-xl sm:text-2xl font-bold text-[#007B57]">{estimatedTotal.toFixed(2)}</span>
                                 </div>
                                 <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2">
                                     Final amount calculated at checkout
@@ -433,7 +433,7 @@ export default function CartPage() {
                             {/* Checkout Button */}
                             <Link
                                 href="/checkout"
-                                className="block w-full bg-[#244033] text-white font-semibold py-3 sm:py-3.5 md:py-4 rounded-lg hover:bg-[#2F4F3E] transition-all text-center text-sm sm:text-base shadow-sm hover:shadow-md active:scale-[0.98] touch-manipulation"
+                                className="block w-full bg-[#007B57] text-white font-semibold py-3 sm:py-3.5 md:py-4 rounded-lg hover:bg-[#009A7B] transition-all text-center text-sm sm:text-base shadow-sm hover:shadow-md active:scale-[0.98] touch-manipulation"
                             >
                                 Proceed to Checkout
                             </Link>

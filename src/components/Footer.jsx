@@ -19,7 +19,7 @@ export default function Footer() {
         <footer className="bg-[#F0F4F1] border-t border-gray-200">
             {/* Mobile Newsletter */}
             <div className="lg:hidden w-full px-6 py-8 border-b border-gray-200">
-                <h2 className="text-2xl font-light mb-2 text-[#2F4F3E]">Stay Connected</h2>
+                <h2 className="text-2xl font-light mb-2 ">Stay Connected</h2>
                 <p className="text-sm text-gray-600 mb-4">
                     Subscribe for updates and exclusive offers
                 </p>
@@ -32,7 +32,7 @@ export default function Footer() {
                     />
                     <button
                         type="submit"
-                        className="w-full bg-[#244033] text-white px-6 py-2.5 text-sm font-medium rounded hover:bg-[#2F4F3E] transition"
+                        className="w-full bg-[#007B57] text-white px-6 py-2.5 text-sm font-medium rounded hover:bg-[#2F4F3E] transition"
                     >
                         Subscribe
                     </button>
@@ -110,7 +110,7 @@ export default function Footer() {
                     <div className="grid grid-cols-5 gap-12 xl:gap-16 2xl:gap-20 mb-12">
                         {/* Logo & Description */}
                         <div className="col-span-1">
-                            <div className="text-2xl font-bold text-[#2F4F3E] flex items-center gap-2">
+                            <div className="text-2xl font-bold flex items-center gap-2">
                                 <span className="text-3xl">🌿</span>
                                 Groves Box
                             </div>
@@ -123,7 +123,7 @@ export default function Footer() {
 
                         {/* Customer Service */}
                         <div>
-                            <h3 className="font-semibold text-[#2F4F3E] mb-4">Customer Service</h3>
+                            <h3 className="font-semibold mb-4">Customer Service</h3>
                             <ul className="space-y-2.5">
                                 <li><Link href="/faq" className="text-sm text-gray-600 hover:text-gray-900 transition">FAQ</Link></li>
                                 <li><Link href="/shipping" className="text-sm text-gray-600 hover:text-gray-900 transition">Shipping & Returns</Link></li>
@@ -133,7 +133,7 @@ export default function Footer() {
 
                         {/* Company */}
                         <div>
-                            <h3 className="font-semibold text-[#2F4F3E] mb-4">Company</h3>
+                            <h3 className="font-semibold mb-4">Company</h3>
                             <ul className="space-y-2.5">
                                 <li><Link href="/about-us" className="text-sm text-gray-600 hover:text-gray-900 transition">About Us</Link></li>
                                 <li><Link href="/contact-us" className="text-sm text-gray-600 hover:text-gray-900 transition">Contact Us</Link></li>
@@ -142,7 +142,7 @@ export default function Footer() {
 
                         {/* Policy Pages */}
                         <div>
-                            <h3 className="font-semibold text-[#2F4F3E] mb-4">Legal</h3>
+                            <h3 className="font-semibold mb-4">Legal</h3>
                             <ul className="space-y-2.5">
                                 <li><Link href="/privacy-policy" className="text-sm text-gray-600 hover:text-gray-900 transition">Privacy Policy</Link></li>
                                 <li><Link href="/terms-service" className="text-sm text-gray-600 hover:text-gray-900 transition">Terms of Service</Link></li>
@@ -152,7 +152,7 @@ export default function Footer() {
 
                         {/* Newsletter */}
                         <div>
-                            <h3 className="font-semibold text-[#2F4F3E] mb-4">Stay Connected</h3>
+                            <h3 className="font-semibold mb-4">Stay Connected</h3>
                             <p className="text-sm text-gray-600 mb-4">
                                 Subscribe for updates and exclusive offers
                             </p>
@@ -165,7 +165,7 @@ export default function Footer() {
                                 />
                                 <button
                                     type="submit"
-                                    className="w-full bg-[#244033] text-white px-6 py-2.5 text-sm font-medium rounded hover:bg-[#2F4F3E] transition"
+                                    className="w-full bg-[#007B57] text-white px-6 py-2.5 text-sm font-medium rounded hover:bg-[#009A7B] transition"
                                 >
                                     Subscribe
                                 </button>

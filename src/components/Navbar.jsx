@@ -243,7 +243,7 @@ export default function Navbar() {
 
                         {/* Logo */}
                         <Link href="/" className="flex-shrink-0">
-                            <div className="text-2xl md:text-3xl font-bold text-[#2F4F3E] flex items-center gap-2">
+                            <div className="text-2xl md:text-3xl font-bold text-[#007B57] flex items-center gap-2">
                                 <span className="text-3xl md:text-4xl">🌿</span>
                                 <span className="hidden sm:inline">Groves Box</span>
                                 <span className="sm:hidden">GB</span>
@@ -256,7 +256,7 @@ export default function Navbar() {
                                 <input
                                     type="text"
                                     placeholder="Search plants, planters, and more..."
-                                    className="w-full px-4 py-2.5 pl-10 border border-[#2F4F3E]-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent"
+                                    className="w-full px-4 py-2.5 pl-10 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent"
                                 />
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                             </div>
@@ -287,7 +287,7 @@ export default function Navbar() {
                                     {isLoggedIn ? (
                                         <>
                                             {/* User Info */}
-                                            <div className="px-4 py-3 bg-gradient-to-r from-[#244033] to-[#2F4F3E] text-white">
+                                            <div className="px-4 py-3 bg-gradient-to-r from-[#007B57] to-[#009A7B] text-white">
                                                 <p className="text-sm font-semibold">{currentUser?.name}</p>
                                                 <p className="text-xs opacity-90 truncate">{currentUser?.email}</p>
                                             </div>
@@ -299,8 +299,8 @@ export default function Navbar() {
                                                     onClick={() => setIsAccountDropdownOpen(false)}
                                                     className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-[#F0F4F1] transition-colors group"
                                                 >
-                                                    <div className="w-8 h-8 bg-[#F0F4F1] rounded-lg flex items-center justify-center group-hover:bg-[#244033] transition-colors">
-                                                        <User size={18} className="text-[#244033] group-hover:text-white transition-colors" />
+                                                    <div className="w-8 h-8 bg-[#F0F4F1] rounded-lg flex items-center justify-center group-hover:bg-[#007B57] transition-colors">
+                                                        <User size={18} className="text-[#007B57] group-hover:text-white transition-colors" />
                                                     </div>
                                                     <span className="font-medium">My Account</span>
                                                 </Link>
@@ -336,7 +336,7 @@ export default function Navbar() {
                                             {/* Welcome Header */}
                                             <div className="px-6 py-5 bg-gradient-to-br from-[#F0F4F1] to-white border-b border-gray-100">
                                                 <div className="flex items-center gap-3 mb-2">
-                                                    <div className="w-10 h-10 bg-[#244033] rounded-full flex items-center justify-center">
+                                                    <div className="w-10 h-10 bg-[#007B57] rounded-full flex items-center justify-center">
                                                         <User size={20} className="text-white" />
                                                     </div>
                                                     <div>
@@ -354,7 +354,7 @@ export default function Navbar() {
                                                 <Link
                                                     href="/login"
                                                     onClick={() => setIsAccountDropdownOpen(false)}
-                                                    className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#244033] text-white font-semibold rounded-lg hover:bg-[#2F4F3E] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                                                    className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#007B57] text-white font-semibold rounded-lg hover:bg-[#009A7B] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                                                 >
                                                     <LogOut size={18} className="rotate-360" />
                                                     <span>Log In</span>
@@ -362,7 +362,7 @@ export default function Navbar() {
                                                 <Link
                                                     href="/signup"
                                                     onClick={() => setIsAccountDropdownOpen(false)}
-                                                    className="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-[#244033] text-[#244033] font-semibold rounded-lg hover:bg-[#F0F4F1] transition-all duration-200"
+                                                    className="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-[#007B57] text-[#007B57] font-semibold rounded-lg hover:bg-[#F0F4F1] transition-all duration-200"
                                                 >
                                                     <span>Create Account</span>
                                                 </Link>
@@ -400,7 +400,7 @@ export default function Navbar() {
                             >
                                 <ShoppingCart size={22} />
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-[#244033] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    <span className="absolute -top-1 -right-1 bg-[#007B57] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                         {cartCount}
                                     </span>
                                 )}
@@ -424,7 +424,7 @@ export default function Navbar() {
                                         key={collection.handle}
                                         href={collection.link}
                                         className={`flex items-center gap-1 px-4 py-1.5 rounded-full font-medium transition-all duration-200 ${isActive
-                                            ? 'bg-[#244033] text-white'
+                                            ? 'bg-[#007B57] text-white'
                                             : 'text-gray-700 hover:bg-gray-100'
                                             }`}
                                     >
@@ -478,7 +478,7 @@ export default function Navbar() {
                 <div className={`lg:hidden fixed inset-y-0 left-0 w-80 bg-white shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     {/* Sidebar Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                        <div className="text-2xl font-bold text-[#2F4F3E] flex items-center gap-2">
+                        <div className="text-2xl font-bold text-[#007B57] flex items-center gap-2">
                             <span className="text-3xl">🌿</span>
                             Groves Box
                         </div>
@@ -506,7 +506,7 @@ export default function Navbar() {
                     <div className="flex-1 overflow-y-auto">
                         {/* Collections Section */}
                         <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-4 text-[#2F4F3E]">Collections</h3>
+                            <h3 className="text-lg font-semibold mb-4 text-[#007B57]">Collections</h3>
                             {loadingCollections ? (
                                 <div className="grid grid-cols-2 gap-3">
                                     {[1, 2, 3, 4].map((i) => (
@@ -589,7 +589,7 @@ export default function Navbar() {
                                 <Link
                                     href="/account"
                                     onClick={handleCloseMenu}
-                                    className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors"
+                                    className="block w-full py-3 px-4 bg-[#007B57] text-white text-center font-semibold rounded-lg hover:bg-[#009A7B] transition-colors"
                                 >
                                     My Account
                                 </Link>
@@ -609,14 +609,14 @@ export default function Navbar() {
                                 <Link
                                     href="/login"
                                     onClick={handleCloseMenu}
-                                    className="block w-full py-3 px-4 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors"
+                                    className="block w-full py-3 px-4 bg-[#007B57] text-white text-center font-semibold rounded-lg hover:bg-[#009A7B] transition-colors"
                                 >
                                     Log In
                                 </Link>
                                 <Link
                                     href="/signup"
                                     onClick={handleCloseMenu}
-                                    className="block w-full py-3 px-4 border-2 border-[#244033] text-[#244033] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="block w-full py-3 px-4 border-2 border-[#007B57] text-[#007B57] text-center font-semibold rounded-lg hover:bg-gray-50 transition-colors"
                                 >
                                     Sign Up
                                 </Link>
@@ -638,7 +638,7 @@ export default function Navbar() {
                 <div className={`fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     {/* Cart Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                        <h2 className="text-xl font-bold text-[#2F4F3E]">Shopping Cart ({cartCount})</h2>
+                        <h2 className="text-xl font-bold text-[#007B57]">Shopping Cart ({cartCount})</h2>
                         <button onClick={handleCloseCart} className="p-2 text-gray-500 hover:text-gray-700 transition-colors">
                             <X size={24} />
                         </button>
@@ -657,7 +657,7 @@ export default function Navbar() {
                                 <p className="text-gray-500 mb-4">Your cart is empty</p>
                                 <button
                                     onClick={handleCloseCart}
-                                    className="px-6 py-2 bg-[#244033] text-white rounded-lg hover:bg-[#2F4F3E] transition-colors"
+                                    className="px-6 py-2 bg-[#007B57] text-white rounded-lg hover:bg-[#2F4F3E] transition-colors"
                                 >
                                     Continue Shopping
                                 </button>
@@ -677,7 +677,7 @@ export default function Navbar() {
 
                                         {/* Product Details */}
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="font-semibold text-[#2F4F3E] truncate">{item.name}</h3>
+                                            <h3 className="font-semibold text-[#007B57] truncate">{item.name}</h3>
                                             {item.variant && item.variant !== 'Default Title' && (
                                                 <p className="text-sm text-gray-500">Variant: {item.variant}</p>
                                             )}
@@ -720,8 +720,8 @@ export default function Navbar() {
                         <div className="border-t border-gray-200 p-4 space-y-4">
                             {/* Subtotal */}
                             <div className="flex justify-between items-center">
-                                <span className="text-lg font-semibold text-[#2F4F3E]">Subtotal</span>
-                                <span className="text-2xl font-bold text-[#2F4F3E]">Rs. {calculateSubtotal()}</span>
+                                <span className="text-lg font-semibold text-[#007B57]">Subtotal</span>
+                                <span className="text-2xl font-bold text-[#007B57]">Rs. {calculateSubtotal()}</span>
                             </div>
                             <p className="text-sm text-gray-500">Shipping and taxes calculated at checkout</p>
 
@@ -729,13 +729,13 @@ export default function Navbar() {
                             <Link
                                 href="/cart"
                                 onClick={handleCloseCart}
-                                className="block w-full py-3 bg-[#244033] text-white text-center font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors"
+                                className="block w-full py-3 bg-[#007B57] text-white text-center font-semibold rounded-lg hover:bg-[#009A7B] transition-colors"
                             >
                                 View Cart
                             </Link>
                             <button
                                 onClick={handleCloseCart}
-                                className="w-full py-3 border-2 border-[#244033] text-[#244033] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                                className="w-full py-3 border-2 border-[#007B57] text-[#007B57] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
                             >
                                 Continue Shopping
                             </button>
@@ -775,7 +775,7 @@ export default function Navbar() {
                             {/* Close Button */}
                             <button
                                 onClick={handleCloseLogoutSuccess}
-                                className="w-full py-3 bg-[#244033] text-white font-semibold rounded-lg hover:bg-[#2F4F3E] transition-colors"
+                                className="w-full py-3 bg-[#007B57] text-white font-semibold rounded-lg hover:bg-[#009A7B] transition-colors"
                             >
                                 Close
                             </button>

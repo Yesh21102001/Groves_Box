@@ -47,7 +47,7 @@ export default function Footer() {
                         onClick={() => toggleSection('customer')}
                         className="w-full px-6 py-4 flex justify-between items-center"
                     >
-                        <span className="font-medium text-[#2F4F3E]">Customer Service</span>
+                        <span className="font-medium">Customer Service</span>
                         <ChevronDown
                             size={18}
                             className={`transition-transform ${openSection === 'customer' ? 'rotate-180' : ''}`}
@@ -68,7 +68,7 @@ export default function Footer() {
                         onClick={() => toggleSection('company')}
                         className="w-full px-6 py-4 flex justify-between items-center"
                     >
-                        <span className="font-medium text-[#2F4F3E]">Company</span>
+                        <span className="font-medium">Company</span>
                         <ChevronDown
                             size={18}
                             className={`transition-transform ${openSection === 'company' ? 'rotate-180' : ''}`}
@@ -88,7 +88,7 @@ export default function Footer() {
                         onClick={() => toggleSection('policy')}
                         className="w-full px-6 py-4 flex justify-between items-center"
                     >
-                        <span className="font-medium text-[#2F4F3E]">Legal</span>
+                        <span className="font-medium">Legal</span>
                         <ChevronDown
                             size={18}
                             className={`transition-transform ${openSection === 'policy' ? 'rotate-180' : ''}`}

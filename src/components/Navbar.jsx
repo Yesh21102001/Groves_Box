@@ -440,17 +440,17 @@ export default function Navbar() {
             {/* Mobile Bottom Navigation Bar */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 shadow-lg">
                 <div className="flex items-center justify-around h-16 px-2">
-                    <Link href="/" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/' ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}>
+                    <Link href="/" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/' ? 'text-[#007B57]' : 'text-gray-400 hover:text-black'}`}>
                         <Home size={24} />
                         <span className="text-xs mt-1 font-medium">Home</span>
                     </Link>
 
-                    <Link href="/products" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/products') ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}>
+                    <Link href="/products" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/products') ? 'text-[#007B57]' : 'text-gray-400 hover:text-black'}`}>
                         <Store size={24} />
                         <span className="text-xs mt-1 font-medium">Shop</span>
                     </Link>
 
-                    <Link href="/wishlist" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist' ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}>
+                    <Link href="/wishlist" className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/wishlist' ? 'text-[#007B57]' : 'text-gray-400 hover:text-black'}`}>
                         <Heart size={24} />
                         <span className="text-xs mt-1 font-medium">Wishlist</span>
                     </Link>
@@ -458,7 +458,7 @@ export default function Navbar() {
                     <Link
                         href={isLoggedIn ? "/account" : "/login"}
                         onClick={handleMobileAccountClick}
-                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account' ? 'text-[#244033]' : 'text-gray-400 hover:text-black'}`}
+                        className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/account' ? 'text-[#007B57]' : 'text-gray-400 hover:text-black'}`}
                     >
                         <User size={24} />
                         <span className="text-xs mt-1 font-medium">Account</span>

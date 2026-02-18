@@ -375,7 +375,7 @@ export default function HomePage() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/collections/indoor-trees"
-              className="px-5 py-3 bg-white text-black text-sm font-semibold hover:bg-[#1a2e24] transition-colors rounded-sm"
+              className="px-5 py-3 bg-white text-black text-sm font-semibold transition-colors rounded-sm"
             >
               Shop New Arrivals
             </Link>

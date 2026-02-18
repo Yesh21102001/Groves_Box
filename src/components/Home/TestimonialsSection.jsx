@@ -98,7 +98,7 @@ const SocialIcon = ({ type }) => {
 const StarRating = ({ rating }) => (
     <div className="flex items-center gap-0.5">
         {[1, 2, 3, 4, 5].map((s) => (
-            <svg key={s} width="15" height="15" viewBox="0 0 24 24" fill={s <= rating ? "#2BBFA4" : "#E5E7EB"}>
+            <svg key={s} width="15" height="15" viewBox="0 0 24 24" fill={s <= rating ? "#007B57" : "#E5E7EB"}>
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
         ))}
@@ -183,7 +183,7 @@ export default function TestimonialsSection() {
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-bold text-[#244033] leading-tight mb-3"
                         style={{ fontFamily: "Georgia, serif" }}>
                         What Our{" "}
-                        <span className="text-[#2BBFA4]">Customers Are Saying</span>
+                        <span className="text-[#007B57]">Customers Are Saying</span>
                     </h2>
                     <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto leading-relaxed">
                         But I must explain to you how all this mistaken idea of denouncing pleasure and praising
@@ -207,7 +207,7 @@ export default function TestimonialsSection() {
               border border-gray-200 flex items-center justify-center
               shadow-md cursor-pointer
               transition-all duration-300 ease-out
-              hover:bg-[#2BBFA4] hover:border-[#2BBFA4] hover:scale-110
+              hover:bg-[#007B57] hover:border-[#007B57] hover:scale-110
               hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
               group
             "
@@ -239,9 +239,9 @@ export default function TestimonialsSection() {
                                         "ease-[cubic-bezier(0.34,1.15,0.64,1)]",
                                         /* State-based styles */
                                         isOnly
-                                            ? "scale-100 opacity-100 shadow-[0_14px_44px_rgba(0,0,0,0.12)] border-[#2BBFA4]"
+                                            ? "scale-100 opacity-100 shadow-[0_14px_44px_rgba(0,0,0,0.12)] border-[#007B57]"
                                             : isCenter
-                                                ? "scale-[1.05] -translate-y-1 opacity-100 shadow-[0_20px_56px_rgba(0,0,0,0.13),0_4px_16px_rgba(43,191,164,0.12)] border-[#2BBFA4] z-10"
+                                                ? "scale-[1.05] -translate-y-1 opacity-100 shadow-[0_20px_56px_rgba(0,0,0,0.13),0_4px_16px_rgba(43,191,164,0.12)] border-[#007B57] z-10"
                                                 : "scale-[0.93] translate-y-1.5 opacity-60 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border-transparent",
                                     ].join(" ")}
                                 >
@@ -253,7 +253,7 @@ export default function TestimonialsSection() {
                                             className={[
                                                 "w-14 h-14 rounded-full object-cover flex-shrink-0",
                                                 "border-[2.5px] transition-[border-color] duration-500",
-                                                isCenter || isOnly ? "border-[#2BBFA4]" : "border-[#e0f2ed]",
+                                                isCenter || isOnly ? "border-[#007B57]" : "border-[#e0f2ed]",
                                             ].join(" ")}
                                         />
                                         <div className="flex-1 min-w-0">
@@ -263,7 +263,7 @@ export default function TestimonialsSection() {
                                                 </span>
                                                 <SocialIcon type={t.social} />
                                             </div>
-                                            <p className="text-[#2BBFA4] text-[10.5px] font-bold uppercase tracking-widest mb-1.5">
+                                            <p className="text-[#007B57] text-[10.5px] font-bold uppercase tracking-widest mb-1.5">
                                                 {t.role}
                                             </p>
                                             <StarRating rating={t.rating} />
@@ -276,7 +276,7 @@ export default function TestimonialsSection() {
                                     {/* Quote + text */}
                                     <div>
                                         <p
-                                            className="text-[#2BBFA4] leading-none mb-[-8px] opacity-75"
+                                            className="text-[#007B57] leading-none mb-[-8px] opacity-75"
                                             style={{ fontSize: 44, fontFamily: "Georgia, serif" }}
                                         >
                                             &ldquo;
@@ -300,7 +300,7 @@ export default function TestimonialsSection() {
               border border-gray-200 flex items-center justify-center
               shadow-md cursor-pointer
               transition-all duration-300 ease-out
-              hover:bg-[#2BBFA4] hover:border-[#2BBFA4] hover:scale-110
+              hover:bg-[#007B57] hover:border-[#007B57] hover:scale-110
               hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
               group
             "
@@ -324,7 +324,7 @@ export default function TestimonialsSection() {
                                 "transition-[width,background-color] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
                                 "hover:bg-[#1aab8e]",
                                 i === activeIndex
-                                    ? "w-8 bg-[#2BBFA4]"
+                                    ? "w-8 bg-[#007B57]"
                                     : "w-2.5 bg-[#c4dfd8]",
                             ].join(" ")}
                         />

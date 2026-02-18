@@ -227,7 +227,7 @@ export default function SignUpPage() {
             <div className="w-full max-w-md">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-[#2F4F3E]">Create Account</h1>
+                    <h1 className="text-3xl font-bold text-[#007B57]">Create Account</h1>
                     <p className="text-gray-600 mt-2">Join us and start your plant journey</p>
                 </div>
 
@@ -251,7 +251,7 @@ export default function SignUpPage() {
                                     name="firstName"
                                     value={formData.firstName}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007B57]"
                                     placeholder="John"
                                     required
                                 />
@@ -266,7 +266,7 @@ export default function SignUpPage() {
                                     name="lastName"
                                     value={formData.lastName}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007B57]"
                                     placeholder="Doe"
                                     required
                                 />
@@ -283,7 +283,7 @@ export default function SignUpPage() {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007B57]"
                                 placeholder="you@example.com"
                                 required
                             />
@@ -304,7 +304,7 @@ export default function SignUpPage() {
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handlePhoneChange}
-                                    className={`w-full pl-16 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] ${showPhoneValidation
+                                    className={`w-full pl-16 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007B57] ${showPhoneValidation
                                         ? isPhoneValid
                                             ? 'border-green-300 bg-green-50'
                                             : 'border-red-300 bg-red-50'
@@ -345,7 +345,7 @@ export default function SignUpPage() {
                                     name="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007B57]"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -388,7 +388,7 @@ export default function SignUpPage() {
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033]"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007B57]"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -419,15 +419,15 @@ export default function SignUpPage() {
                                     type="checkbox"
                                     checked={agreedToTerms}
                                     onChange={(e) => setAgreedToTerms(e.target.checked)}
-                                    className="w-4 h-4 text-[#244033] rounded focus:ring-[#244033] mt-1"
+                                    className="w-4 h-4 text-[#007B57] rounded focus:ring-[#007B57] mt-1"
                                 />
                                 <span className="ml-2 text-sm text-gray-600">
                                     I agree to the{' '}
-                                    <Link href="/terms-service" className="text-[#244033] font-semibold hover:underline">
+                                    <Link href="/terms-service" className="text-[#007B57] font-semibold hover:underline">
                                         Terms of Service
                                     </Link>{' '}
                                     and{' '}
-                                    <Link href="/privacy-policy" className="text-[#244033] font-semibold hover:underline">
+                                    <Link href="/privacy-policy" className="text-[#007B57] font-semibold hover:underline">
                                         Privacy Policy
                                     </Link>
                                 </span>
@@ -438,7 +438,7 @@ export default function SignUpPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-[#244033] text-white py-3 rounded-lg font-semibold hover:bg-[#2F4F3E] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-[#007B57] text-white py-3 rounded-lg font-semibold hover:bg-[#009A7B] transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? 'Creating Account...' : 'Create Account'}
                         </button>
@@ -447,7 +447,7 @@ export default function SignUpPage() {
                     {/* Sign In Link */}
                     <p className="text-center text-gray-600 mt-8">
                         Already have an account?{' '}
-                        <Link href="/login" className="text-[#244033] font-semibold hover:underline">
+                        <Link href="/login" className="text-[#007B57] font-semibold hover:underline">
                             Sign in
                         </Link>
                     </p>

@@ -26,7 +26,6 @@ export default function CollectionsPage() {
     const fetchCollections = async () => {
         try {
             const data = await getCollections(20);
-            // Filter out empty collections and set state
             const validCollections = data.filter((c: any) => c.name && c.id);
             setCollections(validCollections.length > 0 ? validCollections : data);
         } catch (error) {
@@ -47,60 +46,50 @@ export default function CollectionsPage() {
 
     return (
         <div className="min-h-screen bg-white py-8 md:py-12 lg:py-16">
-            <div className="w-full px-4 md:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto">
+            <div className="w-full px-4 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
+                <div className="max-w-[1600px] mx-auto">
 
                     {/* Breadcrumbs */}
-                    <div className="py-4">
-                        <nav className="flex items-center justify-center space-x-2 text-sm text-gray-600">
-                            <Link href="/" className="hover:text-[#2F4F3E]">
-                                Home
-                            </Link>
-                            <ChevronRight className="w-4 h-4" />
-                            <span className="text-[#2F4F3E] font-medium">Collections</span>
-                        </nav>
-                    </div>
+                    <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
+                        <Link href="/" className="hover:text-[#2F4F3E] transition-colors">
+                            Home
+                        </Link>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+                        <span className="text-[#007B57] font-medium">Collections</span>
+                    </nav>
 
                     {/* Header */}
-                    <div className="mb-8 md:mb-12">
-                        <h1 className="font-light text-[#2F4F3E] text-3xl lg:text-4xl 2xl:text-5xl mb-3">
+                    <div className="mb-8 md:mb-10 lg:mb-12">
+                        <h1 className="font-light text-[#007B57] text-3xl lg:text-4xl 2xl:text-5xl tracking-tight">
                             Collections
                         </h1>
-                        <p className="text-gray-600 text-sm">
-                            Explore our curated plant collections and find the perfect plants for your space.
-                        </p>
                     </div>
 
                     {/* Collections Grid */}
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-10 lg:gap-x-8 lg:gap-y-12">
                         {collections.map((collection) => (
                             <Link
                                 key={collection.id}
                                 href={collection.link}
-                                className="group relative overflow-hidden rounded-lg h-64 sm:h-80 md:h-136"
+                                className="group block"
                             >
-                                {/* Image */}
-                                <img
-                                    src={collection.image || '/images/White_arch.webp'}
-                                    alt={collection.imageAlt}
-                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                                />
+                                {/* Image container — no overlay, clean crop */}
+                                <div className="relative overflow-hidden w-full aspect-[3/4] mb-3 sm:mb-4 bg-gray-100">
+                                    <img
+                                        src={collection.image || '/images/White_arch.webp'}
+                                        alt={collection.imageAlt || collection.name}
+                                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                    />
+                                </div>
 
-                                {/* Overlay */}
-                                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition duration-300" />
-
-                                {/* Content */}
-                                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6">
-                                    <h3 className="text-lg sm:text-2xl font-light text-white mb-1">
+                                {/* Title + arrow — below image, no overlay */}
+                                <div className="flex items-center gap-1.5">
+                                    <span className="text-sm sm:text-base lg:text-lg text-[#1a1a1a] font-light leading-snug group-hover:text-[#009A7B] transition-colors duration-200">
                                         {collection.name}
-                                    </h3>
-                                    <p className="text-gray-200 text-xs sm:text-sm line-clamp-2 mb-2">
-                                        {collection.description || 'Explore this collection'}
-                                    </p>
-                                    <div className="flex items-center gap-2 text-white text-sm">
-                                        <span>Explore</span>
-                                        <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                    </div>
+                                    </span>
+                                    <span className="text-[#1a1a1a] text-base leading-none group-hover:text-[#009A7B] transition-transform duration-200 group-hover:translate-x-1 inline-block">
+                                        →
+                                    </span>
                                 </div>
                             </Link>
                         ))}

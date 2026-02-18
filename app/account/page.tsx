@@ -414,7 +414,7 @@ export default function AccountPage() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
-                    <Loader2 className="w-12 h-12 animate-spin text-[#244033] mx-auto mb-4" />
+                    <Loader2 className="w-12 h-12 animate-spin text-[#007B57] mx-auto mb-4" />
                     <p className="text-gray-600">Loading your account...</p>
                 </div>
             </div>
@@ -444,7 +444,7 @@ export default function AccountPage() {
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 shadow-sm font-semibold text-sm sm:text-base"
+                            className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-red-100 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all duration-200 shadow-sm font-semibold text-sm sm:text-base"
                         >
                             <LogOut className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                             Log Out
@@ -471,7 +471,7 @@ export default function AccountPage() {
                     <div className="lg:col-span-1">
                         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 sticky top-6">
                             <div className="flex items-center justify-center flex-col mb-6 pb-6 border-b border-gray-100">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#244033] to-[#3a5f4b] flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg mb-3">
+                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#007B57] to-[#3a5f4b] flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg mb-3">
                                     {userData.firstName?.[0]}{userData.lastName?.[0]}
                                 </div>
                                 <h3 className="font-bold text-gray-900 text-base sm:text-lg text-center">
@@ -513,7 +513,7 @@ export default function AccountPage() {
                                     {!isEditing && (
                                         <button
                                             onClick={() => setIsEditing(true)}
-                                            className="flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 bg-[#244033] text-white rounded-xl hover:bg-black-400 transition-all duration-200 shadow-sm hover:shadow-md text-sm"
+                                            className="flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 bg-[#007B57] text-white rounded-xl hover:bg-black-400 transition-all duration-200 shadow-sm hover:shadow-md text-sm"
                                         >
                                             <Edit2 className="w-4 h-4 mr-2" />
                                             Edit Profile
@@ -533,7 +533,7 @@ export default function AccountPage() {
                                                     name="firstName"
                                                     value={userData.firstName}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
+                                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
                                                 />
                                             </div>
                                             <div>
@@ -545,7 +545,7 @@ export default function AccountPage() {
                                                     name="lastName"
                                                     value={userData.lastName}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
+                                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
                                                 />
                                             </div>
                                         </div>
@@ -559,7 +559,7 @@ export default function AccountPage() {
                                                 name="email"
                                                 value={userData.email}
                                                 onChange={handleInputChange}
-                                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
+                                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
                                             />
                                         </div>
 
@@ -578,7 +578,7 @@ export default function AccountPage() {
                                                     value={formatPhoneForDisplay(userData.phone)}
                                                     onChange={handlePhoneChange}
                                                     placeholder="98765-43210"
-                                                    className="w-full pl-16 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
+                                                    className="w-full pl-16 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
                                                 />
                                             </div>
                                             <p className="text-xs text-gray-500 mt-1">
@@ -590,7 +590,7 @@ export default function AccountPage() {
                                             <button
                                                 onClick={handleSaveChanges}
                                                 disabled={isSaving}
-                                                className="flex-1 flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3.5 bg-[#244033] text-white rounded-xl hover:bg-[#1a2f26] transition-all duration-200 shadow-md hover:shadow-lg font-semibold text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="flex-1 flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3.5 bg-[#007B57] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-md hover:shadow-lg font-semibold text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 {isSaving ? (
                                                     <>
@@ -664,7 +664,7 @@ export default function AccountPage() {
 
                                 {isLoadingOrders ? (
                                     <div className="text-center py-12">
-                                        <Loader2 className="w-12 h-12 animate-spin text-[#244033] mx-auto mb-4" />
+                                        <Loader2 className="w-12 h-12 animate-spin text-[#007B57] mx-auto mb-4" />
                                         <p className="text-gray-600">Loading your orders...</p>
                                     </div>
                                 ) : orders.length === 0 ? (
@@ -674,7 +674,7 @@ export default function AccountPage() {
                                         <p className="text-gray-600 mb-6">Start shopping to see your orders here</p>
                                         <button
                                             onClick={() => router.push('/products')}
-                                            className="px-6 py-3 bg-[#244033] text-white rounded-xl hover:bg-[#1a2f26] transition-all duration-200 shadow-md"
+                                            className="px-6 py-3 bg-[#007B57] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-md"
                                         >
                                             Start Shopping
                                         </button>
@@ -834,7 +834,7 @@ export default function AccountPage() {
                                     </h2>
                                     <button
                                         onClick={() => openAddressModal()}
-                                        className="flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 bg-[#244033] text-white rounded-xl hover:bg-[#1a2f26] transition-all duration-200 shadow-sm hover:shadow-md text-sm"
+                                        className="flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 bg-[#007B57] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-sm hover:shadow-md text-sm"
                                     >
                                         <Plus className="w-4 h-4 mr-2" />
                                         Add Address
@@ -843,7 +843,7 @@ export default function AccountPage() {
 
                                 {isLoadingAddresses ? (
                                     <div className="text-center py-12">
-                                        <Loader2 className="w-12 h-12 animate-spin text-[#244033] mx-auto mb-4" />
+                                        <Loader2 className="w-12 h-12 animate-spin text-[#007B57] mx-auto mb-4" />
                                         <p className="text-gray-600">Loading your addresses...</p>
                                     </div>
                                 ) : addresses.length === 0 ? (
@@ -864,7 +864,7 @@ export default function AccountPage() {
                                                 className="relative border-2 border-gray-100 rounded-xl p-4 sm:p-6 hover:border-gray-200 transition-all duration-200"
                                             >
                                                 {addr.isDefault && (
-                                                    <span className="absolute top-3 right-3 px-2 py-1 bg-[#244033] text-white text-xs font-semibold rounded-lg">
+                                                    <span className="absolute top-3 right-3 px-2 py-1 bg-[#007B57] text-white text-xs font-semibold rounded-lg">
                                                         DEFAULT
                                                     </span>
                                                 )}
@@ -896,7 +896,7 @@ export default function AccountPage() {
                                                     <button
                                                         onClick={() => openAddressModal(addr)}
                                                         disabled={isSaving}
-                                                        className="flex-1 px-3 py-2 text-sm font-semibold text-[#244033] border-2 border-[#244033] rounded-lg hover:bg-[#244033] hover:text-white transition-all duration-200 disabled:opacity-50"
+                                                        className="flex-1 px-3 py-2 text-sm font-semibold text-[#007B57] border-2 border-[#007B57] rounded-lg hover:bg-[#007B57] hover:text-white transition-all duration-200 disabled:opacity-50"
                                                     >
                                                         Edit
                                                     </button>
@@ -947,7 +947,7 @@ export default function AccountPage() {
                                         </div>
                                         <label className="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" className="sr-only peer" />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#244033]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#244033]"></div>
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#007B57]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#007B57]"></div>
                                         </label>
                                     </div>
 
@@ -1032,7 +1032,7 @@ export default function AccountPage() {
                                             name="firstName"
                                             value={addressForm.firstName}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1045,7 +1045,7 @@ export default function AccountPage() {
                                             name="lastName"
                                             value={addressForm.lastName}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1060,7 +1060,7 @@ export default function AccountPage() {
                                         name="address1"
                                         value={addressForm.address1}
                                         onChange={handleAddressFormChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                         required
                                     />
                                 </div>
@@ -1074,7 +1074,7 @@ export default function AccountPage() {
                                         name="address2"
                                         value={addressForm.address2}
                                         onChange={handleAddressFormChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                     />
                                 </div>
 
@@ -1088,7 +1088,7 @@ export default function AccountPage() {
                                             name="city"
                                             value={addressForm.city}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1101,7 +1101,7 @@ export default function AccountPage() {
                                             name="province"
                                             value={addressForm.province}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1114,7 +1114,7 @@ export default function AccountPage() {
                                             name="zip"
                                             value={addressForm.zip}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1129,7 +1129,7 @@ export default function AccountPage() {
                                         name="country"
                                         value={addressForm.country}
                                         onChange={handleAddressFormChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                         required
                                     />
                                 </div>
@@ -1143,7 +1143,7 @@ export default function AccountPage() {
                                         name="phone"
                                         value={addressForm.phone}
                                         onChange={handleAddressFormChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#244033] focus:ring-0 transition-all"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#007B57] focus:ring-0 transition-all"
                                     />
                                 </div>
                             </div>
@@ -1159,7 +1159,7 @@ export default function AccountPage() {
                                 <button
                                     onClick={handleSaveAddress}
                                     disabled={isSaving}
-                                    className="flex-1 px-6 py-3 bg-[#244033] text-white rounded-xl hover:bg-[#1a2f26] transition-all duration-200 shadow-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="flex-1 px-6 py-3 bg-[#007B57] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isSaving ? (
                                         <>
@@ -1221,7 +1221,7 @@ export default function AccountPage() {
                                 </button>
                                 <button
                                     onClick={confirmLogout}
-                                    className="flex-1 px-6 py-3 bg-[#244033] text-white rounded-xl hover:bg-[#1a2f26] transition-all duration-200 shadow-md font-semibold"
+                                    className="flex-1 px-6 py-3 bg-[#007B57] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-md font-semibold"
                                 >
                                     Yes, Logout
                                 </button>
@@ -1253,7 +1253,7 @@ export default function AccountPage() {
                             {/* Loading Spinner */}
                             <div className="mt-6">
                                 <div className="flex justify-center">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#244033]"></div>
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#007B57]"></div>
                                 </div>
                             </div>
                         </div>

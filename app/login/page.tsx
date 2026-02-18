@@ -119,7 +119,7 @@ export default function LoginPage() {
             <div className="max-w-md mx-auto px-4 py-12 sm:py-20">
                 {/* Logo/Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-light text-[#244033] mb-2">Welcome Back</h1>
+                    <h1 className="text-3xl font-light text-[#007B57] mb-2">Welcome Back</h1>
                     <p className="text-gray-600">Sign in to your account</p>
                 </div>
 
@@ -142,7 +142,7 @@ export default function LoginPage() {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent"
                             placeholder="you@example.com"
                         />
                     </div>
@@ -158,14 +158,14 @@ export default function LoginPage() {
                             value={formData.password}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent"
                             placeholder="••••••••"
                         />
                     </div>
 
                     {/* Forgot Password Link */}
                     <div className="text-right">
-                        <Link href="/forgot-password" className="text-sm text-[#244033] hover:underline">
+                        <Link href="/forgot-password" className="text-sm text-[#007B57] hover:underline">
                             Forgot password?
                         </Link>
                     </div>
@@ -174,7 +174,7 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-[#244033] text-white py-3 rounded-lg font-semibold hover:bg-[#2F4F3E] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-[#007B57] text-white py-3 rounded-lg font-semibold hover:bg-[#009A7B] transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading ? 'Signing in...' : 'Sign In'}
                     </button>
@@ -184,7 +184,7 @@ export default function LoginPage() {
                 <div className="mt-8 text-center">
                     <p className="text-gray-600">
                         Don't have an account?{' '}
-                        <Link href="/signup" className="text-[#244033] hover:underline font-medium">
+                        <Link href="/signup" className="text-[#007B57] hover:underline font-medium">
                             Sign up
                         </Link>
                     </p>

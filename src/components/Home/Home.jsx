@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingCart, X, ArrowRight, GraduationCap, Users, Shield } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
+import TestimonialsSection from "../Home/TestimonialsSection";
 import { getProducts, getCollections, getNewArrivals, getProductsByCollection } from "../../lib/shopify_utilis";
 
 function IconButton({ icon, onClick }) {
@@ -658,7 +659,7 @@ export default function HomePage() {
 
 
       {/* TESTIMONIALS */}
-      {testimonials.length > 0 && (
+      {/* {testimonials.length > 0 && (
         <section className="w-full bg-white py-16 px-4 md:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="mb-12">
@@ -692,7 +693,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-      )}
+      )} */}
+      <TestimonialsSection />
 
 
       {/* Bottom Cart Navigator */}

@@ -122,7 +122,8 @@ const ProductCard = ({ product }: { product: Product }) => {
         if (wishlisted) {
             removeFromWishlist(product.id.toString());
         } else {
-            addToWishlist({ id: product.id.toString(), variantId: product.variants?.[0]?.id, name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
+            // FIX: use ?? '' to ensure variantId is always a string
+            addToWishlist({ id: product.id.toString(), variantId: product.variants?.[0]?.id ?? '', name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
         }
     };
 
@@ -349,7 +350,10 @@ export default function ProductDetailPage() {
     const handleWishlistToggle = () => {
         if (!product) return;
         if (isProductWishlisted) { removeFromWishlist(product.id.toString()); }
-        else { addToWishlist({ id: product.id.toString(), variantId: selectedVariant?.id, name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants }); }
+        else {
+            // FIX: use ?? '' to ensure variantId is always a string
+            addToWishlist({ id: product.id.toString(), variantId: selectedVariant?.id ?? '', name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
+        }
     };
 
     const handleShare = async (platform: 'copy' | 'whatsapp' | 'facebook' | 'twitter') => {
@@ -454,9 +458,6 @@ export default function ProductDetailPage() {
                                             {product.badge}
                                         </div>
                                     )}
-                                    {/* <button onClick={handleWishlistToggle} className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#007B57] hover:text-white transition-all duration-300">
-                                        <Heart size={20} className={isProductWishlisted ? 'fill-current text-red-500' : ''} />
-                                    </button> */}
                                     <img src={productImages[mainImage]?.url || product.image} alt={product.name} className="w-full h-full object-cover" />
                                 </div>
                                 {/* Mobile thumbnails */}
@@ -541,11 +542,6 @@ export default function ProductDetailPage() {
                                             {option.name}:{' '}
                                             <span className="font-normal text-gray-600">{selectedOptions[option.name]}</span>
                                         </label>
-                                        {/* {/size/i.test(option.name) && (
-                                            <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#007B57] transition">
-                                                Size Guide
-                                            </button>
-                                        )} */}
                                         {/planter/i.test(option.name) && (
                                             <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#007B57] transition">
                                                 Style Guide
@@ -593,7 +589,6 @@ export default function ProductDetailPage() {
                                                                 : ' text-gray-700 hover:border-[#007B57] hover:text-[#007B57]'
                                                             }`}
                                                     >
-
                                                         {selected && (
                                                             <span className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-[#2F8C6E] rounded-full flex items-center justify-center">
                                                                 <Check size={10} className="text-white" />

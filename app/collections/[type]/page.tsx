@@ -165,7 +165,7 @@ export default function CollectionDetailPage() {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <div className="w-16 h-16 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                     <p className="text-gray-600">Loading collection...</p>
                 </div>
             </div>
@@ -178,7 +178,7 @@ export default function CollectionDetailPage() {
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-red-600 mb-4">Error: {error}</p>
-                    <Link href="/collections" className="text-[#244033] underline">Back to Collections</Link>
+                    <Link href="/collections" className="text-[#007B57] underline">Back to Collections</Link>
                 </div>
             </div>
         );
@@ -190,7 +190,7 @@ export default function CollectionDetailPage() {
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-gray-600 mb-4">Collection not found</p>
-                    <Link href="/collections" className="text-[#244033] underline">Back to Collections</Link>
+                    <Link href="/collections" className="text-[#007B57] underline">Back to Collections</Link>
                 </div>
             </div>
         );
@@ -255,7 +255,7 @@ export default function CollectionDetailPage() {
                     <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-in-out ${showFiltersSidebar ? 'translate-x-0' : 'translate-x-full'} flex flex-col`}>
 
                         {/* Sidebar Header */}
-                        <div className="bg-gradient-to-r from-[#244033] to-[#007B57] p-6 flex items-center justify-between flex-shrink-0">
+                        <div className="bg-gradient-to-r from-[#007B57] to-[#007B57] p-6 flex items-center justify-between flex-shrink-0">
                             <div>
                                 <h2 className="text-xl font-semibold text-white">Filters & Sort</h2>
                                 <p className="text-sm text-white/80 mt-1">Customize your search</p>
@@ -274,13 +274,13 @@ export default function CollectionDetailPage() {
                             {/* Sort By */}
                             <div className="bg-white rounded-xl p-5 shadow-sm">
                                 <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 bg-[#244033] rounded-full" />
+                                    <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full" />
                                     Sort by
                                 </h3>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#244033] focus:border-transparent bg-white text-gray-900 font-medium cursor-pointer"
+                                    className="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent bg-white text-gray-900 font-medium cursor-pointer"
                                 >
                                     <option value="popular">✨ Featured</option>
                                     <option value="newest">🆕 Newest First</option>
@@ -292,20 +292,20 @@ export default function CollectionDetailPage() {
                             {/* Price Range */}
                             <div className="bg-white rounded-xl p-5 shadow-sm">
                                 <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 bg-[#244033] rounded-full" />
+                                    <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full" />
                                     Price Range
                                 </h3>
 
-                                <div className="bg-gradient-to-r from-[#244033]/5 to-[#007B57]/5 rounded-lg p-4 mb-4">
+                                <div className="bg-gradient-to-r from-[#007B57]/5 to-[#007B57]/5 rounded-lg p-4 mb-4">
                                     <div className="flex items-center justify-between">
                                         <div className="text-center flex-1">
                                             <p className="text-xs text-gray-500 mb-1">Minimum</p>
-                                            <p className="text-lg font-bold text-[#244033]">₹{priceRange[0]}</p>
+                                            <p className="text-lg font-bold text-[#007B57]">₹{priceRange[0]}</p>
                                         </div>
                                         <div className="w-px h-8 bg-gray-300 mx-3" />
                                         <div className="text-center flex-1">
                                             <p className="text-xs text-gray-500 mb-1">Maximum</p>
-                                            <p className="text-lg font-bold text-[#244033]">
+                                            <p className="text-lg font-bold text-[#007B57]">
                                                 {priceRange[1] === Infinity ? '∞' : `₹${priceRange[1]}`}
                                             </p>
                                         </div>
@@ -316,7 +316,7 @@ export default function CollectionDetailPage() {
                                     <div>
                                         <div className="flex items-center justify-between mb-2">
                                             <label className="text-xs font-medium text-gray-600">Min Price</label>
-                                            <span className="text-xs text-[#244033] font-semibold">₹{priceRange[0]}</span>
+                                            <span className="text-xs text-[#007B57] font-semibold">₹{priceRange[0]}</span>
                                         </div>
                                         <input
                                             type="range"
@@ -330,13 +330,13 @@ export default function CollectionDetailPage() {
                                                     setPriceRange([newMin, priceRange[1]]);
                                                 }
                                             }}
-                                            className="w-full h-2 bg-gradient-to-r from-[#244033] to-[#007B57] rounded-full appearance-none cursor-pointer slider-thumb"
+                                            className="w-full h-2 bg-gradient-to-r from-[#007B57] to-[#007B57] rounded-full appearance-none cursor-pointer slider-thumb"
                                         />
                                     </div>
                                     <div>
                                         <div className="flex items-center justify-between mb-2">
                                             <label className="text-xs font-medium text-gray-600">Max Price</label>
-                                            <span className="text-xs text-[#244033] font-semibold">
+                                            <span className="text-xs text-[#007B57] font-semibold">
                                                 {priceRange[1] === Infinity ? '∞' : `₹${priceRange[1]}`}
                                             </span>
                                         </div>
@@ -352,16 +352,16 @@ export default function CollectionDetailPage() {
                                                     setPriceRange([priceRange[0], newMax]);
                                                 }
                                             }}
-                                            className="w-full h-2 bg-gradient-to-r from-[#244033] to-[#007B57] rounded-full appearance-none cursor-pointer slider-thumb"
+                                            className="w-full h-2 bg-gradient-to-r from-[#007B57] to-[#007B57] rounded-full appearance-none cursor-pointer slider-thumb"
                                         />
                                     </div>
                                 </div>
                             </div>
 
                             {/* Active Filters Count */}
-                            <div className="bg-[#244033]/5 rounded-lg p-4 border border-[#244033]/10">
+                            <div className="bg-[#007B57]/5 rounded-lg p-4 border border-[#007B57]/10">
                                 <p className="text-sm text-gray-700">
-                                    <span className="font-semibold text-[#244033]">{filteredProducts.length}</span> products match your filters
+                                    <span className="font-semibold text-[#007B57]">{filteredProducts.length}</span> products match your filters
                                 </p>
                             </div>
                         </div>
@@ -370,13 +370,13 @@ export default function CollectionDetailPage() {
                         <div className="bg-white border-t border-gray-200 p-6 flex gap-3 flex-shrink-0">
                             <button
                                 onClick={() => { setPriceRange([0, Infinity]); setSortBy('popular'); }}
-                                className="flex-1 text-center px-6 py-3 border-2 border-[#244033] rounded-lg text-[#244033] hover:bg-[#244033]/5 font-semibold transition-colors"
+                                className="flex-1 text-center px-6 py-3 border-2 border-[#007B57] rounded-lg text-[#007B57] hover:bg-[#007B57]/5 font-semibold transition-colors"
                             >
                                 Clear All
                             </button>
                             <button
                                 onClick={() => setShowFiltersSidebar(false)}
-                                className="flex-1 bg-[#244033] text-white font-semibold rounded-lg hover:bg-[#007B57] transition-colors py-3 shadow-lg"
+                                className="flex-1 bg-[#007B57] text-white font-semibold rounded-lg hover:bg-[#009A7B] transition-colors py-3 shadow-lg"
                             >
                                 Apply
                             </button>
@@ -391,7 +391,7 @@ export default function CollectionDetailPage() {
                             height: 20px;
                             border-radius: 50%;
                             background: white;
-                            border: 3px solid #244033;
+                            border: 3px solid #007B57;
                             cursor: pointer;
                             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                             transition: all 0.2s ease;
@@ -405,7 +405,7 @@ export default function CollectionDetailPage() {
                             height: 20px;
                             border-radius: 50%;
                             background: white;
-                            border: 3px solid #244033;
+                            border: 3px solid #007B57;
                             cursor: pointer;
                             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                             transition: all 0.2s ease;
@@ -508,7 +508,7 @@ export default function CollectionDetailPage() {
                                 <p className="text-sm text-gray-500 mb-4">Try adjusting your price range or clearing filters.</p>
                                 <button
                                     onClick={() => { setPriceRange([0, Infinity]); setSortBy('popular'); }}
-                                    className="text-[#244033] hover:text-[#007B57] font-semibold underline"
+                                    className="text-[#007B57] hover:text-[#007B57] font-semibold underline"
                                 >
                                     Clear all filters
                                 </button>
@@ -523,7 +523,7 @@ export default function CollectionDetailPage() {
                 <div className="fixed z-40 bg-[#F0F4F1] border-t border-gray-200 shadow-lg bottom-[70px] left-3 right-3 sm:bottom-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-[500px] sm:rounded-t-[20px] sm:rounded-b-none p-5 rounded-[20px] sm:p-4 sm:rounded-[16px]">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="bg-[#244033] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                            <div className="bg-[#007B57] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                 {totalItems}
                             </div>
                             <div>
@@ -533,7 +533,7 @@ export default function CollectionDetailPage() {
                         </div>
                         <Link
                             href="/cart"
-                            className="bg-[#244033] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#007B57] transition"
+                            className="bg-[#007B57] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition"
                         >
                             View Cart
                         </Link>

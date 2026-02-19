@@ -26,7 +26,7 @@ export default function WishlistPage() {
 
                 {/* Header */}
                 <div className="text-center mb-10">
-                    <h1 className="text-3xl lg:text-4xl font-bold text-[#2F4F3E] mb-4">
+                    <h1 className="text-3xl lg:text-4xl font-bold text-[#007B57] mb-4">
                         My Wishlist
                     </h1>
                     <p className="text-l text-gray-600 max-w-xl mx-auto">
@@ -37,15 +37,15 @@ export default function WishlistPage() {
                 {/* Empty State */}
                 {wishlistItems.length === 0 ? (
                     <div className="text-center py-16">
-                        <div className="w-24 h-24 bg-[#244033] rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="w-24 h-24 bg-[#007B57] rounded-full flex items-center justify-center mx-auto mb-6">
                             <Heart className="w-12 h-12 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-[#2F4F3E] mb-4">
+                        <h2 className="text-2xl font-bold text-[#007B57] mb-4">
                             Your wishlist is empty
                         </h2>
                         <Link
                             href="/products"
-                            className="inline-flex items-center px-6 py-3 bg-[#244033] text-white rounded-xl font-semibold transition"
+                            className="inline-flex items-center px-6 py-3 bg-[#007B57] text-white rounded-xl font-semibold transition"
                         >
                             Browse Products
                         </Link>
@@ -71,7 +71,7 @@ export default function WishlistPage() {
                                             e.stopPropagation();
                                             removeFromWishlist(item.id);
                                         }}
-                                        className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition"
+                                        className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#007B57] hover:text-white transition"
                                     >
                                         <Heart size={18} className="fill-current text-red-500" />
                                     </button>
@@ -100,7 +100,7 @@ export default function WishlistPage() {
                                                 variants: item.variants
                                             });
                                         }}
-                                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#244033] text-white py-2.5 text-sm font-medium hover:bg-[#2F4F3E] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 duration-300"
+                                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 duration-300"
                                     >
                                         <ShoppingCart size={16} />
                                         Quick Add
@@ -130,7 +130,7 @@ export default function WishlistPage() {
                                                 variants: item.variants
                                             });
                                         }}
-                                        className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
+                                        className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#007B57] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
                                     >
                                         <ShoppingCart size={18} />
                                     </button>
@@ -182,7 +182,7 @@ sm:rounded-b-none
                 >
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="bg-[#244033] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                            <div className="bg-[#007B57] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                 {totalItems}
                             </div>
                             <div>
@@ -195,7 +195,7 @@ sm:rounded-b-none
 
                         <Link
                             href="/cart"
-                            className="bg-[#244033] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#2F4F3E] transition"
+                            className="bg-[#007B57] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition"
                         >
                             View Cart
                         </Link>

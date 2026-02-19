@@ -16,7 +16,7 @@ export default function OrderTracking() {
 
                 {/* Header */}
                 <div className="mb-6">
-                    <h1 className="text-2xl font-semibold text-[#2f4f3e]">
+                    <h1 className="text-2xl font-semibold text-[#007B57]">
                         Track Your Plant
                     </h1>
                     <p className="text-sm text-gray-500 mt-1">
@@ -33,7 +33,7 @@ export default function OrderTracking() {
                     />
 
                     <div className="flex-1">
-                        <h3 className="text-sm md:text-base font-medium text-[#2f4f3e]">
+                        <h3 className="text-sm md:text-base font-medium text-[#007B57]">
                             Fiddle Leaf Fig
                         </h3>
                         <p className="text-xs md:text-sm text-gray-500">
@@ -41,7 +41,7 @@ export default function OrderTracking() {
                         </p>
                     </div>
 
-                    <div className="text-sm md:text-base font-semibold text-[#2f4f3e]">
+                    <div className="text-sm md:text-base font-semibold text-[#007B57]">
                         ₹3,999
                     </div>
                 </div>
@@ -75,7 +75,7 @@ export default function OrderTracking() {
                                 <div>
                                     <h4
                                         className={`text-sm md:text-base font-medium ${isCompleted || isActive
-                                            ? "text-[#2f4f3e]"
+                                            ? "text-[#007B57]"
                                             : "text-gray-400"
                                             }`}
                                     >
@@ -92,7 +92,7 @@ export default function OrderTracking() {
 
                 {/* Footer */}
                 <div className="mt-10">
-                    <button className="w-full bg-[#244033] text-white py-3 rounded-xl font-medium hover:bg-[#244033] transition">
+                    <button className="w-full bg-[#007B57] text-white py-3 rounded-xl font-medium hover:bg-[#009A7B] transition">
                         Need Plant Care Help?
                     </button>
                 </div>

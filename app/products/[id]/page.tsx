@@ -135,10 +135,10 @@ const ProductCard = ({ product }: { product: Product }) => {
                         {product.badge}
                     </div>
                 )}
-                <button onClick={handleWishlistToggle} className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition">
+                <button onClick={handleWishlistToggle} className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#007B57] hover:text-white transition">
                     <Heart size={16} className={wishlisted ? 'fill-current text-red-500' : ''} />
                 </button>
-                <button onClick={handleQuickAdd} className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#244033] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden">
+                <button onClick={handleQuickAdd} className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#007B57] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden">
                     <ShoppingCart size={16} />
                 </button>
                 <button onClick={handleQuickAdd} className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007b5f] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 duration-300">
@@ -236,7 +236,7 @@ const WriteReviewModal = ({ onClose, onSubmit }: { onClose: () => void; onSubmit
                         <input type="checkbox" id="recommend" checked={recommend} onChange={e => setRecommend(e.target.checked)} className="accent-[#2F8C6E]" />
                         <label htmlFor="recommend" className="text-sm text-gray-700">I would recommend this product</label>
                     </div>
-                    <button type="submit" className="w-full bg-[#244033] text-white py-3 rounded-lg font-semibold hover:bg-[#2F4F3E] transition">
+                    <button type="submit" className="w-full bg-[#007B57] text-white py-3 rounded-lg font-semibold hover:bg-[#2F4F3E] transition">
                         Submit Review
                     </button>
                 </form>
@@ -388,7 +388,7 @@ export default function ProductDetailPage() {
     if (loading) return (
         <div className="min-h-screen bg-white flex items-center justify-center">
             <div className="text-center">
-                <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                <div className="w-16 h-16 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                 <p className="text-gray-600">Loading product...</p>
             </div>
         </div>
@@ -398,7 +398,7 @@ export default function ProductDetailPage() {
         <div className="min-h-screen bg-white flex items-center justify-center">
             <div className="text-center">
                 <p className="text-gray-600 mb-4">Product not found</p>
-                <Link href="/products" className="text-[#244033] hover:underline">Back to Products</Link>
+                <Link href="/products" className="text-[#007B57] hover:underline">Back to Products</Link>
             </div>
         </div>
     );
@@ -418,9 +418,9 @@ export default function ProductDetailPage() {
                 <div className="border-b border-gray-200">
                     <div className="max-w-[1800px] mx-auto px-4 py-3 sm:px-6 lg:px-10 xl:px-16 2xl:px-24">
                         <nav className="flex items-center space-x-2 text-sm text-gray-500">
-                            <Link href="/" className="hover:text-[#244033]">Home</Link>
+                            <Link href="/" className="hover:text-[#007B57]">Home</Link>
                             <ChevronRight className="w-4 h-4" />
-                            <Link href="/products" className="hover:text-[#244033]">Products</Link>
+                            <Link href="/products" className="hover:text-[#007B57]">Products</Link>
                             <ChevronRight className="w-4 h-4" />
                             <span className="text-gray-900">{product.name}</span>
                         </nav>
@@ -439,7 +439,7 @@ export default function ProductDetailPage() {
                                     <button
                                         key={idx}
                                         onClick={() => setMainImage(idx)}
-                                        className={`relative bg-gray-100 rounded-lg overflow-hidden aspect-square border-2 transition ${mainImage === idx ? 'border-[#244033]' : 'border-transparent hover:border-gray-300'}`}
+                                        className={`relative bg-gray-100 rounded-lg overflow-hidden aspect-square border-2 transition ${mainImage === idx ? 'border-[#007B57]' : 'border-transparent hover:border-gray-300'}`}
                                     >
                                         <img src={img.url} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
                                     </button>
@@ -454,7 +454,7 @@ export default function ProductDetailPage() {
                                             {product.badge}
                                         </div>
                                     )}
-                                    {/* <button onClick={handleWishlistToggle} className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#244033] hover:text-white transition-all duration-300">
+                                    {/* <button onClick={handleWishlistToggle} className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#007B57] hover:text-white transition-all duration-300">
                                         <Heart size={20} className={isProductWishlisted ? 'fill-current text-red-500' : ''} />
                                     </button> */}
                                     <img src={productImages[mainImage]?.url || product.image} alt={product.name} className="w-full h-full object-cover" />
@@ -462,7 +462,7 @@ export default function ProductDetailPage() {
                                 {/* Mobile thumbnails */}
                                 <div className="flex sm:hidden gap-2 mt-3 overflow-x-auto pb-1">
                                     {productImages.slice(0, 6).map((img, idx) => (
-                                        <button key={idx} onClick={() => setMainImage(idx)} className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition ${mainImage === idx ? 'border-[#244033]' : 'border-transparent'}`}>
+                                        <button key={idx} onClick={() => setMainImage(idx)} className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition ${mainImage === idx ? 'border-[#007B57]' : 'border-transparent'}`}>
                                             <img src={img.url} alt="" className="w-full h-full object-cover" />
                                         </button>
                                     ))}
@@ -507,7 +507,7 @@ export default function ProductDetailPage() {
                                 <StarRating rating={Math.round(avgRating)} size={18} />
                                 <button
                                     onClick={() => document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="text-sm text-gray-600 hover:text-[#244033] underline underline-offset-2 transition"
+                                    className="text-sm text-gray-600 hover:text-[#007B57] underline underline-offset-2 transition"
                                 >
                                     {reviews.length} review{reviews.length !== 1 ? 's' : ''}
                                 </button>
@@ -542,12 +542,12 @@ export default function ProductDetailPage() {
                                             <span className="font-normal text-gray-600">{selectedOptions[option.name]}</span>
                                         </label>
                                         {/* {/size/i.test(option.name) && (
-                                            <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#244033] transition">
+                                            <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#007B57] transition">
                                                 Size Guide
                                             </button>
                                         )} */}
                                         {/planter/i.test(option.name) && (
-                                            <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#244033] transition">
+                                            <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#007B57] transition">
                                                 Style Guide
                                             </button>
                                         )}
@@ -587,7 +587,7 @@ export default function ProductDetailPage() {
                                                         key={value}
                                                         onClick={() => available !== false && setSelectedOptions((prev) => ({ ...prev, [option.name]: value }))}
                                                         className={`relative px-4 py-2 text-sm border rounded-lg mb-3 transition-all duration-200 ${selected
-                                                            ? 'border-[#244033] bg-white text-[#244033] font-semibold ring-1 ring-[#244033]'
+                                                            ? 'border-[#007B57] bg-white text-[#007B57] font-semibold ring-1 ring-[#007B57]'
                                                             : available === false
                                                                 ? 'border-[#007B57] text-gray-300 '
                                                                 : ' text-gray-700 hover:border-[#007B57] hover:text-[#007B57]'
@@ -650,7 +650,7 @@ export default function ProductDetailPage() {
                                     { icon: <RotateCcw size={18} />, title: 'Easy Returns', sub: 'Hassle-free within 30 days' },
                                 ].map(({ icon, title, sub }) => (
                                     <div key={title} className="flex flex-col items-center text-center gap-1">
-                                        <div className="text-[#244033]">{icon}</div>
+                                        <div className="text-[#007B57]">{icon}</div>
                                         <p className="text-xs font-semibold text-gray-800">{title}</p>
                                         <p className="text-xs text-gray-500 hidden sm:block">{sub}</p>
                                     </div>
@@ -666,10 +666,10 @@ export default function ProductDetailPage() {
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`py-4 px-1 text-sm font-semibold relative transition capitalize ${activeTab === tab ? 'text-[#244033]' : 'text-gray-500 hover:text-gray-900'}`}
+                                    className={`py-4 px-1 text-sm font-semibold relative transition capitalize ${activeTab === tab ? 'text-[#007B57]' : 'text-gray-500 hover:text-gray-900'}`}
                                 >
                                     {tab === 'description' ? 'Description' : 'Care Instructions'}
-                                    {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#244033]" />}
+                                    {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#007B57]" />}
                                 </button>
                             ))}
                         </div>
@@ -734,13 +734,13 @@ export default function ProductDetailPage() {
                                     ))}
                                 </div>
                                 {reviews.length > 0 && (
-                                    <div className="bg-[#244033] text-white text-sm font-semibold px-3 py-1.5 rounded-lg inline-block">
+                                    <div className="bg-[#007B57] text-white text-sm font-semibold px-3 py-1.5 rounded-lg inline-block">
                                         {recommendPct}% would recommend this product
                                     </div>
                                 )}
                                 <button
                                     onClick={() => setShowReviewModal(true)}
-                                    className="flex items-center gap-2 border border-gray-300 text-gray-700 px-5 py-2.5 rounded-xl hover:border-[#244033] hover:text-[#244033] transition font-medium text-sm"
+                                    className="flex items-center gap-2 border border-gray-300 text-gray-700 px-5 py-2.5 rounded-xl hover:border-[#007B57] hover:text-[#007B57] transition font-medium text-sm"
                                 >
                                     <PenLine size={15} /> Write a Review
                                 </button>
@@ -787,7 +787,7 @@ export default function ProductDetailPage() {
                                 {reviews.length === 0 && (
                                     <div className="text-center py-10 text-gray-400">
                                         <p className="mb-4">No reviews yet. Be the first!</p>
-                                        <button onClick={() => setShowReviewModal(true)} className="bg-[#244033] text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-[#2F4F3E] transition">
+                                        <button onClick={() => setShowReviewModal(true)} className="bg-[#007B57] text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-[#2F4F3E] transition">
                                             Write a Review
                                         </button>
                                     </div>
@@ -803,7 +803,7 @@ export default function ProductDetailPage() {
                 <div className="fixed z-40 bg-[#F0F4F1] border-t border-gray-200 shadow-lg bottom-[70px] left-3 right-3 sm:bottom-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-[600px] xl:w-[700px] sm:rounded-t-[20px] p-4 rounded-[20px]">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="bg-[#244033] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                            <div className="bg-[#007B57] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                 {totalItems}
                             </div>
                             <div>
@@ -811,7 +811,7 @@ export default function ProductDetailPage() {
                                 <p className="font-semibold text-sm">Rs. {totalPrice.toFixed(2)}</p>
                             </div>
                         </div>
-                        <Link href="/cart" className="bg-[#244033] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#2F4F3E] transition text-sm">
+                        <Link href="/cart" className="bg-[#007B57] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#009A7B] transition text-sm">
                             View Cart
                         </Link>
                     </div>

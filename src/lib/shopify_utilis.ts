@@ -43,6 +43,45 @@ export async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams
   }
 }
 
+export async function getOrderByNumber(accessToken: string, orderNumber: string) {
+  // Normalize — strip the # if present
+  const normalized = String(orderNumber).replace('#', '').trim();
+
+  try {
+    // Fetch up to 50 recent orders and find the matching one
+    const orders = await getCustomerOrders(accessToken, 50);
+
+    if (!orders || orders.length === 0) return null;
+
+    const matched = orders.find(
+      (o: any) =>
+        String(o.orderNumber) === normalized ||
+        o.id === `#${normalized}` ||
+        o.id === normalized
+    );
+
+    return matched || null;
+  } catch (error) {
+    console.error('Error fetching order by number:', error);
+    return null;
+  }
+}
+
+/**
+ * Get the most recent order for a customer
+ * Useful for showing the last order on the success page
+ * when no order number is available yet.
+ */
+export async function getLatestOrder(accessToken: string) {
+  try {
+    const orders = await getCustomerOrders(accessToken, 1);
+    return orders?.[0] || null;
+  } catch (error) {
+    console.error('Error fetching latest order:', error);
+    return null;
+  }
+}
+
 // lib/shopify_customer_utils.ts
 // Extended Shopify customer utilities for account management
 

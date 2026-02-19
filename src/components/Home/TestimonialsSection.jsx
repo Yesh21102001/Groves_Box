@@ -2,63 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const testimonials = [
-    {
-        id: 1,
-        name: "Frank Klin",
-        role: "Designer",
-        rating: 4,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
-        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-        social: "instagram",
-    },
-    {
-        id: 2,
-        name: "Linda Anand",
-        role: "Doctor",
-        rating: 5,
-        text: "Abore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris.",
-        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-        social: "facebook",
-    },
-    {
-        id: 3,
-        name: "David Gueta",
-        role: "Artist",
-        rating: 5,
-        text: "Exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor reprehenderit.",
-        avatar: "https://randomuser.me/api/portraits/men/65.jpg",
-        social: "twitter",
-    },
-    {
-        id: 4,
-        name: "Soda Lanna",
-        role: "Designer",
-        rating: 3,
-        text: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-        avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-        social: "facebook",
-    },
-    {
-        id: 5,
-        name: "Zoom Chat",
-        role: "Developer",
-        rating: 4,
-        text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est.",
-        avatar: "https://randomuser.me/api/portraits/men/11.jpg",
-        social: "facebook",
-    },
-    {
-        id: 6,
-        name: "Aria Wells",
-        role: "Entrepreneur",
-        rating: 5,
-        text: "Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit sed do eiusmod.",
-        avatar: "https://randomuser.me/api/portraits/women/22.jpg",
-        social: "twitter",
-    },
-];
+import { homeConfig } from "../../config/home.config";
 
 /* ── Social icons ── */
 const InstagramIcon = () => (
@@ -107,6 +51,9 @@ const StarRating = ({ rating }) => (
 
 /* ── Main component ── */
 export default function TestimonialsSection() {
+    // ── All values come from config ──────────────────────────────────
+    const { title, titleHighlight, subtitle, bgColor, autoPlayInterval, items: testimonials } = homeConfig.testimonials;
+
     const total = testimonials.length;
     const [activeIndex, setActiveIndex] = useState(0);
     const [visibleCount, setVisibleCount] = useState(3);
@@ -125,13 +72,13 @@ export default function TestimonialsSection() {
         return () => window.removeEventListener("resize", update);
     }, []);
 
-    /* Auto-play */
+    /* Auto-play — interval from config */
     const startAuto = useCallback(() => {
         clearInterval(autoRef.current);
         autoRef.current = setInterval(() => {
             setActiveIndex((p) => (p + 1) % total);
-        }, 4200);
-    }, [total]);
+        }, autoPlayInterval);
+    }, [total, autoPlayInterval]);
 
     useEffect(() => {
         startAuto();
@@ -175,19 +122,20 @@ export default function TestimonialsSection() {
     })();
 
     return (
-        <section className="w-full bg-[#F0F4F1] py-16 sm:py-20 lg:py-24 overflow-hidden">
+        <section className="w-full py-16 sm:py-20 lg:py-24 overflow-hidden" style={{ backgroundColor: bgColor }}>
             <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
 
-                {/* ── Heading ── */}
+                {/* ── Heading — from config ── */}
                 <div className="text-center mb-12 sm:mb-14 lg:mb-16">
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-bold text-[#244033] leading-tight mb-3"
-                        style={{ fontFamily: "Georgia, serif" }}>
-                        What Our{" "}
-                        <span className="text-[#007B57]">Customers Are Saying</span>
+                    <h2
+                        className="text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-bold text-[#244033] leading-tight mb-3"
+                        style={{ fontFamily: "Georgia, serif" }}
+                    >
+                        {title}{" "}
+                        <span className="text-[#007B57]">{titleHighlight}</span>
                     </h2>
                     <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto leading-relaxed">
-                        But I must explain to you how all this mistaken idea of denouncing pleasure and praising
-                        pain was born and I will give you a complete
+                        {subtitle}
                     </p>
                 </div>
 
@@ -202,20 +150,17 @@ export default function TestimonialsSection() {
                         onClick={() => goTo(activeIndex - 1)}
                         aria-label="Previous testimonial"
                         className="
-              absolute left-0 top-1/2 -translate-y-1/2 z-10
-              w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white
-              border border-gray-200 flex items-center justify-center
-              shadow-md cursor-pointer
-              transition-all duration-300 ease-out
-              hover:bg-[#007B57] hover:border-[#007B57] hover:scale-110
-              hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
-              group
-            "
+                            absolute left-0 top-1/2 -translate-y-1/2 z-10
+                            w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white
+                            border border-gray-200 flex items-center justify-center
+                            shadow-md cursor-pointer
+                            transition-all duration-300 ease-out
+                            hover:bg-[#007B57] hover:border-[#007B57] hover:scale-110
+                            hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
+                            group
+                        "
                     >
-                        <ChevronLeft
-                            size={20}
-                            className="text-[#244033] transition-colors duration-300 group-hover:text-white"
-                        />
+                        <ChevronLeft size={20} className="text-[#244033] transition-colors duration-300 group-hover:text-white" />
                     </button>
 
                     {/* Cards Track */}
@@ -229,15 +174,12 @@ export default function TestimonialsSection() {
                                 <div
                                     key={`${t.id}-${offset}`}
                                     className={[
-                                        /* Base */
                                         "flex flex-col gap-4 bg-white rounded-2xl p-6 sm:p-7 flex-1 min-w-0",
                                         "border-t-[3px]",
-                                        /* GPU-composited transition for buttery smoothness */
                                         "will-change-[transform,opacity]",
                                         "transition-[transform,opacity,box-shadow,border-color]",
                                         "duration-[600ms]",
                                         "ease-[cubic-bezier(0.34,1.15,0.64,1)]",
-                                        /* State-based styles */
                                         isOnly
                                             ? "scale-100 opacity-100 shadow-[0_14px_44px_rgba(0,0,0,0.12)] border-[#007B57]"
                                             : isCenter
@@ -258,14 +200,10 @@ export default function TestimonialsSection() {
                                         />
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center justify-between gap-2 mb-0.5">
-                                                <span className="font-bold text-[15px] text-gray-900 truncate">
-                                                    {t.name}
-                                                </span>
+                                                <span className="font-bold text-[15px] text-gray-900 truncate">{t.name}</span>
                                                 <SocialIcon type={t.social} />
                                             </div>
-                                            <p className="text-[#007B57] text-[10.5px] font-bold uppercase tracking-widest mb-1.5">
-                                                {t.role}
-                                            </p>
+                                            <p className="text-[#007B57] text-[10.5px] font-bold uppercase tracking-widest mb-1.5">{t.role}</p>
                                             <StarRating rating={t.rating} />
                                         </div>
                                     </div>
@@ -275,15 +213,10 @@ export default function TestimonialsSection() {
 
                                     {/* Quote + text */}
                                     <div>
-                                        <p
-                                            className="text-[#007B57] leading-none mb-[-8px] opacity-75"
-                                            style={{ fontSize: 44, fontFamily: "Georgia, serif" }}
-                                        >
+                                        <p className="text-[#007B57] leading-none mb-[-8px] opacity-75" style={{ fontSize: 44, fontFamily: "Georgia, serif" }}>
                                             &ldquo;
                                         </p>
-                                        <p className="text-gray-500 text-[13px] sm:text-sm leading-[1.8] italic">
-                                            {t.text}
-                                        </p>
+                                        <p className="text-gray-500 text-[13px] sm:text-sm leading-[1.8] italic">{t.text}</p>
                                     </div>
                                 </div>
                             );
@@ -295,20 +228,17 @@ export default function TestimonialsSection() {
                         onClick={() => goTo(activeIndex + 1)}
                         aria-label="Next testimonial"
                         className="
-              absolute right-0 top-1/2 -translate-y-1/2 z-10
-              w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white
-              border border-gray-200 flex items-center justify-center
-              shadow-md cursor-pointer
-              transition-all duration-300 ease-out
-              hover:bg-[#007B57] hover:border-[#007B57] hover:scale-110
-              hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
-              group
-            "
+                            absolute right-0 top-1/2 -translate-y-1/2 z-10
+                            w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white
+                            border border-gray-200 flex items-center justify-center
+                            shadow-md cursor-pointer
+                            transition-all duration-300 ease-out
+                            hover:bg-[#007B57] hover:border-[#007B57] hover:scale-110
+                            hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
+                            group
+                        "
                     >
-                        <ChevronRight
-                            size={20}
-                            className="text-[#244033] transition-colors duration-300 group-hover:text-white"
-                        />
+                        <ChevronRight size={20} className="text-[#244033] transition-colors duration-300 group-hover:text-white" />
                     </button>
                 </div>
 
@@ -323,9 +253,7 @@ export default function TestimonialsSection() {
                                 "h-2.5 rounded-full border-none cursor-pointer p-0",
                                 "transition-[width,background-color] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
                                 "hover:bg-[#1aab8e]",
-                                i === activeIndex
-                                    ? "w-8 bg-[#007B57]"
-                                    : "w-2.5 bg-[#c4dfd8]",
+                                i === activeIndex ? "w-8 bg-[#007B57]" : "w-2.5 bg-[#c4dfd8]",
                             ].join(" ")}
                         />
                     ))}

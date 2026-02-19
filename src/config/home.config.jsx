@@ -9,7 +9,7 @@ export const homeConfig = {
     hero: {
         heading: "Quality Stuff",
         subheading: "Why stop at one? Buy more, save more – sitewide.",
-        primaryButton: { text: "Shop New Arrivals", href: "/collections/indoor-trees" },
+        primaryButton: { text: "Shop Collections", href: "/collections" },
         secondaryButton: { text: "Shop All", href: "/products" },
         bgColor: "#007B57",
         autoPlayInterval: 3500,   // ms between hero slides

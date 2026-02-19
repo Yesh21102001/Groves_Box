@@ -12,6 +12,15 @@ import {
 
 const CartContext = createContext();
 
+// ✅ Appends return_to so Shopify redirects to your custom success page after payment
+const buildCheckoutUrl = (rawUrl) => {
+    if (!rawUrl) return null;
+    const returnTo = encodeURIComponent(
+        `${process.env.NEXT_PUBLIC_SITE_URL}/order-success`
+    );
+    return `${rawUrl}&return_to=${returnTo}`;
+};
+
 export function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState([]);
     const [cartId, setCartId] = useState(null);
@@ -19,7 +28,6 @@ export function CartProvider({ children }) {
     const [checkoutUrl, setCheckoutUrl] = useState(null);
     const [currentUserId, setCurrentUserId] = useState('guest');
 
-    // Listen for auth changes and reinitialize cart
     useEffect(() => {
         const handleAuthChange = () => {
             console.log('🔄 Auth changed, reinitializing cart...');
@@ -35,18 +43,14 @@ export function CartProvider({ children }) {
         };
     }, []);
 
-    // Initialize cart on mount
     useEffect(() => {
         initializeCart();
     }, []);
 
-    // Helper function to get current user ID
     const getCurrentUserId = () => {
         if (typeof window === 'undefined') return 'guest';
-
         const userStr = localStorage.getItem('plants-current-user');
         if (!userStr) return 'guest';
-
         try {
             const user = JSON.parse(userStr);
             return user.id || 'guest';
@@ -56,21 +60,18 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Initialize or get existing cart
     const initializeCart = async () => {
         try {
             setLoading(true);
 
-            // Get current user from localStorage
-            let currentUser = null;
-            let userId = 'guest'; // Default to guest
+            let userId = 'guest';
 
             if (typeof window !== 'undefined') {
                 const userStr = localStorage.getItem('plants-current-user');
                 if (userStr) {
                     try {
-                        currentUser = JSON.parse(userStr);
-                        userId = currentUser.id; // Use user's unique ID
+                        const currentUser = JSON.parse(userStr);
+                        userId = currentUser.id;
                         console.log('👤 Current user:', currentUser.email, '| ID:', userId);
                     } catch (error) {
                         console.error('Error parsing user:', error);
@@ -80,11 +81,9 @@ export function CartProvider({ children }) {
 
             setCurrentUserId(userId);
 
-            // Create user-specific cart key
             const cartKey = `shopify_cart_id_${userId}`;
             console.log('🔑 Using cart key:', cartKey);
 
-            // Try to get cart ID from localStorage (user-specific)
             let storedCartId = null;
             if (typeof window !== 'undefined') {
                 storedCartId = localStorage.getItem(cartKey);
@@ -92,7 +91,6 @@ export function CartProvider({ children }) {
             }
 
             if (storedCartId) {
-                // Fetch existing cart
                 try {
                     const cartData = await shopifyFetch({
                         query: GET_CART,
@@ -101,11 +99,11 @@ export function CartProvider({ children }) {
 
                     if (cartData.data.cart) {
                         setCartId(storedCartId);
-                        setCheckoutUrl(cartData.data.cart.checkoutUrl);
+                        // ✅ FIX: wrap with buildCheckoutUrl
+                        setCheckoutUrl(buildCheckoutUrl(cartData.data.cart.checkoutUrl));
                         updateCartItems(cartData.data.cart);
                         console.log('✅ Cart loaded for user:', userId);
                     } else {
-                        // Cart doesn't exist, create new one
                         await createNewCart(userId);
                     }
                 } catch (error) {
@@ -113,7 +111,6 @@ export function CartProvider({ children }) {
                     await createNewCart(userId);
                 }
             } else {
-                // No cart ID, create new cart
                 await createNewCart(userId);
             }
         } catch (error) {
@@ -123,12 +120,10 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Create a new cart
     const createNewCart = async (userId = null) => {
         try {
             console.log('📝 Creating new cart...');
 
-            // Get user ID if not provided
             if (!userId) {
                 userId = getCurrentUserId();
             }
@@ -141,11 +136,11 @@ export function CartProvider({ children }) {
             const newCheckoutUrl = response.data.cartCreate.cart.checkoutUrl;
 
             setCartId(newCartId);
-            setCheckoutUrl(newCheckoutUrl);
+            // ✅ FIX: wrap with buildCheckoutUrl
+            setCheckoutUrl(buildCheckoutUrl(newCheckoutUrl));
             setCartItems([]);
             setCurrentUserId(userId);
 
-            // Store cart ID with user-specific key
             if (typeof window !== 'undefined') {
                 const cartKey = `shopify_cart_id_${userId}`;
                 localStorage.setItem(cartKey, newCartId);
@@ -159,7 +154,6 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Update local cart items from Shopify cart data
     const updateCartItems = (cart) => {
         if (!cart || !cart.lines) {
             setCartItems([]);
@@ -182,7 +176,6 @@ export function CartProvider({ children }) {
         setCartItems(items);
     };
 
-    // Refresh cart from Shopify
     const refreshCart = async () => {
         if (!cartId) {
             console.log('⚠️ No cart ID, skipping refresh');
@@ -197,7 +190,8 @@ export function CartProvider({ children }) {
             });
 
             if (cartData.data.cart) {
-                setCheckoutUrl(cartData.data.cart.checkoutUrl);
+                // ✅ FIX: wrap with buildCheckoutUrl
+                setCheckoutUrl(buildCheckoutUrl(cartData.data.cart.checkoutUrl));
                 updateCartItems(cartData.data.cart);
                 console.log('✅ Cart refreshed successfully');
             }
@@ -206,7 +200,6 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Add item to cart
     const addToCart = async (product) => {
         try {
             console.log('🛒 Adding to cart:', product);
@@ -214,13 +207,11 @@ export function CartProvider({ children }) {
             let currentCartId = cartId;
             let userId = getCurrentUserId();
 
-            // Create cart if doesn't exist
             if (!currentCartId) {
                 console.log('📝 No cart exists, creating new one...');
                 currentCartId = await createNewCart(userId);
             }
 
-            // Get the variant ID
             let variantId = product.variantId;
 
             if (!variantId && product.variants && product.variants.length > 0) {
@@ -236,7 +227,6 @@ export function CartProvider({ children }) {
 
             console.log('✅ Using variant ID:', variantId);
 
-            // Check if item already exists in cart
             const existingItem = cartItems.find(item => item.variantId === variantId);
 
             if (existingItem) {
@@ -259,8 +249,6 @@ export function CartProvider({ children }) {
                 });
 
                 console.log('✅ Add to cart response:', addResponse);
-
-                // IMPORTANT: Refresh cart to update UI
                 await refreshCart();
             }
 
@@ -272,7 +260,6 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Update item quantity
     const updateQuantity = async (lineId, newQuantity) => {
         if (!cartId) return;
 
@@ -288,12 +275,7 @@ export function CartProvider({ children }) {
                 query: UPDATE_CART_LINE,
                 variables: {
                     cartId,
-                    lines: [
-                        {
-                            id: lineId,
-                            quantity: newQuantity
-                        }
-                    ]
+                    lines: [{ id: lineId, quantity: newQuantity }]
                 }
             });
 
@@ -304,7 +286,6 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Remove item from cart
     const removeFromCart = async (lineId) => {
         if (!cartId) return;
 
@@ -326,7 +307,6 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Clear entire cart
     const clearCart = async () => {
         try {
             console.log('🗑️ Clearing cart...');
@@ -341,7 +321,7 @@ export function CartProvider({ children }) {
     const value = {
         cartItems,
         cartId,
-        checkoutUrl,
+        checkoutUrl,   // ✅ Already has return_to appended
         loading,
         addToCart,
         updateQuantity,

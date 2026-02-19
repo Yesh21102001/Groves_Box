@@ -7,6 +7,10 @@ import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import TestimonialsSection from "../Home/TestimonialsSection";
 import { getProducts, getCollections, getNewArrivals, getProductsByCollection } from "../../lib/shopify_utilis";
+import { homeConfig } from "../../config/home.config";
+
+// ── Icon map for features strip (add more as needed) ──────────────────
+const ICON_MAP = { GraduationCap, Users, Shield, Phone, MessageSquare, Mail };
 
 function IconButton({ icon, onClick }) {
   return (
@@ -19,14 +23,6 @@ function IconButton({ icon, onClick }) {
   );
 }
 
-// Badge config map
-const BADGE_STYLES = {
-  'On Sale': { bg: 'bg-red-500', icon: '🏷️' },
-  'New Arrival': { bg: 'bg-[#2BBFA4]', icon: '✨' },
-  'Best Seller': { bg: 'bg-[#244033]', icon: '⭐' },
-  'Rare Plant': { bg: 'bg-purple-600', icon: '🌿' },
-};
-
 export default function HomePage() {
   const [quickView, setQuickView] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -34,12 +30,10 @@ export default function HomePage() {
   const { cartItems, addToCart } = useCart();
   const [saleProducts, setSaleProducts] = useState([]);
 
-  // Hero slider state
   const [heroProducts, setHeroProducts] = useState([]);
   const [heroIndex, setHeroIndex] = useState(0);
   const heroIntervalRef = useRef(null);
 
-  // State for Shopify data
   const [products, setProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
@@ -51,57 +45,60 @@ export default function HomePage() {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  const features = [
-    { icon: GraduationCap, title: 'Expert Guidance', description: "Success starts with choosing the right plants. We'll make sure you do." },
-    { icon: Users, title: 'Connect & Grow', description: 'Community is everything. Our workshops and events help you learn and connect.' },
-    { icon: Shield, title: 'Judgement-Free Service', description: 'Our dedicated team is always available to assist — no question too small or too silly!' },
-  ];
+  // ── Pull config values ────────────────────────────────────────────────
+  const { hero, features, bestSellers, help, categories: categoriesConfig,
+    newArrivals: newArrivalsConfig, onSale, workshops: workshopsConfig,
+    testimonials: testimonialsConfig, badges: BADGE_STYLES } = homeConfig;
 
-  // Combine products for hero slider with their category labels
-  const buildHeroProducts = useCallback((bestSellers, sales, arrivals) => {
-    const withLabel = (arr, label) =>
-      arr.slice(0, 4).map(p => ({ ...p, heroLabel: label }));
+  // Badge component — uses config badge styles
+  const ProductBadge = ({ badge }) => {
+    if (!badge) return null;
+    const style = BADGE_STYLES[badge] || { bg: 'bg-gray-700', icon: '' };
+    return (
+      <div className={`absolute top-3 left-3 z-10 flex items-center gap-1 ${style.bg} text-white px-3 py-1 text-xs font-semibold rounded-full shadow-sm`}>
+        <span>{style.icon}</span>
+        <span>{badge}</span>
+      </div>
+    );
+  };
 
-    const combined = [
+  const buildHeroProducts = useCallback((bestSellersArr, sales, arrivals) => {
+    const withLabel = (arr, label) => arr.slice(0, 4).map(p => ({ ...p, heroLabel: label }));
+    return [
       ...withLabel(arrivals, 'New Arrival'),
       ...withLabel(sales, 'On Sale'),
-      ...withLabel(bestSellers, 'Best Seller'),
+      ...withLabel(bestSellersArr, 'Best Seller'),
     ];
-    return combined;
   }, []);
 
-  // Fetch all data on component mount
   useEffect(() => {
     async function fetchAllData() {
       try {
         setLoading(true);
 
         const [bestSellersData, saleData, collectionsData, newArrivalsData] = await Promise.all([
-          getProductsByCollection('best-sellers', 8).then(data => data.length > 0 ? data : getProducts(8)),
-          getProductsByCollection('on-sale', 8).then(data => data.length > 0 ? data : getProducts(8)),
-          getCollections(4),
-          getNewArrivals(8)
+          getProductsByCollection(bestSellers.collectionHandle, bestSellers.limit).then(d => d.length > 0 ? d : getProducts(bestSellers.limit)),
+          getProductsByCollection(onSale.collectionHandle, onSale.limit).then(d => d.length > 0 ? d : getProducts(onSale.limit)),
+          getCollections(categoriesConfig.limit),
+          getNewArrivals(newArrivalsConfig.limit),
         ]);
 
         setProducts(bestSellersData || []);
         setSaleProducts(saleData || []);
         setCategories(collectionsData || []);
         setNewArrivals(newArrivalsData || []);
-
-        const heroList = buildHeroProducts(bestSellersData || [], saleData || [], newArrivalsData || []);
-        setHeroProducts(heroList);
+        setHeroProducts(buildHeroProducts(bestSellersData || [], saleData || [], newArrivalsData || []));
 
         try {
           const [testimonialsRes, workshopsRes] = await Promise.all([
             fetch('/data/testimonials.json'),
-            fetch('/data/workshops.json')
+            fetch(workshopsConfig.dataFile),
           ]);
           if (testimonialsRes.ok) setTestimonials(await testimonialsRes.json());
           if (workshopsRes.ok) setWorkshops(await workshopsRes.json());
         } catch (jsonError) {
           console.log('Optional data not available:', jsonError);
         }
-
       } catch (err) {
         console.error('Error fetching data:', err);
         setError(err.message);
@@ -112,36 +109,29 @@ export default function HomePage() {
     fetchAllData();
   }, [buildHeroProducts]);
 
-  // Hero auto-scroll (desktop only)
+  // Hero auto-scroll — interval from config
   useEffect(() => {
     if (heroProducts.length === 0) return;
     heroIntervalRef.current = setInterval(() => {
       setHeroIndex(prev => (prev + 1) % heroProducts.length);
-    }, 3500);
+    }, hero.autoPlayInterval);
     return () => clearInterval(heroIntervalRef.current);
-  }, [heroProducts.length]);
+  }, [heroProducts.length, hero.autoPlayInterval]);
 
-  const heroNext = () => {
-    clearInterval(heroIntervalRef.current);
-    setHeroIndex(prev => (prev + 1) % heroProducts.length);
-  };
+  const heroNext = () => { clearInterval(heroIntervalRef.current); setHeroIndex(prev => (prev + 1) % heroProducts.length); };
+  const heroPrev = () => { clearInterval(heroIntervalRef.current); setHeroIndex(prev => (prev - 1 + heroProducts.length) % heroProducts.length); };
 
-  const heroPrev = () => {
-    clearInterval(heroIntervalRef.current);
-    setHeroIndex(prev => (prev - 1 + heroProducts.length) % heroProducts.length);
-  };
-
-  // Testimonial slider auto-play
+  // Testimonial slider auto-play — interval from config
   useEffect(() => {
     if (!isAutoPlaying || testimonials.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+      setCurrentSlide(prev => (prev + 1) % testimonials.length);
+    }, testimonialsConfig.autoPlayInterval);
     return () => clearInterval(interval);
-  }, [isAutoPlaying, testimonials.length]);
+  }, [isAutoPlaying, testimonials.length, testimonialsConfig.autoPlayInterval]);
 
-  const nextSlide = () => { setCurrentSlide((prev) => (prev + 1) % testimonials.length); setIsAutoPlaying(false); };
-  const prevSlide = () => { setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length); setIsAutoPlaying(false); };
+  const nextSlide = () => { setCurrentSlide(prev => (prev + 1) % testimonials.length); setIsAutoPlaying(false); };
+  const prevSlide = () => { setCurrentSlide(prev => (prev - 1 + testimonials.length) % testimonials.length); setIsAutoPlaying(false); };
 
   const StarRatingMini = ({ rating = 4, count = 0 }) => (
     <div className="flex items-center gap-1.5">
@@ -161,19 +151,7 @@ export default function HomePage() {
     </div>
   );
 
-  // Badge component
-  const ProductBadge = ({ badge }) => {
-    if (!badge) return null;
-    const style = BADGE_STYLES[badge] || { bg: 'bg-gray-700', icon: '' };
-    return (
-      <div className={`absolute top-3 left-3 z-10 flex items-center gap-1 ${style.bg} text-white px-3 py-1 text-xs font-semibold rounded-full shadow-sm`}>
-        <span>{style.icon}</span>
-        <span>{badge}</span>
-      </div>
-    );
-  };
-
-  // Hero Product Card (for slider)
+  // ── Hero Product Card ─────────────────────────────────────────────────
   const HeroProductCard = ({ product }) => {
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const wishlisted = isInWishlist(product.id.toString());
@@ -184,265 +162,172 @@ export default function HomePage() {
       : 0;
 
     const handleQuickAdd = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       const variantId = product.variants?.[0]?.id;
       if (!variantId) { alert('This product is currently unavailable'); return; }
       addToCart({ id: product.id, variantId, name: product.name, price: product.price, quantity: 1, image: product.image, handle: product.handle, variants: product.variants });
     };
 
     const handleWishlistToggle = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       if (wishlisted) removeFromWishlist(product.id.toString());
-      else addToWishlist({ id: product.id.toString(), variantId: product.variants?.[0]?.id, name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
+      else addToWishlist({ id: product.id.toString(), variantId: product.variants?.[0]?.id ?? '', name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
     };
 
     return (
       <Link href={`/products/${product.handle}`} className="group block bg-white h-full">
-        {/* Image */}
         <div className="relative overflow-hidden bg-gray-50 aspect-[3/4]">
           <ProductBadge badge={badge} />
-
-          <button
-            onClick={handleWishlistToggle}
-            className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          >
+          <button onClick={handleWishlistToggle} className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <Heart size={15} className={wishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
           </button>
-
-          <button
-            onClick={handleQuickAdd}
-            className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
-          >
+          <button onClick={handleQuickAdd} className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
             <ShoppingCart size={13} /> Quick Add
           </button>
-
-          <button
-            onClick={handleQuickAdd}
-            className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#007B57] text-white rounded-full flex items-center justify-center md:hidden"
-          >
+          <button onClick={handleQuickAdd} className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#007B57] text-white rounded-full flex items-center justify-center md:hidden">
             <ShoppingCart size={14} />
           </button>
-
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
-
-        {/* Info */}
         <div className="p-3 space-y-1">
-          <h3 className={`text-sm font-medium leading-snug ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>
-            {product.name}
-          </h3>
-          {product.description && (
-            <p className="text-xs text-gray-400 italic leading-tight line-clamp-1">{product.description}</p>
-          )}
+          <h3 className={`text-sm font-medium leading-snug ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>{product.name}</h3>
+          {product.description && <p className="text-xs text-gray-400 italic leading-tight line-clamp-1">{product.description}</p>}
           <StarRatingMini rating={4.5} count={reviewCount} />
-          {badge === 'New Arrival' && (
-            <p className="text-xs text-[#2F8C6E] font-medium">Now available in giant 6&apos;-7&apos; sizes!</p>
-          )}
+          {badge === 'New Arrival' && <p className="text-xs text-[#2F8C6E] font-medium">Now available in giant 6&apos;-7&apos; sizes!</p>}
           <div className="flex items-center gap-2 pt-0.5">
             <span className={`text-sm font-semibold ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>
               {isOnSale ? `From Rs. ${product.price}` : `Rs. ${product.price}`}
             </span>
-            {isOnSale && (
-              <span className="text-xs text-gray-400 line-through">Rs. {product.originalPrice}</span>
-            )}
+            {isOnSale && <span className="text-xs text-gray-400 line-through">Rs. {product.originalPrice}</span>}
           </div>
         </div>
       </Link>
     );
   };
 
-  // Standard Product Card Component
+  // ── Standard Product Card ─────────────────────────────────────────────
   const ProductCard = ({ product }) => {
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const wishlisted = isInWishlist(product.id.toString());
-
-    const handleQuickAdd = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const variantId = product.variants?.[0]?.id;
-      if (!variantId) { alert('This product is currently unavailable'); return; }
-      addToCart({ id: product.id, variantId, name: product.name, price: product.price, quantity: 1, image: product.image, handle: product.handle, variants: product.variants });
-    };
-
-    const handleWishlistToggle = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (wishlisted) removeFromWishlist(product.id.toString());
-      else addToWishlist({ id: product.id.toString(), variantId: product.variants?.[0]?.id, name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
-    };
-
     const isOnSale = !!product.originalPrice;
     const reviewCount = product.tags?.find(t => /\d+review/i.test(t.replace(/\s/g, '')))
       ? parseInt(product.tags.find(t => /\d+review/i.test(t.replace(/\s/g, ''))))
       : 0;
 
+    const handleQuickAdd = (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const variantId = product.variants?.[0]?.id;
+      if (!variantId) { alert('This product is currently unavailable'); return; }
+      addToCart({ id: product.id, variantId, name: product.name, price: product.price, quantity: 1, image: product.image, handle: product.handle, variants: product.variants });
+    };
+
+    const handleWishlistToggle = (e) => {
+      e.preventDefault(); e.stopPropagation();
+      if (wishlisted) removeFromWishlist(product.id.toString());
+      else addToWishlist({ id: product.id.toString(), variantId: product.variants?.[0]?.id ?? '', name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
+    };
+
     return (
       <Link href={`/products/${product.handle}`} className="group block">
         <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-3">
           <ProductBadge badge={product.badge} />
-
-          <button
-            onClick={handleWishlistToggle}
-            className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          >
+          <button onClick={handleWishlistToggle} className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <Heart size={15} className={wishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
           </button>
-
-          <button
-            onClick={handleQuickAdd}
-            className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
-          >
+          <button onClick={handleQuickAdd} className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
             <ShoppingCart size={13} /> Quick Add
           </button>
-
-          <button
-            onClick={handleQuickAdd}
-            className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#007B57] text-white rounded-full flex items-center justify-center md:hidden"
-          >
+          <button onClick={handleQuickAdd} className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#007B57] text-white rounded-full flex items-center justify-center md:hidden">
             <ShoppingCart size={14} />
           </button>
-
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
-
         <div className="space-y-1.5">
-          <h3 className={`text-sm md:text-base font-normal leading-snug ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>
-            {product.name}
-          </h3>
-          {product.description && (
-            <p className="text-xs text-gray-400 italic leading-tight line-clamp-1">{product.description}</p>
-          )}
+          <h3 className={`text-sm md:text-base font-normal leading-snug ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>{product.name}</h3>
+          {product.description && <p className="text-xs text-gray-400 italic leading-tight line-clamp-1">{product.description}</p>}
           <StarRatingMini rating={4.5} count={reviewCount} />
           <div className="flex items-center gap-2 pt-0.5">
             <span className={`text-sm font-medium ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>
               {isOnSale ? `From Rs. ${product.price}` : `Rs. ${product.price}`}
             </span>
-            {isOnSale && (
-              <span className="text-xs text-gray-400 line-through">Rs. {product.originalPrice}</span>
-            )}
+            {isOnSale && <span className="text-xs text-gray-400 line-through">Rs. {product.originalPrice}</span>}
           </div>
         </div>
       </Link>
     );
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
+  if (loading) return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-[#244033] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading...</p>
       </div>
-    );
-  }
+    </div>
+  );
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">Error loading data: {error}</p>
-          <button onClick={() => window.location.reload()} className="bg-[#244033] text-white px-6 py-3 rounded">Retry</button>
-        </div>
+  if (error) return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-red-600 mb-4">Error loading data: {error}</p>
+        <button onClick={() => window.location.reload()} className="bg-[#244033] text-white px-6 py-3 rounded">Retry</button>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
     <div className={`bg-white ${totalItems > 0 ? 'pb-20' : ''}`}>
 
-      {/* ===================== HERO SECTION ===================== */}
-      <section className="w-full bg-[#007B57] flex flex-col lg:flex-row overflow-hidden min-h-[620px] lg:min-h-[800px]">
+      {/* ===================== HERO ===================== */}
+      <section className="w-full flex flex-col lg:flex-row overflow-hidden min-h-[620px] lg:min-h-[800px]" style={{ backgroundColor: hero.bgColor }}>
 
-        {/* LEFT: Promo text — full width on mobile, fixed width on desktop */}
+        {/* LEFT: promo text — all values from config */}
         <div className="flex-shrink-0 flex flex-col justify-center px-6 sm:px-12 lg:px-16 pt-10 pb-6 lg:py-0 lg:w-[340px] xl:w-[550px]">
           <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold text-white leading-tight mb-4">
-            Quality Stuff
+            {hero.heading}
           </h1>
-          <p className="text-white/80 text-base mb-8">
-            Why stop at one? Buy more, save more – sitewide.
-          </p>
+          <p className="text-white/80 text-base mb-8">{hero.subheading}</p>
           <div className="flex flex-wrap gap-3">
-            <Link
-              href="/collections/indoor-trees"
-              className="px-5 py-3 bg-white text-black text-sm font-semibold transition-colors rounded-sm"
-            >
-              Shop New Arrivals
+            <Link href={hero.primaryButton.href} className="px-5 py-3 bg-white text-black text-sm font-semibold transition-colors rounded-sm">
+              {hero.primaryButton.text}
             </Link>
-            <Link
-              href="/products"
-              className="px-5 py-3 bg-white/10 border border-white text-white text-sm font-semibold hover:bg-white/20 transition-colors rounded-sm"
-            >
-              Shop All
+            <Link href={hero.secondaryButton.href} className="px-5 py-3 bg-white/10 border border-white text-white text-sm font-semibold hover:bg-white/20 transition-colors rounded-sm">
+              {hero.secondaryButton.text}
             </Link>
           </div>
         </div>
 
-        {/* RIGHT: Product cards */}
+        {/* RIGHT: Product slider */}
         <div className="flex-1 relative flex items-center min-h-[460px] lg:min-h-0 overflow-hidden">
-
           {heroProducts.length === 0 ? (
             <div className="flex-1 h-full bg-[url('/images/Groves_Box_mobile.png')] sm:bg-[url('/images/Groves%20Box.png')] bg-cover bg-center" />
           ) : (
             <>
-              {/* ── MOBILE: horizontal snap scroll showing ~1.5 cards ── */}
               <div className="flex sm:hidden w-full h-full items-stretch overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-3 pl-3 pr-6">
                 {heroProducts.map((product, i) => (
-                  <div
-                    key={i}
-                    className="snap-start flex-shrink-0 w-[75vw] max-w-[300px] self-center"
-                  >
+                  <div key={i} className="snap-start flex-shrink-0 w-[75vw] max-w-[300px] self-center">
                     <HeroProductCard product={product} />
                   </div>
                 ))}
               </div>
-
-              {/* ── SM (tablet): 2 cards, with arrows ── */}
               <div className="hidden sm:flex lg:hidden w-full h-full items-center gap-4 px-12 justify-center">
                 {[0, 1].map(offset => (
                   <div key={offset} className="w-[45%] max-w-[350px]">
-                    <HeroProductCard
-                      product={heroProducts[(heroIndex + offset) % heroProducts.length]}
-                    />
+                    <HeroProductCard product={heroProducts[(heroIndex + offset) % heroProducts.length]} />
                   </div>
                 ))}
               </div>
-
-              {/* ── LG (desktop): 3 cards, with arrows ── */}
               <div className="hidden lg:flex w-full h-full items-center gap-6 px-12 justify-center">
                 {[0, 1, 2].map(offset => (
                   <div key={offset} className="w-[30%] max-w-[350px]">
-                    <HeroProductCard
-                      product={heroProducts[(heroIndex + offset) % heroProducts.length]}
-                    />
+                    <HeroProductCard product={heroProducts[(heroIndex + offset) % heroProducts.length]} />
                   </div>
                 ))}
               </div>
-
-              {/* Arrows — hidden on mobile (swipe handles it) */}
-              <button
-                onClick={heroPrev}
-                aria-label="Previous product"
-                className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/90 hover:bg-white rounded-full items-center justify-center shadow-md transition-all hover:scale-110"
-              >
+              <button onClick={heroPrev} aria-label="Previous product" className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/90 hover:bg-white rounded-full items-center justify-center shadow-md transition-all hover:scale-110">
                 <ChevronLeft size={20} className="text-[#244033]" />
               </button>
-
-              <button
-                onClick={heroNext}
-                aria-label="Next product"
-                className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/90 hover:bg-white rounded-full items-center justify-center shadow-md transition-all hover:scale-110"
-              >
+              <button onClick={heroNext} aria-label="Next product" className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/90 hover:bg-white rounded-full items-center justify-center shadow-md transition-all hover:scale-110">
                 <ChevronRight size={20} className="text-[#244033]" />
               </button>
             </>
@@ -451,16 +336,16 @@ export default function HomePage() {
       </section>
 
 
-      {/* FEATURES SECTION */}
-      <section className="w-full bg-[#F0F4F1] py-12 md:py-14">
+      {/* ===================== FEATURES STRIP ===================== */}
+      <section className="w-full py-12 md:py-14" style={{ backgroundColor: features.bgColor }}>
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-8">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
+            {features.items.map((feature, index) => {
+              const Icon = ICON_MAP[feature.icon];
               return (
                 <div key={index} className="flex flex-col items-center text-center">
                   <div className="mb-3">
-                    <Icon className="w-8 h-8 text-[#007B57]" strokeWidth={1.5} />
+                    {Icon && <Icon className="w-8 h-8 text-[#007B57]" strokeWidth={1.5} />}
                   </div>
                   <h3 className="text-base font-semibold text-[#007B57] mb-3">{feature.title}</h3>
                   <p className="text-gray-600 leading-relaxed max-w-xs">{feature.description}</p>
@@ -472,21 +357,21 @@ export default function HomePage() {
       </section>
 
 
-      {/* MOST POPULAR PLANTS (BEST SELLERS) */}
+      {/* ===================== BEST SELLERS ===================== */}
       {products.length > 0 && (
         <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="max-w-[1600px] mx-auto">
             <div className="flex justify-between items-center mb-12">
               <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">
-                Our Most Popular Plants
+                {bestSellers.title}
               </h2>
-              <Link href="/products?filter=bestseller" className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#007B57] text-[#007B57] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#007B57] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0">
-                <span>View All</span>
+              <Link href={bestSellers.viewAllHref} className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#007B57] text-[#007B57] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#007B57] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0">
+                <span>{bestSellers.viewAllText}</span>
                 <ArrowRight size={16} className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-              {products.slice(0, 4).map((product) => (
+              {products.slice(0, bestSellers.limit).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
@@ -511,60 +396,55 @@ export default function HomePage() {
               }}
               className="w-full bg-[#244033] text-white py-3"
             >
-              Add to Cart — ${quickView.price}
+              Add to Cart — Rs. {quickView.price}
             </button>
           </div>
         </div>
       )}
 
 
-      {/* HELP SECTION */}
-      <section className="w-full px-4 sm:px-6 lg:px-12 py-20 lg:py-28 bg-[#F0F4F1]">
+      {/* ===================== HELP SECTION ===================== */}
+      <section className="w-full px-4 sm:px-6 lg:px-12 py-20 lg:py-28" style={{ backgroundColor: help.bgColor }}>
         <div className="max-w-[1400px] mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             <div>
-              <p className="text-sm tracking-wide uppercase text-gray-600 mb-6">Speak to a Plant Specialist</p>
-              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">Need Help?</h2>
-              <p className="text-lg md:text-l text-gray-600 leading-relaxed max-w-xl">
-                Your confidence is our priority. Unsure what plants will work with your light? New to gardening outdoors and need some advice? Reach out, we&apos;re here to help.
-              </p>
+              <p className="text-sm tracking-wide uppercase text-gray-600 mb-6">{help.label}</p>
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">{help.title}</h2>
+              <p className="text-lg md:text-l text-gray-600 leading-relaxed max-w-xl">{help.subtitle}</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="bg-white text-center p-10">
-                <MessageSquare size={36} className="mx-auto mb-6 text-[#007B57]" />
-                <h3 className="text-lg font-medium text-[#007B57] mb-2">Chat</h3>
-                <p className="text-sm text-gray-600">DM with a plant care expert</p>
-              </div>
-              <div className="bg-white text-center p-10">
-                <Phone size={36} className="mx-auto mb-6 text-[#007B57]" />
-                <h3 className="text-lg font-medium text-[#007B57] mb-2">Call</h3>
-                <p className="text-sm text-gray-600">Speak live to a plant care expert</p>
-              </div>
-              <div className="bg-white text-center p-10">
-                <Mail size={36} className="mx-auto mb-6 text-[#007B57]" />
-                <h3 className="text-lg font-medium text-[#007B57] mb-2">Email</h3>
-                <p className="text-sm text-gray-600">Send a note to info@thesill.com</p>
-              </div>
+              {help.channels.map((channel, i) => {
+                const Icon = ICON_MAP[channel.icon];
+                return (
+                  <div key={i} className="bg-white text-center p-10">
+                    {Icon && <Icon size={36} className="mx-auto mb-6 text-[#007B57]" />}
+                    <h3 className="text-lg font-medium text-[#007B57] mb-2">{channel.title}</h3>
+                    <p className="text-sm text-gray-600">{channel.description}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
 
-      {/* Categories */}
+      {/* ===================== CATEGORIES ===================== */}
       {categories.length > 0 && (
         <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="w-full px-4 md:px-6 lg:px-8">
             <div className="max-w-[1600px] mx-auto">
               <div className="flex items-center justify-between gap-3 mb-8 md:mb-10 lg:mb-12 xl:mb-14">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">Plants For Everyone</h2>
-                <Link href="/collections" className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#007B57] text-[#007B57] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#007B57] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0">
-                  <span>View All</span>
+                <h2 className="text-xl sm:text-2xl lg:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">
+                  {categoriesConfig.title}
+                </h2>
+                <Link href={categoriesConfig.viewAllHref} className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#007B57] text-[#007B57] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#007B57] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0">
+                  <span>{categoriesConfig.viewAllText}</span>
                   <ArrowRight size={16} className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-                {categories.slice(0, 8).map((category) => (
+                {categories.slice(0, categoriesConfig.limit).map((category) => (
                   <Link key={category.id} href={category.link} className="group block">
                     <div className="relative overflow-hidden aspect-[3/4]">
                       <img src={category.image} alt={category.name} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
@@ -584,19 +464,21 @@ export default function HomePage() {
       )}
 
 
-      {/* New Arrivals */}
+      {/* ===================== NEW ARRIVALS ===================== */}
       {newArrivals.length > 0 && (
         <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="max-w-[1600px] mx-auto">
             <div className="flex justify-between items-center mb-12">
-              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">New Arrivals</h2>
-              <Link href="/products?filter=new" className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#007B57] text-[#007B57] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#007B57] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0">
-                <span>View All</span>
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">
+                {newArrivalsConfig.title}
+              </h2>
+              <Link href={newArrivalsConfig.viewAllHref} className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#007B57] text-[#007B57] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#007B57] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0">
+                <span>{newArrivalsConfig.viewAllText}</span>
                 <ArrowRight size={16} className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-              {newArrivals.slice(0, 4).map((product) => (
+              {newArrivals.slice(0, newArrivalsConfig.limit).map((product) => (
                 <ProductCard key={`new-${product.id}`} product={product} />
               ))}
             </div>
@@ -605,19 +487,21 @@ export default function HomePage() {
       )}
 
 
-      {/* On Sale */}
+      {/* ===================== ON SALE ===================== */}
       {saleProducts.length > 0 && (
         <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="max-w-[1600px] mx-auto">
             <div className="flex justify-between items-center mb-12">
-              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">On Sale</h2>
-              <Link href="/products?filter=sale" className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#007B57] text-[#007B57] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#007B57] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0">
-                <span>View All</span>
+              <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">
+                {onSale.title}
+              </h2>
+              <Link href={onSale.viewAllHref} className="group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 bg-white border-2 border-[#007B57] text-[#007B57] font-medium text-xs sm:text-sm md:text-base tracking-wide hover:bg-[#007B57] hover:text-white transition-all duration-300 rounded-none whitespace-nowrap flex-shrink-0">
+                <span>{onSale.viewAllText}</span>
                 <ArrowRight size={16} className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-              {saleProducts.slice(0, 4).map((product) => (
+              {saleProducts.slice(0, onSale.limit).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
@@ -626,15 +510,17 @@ export default function HomePage() {
       )}
 
 
-      {/* WORKSHOPS & BLOG */}
+      {/* ===================== WORKSHOPS & BLOG ===================== */}
       {workshops.length > 0 && (
-        <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-12 sm:py-16 md:py-20 lg:py-24 bg-[#F0F4F1]">
+        <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-12 sm:py-16 md:py-20 lg:py-24" style={{ backgroundColor: workshopsConfig.bgColor }}>
           <div className="max-w-[1600px] mx-auto">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-8 md:mb-12 lg:mb-16">
               <div>
-                <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">Plant Care &amp; Workshops</h2>
+                <h2 className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">
+                  {workshopsConfig.title}
+                </h2>
                 <p className="text-base sm:text-l md:text-l lg:text-l text-gray-600 max-w-2xl">
-                  Empowering all people to be plant people. Welcome to Plant Parenthood®.
+                  {workshopsConfig.subtitle}
                 </p>
               </div>
             </div>
@@ -658,42 +544,7 @@ export default function HomePage() {
       )}
 
 
-      {/* TESTIMONIALS */}
-      {/* {testimonials.length > 0 && (
-        <section className="w-full bg-white py-16 px-4 md:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-12">
-              <p className="text-2xl sm:text-3xl 2xl:text-3xl font-lexend font-semibold text-[#007B57]">What our customers are saying</p>
-            </div>
-            <div className="relative">
-              <div className="flex flex-col md:flex-row gap-0 overflow-hidden h-auto md:h-[500px]">
-                <div className="w-full md:w-1/5 md:min-w-[200px] bg-[#F0F4F1] flex items-center justify-center p-6 md:p-8 relative min-h-[150px] md:min-h-0 md:h-full">
-                  <div className="relative w-full h-full flex items-center">
-                    {testimonials.map((testimonial, index) => (
-                      <div key={index} className={`absolute inset-0 flex items-center justify-center p-4 md:p-6 transition-all duration-700 ${index === currentSlide ? 'opacity-100 translate-x-0' : index < currentSlide ? 'opacity-0 -translate-x-full' : 'opacity-0 translate-x-full'}`}>
-                        <p className="text-center text-gray-800 text-sm md:text-base leading-relaxed">&ldquo;{testimonial.text}&rdquo;</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="w-full md:w-4/5 relative overflow-hidden bg-gray-100 h-[300px] md:h-full">
-                  {testimonials.map((testimonial, index) => (
-                    <div key={index} className={`absolute inset-0 transition-all duration-700 ${index === currentSlide ? 'opacity-100 translate-x-0' : index < currentSlide ? 'opacity-0 -translate-x-full' : 'opacity-0 translate-x-full'}`}>
-                      <img src={testimonial.image} alt={`Testimonial ${index + 1}`} className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                  <button onClick={prevSlide} className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10" aria-label="Previous slide">
-                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
-                  </button>
-                  <button onClick={nextSlide} className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10" aria-label="Next slide">
-                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-[#244033]" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )} */}
+      {/* ===================== TESTIMONIALS ===================== */}
       <TestimonialsSection />
 
 

@@ -5,58 +5,31 @@ import { ChevronLeft, Trash2, Minus, Plus, AlertCircle, Heart, ShoppingCart } fr
 import Link from 'next/link';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { getProducts } from "../../lib/shopify_utilis";
+import { getProducts } from '../../lib/shopify_utilis';
 
-export default function CartPage() {
-    const [products, setProducts] = useState([]);
+import {
+    colors,
+    shippingConfig,
+    recommendationsConfig,
+    strings,
+    routes,
+    features,
+    ui,
+} from '../../config/cart.config';
 
-    const {
-        cartItems,
-        loading,
-        updateQuantity,
-        removeFromCart,
-        addToCart,
-        checkoutUrl,
-    } = useCart();
+// ─────────────────────────────────────────────────────────────────────────────
+// ProductCard
+// ─────────────────────────────────────────────────────────────────────────────
+function ProductCard({ product }) {
+    const { addToCart } = useCart();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+    const wishlisted = isInWishlist(product.id.toString());
 
-    // ── Totals ──────────────────────────────────────────────────────────────
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const shipping = subtotal >= 79 ? 0 : 15;
-    const freeShippingThreshold = 79;
-    const amountUntilFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-    const estimatedTotal = subtotal + shipping;
-    const shippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
-
-    // ── Recommended products ─────────────────────────────────────────────────
-    useEffect(() => {
-        async function loadProducts() {
-            try {
-                const productsData = await getProducts(8);
-                setProducts(productsData);
-            } catch (error) {
-                console.error('Error loading products:', error);
-            }
-        }
-        loadProducts();
-    }, []);
-
-    const recommendedProducts = products
-        .filter(product => !cartItems.some(cartItem => cartItem.name === product.name))
-        .slice(0, 4)
-        .map(product => ({
-            ...product,
-            badge: product.price < 50 ? 'Best Seller' : product.rating >= 4.8 ? 'Top Rated' : undefined,
-            badgeColor: product.price < 50 ? 'bg-gray-800' : product.rating >= 4.8 ? 'bg-green-600' : undefined,
-        }));
-
-    // ── Handlers ─────────────────────────────────────────────────────────────
-    const increaseQty = (lineId, qty) => updateQuantity(lineId, qty + 1);
-    const decreaseQty = (lineId, qty) => updateQuantity(lineId, qty - 1);
-    const removeItem = (lineId) => removeFromCart(lineId);
-
-    const handleAddToCart = (product) => {
+    const handleQuickAdd = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         const variantId = product.variants?.[0]?.id;
-        if (!variantId) return;
+        if (!variantId) { alert(strings.recommendations.unavailable); return; }
         addToCart({
             id: product.id,
             variantId,
@@ -69,72 +42,164 @@ export default function CartPage() {
         });
     };
 
-    // ── Shopify checkout redirect ─────────────────────────────────────────────
-    const handleCheckout = () => {
-        if (checkoutUrl) {
-            window.location.href = checkoutUrl;
-        } else {
-            console.error('No Shopify checkout URL available.');
-        }
+    const handleWishlistToggle = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        wishlisted
+            ? removeFromWishlist(product.id.toString())
+            : addToWishlist({
+                id: product.id.toString(),
+                variantId: product.variants?.[0]?.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                handle: product.handle,
+                variants: product.variants,
+            });
     };
 
-    // ── Product Card ─────────────────────────────────────────────────────────
-    const ProductCard = ({ product }) => {
-        const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-        const wishlisted = isInWishlist(product.id.toString());
+    return (
+        <Link href={routes.productDetail(product.handle)} className="group block">
+            <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3">
+                {/* Badge */}
+                {product.badge && (
+                    <div
+                        className="absolute top-2 left-2 z-10 px-2 py-0.5 text-[10px] sm:text-xs rounded-full font-medium"
+                        style={{ backgroundColor: product.badgeColor, color: '#fff' }}
+                    >
+                        {product.badge}
+                    </div>
+                )}
 
-        const handleQuickAdd = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const variantId = product.variants?.[0]?.id;
-            if (!variantId) { alert('This product is currently unavailable'); return; }
-            addToCart({ id: product.id, variantId, name: product.name, price: product.price, quantity: 1, image: product.image, handle: product.handle, variants: product.variants });
-        };
+                {/* Wishlist */}
+                {features.showWishlistOnCards && (
+                    <button
+                        onClick={handleWishlistToggle}
+                        className="absolute top-2 right-2 z-10 w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center shadow transition"
+                        style={{ '--hover-bg': colors.primary }}
+                    >
+                        <Heart
+                            size={16}
+                            className={`sm:w-[18px] sm:h-[18px] ${wishlisted ? 'fill-current text-red-500' : ''}`}
+                        />
+                    </button>
+                )}
 
-        const handleWishlistToggle = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            wishlisted
-                ? removeFromWishlist(product.id.toString())
-                : addToWishlist({ id: product.id.toString(), variantId: product.variants?.[0]?.id, name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
-        };
+                {/* Quick Add – mobile */}
+                <button
+                    onClick={handleQuickAdd}
+                    className="absolute bottom-2 right-2 z-10 w-9 h-9 sm:w-10 sm:h-10 text-white rounded-full flex items-center justify-center transition active:scale-95 md:hidden"
+                    style={{ backgroundColor: colors.primary }}
+                >
+                    <ShoppingCart size={16} />
+                </button>
 
-        return (
-            <Link href={`/products/${product.handle}`} className="group block">
-                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-3">
-                    {product.badge && (
-                        <div className={`absolute top-2 left-2 z-10 ${product.badgeColor} text-white px-2 py-0.5 text-[10px] sm:text-xs rounded-full font-medium`}>
-                            {product.badge}
-                        </div>
-                    )}
-                    <button onClick={handleWishlistToggle} className="absolute top-2 right-2 z-10 w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#007B57] hover:text-white transition">
-                        <Heart size={16} className={`sm:w-[18px] sm:h-[18px] ${wishlisted ? 'fill-current text-red-500' : ''}`} />
-                    </button>
-                    <button onClick={handleQuickAdd} className="absolute bottom-2 right-2 z-10 w-9 h-9 sm:w-10 sm:h-10 bg-[#007B57] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition active:scale-95 md:hidden">
-                        <ShoppingCart size={16} />
-                    </button>
-                    <button onClick={handleQuickAdd} className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                        <ShoppingCart size={16} /> Quick Add
-                    </button>
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </div>
-                <h3 className="text-xs sm:text-sm md:text-base font-sans font-light text-gray-900 mb-1 line-clamp-1">{product.name}</h3>
-                <p className="text-[10px] sm:text-xs md:text-sm italic text-gray-500 mb-1.5 line-clamp-2">{product.description}</p>
-                <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                    <span className="font-medium text-gray-900">Rs. {product.price}</span>
-                    {product.originalPrice && <span className="text-gray-400 line-through text-[10px] sm:text-xs">Rs. {product.originalPrice}</span>}
-                </div>
-            </Link>
-        );
+                {/* Quick Add – desktop hover */}
+                <button
+                    onClick={handleQuickAdd}
+                    className={`hidden md:flex absolute bottom-3 left-3 right-3 z-10 text-white py-2.5 text-sm font-medium items-center justify-center gap-2 ${ui.transitions.slideUp}`}
+                    style={{ backgroundColor: colors.primary }}
+                >
+                    <ShoppingCart size={16} />
+                    {strings.recommendations.quickAdd}
+                </button>
+
+                <img
+                    src={product.image}
+                    alt={product.name}
+                    className={`w-full h-full object-cover ${ui.transitions.groupImg}`}
+                />
+            </div>
+
+            <h3 className="text-xs sm:text-sm md:text-base font-sans font-light text-gray-900 mb-1 line-clamp-1">
+                {product.name}
+            </h3>
+            <p className="text-[10px] sm:text-xs md:text-sm italic text-gray-500 mb-1.5 line-clamp-2">
+                {product.description}
+            </p>
+            <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                <span className="font-medium text-gray-900">
+                    {shippingConfig.currency}{product.price}
+                </span>
+                {product.originalPrice && (
+                    <span className="text-gray-400 line-through text-[10px] sm:text-xs">
+                        {shippingConfig.currency}{product.originalPrice}
+                    </span>
+                )}
+            </div>
+        </Link>
+    );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CartPage
+// ─────────────────────────────────────────────────────────────────────────────
+export default function CartPage() {
+    const [products, setProducts] = useState([]);
+
+    const {
+        cartItems,
+        loading,
+        updateQuantity,
+        removeFromCart,
+        addToCart,
+        checkoutUrl,
+    } = useCart();
+
+    // ── Totals ────────────────────────────────────────────────────────────────
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const shipping = subtotal >= shippingConfig.freeShippingThreshold ? 0 : shippingConfig.standardShippingCost;
+    const amountUntilFreeShipping = Math.max(0, shippingConfig.freeShippingThreshold - subtotal);
+    const estimatedTotal = subtotal + shipping;
+    const shippingProgress = Math.min(100, (subtotal / shippingConfig.freeShippingThreshold) * 100);
+
+    // ── Recommended products ──────────────────────────────────────────────────
+    useEffect(() => {
+        if (!features.showRecommendations) return;
+        async function loadProducts() {
+            try {
+                const data = await getProducts(recommendationsConfig.fetchCount);
+                setProducts(data);
+            } catch (err) {
+                console.error('Error loading products:', err);
+            }
+        }
+        loadProducts();
+    }, []);
+
+    const recommendedProducts = products
+        .filter((p) => !cartItems.some((c) => c.name === p.name))
+        .slice(0, recommendationsConfig.displayCount)
+        .map((p) => {
+            const isBestSeller = p.price < recommendationsConfig.badgeRules.bestSeller.maxPrice;
+            const isTopRated = p.rating >= recommendationsConfig.badgeRules.topRated.minRating;
+            return {
+                ...p,
+                badge: isBestSeller ? 'Best Seller' : isTopRated ? 'Top Rated' : undefined,
+                badgeColor: isBestSeller ? colors.badge.bestSeller.bg : isTopRated ? colors.badge.topRated.bg : undefined,
+            };
+        });
+
+    // ── Handlers ──────────────────────────────────────────────────────────────
+    const increaseQty = (id, qty) => updateQuantity(id, qty + 1);
+    const decreaseQty = (id, qty) => updateQuantity(id, qty - 1);
+    const removeItem = (id) => removeFromCart(id);
+
+    const handleCheckout = () => {
+        if (checkoutUrl) window.location.href = checkoutUrl;
+        else console.error('No Shopify checkout URL available.');
     };
 
     // ── Loading ───────────────────────────────────────────────────────────────
     if (loading) {
         return (
-            <div className="bg-[#F0F4F1] min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.surface.page }}>
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-gray-600">Loading cart...</p>
+                    <div
+                        className="w-16 h-16 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                        style={{ borderColor: colors.primary, borderTopColor: 'transparent' }}
+                    />
+                    <p style={{ color: colors.text.muted }}>{strings.loading}</p>
                 </div>
             </div>
         );
@@ -143,14 +208,20 @@ export default function CartPage() {
     // ── Empty cart ────────────────────────────────────────────────────────────
     if (cartItems.length === 0) {
         return (
-            <div className="bg-[#F0F4F1] min-h-screen">
+            <div className="min-h-screen" style={{ backgroundColor: colors.surface.page }}>
                 <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
                     <div className="text-center py-16">
-                        <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your cart is empty</h2>
-                        <p className="text-gray-600 mb-6">Add some plants to get started!</p>
-                        <Link href="/products" className="inline-block bg-[#007B57] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition">
-                            Continue Shopping
+                        <ShoppingCart className="w-16 h-16 mx-auto mb-4" style={{ color: colors.text.muted }} />
+                        <h2 className="text-2xl font-semibold mb-2" style={{ color: colors.text.body }}>
+                            {strings.empty.heading}
+                        </h2>
+                        <p className="mb-6" style={{ color: colors.text.muted }}>{strings.empty.subtext}</p>
+                        <Link
+                            href={routes.products}
+                            className="inline-block text-white px-8 py-3 rounded-lg font-medium transition"
+                            style={{ backgroundColor: colors.primary }}
+                        >
+                            {strings.empty.cta}
                         </Link>
                     </div>
                 </div>
@@ -158,48 +229,83 @@ export default function CartPage() {
         );
     }
 
+    // ── Recommendations grid (shared between mobile + desktop) ────────────────
+    const RecommendationsGrid = ({ extraClass = '' }) =>
+        features.showRecommendations && recommendedProducts.length > 0 ? (
+            <div className={`mt-8 sm:mt-10 md:mt-12 ${extraClass}`}>
+                <h2 className="text-xl sm:text-2xl font-sans mb-1 sm:mb-2" style={{ color: colors.text.heading }}>
+                    {strings.recommendations.title}
+                </h2>
+                <p className="text-sm sm:text-base mb-4 sm:mb-6" style={{ color: colors.text.muted }}>
+                    {strings.recommendations.subtitle}
+                </p>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+                    {recommendedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
+                </div>
+            </div>
+        ) : null;
+
     // ── Main render ───────────────────────────────────────────────────────────
     return (
-        <div className="bg-[#F0F4F1] min-h-screen">
+        <div className="min-h-screen" style={{ backgroundColor: colors.surface.page }}>
             <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
 
-                {/* Back button */}
-                <Link href="/products" className="inline-flex items-center text-gray-600 hover:text-[#007B57] transition-colors mb-4 sm:mb-6 group active:scale-95">
+                {/* Back link */}
+                <Link
+                    href={routes.products}
+                    className="inline-flex items-center transition-colors mb-4 sm:mb-6 group active:scale-95"
+                    style={{ color: colors.text.muted }}
+                >
                     <ChevronLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
-                    <span className="text-xs sm:text-sm font-medium">Continue Shopping</span>
+                    <span className="text-xs sm:text-sm font-medium">{strings.page.backLabel}</span>
                 </Link>
 
                 <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
 
-                    {/* ── Left: Cart Items ── */}
+                    {/* ── LEFT: Cart Items ── */}
                     <div className="lg:col-span-8 order-1">
+
+                        {/* Header */}
                         <div className="flex items-center justify-between mb-4 sm:mb-6">
-                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-sans text-[#009A7B]">Shopping Cart</h1>
-                            <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap ml-2">
-                                {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
+                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-sans" style={{ color: colors.text.heading }}>
+                                {strings.page.title}
+                            </h1>
+                            <span className="text-xs sm:text-sm ml-2" style={{ color: colors.text.muted }}>
+                                {cartItems.length} {cartItems.length === 1 ? strings.page.itemSingular : strings.page.itemPlural}
                             </span>
                         </div>
 
                         {/* Cold weather notice */}
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
-                            <div className="flex gap-2 sm:gap-3">
-                                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                                <div>
-                                    <p className="text-xs sm:text-sm text-blue-900 font-medium mb-0.5 sm:mb-1">Cold Weather Protection</p>
-                                    <p className="text-xs sm:text-sm text-blue-800 leading-relaxed">
-                                        A ₹50 surcharge applies for special packaging to protect your plants during cold weather transit.
-                                    </p>
+                        {features.showColdWeatherNotice && (
+                            <div
+                                className="rounded-lg sm:rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 border"
+                                style={{ backgroundColor: colors.notice.cold.bg, borderColor: colors.notice.cold.border }}
+                            >
+                                <div className="flex gap-2 sm:gap-3">
+                                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" style={{ color: colors.notice.cold.icon }} />
+                                    <div>
+                                        <p className="text-xs sm:text-sm font-medium mb-0.5 sm:mb-1" style={{ color: colors.notice.cold.title }}>
+                                            {strings.coldWeather.title}
+                                        </p>
+                                        <p className="text-xs sm:text-sm leading-relaxed" style={{ color: colors.notice.cold.body }}>
+                                            {strings.coldWeather.body}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Cart item list */}
                         <div className="space-y-3 sm:space-y-4">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6 border border-gray-200 hover:shadow-md transition-shadow">
+                                <div
+                                    key={item.id}
+                                    className="rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6 border hover:shadow-md transition-shadow"
+                                    style={{ backgroundColor: colors.surface.card, borderColor: colors.border.default }}
+                                >
                                     <div className="flex gap-3 sm:gap-4 md:gap-6">
                                         {/* Image */}
-                                        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
+                                        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-lg flex-shrink-0 overflow-hidden" style={{ backgroundColor: colors.surface.muted }}>
                                             <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                         </div>
 
@@ -207,33 +313,55 @@ export default function CartPage() {
                                         <div className="flex-grow flex flex-col min-w-0">
                                             <div className="flex justify-between items-start mb-2 gap-2">
                                                 <div className="min-w-0 flex-1">
-                                                    <h3 className="text-sm sm:text-base md:text-lg font-semibold text-[#009A7B] mb-1 line-clamp-2">{item.name}</h3>
-                                                    {item.size && <p className="text-xs sm:text-sm text-gray-600 mb-0.5 sm:mb-1 line-clamp-1">{item.size}</p>}
+                                                    <h3 className="text-sm sm:text-base md:text-lg font-semibold mb-1 line-clamp-2" style={{ color: colors.text.heading }}>
+                                                        {item.name}
+                                                    </h3>
+                                                    {item.size && (
+                                                        <p className="text-xs sm:text-sm mb-0.5 sm:mb-1 line-clamp-1" style={{ color: colors.text.body }}>
+                                                            {item.size}
+                                                        </p>
+                                                    )}
                                                     {item.variant && item.variant !== 'Default Title' && (
-                                                        <p className="text-xs sm:text-sm text-gray-500 line-clamp-1">{item.variant}</p>
+                                                        <p className="text-xs sm:text-sm line-clamp-1" style={{ color: colors.text.muted }}>
+                                                            {item.variant}
+                                                        </p>
                                                     )}
                                                 </div>
-                                                <span className="text-base sm:text-lg md:text-xl font-semibold text-[#009A7B] flex-shrink-0">
-                                                    ₹{(item.price * item.quantity).toFixed(2)}
+                                                <span className="text-base sm:text-lg md:text-xl font-semibold flex-shrink-0" style={{ color: colors.text.price }}>
+                                                    {shippingConfig.currency}{(item.price * item.quantity).toFixed(2)}
                                                 </span>
                                             </div>
 
                                             {/* Qty + Remove */}
                                             <div className="flex items-center justify-between mt-auto pt-3 sm:pt-4 gap-2">
-                                                <button onClick={() => removeItem(item.id)} className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-red-600 hover:text-red-700 font-medium transition-colors active:scale-95">
+                                                <button
+                                                    onClick={() => removeItem(item.id)}
+                                                    className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium transition-colors active:scale-95"
+                                                    style={{ color: colors.text.danger }}
+                                                >
                                                     <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                                     <span className="hidden xs:inline">Remove</span>
                                                 </button>
 
-                                                <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                                                    <button onClick={() => decreaseQty(item.id, item.quantity)} className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 active:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation" disabled={item.quantity <= 1}>
-                                                        <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" />
+                                                <div className="flex items-center rounded-lg overflow-hidden border" style={{ borderColor: colors.border.default }}>
+                                                    <button
+                                                        onClick={() => decreaseQty(item.id, item.quantity)}
+                                                        className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 active:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                                                        disabled={item.quantity <= 1}
+                                                    >
+                                                        <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: colors.text.muted }} />
                                                     </button>
-                                                    <span className="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-900 border-x border-gray-300 min-w-[3rem] sm:min-w-[3.5rem] md:min-w-[4rem] text-center">
+                                                    <span
+                                                        className="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium border-x min-w-[3rem] sm:min-w-[3.5rem] md:min-w-[4rem] text-center"
+                                                        style={{ borderColor: colors.border.default, color: colors.text.body }}
+                                                    >
                                                         {item.quantity}
                                                     </span>
-                                                    <button onClick={() => increaseQty(item.id, item.quantity)} className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 active:bg-gray-200 transition-colors touch-manipulation">
-                                                        <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" />
+                                                    <button
+                                                        onClick={() => increaseQty(item.id, item.quantity)}
+                                                        className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 active:bg-gray-200 transition-colors touch-manipulation"
+                                                    >
+                                                        <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: colors.text.muted }} />
                                                     </button>
                                                 </div>
                                             </div>
@@ -243,105 +371,122 @@ export default function CartPage() {
                             ))}
                         </div>
 
-                        {/* Recommended — desktop */}
-                        {recommendedProducts.length > 0 && (
-                            <div className="mt-8 sm:mt-10 md:mt-12 hidden lg:block">
-                                <h2 className="text-xl sm:text-2xl font-sans text-[#009A7B] mb-1 sm:mb-2">You Might Also Like</h2>
-                                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Complete your plant collection with these essentials</p>
-                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                                    {recommendedProducts.map(p => <ProductCard key={p.id} product={p} />)}
-                                </div>
-                            </div>
-                        )}
+                        {/* Recommendations – desktop */}
+                        <RecommendationsGrid extraClass="hidden lg:block" />
                     </div>
 
-                    {/* ── Right: Order Summary ── */}
+                    {/* ── RIGHT: Order Summary ── */}
                     <div className="lg:col-span-4 order-2">
-                        <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-5 md:p-6 lg:sticky lg:top-8">
-                            <h2 className="text-lg sm:text-xl font-sans text-[#009A7B] mb-4 sm:mb-6">Order Summary</h2>
+                        <div
+                            className="rounded-lg sm:rounded-xl border p-4 sm:p-5 md:p-6 lg:sticky lg:top-8"
+                            style={{ backgroundColor: colors.surface.card, borderColor: colors.border.default }}
+                        >
+                            <h2 className="text-lg sm:text-xl font-sans mb-4 sm:mb-6" style={{ color: colors.text.heading }}>
+                                {strings.summary.title}
+                            </h2>
 
                             {/* Free shipping progress */}
-                            {amountUntilFreeShipping > 0 ? (
-                                <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
-                                    <p className="text-xs sm:text-sm text-gray-700 mb-2 sm:mb-3">
-                                        Add <span className="font-bold text-[#007B57]">₹{amountUntilFreeShipping.toFixed(2)}</span> more for free shipping!
-                                    </p>
-                                    <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#007B57] to-[#009A7B] transition-all duration-500 ease-out" style={{ width: `${shippingProgress}%` }} />
+                            {features.enableFreeShippingProgress && (
+                                amountUntilFreeShipping > 0 ? (
+                                    <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg" style={{ backgroundColor: colors.surface.muted }}>
+                                        <p className="text-xs sm:text-sm mb-2 sm:mb-3" style={{ color: colors.text.body }}>
+                                            Add{' '}
+                                            <span className="font-bold" style={{ color: colors.primary }}>
+                                                {shippingConfig.currency}{amountUntilFreeShipping.toFixed(2)}
+                                            </span>{' '}
+                                            more for free shipping!
+                                        </p>
+                                        <div className="relative h-2 rounded-full overflow-hidden" style={{ backgroundColor: colors.progressBar.track }}>
+                                            <div
+                                                className="absolute top-0 left-0 h-full transition-all duration-500 ease-out"
+                                                style={{
+                                                    width: `${shippingProgress}%`,
+                                                    background: `linear-gradient(to right, ${colors.progressBar.fillFrom}, ${colors.progressBar.fillTo})`,
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="flex justify-between items-center mt-1.5 sm:mt-2">
+                                            <span className="text-[10px] sm:text-xs" style={{ color: colors.text.muted }}>
+                                                {shippingConfig.currency}{subtotal.toFixed(2)}
+                                            </span>
+                                            <span className="text-[10px] sm:text-xs font-semibold" style={{ color: colors.primary }}>
+                                                {strings.summary.freeShippingLabel}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="flex justify-between items-center mt-1.5 sm:mt-2">
-                                        <span className="text-[10px] sm:text-xs text-gray-600">₹{subtotal.toFixed(2)}</span>
-                                        <span className="text-[10px] sm:text-xs font-semibold text-[#007B57]">₹79 Free Shipping</span>
+                                ) : (
+                                    <div
+                                        className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg border"
+                                        style={{ backgroundColor: colors.notice.freeShipping.bg, borderColor: colors.notice.freeShipping.border }}
+                                    >
+                                        <p className="text-xs sm:text-sm font-medium flex items-center gap-2" style={{ color: colors.notice.freeShipping.text }}>
+                                            <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            {strings.summary.freeShippingUnlocked}
+                                        </p>
                                     </div>
-                                </div>
-                            ) : (
-                                <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-50 rounded-lg border border-green-200">
-                                    <p className="text-xs sm:text-sm font-medium text-green-800 flex items-center gap-2">
-                                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        You've qualified for free shipping!
-                                    </p>
-                                </div>
+                                )
                             )}
 
                             {/* Price breakdown */}
                             <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
-                                <div className="flex justify-between items-center text-xs sm:text-sm">
-                                    <span className="text-gray-600">Subtotal</span>
-                                    <span className="font-medium text-gray-900">₹{subtotal.toFixed(2)}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-xs sm:text-sm">
-                                    <span className="text-gray-600">Shipping</span>
-                                    {shipping === 0
-                                        ? <span className="font-medium text-green-600">FREE</span>
-                                        : <span className="font-medium text-gray-900">₹{shipping.toFixed(2)}</span>}
-                                </div>
-                                <div className="flex justify-between items-center text-xs sm:text-sm">
-                                    <span className="text-gray-600">Taxes</span>
-                                    <span className="text-gray-500 text-xs">Calculated at checkout</span>
-                                </div>
+                                {[
+                                    { label: strings.summary.subtotal, value: `${shippingConfig.currency}${subtotal.toFixed(2)}` },
+                                    {
+                                        label: strings.summary.shipping,
+                                        value: shipping === 0
+                                            ? <span style={{ color: '#16A34A' }}>{strings.summary.shippingFree}</span>
+                                            : `${shippingConfig.currency}${shipping.toFixed(2)}`,
+                                    },
+                                    { label: strings.summary.taxes, value: <span style={{ color: colors.text.muted, fontSize: '0.75rem' }}>{strings.summary.taxesNote}</span> },
+                                ].map(({ label, value }) => (
+                                    <div key={label} className="flex justify-between items-center text-xs sm:text-sm">
+                                        <span style={{ color: colors.text.muted }}>{label}</span>
+                                        <span className="font-medium" style={{ color: colors.text.body }}>{value}</span>
+                                    </div>
+                                ))}
                             </div>
 
                             {/* Total */}
-                            <div className="border-t border-gray-200 pt-3 sm:pt-4 mb-4 sm:mb-6">
+                            <div className="pt-3 sm:pt-4 mb-4 sm:mb-6 border-t" style={{ borderColor: colors.border.default }}>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-base sm:text-lg font-semibold text-[#007B57]">Total</span>
-                                    <span className="text-xl sm:text-2xl font-bold text-[#007B57]">₹{estimatedTotal.toFixed(2)}</span>
+                                    <span className="text-base sm:text-lg font-semibold" style={{ color: colors.primary }}>
+                                        {strings.summary.total}
+                                    </span>
+                                    <span className="text-xl sm:text-2xl font-bold" style={{ color: colors.primary }}>
+                                        {shippingConfig.currency}{estimatedTotal.toFixed(2)}
+                                    </span>
                                 </div>
-                                <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2">Final amount calculated at checkout</p>
+                                <p className="text-[10px] sm:text-xs mt-1.5 sm:mt-2" style={{ color: colors.text.muted }}>
+                                    {strings.summary.totalNote}
+                                </p>
                             </div>
 
-                            {/* ✅ Shopify Checkout Button */}
+                            {/* Checkout button */}
                             <button
                                 onClick={handleCheckout}
                                 disabled={!checkoutUrl}
-                                className="block w-full bg-[#007B57] text-white font-semibold py-3 sm:py-3.5 md:py-4 rounded-lg hover:bg-[#009A7B] transition-all text-center text-sm sm:text-base shadow-sm hover:shadow-md active:scale-[0.98] touch-manipulation disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="block w-full text-white font-semibold py-3 sm:py-3.5 md:py-4 rounded-lg transition-all text-center text-sm sm:text-base shadow-sm hover:shadow-md active:scale-[0.98] touch-manipulation disabled:opacity-60 disabled:cursor-not-allowed"
+                                style={{ backgroundColor: colors.primary }}
                             >
-                                {checkoutUrl ? 'Proceed to Checkout' : 'Loading Checkout…'}
+                                {checkoutUrl ? strings.checkout.proceed : strings.checkout.loading}
                             </button>
 
                             {/* Security badge */}
-                            <div className="mt-3 sm:mt-4 flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-gray-500">
+                            <div className="mt-3 sm:mt-4 flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs" style={{ color: colors.text.muted }}>
                                 <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                                 </svg>
-                                <span>Secure Shopify Checkout</span>
+                                <span>{strings.checkout.security}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Recommended — mobile */}
-                {recommendedProducts.length > 0 && (
-                    <div className="mt-8 sm:mt-10 lg:hidden order-3">
-                        <h2 className="text-xl sm:text-2xl font-sans text-gray-900 mb-1 sm:mb-2">You Might Also Like</h2>
-                        <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Complete your plant collection with these essentials</p>
-                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                            {recommendedProducts.map(p => <ProductCard key={p.id} product={p} />)}
-                        </div>
-                    </div>
-                )}
+                {/* Recommendations – mobile */}
+                <RecommendationsGrid extraClass="lg:hidden order-3" />
+
             </div>
         </div>
     );

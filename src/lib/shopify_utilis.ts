@@ -44,11 +44,9 @@ export async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams
 }
 
 export async function getOrderByNumber(accessToken: string, orderNumber: string) {
-  // Normalize — strip the # if present
   const normalized = String(orderNumber).replace('#', '').trim();
 
   try {
-    // Fetch up to 50 recent orders and find the matching one
     const orders = await getCustomerOrders(accessToken, 50);
 
     if (!orders || orders.length === 0) return null;
@@ -69,8 +67,6 @@ export async function getOrderByNumber(accessToken: string, orderNumber: string)
 
 /**
  * Get the most recent order for a customer
- * Useful for showing the last order on the success page
- * when no order number is available yet.
  */
 export async function getLatestOrder(accessToken: string) {
   try {
@@ -81,9 +77,6 @@ export async function getLatestOrder(accessToken: string) {
     return null;
   }
 }
-
-// lib/shopify_customer_utils.ts
-// Extended Shopify customer utilities for account management
 
 /**
  * Get Customer Orders
@@ -524,30 +517,15 @@ function formatOrder(order: any) {
  * Determine Order Status
  */
 function determineOrderStatus(fulfillmentStatus: string, financialStatus: string): string {
-  if (fulfillmentStatus === 'FULFILLED') {
-    return 'Delivered';
-  }
-  if (fulfillmentStatus === 'PARTIAL') {
-    return 'Partially Shipped';
-  }
-  if (fulfillmentStatus === 'IN_TRANSIT') {
-    return 'In Transit';
-  }
+  if (fulfillmentStatus === 'FULFILLED') return 'Delivered';
+  if (fulfillmentStatus === 'PARTIAL') return 'Partially Shipped';
+  if (fulfillmentStatus === 'IN_TRANSIT') return 'In Transit';
   if (fulfillmentStatus === 'UNFULFILLED') {
-    if (financialStatus === 'PAID') {
-      return 'Processing';
-    }
-    if (financialStatus === 'PENDING') {
-      return 'Payment Pending';
-    }
+    if (financialStatus === 'PAID') return 'Processing';
+    if (financialStatus === 'PENDING') return 'Payment Pending';
   }
-  if (financialStatus === 'REFUNDED') {
-    return 'Refunded';
-  }
-  if (financialStatus === 'PARTIALLY_REFUNDED') {
-    return 'Partially Refunded';
-  }
-
+  if (financialStatus === 'REFUNDED') return 'Refunded';
+  if (financialStatus === 'PARTIALLY_REFUNDED') return 'Partially Refunded';
   return 'Processing';
 }
 
@@ -555,9 +533,6 @@ function determineOrderStatus(fulfillmentStatus: string, financialStatus: string
    SHOPIFY CART QUERIES & MUTATIONS
 ===================================================== */
 
-/* ===============================
-   CREATE CART
-================================ */
 export const CREATE_CART = `
   mutation createCart {
     cartCreate {
@@ -570,9 +545,6 @@ export const CREATE_CART = `
   }
 `;
 
-/* ===============================
-   GET CART
-================================ */
 export const GET_CART = `
   query getCart($cartId: ID!) {
     cart(id: $cartId) {
@@ -580,14 +552,8 @@ export const GET_CART = `
       checkoutUrl
       totalQuantity
       cost {
-        subtotalAmount {
-          amount
-          currencyCode
-        }
-        totalAmount {
-          amount
-          currencyCode
-        }
+        subtotalAmount { amount currencyCode }
+        totalAmount { amount currencyCode }
       }
       lines(first: 100) {
         edges {
@@ -598,17 +564,12 @@ export const GET_CART = `
               ... on ProductVariant {
                 id
                 title
-                price {
-                  amount
-                  currencyCode
-                }
+                price { amount currencyCode }
                 product {
                   id
                   title
                   handle
-                  featuredImage {
-                    url
-                  }
+                  featuredImage { url }
                 }
               }
             }
@@ -619,51 +580,33 @@ export const GET_CART = `
   }
 `;
 
-/* ===============================
-   ADD TO CART
-================================ */
 export const ADD_TO_CART = `
   mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
-      cart {
-        id
-        totalQuantity
-      }
+      cart { id totalQuantity }
     }
   }
 `;
 
-/* ===============================
-   UPDATE CART LINE ( + / - )
-================================ */
 export const UPDATE_CART_LINE = `
   mutation updateCartLine($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
     cartLinesUpdate(cartId: $cartId, lines: $lines) {
-      cart {
-        id
-        totalQuantity
-      }
+      cart { id totalQuantity }
     }
   }
 `;
 
-/* ===============================
-   REMOVE CART LINE
-================================ */
 export const REMOVE_CART_LINE = `
   mutation removeCartLine($cartId: ID!, $lineIds: [ID!]!) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
-      cart {
-        id
-        totalQuantity
-      }
+      cart { id totalQuantity }
     }
   }
 `;
 
 
 /**
- * Get all products
+ * Get all products — includes selectedOptions for color/size filtering
  */
 export async function getProducts(limit = 20) {
   const query = `
@@ -678,23 +621,14 @@ export async function getProducts(limit = 20) {
             tags
             availableForSale
             priceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
+              minVariantPrice { amount currencyCode }
             }
             compareAtPriceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
+              minVariantPrice { amount currencyCode }
             }
             images(first: 5) {
               edges {
-                node {
-                  url
-                  altText
-                }
+                node { url altText }
               }
             }
             variants(first: 10) {
@@ -703,8 +637,10 @@ export async function getProducts(limit = 20) {
                   id
                   title
                   availableForSale
-                  price {
-                    amount
+                  price { amount }
+                  selectedOptions {
+                    name
+                    value
                   }
                 }
               }
@@ -715,16 +651,12 @@ export async function getProducts(limit = 20) {
     }
   `;
 
-  const data = await shopifyFetch({
-    query,
-    variables: { first: limit }
-  });
-
+  const data = await shopifyFetch({ query, variables: { first: limit } });
   return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
 }
 
 /**
- * Get new arrival products
+ * Get new arrival products — includes selectedOptions
  */
 export async function getNewArrivals(limit = 8) {
   const thirtyDaysAgo = new Date();
@@ -743,23 +675,14 @@ export async function getNewArrivals(limit = 8) {
             availableForSale
             createdAt
             priceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
+              minVariantPrice { amount currencyCode }
             }
             compareAtPriceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
+              minVariantPrice { amount currencyCode }
             }
             images(first: 5) {
               edges {
-                node {
-                  url
-                  altText
-                }
+                node { url altText }
               }
             }
             variants(first: 10) {
@@ -768,8 +691,10 @@ export async function getNewArrivals(limit = 8) {
                   id
                   title
                   availableForSale
-                  price {
-                    amount
+                  price { amount }
+                  selectedOptions {
+                    name
+                    value
                   }
                 }
               }
@@ -792,7 +717,7 @@ export async function getNewArrivals(limit = 8) {
 }
 
 /**
- * Get products by tag - SINGLE DEFINITION
+ * Get products by tag — includes selectedOptions
  */
 export async function getProductsByTag(tag: string, limit = 100) {
   const query = `
@@ -807,23 +732,14 @@ export async function getProductsByTag(tag: string, limit = 100) {
             tags
             availableForSale
             priceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
+              minVariantPrice { amount currencyCode }
             }
             compareAtPriceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
+              minVariantPrice { amount currencyCode }
             }
             images(first: 5) {
               edges {
-                node {
-                  url
-                  altText
-                }
+                node { url altText }
               }
             }
             variants(first: 10) {
@@ -832,8 +748,10 @@ export async function getProductsByTag(tag: string, limit = 100) {
                   id
                   title
                   availableForSale
-                  price {
-                    amount
+                  price { amount }
+                  selectedOptions {
+                    name
+                    value
                   }
                 }
               }
@@ -846,17 +764,14 @@ export async function getProductsByTag(tag: string, limit = 100) {
 
   const data = await shopifyFetch({
     query,
-    variables: {
-      first: limit,
-      query: `tag:${tag}`
-    }
+    variables: { first: limit, query: `tag:${tag}` }
   });
 
   return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
 }
 
 /**
- * Get products by collection - FIXED TO INCLUDE VARIANTS
+ * Get products by collection — includes selectedOptions
  */
 export async function getProductsByCollection(handle: string, first = 100) {
   const query = `
@@ -874,21 +789,14 @@ export async function getProductsByCollection(handle: string, first = 100) {
               tags
               availableForSale
               priceRange {
-                minVariantPrice {
-                  amount
-                }
+                minVariantPrice { amount }
               }
               compareAtPriceRange {
-                minVariantPrice {
-                  amount
-                }
+                minVariantPrice { amount }
               }
               images(first: 5) {
                 edges {
-                  node {
-                    url
-                    altText
-                  }
+                  node { url altText }
                 }
               }
               variants(first: 10) {
@@ -897,8 +805,10 @@ export async function getProductsByCollection(handle: string, first = 100) {
                     id
                     title
                     availableForSale
-                    price {
-                      amount
+                    price { amount }
+                    selectedOptions {
+                      name
+                      value
                     }
                   }
                 }
@@ -911,10 +821,7 @@ export async function getProductsByCollection(handle: string, first = 100) {
   `;
 
   try {
-    const data = await shopifyFetch({
-      query,
-      variables: { handle, first }
-    });
+    const data = await shopifyFetch({ query, variables: { handle, first } });
 
     if (!data?.data?.collectionByHandle) {
       console.warn(`Collection "${handle}" not found, returning empty array`);
@@ -929,7 +836,7 @@ export async function getProductsByCollection(handle: string, first = 100) {
 }
 
 /**
- * Get single product by handle
+ * Get single product by handle — includes selectedOptions
  */
 export async function getProduct(handle: string) {
   const query = `
@@ -943,25 +850,14 @@ export async function getProduct(handle: string) {
         tags
         availableForSale
         priceRange {
-          minVariantPrice {
-            amount
-            currencyCode
-          }
+          minVariantPrice { amount currencyCode }
         }
         compareAtPriceRange {
-          minVariantPrice {
-            amount
-            currencyCode
-          }
+          minVariantPrice { amount currencyCode }
         }
         images(first: 10) {
           edges {
-            node {
-              url
-              altText
-              width
-              height
-            }
+            node { url altText width height }
           }
         }
         variants(first: 50) {
@@ -971,14 +867,8 @@ export async function getProduct(handle: string) {
               title
               availableForSale
               quantityAvailable
-              price {
-                amount
-                currencyCode
-              }
-              compareAtPrice {
-                amount
-                currencyCode
-              }
+              price { amount currencyCode }
+              compareAtPrice { amount currencyCode }
               selectedOptions {
                 name
                 value
@@ -990,11 +880,7 @@ export async function getProduct(handle: string) {
     }
   `;
 
-  const data = await shopifyFetch({
-    query,
-    variables: { handle }
-  });
-
+  const data = await shopifyFetch({ query, variables: { handle } });
   return data.data.productByHandle ? formatProduct(data.data.productByHandle) : null;
 }
 
@@ -1011,26 +897,19 @@ export async function getCollections(limit = 10) {
             title
             handle
             description
-            image {
-              url
-              altText
-            }
+            image { url altText }
           }
         }
       }
     }
   `;
 
-  const data = await shopifyFetch({
-    query,
-    variables: { first: limit }
-  });
-
+  const data = await shopifyFetch({ query, variables: { first: limit } });
   return data.data.collections.edges.map((edge: any) => formatCollection(edge.node));
 }
 
 /**
- * Get collection by handle - FIXED VERSION
+ * Get collection by handle — includes selectedOptions
  */
 export async function getCollection(handle: string) {
   const query = `
@@ -1040,10 +919,7 @@ export async function getCollection(handle: string) {
         title
         handle
         description
-        image {
-          url
-          altText
-        }
+        image { url altText }
         products(first: 50) {
           edges {
             node {
@@ -1054,23 +930,14 @@ export async function getCollection(handle: string) {
               tags
               availableForSale
               priceRange {
-                minVariantPrice {
-                  amount
-                  currencyCode
-                }
+                minVariantPrice { amount currencyCode }
               }
               compareAtPriceRange {
-                minVariantPrice {
-                  amount
-                  currencyCode
-                }
+                minVariantPrice { amount currencyCode }
               }
               images(first: 5) {
                 edges {
-                  node {
-                    url
-                    altText
-                  }
+                  node { url altText }
                 }
               }
               variants(first: 10) {
@@ -1079,8 +946,10 @@ export async function getCollection(handle: string) {
                     id
                     title
                     availableForSale
-                    price {
-                      amount
+                    price { amount }
+                    selectedOptions {
+                      name
+                      value
                     }
                   }
                 }
@@ -1092,13 +961,9 @@ export async function getCollection(handle: string) {
     }
   `;
 
-  const data = await shopifyFetch({
-    query,
-    variables: { handle }
-  });
+  const data = await shopifyFetch({ query, variables: { handle } });
 
   console.log('🔍 Shopify API Response for collection:', handle);
-  console.log('🔍 Full response:', JSON.stringify(data, null, 2));
 
   if (!data.data.collectionByHandle) {
     console.log('❌ collectionByHandle is null or undefined');
@@ -1106,15 +971,7 @@ export async function getCollection(handle: string) {
   }
 
   const collection = data.data.collectionByHandle;
-
-  console.log('🔍 Collection title:', collection.title);
-  console.log('🔍 Collection handle:', collection.handle);
-  console.log('🔍 Products edges:', collection.products.edges);
-  console.log('🔍 Number of product edges:', collection.products.edges.length);
-
   const formattedProducts = collection.products.edges.map((edge: any) => formatProduct(edge.node));
-  console.log('🔍 Formatted products:', formattedProducts);
-  console.log('🔍 Number of formatted products:', formattedProducts.length);
 
   return {
     ...formatCollection(collection),
@@ -1123,7 +980,7 @@ export async function getCollection(handle: string) {
 }
 
 /**
- * Format product data
+ * Format product data — maps selectedOptions through from variants
  */
 function formatProduct(product: any) {
   const badge = determineBadge(product.tags);
@@ -1158,7 +1015,7 @@ function formatProduct(product: any) {
         : null,
       availableForSale: edge.node.availableForSale,
       quantityAvailable: edge.node.quantityAvailable,
-      selectedOptions: edge.node.selectedOptions
+      selectedOptions: edge.node.selectedOptions || []   // ← color/size options live here
     })) || []
   };
 }
@@ -1207,21 +1064,16 @@ function determineBadge(tags: string[]) {
  */
 function getBadgeColor(badge: string | null) {
   switch (badge) {
-    case 'Best Seller':
-      return 'bg-gray-800';
-    case 'On Sale':
-      return 'bg-red-600';
-    case 'Rare Plant':
-      return 'bg-purple-600';
-    case 'New Arrival':
-      return 'bg-blue-600';
-    default:
-      return 'bg-gray-800';
+    case 'Best Seller': return 'bg-gray-800';
+    case 'On Sale': return 'bg-red-600';
+    case 'Rare Plant': return 'bg-purple-600';
+    case 'New Arrival': return 'bg-blue-600';
+    default: return 'bg-gray-800';
   }
 }
 
 /**
- * Search products
+ * Search products — includes selectedOptions
  */
 export async function searchProducts(searchTerm: string, limit = 20) {
   const query = `
@@ -1236,16 +1088,11 @@ export async function searchProducts(searchTerm: string, limit = 20) {
             tags
             availableForSale
             priceRange {
-              minVariantPrice {
-                amount
-              }
+              minVariantPrice { amount }
             }
             images(first: 1) {
               edges {
-                node {
-                  url
-                  altText
-                }
+                node { url altText }
               }
             }
             variants(first: 10) {
@@ -1254,8 +1101,10 @@ export async function searchProducts(searchTerm: string, limit = 20) {
                   id
                   title
                   availableForSale
-                  price {
-                    amount
+                  price { amount }
+                  selectedOptions {
+                    name
+                    value
                   }
                 }
               }
@@ -1268,10 +1117,7 @@ export async function searchProducts(searchTerm: string, limit = 20) {
 
   const data = await shopifyFetch({
     query,
-    variables: {
-      query: searchTerm,
-      first: limit
-    }
+    variables: { query: searchTerm, first: limit }
   });
 
   return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
@@ -1279,18 +1125,11 @@ export async function searchProducts(searchTerm: string, limit = 20) {
 
 /**
  * Get products with fallback support
- * Tries primary collection, falls back to getProducts if not found
  */
-export async function getProductsWithFallback(
-  collectionHandle: string,
-  limit = 100
-): Promise<any[]> {
+export async function getProductsWithFallback(collectionHandle: string, limit = 100): Promise<any[]> {
   try {
     const products = await getProductsByCollection(collectionHandle, limit);
-    if (products.length > 0) {
-      return products;
-    }
-    // Fallback to all products if collection is empty
+    if (products.length > 0) return products;
     console.warn(`Collection "${collectionHandle}" is empty, using all products`);
     return await getProducts(limit);
   } catch (error) {
@@ -1314,18 +1153,10 @@ export async function getAllCollections(limit = 50) {
 /**
  * Search and filter products
  */
-export async function filterProducts(
-  searchTerm?: string,
-  tag?: string,
-  limit = 100
-): Promise<any[]> {
+export async function filterProducts(searchTerm?: string, tag?: string, limit = 100): Promise<any[]> {
   try {
-    if (tag) {
-      return await getProductsByTag(tag, limit);
-    }
-    if (searchTerm) {
-      return await searchProducts(searchTerm, limit);
-    }
+    if (tag) return await getProductsByTag(tag, limit);
+    if (searchTerm) return await searchProducts(searchTerm, limit);
     return await getProducts(limit);
   } catch (error) {
     console.error('Error filtering products:', error);
@@ -1338,8 +1169,7 @@ export async function filterProducts(
  */
 export async function getProductDetails(handle: string) {
   try {
-    const product = await getProduct(handle);
-    return product;
+    return await getProduct(handle);
   } catch (error) {
     console.error(`Error fetching product details for "${handle}":`, error);
     return null;
@@ -1350,9 +1180,6 @@ export async function getProductDetails(handle: string) {
    CUSTOMER AUTHENTICATION & WISHLIST
 ===================================================== */
 
-/**
- * Customer Signup/Registration
- */
 export async function customerCreate(
   email: string,
   password: string,
@@ -1379,31 +1206,13 @@ export async function customerCreate(
     }
   `;
 
-  const input: any = {
-    email,
-    password,
-    firstName,
-    lastName,
-    acceptsMarketing: false
-  };
+  const input: any = { email, password, firstName, lastName, acceptsMarketing: false };
+  if (phone) input.phone = phone;
 
-  // Add phone if provided (must be in E.164 format: +1XXXXXXXXXX)
-  if (phone) {
-    input.phone = phone;
-  }
-
-  const data = await shopifyFetch({
-    query: mutation,
-    variables: { input }
-  });
-
+  const data = await shopifyFetch({ query: mutation, variables: { input } });
   return data.data.customerCreate;
 }
 
-
-/**
- * Customer Login
- */
 export async function customerLogin(email: string, password: string) {
   const mutation = `
     mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
@@ -1423,20 +1232,12 @@ export async function customerLogin(email: string, password: string) {
 
   const data = await shopifyFetch({
     query: mutation,
-    variables: {
-      input: {
-        email,
-        password
-      }
-    }
+    variables: { input: { email, password } }
   });
 
   return data.data.customerAccessTokenCreate;
 }
 
-/**
- * Get Customer Data (including wishlist from metafield)
- */
 export async function getCustomerData(accessToken: string) {
   const query = `
     query getCustomer($customerAccessToken: String!) {
@@ -1454,14 +1255,9 @@ export async function getCustomerData(accessToken: string) {
   `;
 
   try {
-    const data = await shopifyFetch({
-      query,
-      variables: { customerAccessToken: accessToken }
-    });
+    const data = await shopifyFetch({ query, variables: { customerAccessToken: accessToken } });
 
-    if (!data.data.customer) {
-      return null;
-    }
+    if (!data.data.customer) return null;
 
     const customer = data.data.customer;
     const wishlistData = customer.metafield?.value;
@@ -1481,10 +1277,6 @@ export async function getCustomerData(accessToken: string) {
   }
 }
 
-/**
- * Update Customer Wishlist
- * Note: This uses the Customer Update API which requires proper metafield setup in Shopify Admin
- */
 export async function updateCustomerWishlist(accessToken: string, wishlistItems: any[]) {
   const mutation = `
     mutation customerUpdate($customerAccessToken: String!, $customer: CustomerUpdateInput!) {
@@ -1510,20 +1302,17 @@ export async function updateCustomerWishlist(accessToken: string, wishlistItems:
       variables: {
         customerAccessToken: accessToken,
         customer: {
-          metafields: [
-            {
-              namespace: "custom",
-              key: "wishlist",
-              value: JSON.stringify(wishlistItems),
-              type: "json"
-            }
-          ]
+          metafields: [{
+            namespace: "custom",
+            key: "wishlist",
+            value: JSON.stringify(wishlistItems),
+            type: "json"
+          }]
         }
       }
     });
 
     if (data.data.customerUpdate.customerUserErrors.length > 0) {
-      console.error('Customer update errors:', data.data.customerUpdate.customerUserErrors);
       throw new Error(data.data.customerUpdate.customerUserErrors[0].message);
     }
 
@@ -1534,9 +1323,6 @@ export async function updateCustomerWishlist(accessToken: string, wishlistItems:
   }
 }
 
-/**
- * Logout Customer
- */
 export async function customerLogout(accessToken: string) {
   const mutation = `
     mutation customerAccessTokenDelete($customerAccessToken: String!) {

@@ -31,7 +31,6 @@ export const footerConfig = {
     },
 
     // ── Navigation Columns ────────────────────────────────
-    // Add / remove columns and links freely here
     columns: [
         {
             title: "Customer Service",

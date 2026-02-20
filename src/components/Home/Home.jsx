@@ -178,8 +178,8 @@ export default function HomePage() {
       <Link href={`/products/${product.handle}`} className="group block bg-white h-full">
         <div className="relative overflow-hidden bg-gray-50 aspect-[3/4]">
           <ProductBadge badge={badge} />
-          <button onClick={handleWishlistToggle} className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <Heart size={15} className={wishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
+          <button onClick={handleWishlistToggle} className="absolute top-2 right-2 z-10 w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#007B57] hover:text-white transition">
+            <Heart size={16} className={`sm:w-[18px] sm:h-[18px] ${wishlisted ? 'fill-current text-red-500' : ''}`} />
           </button>
           <button onClick={handleQuickAdd} className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
             <ShoppingCart size={13} /> Quick Add
@@ -231,8 +231,8 @@ export default function HomePage() {
       <Link href={`/products/${product.handle}`} className="group block">
         <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-3">
           <ProductBadge badge={product.badge} />
-          <button onClick={handleWishlistToggle} className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <Heart size={15} className={wishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
+          <button onClick={handleWishlistToggle} className="absolute top-2 right-2 z-10 w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#007B57] hover:text-white transition">
+            <Heart size={16} className={`sm:w-[18px] sm:h-[18px] ${wishlisted ? 'fill-current text-red-500' : ''}`} />
           </button>
           <button onClick={handleQuickAdd} className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
             <ShoppingCart size={13} /> Quick Add
@@ -324,11 +324,26 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-              <button onClick={heroPrev} aria-label="Previous product" className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/90 hover:bg-white rounded-full items-center justify-center shadow-md transition-all hover:scale-110">
-                <ChevronLeft size={20} className="text-[#244033]" />
+              <button
+                onClick={heroPrev}
+                aria-label="Previous product"
+                className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 
+             z-20 w-10 h-10 bg-white/90 hover:bg-[#009A7B] 
+             rounded-full items-center justify-center 
+             shadow-md transition-all hover:scale-110 group"
+              >
+                <ChevronLeft
+                  size={20}
+                  className="text-[#244033] group-hover:text-white transition-colors"
+                />
               </button>
-              <button onClick={heroNext} aria-label="Next product" className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/90 hover:bg-white rounded-full items-center justify-center shadow-md transition-all hover:scale-110">
-                <ChevronRight size={20} className="text-[#244033]" />
+              <button onClick={heroNext} aria-label="Next product"
+                className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2
+               z-20 w-10 h-10 bg-white/90 hover:bg-[#009A7B]
+                rounded-full items-center justify-center
+                 shadow-md transition-all hover:scale-110 group">
+                <ChevronRight size={20}
+                  className="text-[#244033] group-hover:text-white transition-colors" />
               </button>
             </>
           )}

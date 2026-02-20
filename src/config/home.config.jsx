@@ -7,7 +7,7 @@ export const homeConfig = {
 
     // ── Hero Section ───────────────────────────────────────
     hero: {
-        heading: "Quality",
+        heading: "Quality Stuff",
         subheading: "Why stop at one? Buy more, save more – sitewide.",
         primaryButton: { text: "Shop Collections", href: "/collections" },
         secondaryButton: { text: "Shop All", href: "/products" },

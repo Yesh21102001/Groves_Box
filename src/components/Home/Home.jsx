@@ -327,9 +327,9 @@ export default function HomePage() {
               <button
                 onClick={heroPrev}
                 aria-label="Previous product"
-                className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 
-             z-20 w-10 h-10 bg-white/90 hover:bg-[#009A7B] 
-             rounded-full items-center justify-center 
+                className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2
+             z-20 w-10 h-10 bg-white/90 hover:bg-[#009A7B]
+             rounded-full items-center justify-center
              shadow-md transition-all hover:scale-110 group"
               >
                 <ChevronLeft

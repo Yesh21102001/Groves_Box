@@ -59,6 +59,19 @@ function WishlistButton({ product, className = "" }) {
   );
 }
 
+const featuredCollection = {
+  handle: "Gift Box",
+  label: "Spring into Green –",
+  discount: "35%",
+  titleAfter: "Off All Indoor Plants!",
+  description:
+    "One simple and rewarding way to make a difference is by incorporating at-home composting and reusing materials into your gardening routine.",
+  cta: "Explore More",
+  image: "/images/2148488544.jpg",
+};
+
+
+
 // Each card navigates to /collections/[handle] on click
 function CategoryRow({ categories }) {
   return (
@@ -378,39 +391,40 @@ export default function HomePage() {
       ══════════════════════════════════════ */}
       <section className="w-full px-5 sm:px-8 lg:px-12 py-6 pb-12">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-3xl overflow-hidden bg-[#eef6ee] flex flex-col md:flex-row items-center">
-            <div className="flex-1 p-8 sm:p-12 lg:p-16">
-              <span className="text-xs font-bold tracking-[0.2em] uppercase text-green-600 block mb-4">Special Offer</span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
-                SUCCULENT GARDEN<br />
-                <span className="text-green-600">GIFT BOXES</span>
+          <div className="rounded-3xl overflow-hidden flex flex-col md:flex-row items-stretch min-h-[320px] lg:min-h-[380px]">
+            {/* LEFT: green gradient panel */}
+            <div className="flex-1 bg-gradient-to-br from-[#8CAB4F] to-[#C2DEA3] p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
+              <span className="text-sm font-medium text-white/90 block mb-3">
+                {featuredCollection.label}
+              </span>
+
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-5 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <span className="inline-flex items-center bg-white/95 text-green-800 px-3 py-1 rounded-md text-xl sm:text-2xl lg:text-3xl font-extrabold">
+                  {featuredCollection.discount}
+                </span>
+                <span>{featuredCollection.titleAfter}</span>
               </h2>
-              <p className="text-sm text-gray-500 max-w-sm leading-relaxed mb-8">
-                Give planter materials to style options, find our which planter is best for your house.
+
+              <p className="text-sm text-white/80 max-w-md leading-relaxed mb-7">
+                {featuredCollection.description}
               </p>
+
               <Link
-                href="/collections/gift-boxes"
-                className="inline-flex items-center gap-2 border-2 border-gray-900 text-gray-900 px-7 py-3 text-sm font-bold hover:bg-gray-900 hover:text-white transition-all duration-200 rounded-sm"
+                href={`/collections/${featuredCollection.handle}`}
+                className="inline-flex w-fit items-center gap-2 bg-[#6B9238] hover:bg-[#8CAB4F] text-white px-6 py-3 text-sm font-semibold rounded-md transition-all duration-200 shadow-md"
               >
-                Explore The Shop
+                {featuredCollection.cta}
                 <ArrowRight size={14} />
               </Link>
             </div>
-            <div className="flex-1 flex items-center justify-center p-8 sm:p-12">
-              {saleProducts.length > 0 ? (
-                <div className="flex items-end gap-4">
-                  <div className="w-40 h-40 sm:w-52 sm:h-52 rounded-full overflow-hidden border-[6px] border-white shadow-xl">
-                    <img src={saleProducts[0].image} alt={saleProducts[0].name} className="w-full h-full object-cover" />
-                  </div>
-                  {saleProducts[1] && (
-                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-[6px] border-white shadow-lg mb-4">
-                      <img src={saleProducts[1].image} alt={saleProducts[1].name} className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="w-52 h-52 rounded-full bg-green-100 flex items-center justify-center text-7xl">🪴</div>
-              )}
+
+            {/* RIGHT: full-bleed image */}
+            <div className="flex-1 relative min-h-[240px] md:min-h-0">
+              <img
+                src={featuredCollection.image}
+                alt={featuredCollection.titleAfter}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>

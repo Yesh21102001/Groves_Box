@@ -45,7 +45,6 @@ export default function IndoorPlantsSlider() {
 
     const handlePrev = () => setCurrentIndex(prev => (prev <= 0 ? maxIndex : prev - 1));
     const handleNext = () => setCurrentIndex(prev => (prev >= maxIndex ? 0 : prev + 1));
-
     const truncate = (text, len = 110) => {
         if (!text) return '';
         return text.length > len ? text.substring(0, len).trim() + '…' : text;
@@ -160,21 +159,30 @@ function GlassCard({ product, truncate }) {
     return (
         <div
             className="
-                relative overflow-hidden
-                backdrop-blur-12 backdrop-saturate-250
-                border border-white/25
-                rounded-2xl p-6
-                flex gap-4 min-h-[220px] h-full
-                shadow-[0_8px_32px_rgba(0,0,0,0.25)]
-                transition-all duration-300
-                hover:-translate-y-1 hover:shadow-[0_14px_40px_rgba(0,0,0,0.35)]
-                hover:border-white/40
-                before:content-['']
-                before:absolute before:inset-0
-                before:bg-gradient-to-br before:from-white/20 before:via-white/5 before:to-transparent
-                before:pointer-events-none before:rounded-2xl
-            "
-        >
+    relative overflow-hidden
+    backdrop-blur-[9px] backdrop-saturate-[1.4]
+    bg-white/10
+    border border-white/30
+    rounded-2xl p-6
+    flex gap-4 min-h-[220px] h-full
+
+    shadow-[0_8px_32px_rgba(0,0,0,0.25)]
+    transition-all duration-300
+
+    hover:-translate-y-1
+    hover:shadow-[0_14px_40px_rgba(0,0,0,0.35)]
+    hover:border-white/50
+
+    before:content-['']
+    before:absolute before:inset-0
+    before:bg-gradient-to-br
+    before:from-white/40
+    before:via-white/10
+    before:to-transparent
+    before:opacity-60
+    before:pointer-events-none
+    before:rounded-2xl
+  ">
             {/* Top-left highlight shine */}
             <div className="absolute -top-20 -left-20 w-48 h-48 bg-white/20 rounded-full blur-3xl pointer-events-none" />
 
@@ -200,7 +208,7 @@ function GlassCard({ product, truncate }) {
                 {/* Explore Now button */}
                 <Link
                     href={`/products/${product.handle}`}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#244033] hover:bg-[#78a240] text-white rounded-lg text-sm font-semibold self-start transition-all duration-200 hover:translate-x-0.5"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#6B9238] hover:bg-[#78a240] text-white rounded-lg text-sm font-semibold self-start transition-all duration-200 hover:translate-x-0.5"
                 >
                     Explore Now <ArrowRight size={14} />
                 </Link>

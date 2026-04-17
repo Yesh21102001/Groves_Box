@@ -64,7 +64,7 @@ export const homeConfig = {
         title: "Plants For Everyone",
         viewAllText: "View All",
         viewAllHref: "/collections",
-        limit: 4,
+        limit: 7,
     },
 
     // ── New Arrivals Section ───────────────────────────────

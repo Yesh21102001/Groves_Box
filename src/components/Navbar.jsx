@@ -4,679 +4,619 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-    Search, Heart, User, ShoppingCart, ChevronDown, Menu, X,
-    ChevronRight, Minus, Plus, Trash2, Home, Store, LogOut, CheckCircle
+    Search, Heart, User, ShoppingCart, ChevronDown,
+    Menu, X, ChevronRight, Minus, Plus, Trash2, LogOut, CheckCircle,
+    Home, Store
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { getCollections, customerLogout } from '../lib/shopify_utilis';
-import { navbarConfig } from '../config/Navbar.config';
 
-// ── Mobile icon map ───────────────────────────────────────────────────
-const MobileIconMap = { Home, Store, Heart, User };
+// ─── Brand SVG leaf icon ───────────────────────────────────────────────────
+function LeafIcon() {
+    return (
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
+            <path d="M16 26 C16 26 8 20 8 13 C8 9 11.5 6 16 6 C20.5 6 24 9 24 13 C24 20 16 26 16 26Z" fill="white" opacity="0.9" />
+            <path d="M16 14 L16 26" stroke="#78a240" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M12 17 C13.5 15 15 14 16 14" stroke="#78a240" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+            <path d="M20 17 C18.5 15 17 14 16 14" stroke="#78a240" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        </svg>
+    );
+}
+
+// ─── Config ───────────────────────────────────────────────────────────────
+const NAV_LINKS = [
+    { label: 'Root', href: '/collections/root' },
+    { label: 'Planters', href: '/collections/planters' },
+    { label: 'Herbs', href: '/collections/herbs' },
+    { label: 'Shrubs', href: '/collections/shrubs' },
+    { label: 'More', href: '/collections', hasArrow: true },
+];
+
+const GREEN = '#78a240';
+const GREEN_DARK = '#5e7e30';
+const GREEN_DEEP = '#244033';
+const WHITE = '#ffffff';
+const ICON_HOVER = 'rgba(255,255,255,0.15)';
 
 export default function Navbar() {
     const pathname = usePathname();
     const router = useRouter();
-    const cfg = navbarConfig;
 
+    const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+    const [isAccountOpen, setIsAccountOpen] = useState(false);
     const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
-    const accountDropdownRef = useRef(null);
-
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [navCollections, setNavCollections] = useState([]);
     const [loadingCollections, setLoadingCollections] = useState(true);
 
+    const accountRef = useRef(null);
+
     const { cartItems, updateQuantity, removeFromCart, loading } = useCart();
-    const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const cartCount = cartItems.reduce((s, i) => s + i.quantity, 0);
+    const subtotal = cartItems.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2);
 
-    // ── Auth check ───────────────────────────────────────────────────
+    // scroll
     useEffect(() => {
-        const checkAuth = () => {
-            const user = localStorage.getItem('plants-current-user');
-            if (user) {
-                try {
-                    const userData = JSON.parse(user);
-                    if (userData.accessToken) {
-                        if (new Date(userData.expiresAt) > new Date()) {
-                            setCurrentUser(userData);
-                            setIsLoggedIn(true);
-                        } else {
-                            localStorage.removeItem('plants-current-user');
-                            setIsLoggedIn(false);
-                            setCurrentUser(null);
-                        }
-                    } else {
-                        setCurrentUser(userData);
-                        setIsLoggedIn(true);
-                    }
-                } catch {
-                    localStorage.removeItem('plants-current-user');
-                    setIsLoggedIn(false);
-                    setCurrentUser(null);
-                }
-            } else {
-                setIsLoggedIn(false);
-                setCurrentUser(null);
-            }
-        };
-        checkAuth();
-        window.addEventListener('storage', checkAuth);
-        window.addEventListener('auth-change', checkAuth);
-        return () => {
-            window.removeEventListener('storage', checkAuth);
-            window.removeEventListener('auth-change', checkAuth);
-        };
+        const fn = () => setScrolled(window.scrollY > 10);
+        window.addEventListener('scroll', fn, { passive: true });
+        return () => window.removeEventListener('scroll', fn);
     }, []);
 
-    // ── Fetch nav collections ─────────────────────────────────────────
+    // auth
     useEffect(() => {
-        async function fetchNavCollections() {
+        const check = () => {
+            const raw = localStorage.getItem('plants-current-user');
+            if (!raw) { setIsLoggedIn(false); setCurrentUser(null); return; }
             try {
-                setLoadingCollections(true);
-                const collections = await getCollections(cfg.collectionPills.fetchLimit);
-                const filtered = collections
-                    .filter(c => !cfg.collectionPills.excludeHandles.includes(c.handle.toLowerCase()))
-                    .slice(0, cfg.collectionPills.displayLimit);
-                setNavCollections(filtered);
+                const u = JSON.parse(raw);
+                if (u.accessToken && new Date(u.expiresAt) <= new Date()) {
+                    localStorage.removeItem('plants-current-user');
+                    setIsLoggedIn(false); setCurrentUser(null);
+                } else {
+                    setCurrentUser(u); setIsLoggedIn(true);
+                }
             } catch {
-                setNavCollections(cfg.collectionPills.fallback);
-            } finally {
-                setLoadingCollections(false);
+                localStorage.removeItem('plants-current-user');
+                setIsLoggedIn(false); setCurrentUser(null);
             }
-        }
-        fetchNavCollections();
+        };
+        check();
+        window.addEventListener('storage', check);
+        window.addEventListener('auth-change', check);
+        return () => {
+            window.removeEventListener('storage', check);
+            window.removeEventListener('auth-change', check);
+        };
     }, []);
 
-    // ── Body scroll lock ──────────────────────────────────────────────
+    // collections
     useEffect(() => {
-        document.body.style.overflow = (isMenuOpen || isCartOpen || showLogoutSuccess) ? 'hidden' : 'unset';
-        return () => { document.body.style.overflow = 'unset'; };
+        getCollections(20)
+            .then(cols => {
+                setNavCollections(
+                    cols.filter(c => !['all', 'frontpage'].includes(c.handle.toLowerCase())).slice(0, 7)
+                );
+            })
+            .catch(() => setNavCollections([]))
+            .finally(() => setLoadingCollections(false));
+    }, []);
+
+    const displayedNavLinks = navCollections.length > 0
+        ? navCollections.map((c) => ({ label: c.name, href: `/collections/${c.handle}` }))
+        : NAV_LINKS;
+
+    // scroll lock
+    useEffect(() => {
+        document.body.style.overflow =
+            (isMenuOpen || isCartOpen || showLogoutSuccess) ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
     }, [isMenuOpen, isCartOpen, showLogoutSuccess]);
 
-    // ── Close dropdown on outside click ──────────────────────────────
+    // outside click for account dropdown
     useEffect(() => {
-        const handler = (e) => {
-            if (accountDropdownRef.current && !accountDropdownRef.current.contains(e.target))
-                setIsAccountDropdownOpen(false);
+        const h = e => {
+            if (accountRef.current && !accountRef.current.contains(e.target))
+                setIsAccountOpen(false);
         };
-        if (isAccountDropdownOpen) document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
-    }, [isAccountDropdownOpen]);
+        if (isAccountOpen) document.addEventListener('mousedown', h);
+        return () => document.removeEventListener('mousedown', h);
+    }, [isAccountOpen]);
 
-    // ── Logout ────────────────────────────────────────────────────────
+    // logout
     const handleLogout = async () => {
         try {
-            const user = localStorage.getItem('plants-current-user');
-            if (user) {
-                const userData = JSON.parse(user);
-                if (userData.accessToken) await customerLogout(userData.accessToken);
+            const raw = localStorage.getItem('plants-current-user');
+            if (raw) {
+                const u = JSON.parse(raw);
+                if (u.accessToken) await customerLogout(u.accessToken);
             }
         } catch { /* ignore */ } finally {
             localStorage.removeItem('plants-current-user');
-            setIsLoggedIn(false);
-            setCurrentUser(null);
-            setIsAccountDropdownOpen(false);
+            setIsLoggedIn(false); setCurrentUser(null);
+            setIsAccountOpen(false);
             window.dispatchEvent(new Event('auth-change'));
             setShowLogoutSuccess(true);
-            setTimeout(() => {
-                setShowLogoutSuccess(false);
-                router.push(cfg.logoutModal.redirectTo);
-            }, cfg.logoutModal.autoCloseDuration);
+            setTimeout(() => { setShowLogoutSuccess(false); router.push('/'); }, 2500);
         }
     };
 
-    const handleCloseLogoutSuccess = () => {
-        setShowLogoutSuccess(false);
-        router.push(cfg.logoutModal.redirectTo);
-    };
+    // ── navbar bg ─────────────────────────────────────────────────────────
+    const navBg = scrolled ? WHITE : GREEN;
+    const iconColor = scrolled ? GREEN_DEEP : WHITE;
+    const textColor = scrolled ? GREEN_DEEP : WHITE;
 
-    const calculateSubtotal = () =>
-        cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
-
-    const { cartSidebar: cs, mobileSidebar: ms, accountDropdown: ad } = cfg;
+    // ── bottom nav items ──────────────────────────────────────────────────
+    const bottomNavItems = [
+        { label: 'Home', href: '/', icon: Home },
+        { label: 'Shop', href: '/collections', icon: Store },
+        { label: 'Wishlist', href: '/wishlist', icon: Heart },
+        {
+            label: 'Account',
+            href: isLoggedIn ? '/account' : '/account/login',
+            icon: User,
+        },
+    ];
 
     return (
         <>
-            {/* ══════════════════════════════════════════════════════════
-                MAIN NAVBAR
-            ══════════════════════════════════════════════════════════ */}
-            <nav
-                className={`border-b ${cfg.topBar.sticky ? 'sticky top-0' : ''} ${cfg.topBar.zIndex}`}
-                style={{ backgroundColor: cfg.topBar.bg, borderColor: cfg.topBar.borderColor }}
-            >
-                <div className={`${cfg.topBar.maxWidth} mx-auto px-4 sm:px-6 lg:px-8`}>
+            {/* ═══ Single global style block (all CSS combined) ═══ */}
+            <style jsx global>{`
+                .mobile-bottom-nav,
+                .mobile-bottom-nav-spacer {
+                    display: flex;
+                }
+                .desktop-only-wishlist {
+                    display: flex;
+                }
+                @media (max-width: 1023px) {
+                    .desktop-only-wishlist {
+                        display: none !important;
+                    }
+                }
+                @media (min-width: 1024px) {
+                    .mobile-bottom-nav,
+                    .mobile-bottom-nav-spacer {
+                        display: none !important;
+                    }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: scale(0.9); }
+                    to   { opacity: 1; transform: scale(1); }
+                }
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            `}</style>
 
-                    {/* Top row */}
-                    <div className={`flex items-center justify-between ${cfg.topBar.height}`}>
+            {/* ═══════════════════════════  NAVBAR  ═══════════════════════════ */}
+            <nav style={{
+                backgroundColor: navBg,
+                borderBottom: `1px solid ${scrolled ? '#e2e8f0' : '#6b9238'}`,
+                position: 'sticky', top: 0,
+                zIndex: 40,
+                transition: 'background-color 0.3s, border-color 0.3s',
+            }}>
+                <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', height: 56, gap: 24 }}>
 
-                        {/* Hamburger */}
+                        {/* Hamburger (mobile) */}
                         <button
                             onClick={() => setIsMenuOpen(true)}
-                            className="lg:hidden p-2 transition-colors"
-                            style={{ color: cfg.icons.color }}
+                            className="lg:hidden"
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: iconColor }}
                         >
-                            <Menu size={24} />
+                            <Menu size={22} />
                         </button>
 
                         {/* Brand */}
-                        <Link href={cfg.brand.href} className="flex-shrink-0">
-                            <div
-                                className={`${cfg.brand.fontSize} ${cfg.brand.fontWeight} flex items-center gap-2`}
-                                style={{ color: cfg.brand.color }}
-                            >
-                                <span className={cfg.brand.emojiSize}>{cfg.brand.emoji}</span>
-                                <span className="hidden sm:inline">{cfg.brand.name}</span>
-                                <span className="sm:hidden">{cfg.brand.mobileShort}</span>
+                        <Link href="/" style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <LeafIcon />
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <span style={{ fontSize: 17, fontWeight: 700, color: textColor, letterSpacing: 0.3, lineHeight: 1.1 }}>
+                                    PlantTree
+                                </span>
+                                <span style={{ fontSize: 9, color: scrolled ? '#78a240' : 'rgba(255,255,255,0.8)', letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                                    Indoor Plants
+                                </span>
                             </div>
                         </Link>
 
-                        {/* Search */}
-                        <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
-                            <div className="w-full relative">
-                                <input
-                                    type="text"
-                                    placeholder={cfg.search.placeholder}
-                                    className={`w-full ${cfg.search.padding} border ${cfg.search.borderRadius} focus:outline-none focus:ring-2`}
-                                    style={{ borderColor: cfg.search.borderColor }}
-                                />
-                                <Search
-                                    className="absolute left-3 top-1/2 -translate-y-1/2"
-                                    size={20}
-                                    style={{ color: cfg.search.iconColor }}
-                                />
-                            </div>
+                        {/* Desktop nav links */}
+                        <div className="hidden lg:flex" style={{ flex: 1, justifyContent: 'center', gap: 2 }}>
+                            {displayedNavLinks.map(({ label, href }) => (
+                                <Link
+                                    key={label}
+                                    href={href}
+                                    style={{
+                                        color: textColor,
+                                        textDecoration: 'none',
+                                        fontSize: 13.5,
+                                        fontWeight: 500,
+                                        padding: '6px 14px',
+                                        borderRadius: 4,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 3,
+                                        transition: 'background 0.15s',
+                                    }}
+                                    onMouseEnter={e => e.currentTarget.style.background = scrolled ? 'rgba(120,162,64,0.1)' : ICON_HOVER}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                >
+                                    {label}
+                                </Link>
+                            ))}
                         </div>
 
                         {/* Right actions */}
-                        <div className="flex items-center gap-3 sm:gap-4">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 2, marginLeft: 'auto' }}>
 
-                            {/* Wishlist - desktop */}
-                            <Link href={cfg.icons.wishlistHref} className="hidden lg:block p-2 transition-colors" style={{ color: cfg.icons.color }}>
-                                <Heart size={cfg.icons.size} />
+                            {/* Search */}
+                            <button
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 7, borderRadius: 4, color: iconColor, display: 'flex', alignItems: 'center' }}
+                                onMouseEnter={e => e.currentTarget.style.background = scrolled ? 'rgba(120,162,64,0.1)' : ICON_HOVER}
+                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                            >
+                                <Search size={20} />
+                            </button>
+
+                            {/* Wishlist (desktop only) */}
+                            <Link
+                                href="/wishlist"
+                                className="desktop-only-wishlist"
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    padding: 7,
+                                    borderRadius: 4,
+                                    color: iconColor,
+                                    alignItems: 'center',
+                                    textDecoration: 'none',
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.background = scrolled ? 'rgba(120,162,64,0.1)' : ICON_HOVER}
+                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                            >
+                                <Heart size={20} />
                             </Link>
 
-                            {/* Account dropdown - desktop */}
-                            <div className="hidden lg:block relative" ref={accountDropdownRef}>
+                            {/* Account dropdown (desktop) */}
+                            <div className="hidden lg:block" style={{ position: 'relative' }} ref={accountRef}>
                                 <button
-                                    onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
-                                    className="p-2 transition-colors flex items-center gap-1"
-                                    style={{ color: cfg.icons.color }}
+                                    onClick={() => {
+                                        if (isLoggedIn) setIsAccountOpen(p => !p);
+                                        else router.push('/account/login');
+                                    }}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 7, borderRadius: 4, color: iconColor, display: 'flex', alignItems: 'center', gap: 2 }}
+                                    onMouseEnter={e => e.currentTarget.style.background = scrolled ? 'rgba(120,162,64,0.1)' : ICON_HOVER}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                                 >
-                                    <User size={cfg.icons.size} />
-                                    {isLoggedIn && (
-                                        <ChevronDown size={16} className={`transition-transform ${isAccountDropdownOpen ? 'rotate-180' : ''}`} />
-                                    )}
+                                    <User size={20} />
+                                    {isLoggedIn && <ChevronDown size={14} style={{ transform: isAccountOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />}
                                 </button>
 
                                 {/* Dropdown */}
-                                <div
-                                    className={`absolute right-0 mt-2 ${ad.width} bg-white ${ad.borderRadius} border ${ad.shadow} overflow-hidden z-50 transition-all duration-200 ${isAccountDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}
-                                    style={{ borderColor: ad.borderColor }}
-                                >
-                                    {isLoggedIn ? (
-                                        <>
-                                            {/* Logged-in header */}
-                                            <div
-                                                className="px-4 py-3 text-white"
-                                                style={{ background: `linear-gradient(to right, ${ad.loggedInGradientFrom}, ${ad.loggedInGradientTo})` }}
-                                            >
-                                                <p className="text-sm font-semibold">{currentUser?.name}</p>
-                                                <p className="text-xs opacity-90 truncate">{currentUser?.email}</p>
-                                            </div>
-                                            <div className="py-2">
-                                                <Link
-                                                    href={ad.myAccountHref}
-                                                    onClick={() => setIsAccountDropdownOpen(false)}
-                                                    className="flex items-center gap-3 px-4 py-3 transition-colors group"
-                                                    style={{ color: '#374151' }}
-                                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = ad.itemHoverBg}
-                                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                                                >
-                                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-                                                        style={{ backgroundColor: ad.itemIconBg }}>
-                                                        <User size={18} style={{ color: ad.itemIconColor }} />
-                                                    </div>
-                                                    <span className="font-medium">{ad.myAccountLabel}</span>
-                                                </Link>
-                                            </div>
-                                            <div className="border-t my-1" style={{ borderColor: ad.borderColor }} />
-                                            <div className="py-2">
-                                                <button
-                                                    onClick={handleLogout}
-                                                    className="flex items-center gap-3 px-4 py-3 w-full transition-colors"
-                                                    style={{ color: ad.logoutTextColor }}
-                                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = ad.logoutHoverBg}
-                                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                                                >
-                                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                                                        style={{ backgroundColor: ad.logoutIconBg }}>
-                                                        <LogOut size={18} style={{ color: ad.logoutTextColor }} />
-                                                    </div>
-                                                    <span className="font-medium">Logout</span>
-                                                </button>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            {/* Guest header */}
-                                            <div className="px-6 py-5 border-b" style={{ backgroundColor: ad.guestHeaderBg, borderColor: ad.borderColor }}>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: ad.loginBg }}>
-                                                        <User size={20} style={{ color: ad.loginTextColor }} />
-                                                    </div>
-                                                    <p className="text-xs font-bold" style={{ color: '#4B5563' }}>{ad.guestSubtitle}</p>
+                                {isAccountOpen && (
+                                    <div style={{
+                                        position: 'absolute', right: 0, top: 'calc(100% + 8px)',
+                                        width: 220, background: WHITE, borderRadius: 10,
+                                        border: '1px solid #e2e8f0', boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                                        overflow: 'hidden', zIndex: 50,
+                                    }}>
+                                        {isLoggedIn ? (
+                                            <>
+                                                <div style={{ padding: '12px 16px', background: `linear-gradient(to right, ${GREEN}, ${GREEN_DARK})`, color: WHITE }}>
+                                                    <p style={{ fontSize: 14, fontWeight: 600 }}>{currentUser?.name}</p>
+                                                    <p style={{ fontSize: 12, opacity: 0.85, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{currentUser?.email}</p>
                                                 </div>
-                                            </div>
-                                            <div className="p-4 space-y-3">
-                                                <Link
-                                                    href={ad.loginHref}
-                                                    onClick={() => setIsAccountDropdownOpen(false)}
-                                                    className="flex items-center justify-center gap-2 w-full py-3 px-4 font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
-                                                    style={{ backgroundColor: ad.loginBg, color: ad.loginTextColor }}
-                                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = ad.loginHoverBg}
-                                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = ad.loginBg}
-                                                >
-                                                    <LogOut size={18} />
-                                                    <span>{ad.loginLabel}</span>
+                                                <Link href="/account" onClick={() => setIsAccountOpen(false)}
+                                                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', textDecoration: 'none', color: '#374151', fontSize: 14 }}
+                                                    onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
+                                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                                    <User size={16} /> My Account
                                                 </Link>
-                                                <Link
-                                                    href={ad.signupHref}
-                                                    onClick={() => setIsAccountDropdownOpen(false)}
-                                                    className="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 font-semibold rounded-lg transition-all duration-200"
-                                                    style={{ borderColor: ad.signupBorderColor, color: ad.signupTextColor }}
-                                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = ad.signupHoverBg}
-                                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                                                >
-                                                    <span>{ad.signupLabel}</span>
+                                                <div style={{ borderTop: '1px solid #e2e8f0' }} />
+                                                <button onClick={handleLogout}
+                                                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', width: '100%', background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', fontSize: 14 }}
+                                                    onMouseEnter={e => e.currentTarget.style.background = '#fef2f2'}
+                                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                                    <LogOut size={16} /> Logout
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                                <Link href="/account/login" onClick={() => setIsAccountOpen(false)}
+                                                    style={{ display: 'flex', justifyContent: 'center', padding: '10px 16px', background: GREEN, color: WHITE, textDecoration: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
+                                                    Login
+                                                </Link>
+                                                <Link href="/account/register" onClick={() => setIsAccountOpen(false)}
+                                                    style={{ display: 'flex', justifyContent: 'center', padding: '10px 16px', border: `2px solid ${GREEN}`, color: GREEN, textDecoration: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
+                                                    Sign Up
                                                 </Link>
                                             </div>
-                                        </>
-                                    )}
-                                </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
 
-                            {/* Cart button */}
+                            {/* Cart */}
                             <button
-                                onClick={(e) => { e.preventDefault(); setIsCartOpen(true); }}
-                                className="relative p-2 transition-colors"
-                                style={{ color: cfg.icons.color }}
+                                onClick={() => setIsCartOpen(true)}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 7, borderRadius: 4, color: iconColor, display: 'flex', alignItems: 'center', position: 'relative' }}
+                                onMouseEnter={e => e.currentTarget.style.background = scrolled ? 'rgba(120,162,64,0.1)' : ICON_HOVER}
+                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                             >
-                                <ShoppingCart size={cfg.icons.size} />
+                                <ShoppingCart size={20} />
                                 {cartCount > 0 && (
-                                    <span
-                                        className={`absolute -top-1 -right-1 ${cfg.cartBadge.fontSize} ${cfg.cartBadge.fontWeight} rounded-full h-5 w-5 flex items-center justify-center`}
-                                        style={{ backgroundColor: cfg.cartBadge.bg, color: cfg.cartBadge.textColor }}
-                                    >
+                                    <span style={{
+                                        position: 'absolute', top: 2, right: 2,
+                                        background: '#e74c3c', color: WHITE,
+                                        fontSize: 10, fontWeight: 700,
+                                        width: 16, height: 16, borderRadius: '50%',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    }}>
                                         {cartCount}
                                     </span>
                                 )}
                             </button>
                         </div>
                     </div>
-
-                    {/* Desktop collection pills */}
-                    <div className={`hidden lg:flex justify-center items-center ${cfg.collectionPills.gap} pb-4`}>
-                        {loadingCollections ? (
-                            [1, 2, 3, 4].map(i => <div key={i} className="h-8 w-32 bg-gray-200 rounded-full animate-pulse" />)
-                        ) : (
-                            navCollections.map((col) => {
-                                const isActive = pathname === col.link || pathname?.startsWith(col.link);
-                                return (
-                                    <Link
-                                        key={col.handle}
-                                        href={col.link}
-                                        className={`flex items-center gap-1 ${cfg.collectionPills.padding} ${cfg.collectionPills.borderRadius} ${cfg.collectionPills.fontWeight} ${cfg.collectionPills.fontSize} transition-all duration-200`}
-                                        style={{
-                                            backgroundColor: isActive ? cfg.collectionPills.activeBg : cfg.collectionPills.inactiveBg,
-                                            color: isActive ? cfg.collectionPills.activeText : cfg.collectionPills.inactiveText,
-                                        }}
-                                        onMouseEnter={e => { if (!isActive) e.currentTarget.style.backgroundColor = cfg.collectionPills.hoverBg; }}
-                                        onMouseLeave={e => { if (!isActive) e.currentTarget.style.backgroundColor = cfg.collectionPills.inactiveBg; }}
-                                    >
-                                        {col.name}
-                                    </Link>
-                                );
-                            })
-                        )}
-                    </div>
                 </div>
             </nav>
 
-            {/* ══════════════════════════════════════════════════════════
-                MOBILE BOTTOM NAV
-            ══════════════════════════════════════════════════════════ */}
-            <div
-                className={`lg:hidden fixed bottom-0 left-0 right-0 border-t z-40 shadow-lg`}
-                style={{ backgroundColor: cfg.mobileBottomNav.bg, borderColor: cfg.mobileBottomNav.borderColor }}
-            >
-                <div className={`flex items-center justify-around ${cfg.mobileBottomNav.height} px-2`}>
-                    {cfg.mobileBottomNav.items.map(({ label, icon, href, authHref }) => {
-                        const Icon = MobileIconMap[icon];
-                        const resolvedHref = authHref && !isLoggedIn ? authHref : href;
-                        const isActive = pathname === href || (href !== '/' && pathname?.startsWith(href));
-                        return (
-                            <Link
-                                key={label}
-                                href={resolvedHref}
-                                className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors`}
-                                style={{ color: isActive ? cfg.mobileBottomNav.activeColor : cfg.mobileBottomNav.inactiveColor }}
-                                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = cfg.mobileBottomNav.hoverColor; }}
-                                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = cfg.mobileBottomNav.inactiveColor; }}
-                            >
-                                {Icon && <Icon size={cfg.mobileBottomNav.iconSize} />}
-                                <span className={`${cfg.mobileBottomNav.labelFontSize} ${cfg.mobileBottomNav.labelMarginTop} ${cfg.mobileBottomNav.labelFontWeight}`}>
-                                    {label}
-                                </span>
-                            </Link>
-                        );
-                    })}
-                </div>
-            </div>
-
-            {/* ══════════════════════════════════════════════════════════
-                MOBILE SIDEBAR MENU
-            ══════════════════════════════════════════════════════════ */}
-            <div
-                className={`lg:hidden fixed inset-0 bg-black z-50 transition-opacity duration-300 ${isMenuOpen ? 'opacity-50 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-                onClick={() => setIsMenuOpen(false)}
-            />
-            <div
-                className={`lg:hidden fixed inset-y-0 left-0 ${ms.width} ${ms.shadow} z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
-                style={{ backgroundColor: ms.bg }}
-            >
-                {/* Sidebar header */}
-                <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                    <div className={`text-2xl font-bold flex items-center gap-2`} style={{ color: ms.brandColor }}>
-                        <span className="text-3xl">{ms.brandEmoji}</span>
-                        {ms.brandName}
+            {/* ═══════════════════════  MOBILE SIDEBAR  ══════════════════════ */}
+            {isMenuOpen && (
+                <div
+                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50 }}
+                    onClick={() => setIsMenuOpen(false)}
+                />
+            )}
+            <div style={{
+                position: 'fixed', insetY: 0, left: 0, top: 0, bottom: 0,
+                width: 300, background: WHITE, zIndex: 51,
+                display: 'flex', flexDirection: 'column',
+                transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
+                transition: 'transform 0.3s ease-in-out',
+                boxShadow: '4px 0 24px rgba(0,0,0,0.15)',
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', borderBottom: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <LeafIcon />
+                        <span style={{ fontSize: 18, fontWeight: 700, color: GREEN }}>PlantTree</span>
                     </div>
-                    <button onClick={() => setIsMenuOpen(false)} className="p-2 text-gray-500 hover:text-gray-700">
-                        <X size={24} />
+                    <button onClick={() => setIsMenuOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}>
+                        <X size={22} />
                     </button>
                 </div>
 
-                {/* Logged-in user info */}
                 {isLoggedIn && currentUser && (
-                    <div className="p-4 border-b border-gray-200" style={{ backgroundColor: ms.userSectionBg }}>
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold"
-                                style={{ backgroundColor: ms.userAvatarBg, color: ms.userAvatarTextColor }}>
-                                {currentUser.name?.charAt(0).toUpperCase()}
-                            </div>
-                            <div>
-                                <p className="font-semibold text-gray-900">{currentUser.name}</p>
-                                <p className="text-sm text-gray-600 truncate">{currentUser.email}</p>
-                            </div>
+                    <div style={{ padding: 16, background: '#f0f7e6', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: '50%', background: GREEN, color: WHITE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 18 }}>
+                            {currentUser.name?.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <p style={{ fontWeight: 600, color: '#111827', fontSize: 14 }}>{currentUser.name}</p>
+                            <p style={{ fontSize: 12, color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180 }}>{currentUser.email}</p>
                         </div>
                     </div>
                 )}
 
-                {/* Scrollable body */}
-                <div className="flex-1 overflow-y-auto">
-                    {/* Collections */}
-                    <div className="p-4">
-                        <h3
-                            className={`${ms.sectionTitleSize} ${ms.sectionTitleWeight} mb-4`}
-                            style={{ color: ms.sectionTitleColor }}
-                        >
-                            {ms.sectionTitle}
-                        </h3>
-                        {loadingCollections ? (
-                            <div className="grid grid-cols-2 gap-3">
-                                {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-gray-200 rounded animate-pulse" />)}
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-2 gap-3">
-                                {navCollections.map((col, i) => {
-                                    const scheme = ms.cardColors[i % ms.cardColors.length];
-                                    return (
-                                        <Link key={col.handle} href={col.link} onClick={() => setIsMenuOpen(false)} className="group">
-                                            <div className={`relative p-3 ${scheme.bg} overflow-hidden transition-transform group-hover:scale-105`} style={{ aspectRatio: '1' }}>
-                                                <div
-                                                    className="absolute inset-3 flex items-center justify-center"
-                                                    style={{
-                                                        backgroundColor: scheme.color,
-                                                        maskImage: `url(/images/mask${(i % 4) + 1}.svg)`,
-                                                        WebkitMaskImage: `url(/images/mask${(i % 4) + 1}.svg)`,
-                                                        maskSize: '100% 100%', WebkitMaskSize: '100% 100%',
-                                                        maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat',
-                                                        maskPosition: 'center', WebkitMaskPosition: 'center',
-                                                    }}
-                                                >
-                                                    <span className="text-white text-sm text-center px-2 relative z-10">{col.name}</span>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    );
-                                })}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Extra links */}
-                    {ms.extraLinks.map(({ label, icon, href }) => {
-                        const Icon = MobileIconMap[icon];
-                        return (
-                            <Link
-                                key={label}
-                                href={href}
-                                onClick={() => setIsMenuOpen(false)}
-                                className="flex items-center justify-between px-4 py-4 border-t hover:bg-gray-50 transition-colors"
-                                style={{ borderColor: ms.extraLinkBorderColor }}
-                            >
-                                <div className="flex items-center gap-3">
-                                    {Icon && <Icon size={20} style={{ color: ms.extraLinkTextColor }} />}
-                                    <span className={`${ms.extraLinkFontWeight}`} style={{ color: ms.extraLinkTextColor }}>{label}</span>
-                                </div>
-                                <ChevronRight size={20} style={{ color: ms.extraLinkChevronColor }} />
-                            </Link>
-                        );
-                    })}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+                    {displayedNavLinks.map(({ label, href }) => (
+                        <Link key={label} href={href} onClick={() => setIsMenuOpen(false)}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', textDecoration: 'none', color: '#374151', fontSize: 15, fontWeight: 500, borderBottom: '1px solid #f3f4f6' }}
+                            onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                            {label}
+                            <ChevronRight size={16} color="#9ca3af" />
+                        </Link>
+                    ))}
                 </div>
 
-                {/* Bottom buttons */}
-                <div className="border-t border-gray-200 p-4 space-y-3">
+                <div style={{ padding: 16, borderTop: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {isLoggedIn ? (
                         <>
-                            <Link
-                                href={ms.myAccountHref}
-                                onClick={() => setIsMenuOpen(false)}
-                                className="block w-full py-3 px-4 text-center font-semibold rounded-lg transition-colors"
-                                style={{ backgroundColor: ms.myAccountBg, color: ms.myAccountTextColor }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = ms.myAccountHoverBg}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = ms.myAccountBg}
-                            >
-                                {ms.myAccountLabel}
+                            <Link href="/account" onClick={() => setIsMenuOpen(false)}
+                                style={{ display: 'block', padding: '12px 16px', background: GREEN, color: WHITE, textDecoration: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14 }}>
+                                My Account
                             </Link>
-                            <button
-                                onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-                                className="block w-full py-3 px-4 border-2 text-center font-semibold rounded-lg transition-colors"
-                                style={{ borderColor: ms.logoutBorderColor, color: ms.logoutTextColor }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = ms.logoutHoverBg}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                            >
-                                {ms.logoutLabel}
+                            <button onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                                style={{ padding: '12px 16px', border: `2px solid #dc2626`, color: '#dc2626', background: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontSize: 14 }}>
+                                Logout
                             </button>
                         </>
                     ) : (
                         <>
-                            <Link
-                                href={ms.loginHref}
-                                onClick={() => setIsMenuOpen(false)}
-                                className="block w-full py-3 px-4 text-center font-semibold rounded-lg transition-colors"
-                                style={{ backgroundColor: ms.loginBg, color: ms.loginTextColor }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = ms.loginHoverBg}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = ms.loginBg}
-                            >
-                                {ms.loginLabel}
+                            <Link href="/account/login" onClick={() => setIsMenuOpen(false)}
+                                style={{ display: 'block', padding: '12px 16px', background: GREEN, color: WHITE, textDecoration: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14 }}>
+                                Login
                             </Link>
-                            <Link
-                                href={ms.signupHref}
-                                onClick={() => setIsMenuOpen(false)}
-                                className="block w-full py-3 px-4 border-2 text-center font-semibold rounded-lg transition-colors"
-                                style={{ borderColor: ms.signupBorderColor, color: ms.signupTextColor }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = ms.signupHoverBg}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                            >
-                                {ms.signupLabel}
+                            <Link href="/account/register" onClick={() => setIsMenuOpen(false)}
+                                style={{ display: 'block', padding: '12px 16px', border: `2px solid ${GREEN}`, color: GREEN, textDecoration: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14 }}>
+                                Sign Up
                             </Link>
                         </>
                     )}
                 </div>
             </div>
 
-            {/* ══════════════════════════════════════════════════════════
-                CART SIDEBAR
-            ══════════════════════════════════════════════════════════ */}
-            <div
-                className={`fixed inset-0 bg-black z-50 transition-opacity duration-300 ${isCartOpen ? 'opacity-50 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-                onClick={() => setIsCartOpen(false)}
-            />
-            <div
-                className={`fixed inset-y-0 right-0 ${cs.width} bg-white shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}
-            >
-                {/* Cart header */}
-                <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                    <h2 className="text-xl font-bold" style={{ color: cs.headerTitleColor }}>
-                        {cs.headerTitle} ({cartCount})
-                    </h2>
-                    <button onClick={() => setIsCartOpen(false)} className="p-2 text-gray-500 hover:text-gray-700">
-                        <X size={24} />
+            {/* ════════════════════════  CART SIDEBAR  ════════════════════════ */}
+            {isCartOpen && (
+                <div
+                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50 }}
+                    onClick={() => setIsCartOpen(false)}
+                />
+            )}
+            <div style={{
+                position: 'fixed', top: 0, right: 0, bottom: 0,
+                width: 380, background: WHITE, zIndex: 51,
+                display: 'flex', flexDirection: 'column',
+                transform: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
+                transition: 'transform 0.3s ease-in-out',
+                boxShadow: '-4px 0 24px rgba(0,0,0,0.15)',
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottom: '1px solid #e2e8f0' }}>
+                    <h2 style={{ fontSize: 18, fontWeight: 700, color: GREEN_DEEP }}>Cart ({cartCount})</h2>
+                    <button onClick={() => setIsCartOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}>
+                        <X size={22} />
                     </button>
                 </div>
 
-                {/* Cart items */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center h-full">
-                            <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4" style={{ borderColor: '#244033', borderTopColor: 'transparent' }} />
-                            <p className="text-gray-600">Loading cart...</p>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12 }}>
+                            <div style={{ width: 40, height: 40, border: `3px solid ${GREEN}`, borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                            <p style={{ color: '#6b7280' }}>Loading cart…</p>
                         </div>
                     ) : cartItems.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-center">
-                            <ShoppingCart size={64} className="text-gray-300 mb-4" />
-                            <p className="text-gray-500 mb-4">{cs.emptyMessage}</p>
-                            <button
-                                onClick={() => setIsCartOpen(false)}
-                                className="px-6 py-2 rounded-lg transition-colors"
-                                style={{ backgroundColor: cs.emptyButtonBg, color: '#ffffff' }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = cs.emptyButtonHoverBg}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = cs.emptyButtonBg}
-                            >
-                                {cs.emptyButtonLabel}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12 }}>
+                            <ShoppingCart size={56} color="#d1d5db" />
+                            <p style={{ color: '#6b7280' }}>Your cart is empty</p>
+                            <button onClick={() => setIsCartOpen(false)}
+                                style={{ padding: '10px 24px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>
+                                Shop Now
                             </button>
                         </div>
-                    ) : (
-                        cartItems.map((item) => (
-                            <div key={item.id} className="flex gap-4 p-3 border rounded-lg" style={{ borderColor: cs.itemBorderColor }}>
-                                <div className="w-20 h-20 rounded-lg flex-shrink-0 overflow-hidden" style={{ backgroundColor: cs.itemImageBg }}>
-                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="font-semibold truncate" style={{ color: cs.itemNameColor }}>{item.name}</h3>
-                                    {item.variant && item.variant !== 'Default Title' && (
-                                        <p className="text-sm text-gray-500">Variant: {item.variant}</p>
-                                    )}
-                                    <p className="font-semibold mt-1" style={{ color: cs.itemPriceColor }}>Rs. {item.price.toFixed(2)}</p>
-                                    <div className="flex items-center gap-2 mt-2">
-                                        <div className="flex items-center border rounded-md" style={{ borderColor: cs.qtyBorderColor }}>
-                                            <button onClick={() => item.quantity > 1 && updateQuantity(item.id, item.quantity - 1)} className="p-1 hover:bg-gray-100 transition-colors" disabled={item.quantity <= 1}>
-                                                <Minus size={16} />
-                                            </button>
-                                            <span className="px-3 text-sm font-medium">{item.quantity}</span>
-                                            <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1 hover:bg-gray-100 transition-colors">
-                                                <Plus size={16} />
-                                            </button>
-                                        </div>
-                                        <button onClick={() => removeFromCart(item.id)} className="p-1 rounded-md transition-colors" style={{ color: cs.removeIconColor }}
-                                            onMouseEnter={e => e.currentTarget.style.backgroundColor = cs.removeHoverBg}
-                                            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
-                                            <Trash2 size={18} />
+                    ) : cartItems.map(item => (
+                        <div key={item.id} style={{ display: 'flex', gap: 12, padding: 12, border: '1px solid #e2e8f0', borderRadius: 10 }}>
+                            <div style={{ width: 72, height: 72, borderRadius: 8, overflow: 'hidden', background: '#f3f4f6', flexShrink: 0 }}>
+                                <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                                <p style={{ fontWeight: 600, fontSize: 14, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
+                                {item.variant && item.variant !== 'Default Title' && (
+                                    <p style={{ fontSize: 12, color: '#6b7280' }}>Variant: {item.variant}</p>
+                                )}
+                                <p style={{ fontWeight: 700, color: GREEN, fontSize: 14, marginTop: 2 }}>Rs. {item.price.toFixed(2)}</p>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: 6 }}>
+                                        <button onClick={() => item.quantity > 1 && updateQuantity(item.id, item.quantity - 1)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', color: '#374151' }}>
+                                            <Minus size={14} />
+                                        </button>
+                                        <span style={{ padding: '0 8px', fontSize: 13, fontWeight: 600 }}>{item.quantity}</span>
+                                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', color: '#374151' }}>
+                                            <Plus size={14} />
                                         </button>
                                     </div>
+                                    <button onClick={() => removeFromCart(item.id)}
+                                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', padding: 4, borderRadius: 4 }}>
+                                        <Trash2 size={16} />
+                                    </button>
                                 </div>
                             </div>
-                        ))
-                    )}
+                        </div>
+                    ))}
                 </div>
 
-                {/* Cart footer */}
                 {cartItems.length > 0 && (
-                    <div className="border-t border-gray-200 p-4 space-y-4">
-                        <div className="flex justify-between items-center">
-                            <span className="text-lg font-semibold" style={{ color: cs.subtotalColor }}>{cs.subtotalLabel}</span>
-                            <span className="text-2xl font-bold" style={{ color: cs.subtotalColor }}>Rs. {calculateSubtotal()}</span>
+                    <div style={{ padding: 16, borderTop: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 600, color: GREEN_DEEP }}>Subtotal</span>
+                            <span style={{ fontSize: 22, fontWeight: 700, color: GREEN_DEEP }}>Rs. {subtotal}</span>
                         </div>
-                        <p className="text-sm" style={{ color: cs.subtotalNoteColor }}>{cs.subtotalNote}</p>
-                        <Link
-                            href={cs.viewCartHref}
-                            onClick={() => setIsCartOpen(false)}
-                            className="block w-full py-3 text-center font-semibold rounded-lg transition-colors"
-                            style={{ backgroundColor: cs.viewCartBg, color: cs.viewCartTextColor }}
-                            onMouseEnter={e => e.currentTarget.style.backgroundColor = cs.viewCartHoverBg}
-                            onMouseLeave={e => e.currentTarget.style.backgroundColor = cs.viewCartBg}
-                        >
-                            {cs.viewCartLabel}
+                        <p style={{ fontSize: 12, color: '#9ca3af' }}>Taxes and shipping calculated at checkout</p>
+                        <Link href="/cart" onClick={() => setIsCartOpen(false)}
+                            style={{ display: 'block', padding: '13px 16px', background: GREEN, color: WHITE, textDecoration: 'none', borderRadius: 8, fontWeight: 700, textAlign: 'center' }}>
+                            View Cart
                         </Link>
-                        <button
-                            onClick={() => setIsCartOpen(false)}
-                            className="w-full py-3 border-2 font-semibold rounded-lg transition-colors"
-                            style={{ borderColor: cs.continueBorderColor, color: cs.continueTextColor }}
-                            onMouseEnter={e => e.currentTarget.style.backgroundColor = cs.continueHoverBg}
-                            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                        >
-                            {cs.continueLabel}
+                        <button onClick={() => setIsCartOpen(false)}
+                            style={{ padding: '13px 16px', border: `2px solid ${GREEN}`, color: GREEN, background: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>
+                            Continue Shopping
                         </button>
                     </div>
                 )}
             </div>
 
-            {/* ══════════════════════════════════════════════════════════
-                LOGOUT SUCCESS MODAL
-            ══════════════════════════════════════════════════════════ */}
+            {/* ═══════════════════  LOGOUT SUCCESS MODAL  ════════════════════ */}
             {showLogoutSuccess && (
                 <div
-                    className={`fixed inset-0 ${cfg.logoutModal.backdropColor} ${cfg.logoutModal.backdropBlur} z-[60] flex items-center justify-center p-4`}
-                    onClick={handleCloseLogoutSuccess}
+                    onClick={() => { setShowLogoutSuccess(false); router.push('/'); }}
+                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
                 >
-                    <div
-                        className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full"
-                        style={{ animation: 'fadeIn 0.3s ease-out' }}
-                        onClick={e => e.stopPropagation()}
-                    >
-                        <div className="flex justify-center mb-6">
-                            <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ backgroundColor: cfg.logoutModal.iconBg }}>
-                                <CheckCircle size={cfg.logoutModal.iconSize} style={{ color: cfg.logoutModal.iconColor }} />
-                            </div>
+                    <div onClick={e => e.stopPropagation()} style={{ background: WHITE, borderRadius: 20, padding: 40, maxWidth: 400, width: '100%', textAlign: 'center', animation: 'fadeIn 0.3s ease-out' }}>
+                        <div style={{ width: 72, height: 72, background: '#f0f7e6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                            <CheckCircle size={38} color={GREEN} />
                         </div>
-                        <h2 className="text-2xl font-bold text-center mb-3" style={{ color: cfg.logoutModal.titleColor }}>
-                            {cfg.logoutModal.title}
-                        </h2>
-                        <p className="text-center mb-6" style={{ color: cfg.logoutModal.messageColor }}>
-                            {cfg.logoutModal.message}
-                        </p>
+                        <h2 style={{ fontSize: 22, fontWeight: 700, color: GREEN_DEEP, marginBottom: 10 }}>Logged Out Successfully</h2>
+                        <p style={{ color: '#6b7280', marginBottom: 24 }}>You have been signed out. See you again soon!</p>
                         <button
-                            onClick={handleCloseLogoutSuccess}
-                            className="w-full py-3 font-semibold rounded-lg transition-colors"
-                            style={{ backgroundColor: cfg.logoutModal.closeBg, color: cfg.logoutModal.closeTextColor }}
-                            onMouseEnter={e => e.currentTarget.style.backgroundColor = cfg.logoutModal.closeHoverBg}
-                            onMouseLeave={e => e.currentTarget.style.backgroundColor = cfg.logoutModal.closeBg}
-                        >
-                            {cfg.logoutModal.closeLabel}
+                            onClick={() => { setShowLogoutSuccess(false); router.push('/'); }}
+                            style={{ width: '100%', padding: '13px 16px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontSize: 15 }}>
+                            Continue
                         </button>
                     </div>
-                    <style jsx>{`
-                        @keyframes fadeIn {
-                            from { opacity: 0; transform: scale(0.9); }
-                            to   { opacity: 1; transform: scale(1);   }
-                        }
-                    `}</style>
                 </div>
             )}
+
+            {/* ═══════════════════  MOBILE BOTTOM NAV (< 1024px only) ═══════════════════ */}
+            <nav
+                className="mobile-bottom-nav"
+                style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 64,
+                    background: WHITE,
+                    borderTop: '1px solid #e2e8f0',
+                    boxShadow: '0 -2px 12px rgba(0,0,0,0.06)',
+                    zIndex: 45,
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    paddingBottom: 'env(safe-area-inset-bottom)',
+                }}
+            >
+                {bottomNavItems.map(({ label, href, icon: Icon }) => {
+                    const active =
+                        href === '/'
+                            ? pathname === '/'
+                            : pathname === href || pathname.startsWith(href + '/');
+                    return (
+                        <Link
+                            key={label}
+                            href={href}
+                            style={{
+                                flex: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: 3,
+                                textDecoration: 'none',
+                                color: active ? GREEN : '#6b7280',
+                                fontSize: 11,
+                                fontWeight: active ? 600 : 500,
+                                height: '100%',
+                                position: 'relative',
+                                transition: 'color 0.2s',
+                            }}
+                        >
+                            {active && (
+                                <span
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        width: 32,
+                                        height: 3,
+                                        background: GREEN,
+                                        borderRadius: '0 0 4px 4px',
+                                    }}
+                                />
+                            )}
+                            <Icon size={22} strokeWidth={active ? 2.2 : 1.8} />
+                            <span>{label}</span>
+                        </Link>
+                    );
+                })}
+            </nav>
+
         </>
     );
 }

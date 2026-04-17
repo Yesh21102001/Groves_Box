@@ -9,7 +9,7 @@ export const colors = {
     // Brand
     primary: '#2F4F3E',     // dark forest green – headings, CTA bg
     primaryDark: '#244033',     // deeper green – shop button bg
-    accent: '#007B57',     // emerald links
+    accent: '#6b9238',     // emerald links
     accentHover: '#065f46',     // emerald link hover
 
     // Page backgrounds

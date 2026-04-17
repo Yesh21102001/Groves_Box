@@ -12,7 +12,56 @@ import {
 
 const CartContext = createContext();
 
-// ✅ Appends return_to so Shopify redirects to your custom success page after payment
+// ─────────────────────────────────────────────────────────────────────────────
+// GraphQL: Apply / Remove discount codes
+// ─────────────────────────────────────────────────────────────────────────────
+const APPLY_DISCOUNT_CODE = `
+  mutation cartDiscountCodesUpdate($cartId: ID!, $discountCodes: [String!]!) {
+    cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
+      cart {
+        id
+        checkoutUrl
+        discountCodes {
+          code
+          applicable
+        }
+        cost {
+          totalAmount { amount }
+          subtotalAmount { amount }
+        }
+        lines(first: 100) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  price { amount }
+                  product {
+                    id
+                    title
+                    handle
+                    featuredImage { url }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Helper
+// ─────────────────────────────────────────────────────────────────────────────
 const buildCheckoutUrl = (rawUrl) => {
     if (!rawUrl) return null;
     const returnTo = encodeURIComponent(
@@ -21,6 +70,9 @@ const buildCheckoutUrl = (rawUrl) => {
     return `${rawUrl}&return_to=${returnTo}`;
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Provider
+// ─────────────────────────────────────────────────────────────────────────────
 export function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState([]);
     const [cartId, setCartId] = useState(null);
@@ -28,15 +80,19 @@ export function CartProvider({ children }) {
     const [checkoutUrl, setCheckoutUrl] = useState(null);
     const [currentUserId, setCurrentUserId] = useState('guest');
 
+    // Discount state
+    const [discountCodes, setDiscountCodes] = useState([]);
+    const [discountAmount, setDiscountAmount] = useState(0);
+    const [discountError, setDiscountError] = useState(null);
+    const [discountLoading, setDiscountLoading] = useState(false);
+
     useEffect(() => {
         const handleAuthChange = () => {
             console.log('🔄 Auth changed, reinitializing cart...');
             initializeCart();
         };
-
         window.addEventListener('auth-change', handleAuthChange);
         window.addEventListener('storage', handleAuthChange);
-
         return () => {
             window.removeEventListener('auth-change', handleAuthChange);
             window.removeEventListener('storage', handleAuthChange);
@@ -54,8 +110,7 @@ export function CartProvider({ children }) {
         try {
             const user = JSON.parse(userStr);
             return user.id || 'guest';
-        } catch (error) {
-            console.error('Error parsing user:', error);
+        } catch {
             return 'guest';
         }
     };
@@ -63,7 +118,6 @@ export function CartProvider({ children }) {
     const initializeCart = async () => {
         try {
             setLoading(true);
-
             let userId = 'guest';
 
             if (typeof window !== 'undefined') {
@@ -72,49 +126,42 @@ export function CartProvider({ children }) {
                     try {
                         const currentUser = JSON.parse(userStr);
                         userId = currentUser.id;
-                        console.log('👤 Current user:', currentUser.email, '| ID:', userId);
-                    } catch (error) {
-                        console.error('Error parsing user:', error);
+                    } catch (err) {
+                        console.error('Error parsing user:', err);
                     }
                 }
             }
 
             setCurrentUserId(userId);
-
             const cartKey = `shopify_cart_id_${userId}`;
-            console.log('🔑 Using cart key:', cartKey);
-
             let storedCartId = null;
+
             if (typeof window !== 'undefined') {
                 storedCartId = localStorage.getItem(cartKey);
-                console.log('📦 Stored cart ID:', storedCartId || 'none');
             }
 
             if (storedCartId) {
                 try {
                     const cartData = await shopifyFetch({
                         query: GET_CART,
-                        variables: { cartId: storedCartId }
+                        variables: { cartId: storedCartId },
                     });
-
                     if (cartData.data.cart) {
                         setCartId(storedCartId);
-                        // ✅ FIX: wrap with buildCheckoutUrl
                         setCheckoutUrl(buildCheckoutUrl(cartData.data.cart.checkoutUrl));
                         updateCartItems(cartData.data.cart);
-                        console.log('✅ Cart loaded for user:', userId);
                     } else {
                         await createNewCart(userId);
                     }
-                } catch (error) {
-                    console.error('Error fetching cart:', error);
+                } catch (err) {
+                    console.error('Error fetching cart:', err);
                     await createNewCart(userId);
                 }
             } else {
                 await createNewCart(userId);
             }
-        } catch (error) {
-            console.error('Error initializing cart:', error);
+        } catch (err) {
+            console.error('Error initializing cart:', err);
         } finally {
             setLoading(false);
         }
@@ -122,43 +169,30 @@ export function CartProvider({ children }) {
 
     const createNewCart = async (userId = null) => {
         try {
-            console.log('📝 Creating new cart...');
-
-            if (!userId) {
-                userId = getCurrentUserId();
-            }
-
-            const response = await shopifyFetch({
-                query: CREATE_CART
-            });
-
+            if (!userId) userId = getCurrentUserId();
+            const response = await shopifyFetch({ query: CREATE_CART });
             const newCartId = response.data.cartCreate.cart.id;
             const newCheckoutUrl = response.data.cartCreate.cart.checkoutUrl;
 
             setCartId(newCartId);
-            // ✅ FIX: wrap with buildCheckoutUrl
             setCheckoutUrl(buildCheckoutUrl(newCheckoutUrl));
             setCartItems([]);
+            setDiscountCodes([]);
+            setDiscountAmount(0);
             setCurrentUserId(userId);
 
             if (typeof window !== 'undefined') {
-                const cartKey = `shopify_cart_id_${userId}`;
-                localStorage.setItem(cartKey, newCartId);
-                console.log(`✅ New cart created for user ${userId}:`, newCartId);
+                localStorage.setItem(`shopify_cart_id_${userId}`, newCartId);
             }
-
             return newCartId;
-        } catch (error) {
-            console.error('❌ Error creating cart:', error);
-            throw error;
+        } catch (err) {
+            console.error('❌ Error creating cart:', err);
+            throw err;
         }
     };
 
     const updateCartItems = (cart) => {
-        if (!cart || !cart.lines) {
-            setCartItems([]);
-            return;
-        }
+        if (!cart || !cart.lines) { setCartItems([]); return; }
 
         const items = cart.lines.edges.map((edge) => ({
             id: edge.node.id,
@@ -169,166 +203,170 @@ export function CartProvider({ children }) {
             quantity: edge.node.quantity,
             image: edge.node.merchandise.product.featuredImage?.url || '/placeholder.png',
             handle: edge.node.merchandise.product.handle,
-            variant: edge.node.merchandise.title !== 'Default Title' ? edge.node.merchandise.title : null
+            variant: edge.node.merchandise.title !== 'Default Title'
+                ? edge.node.merchandise.title : null,
         }));
 
-        console.log('🔄 Updating cart items:', items.length, 'items');
         setCartItems(items);
+
+        if (cart.discountCodes) setDiscountCodes(cart.discountCodes);
+
+        if (cart.cost) {
+            const sub = parseFloat(cart.cost.subtotalAmount.amount);
+            const total = parseFloat(cart.cost.totalAmount.amount);
+            setDiscountAmount(Math.max(0, sub - total));
+        }
     };
 
     const refreshCart = async () => {
-        if (!cartId) {
-            console.log('⚠️ No cart ID, skipping refresh');
-            return;
-        }
-
+        if (!cartId) return;
         try {
-            console.log('🔄 Refreshing cart...');
-            const cartData = await shopifyFetch({
-                query: GET_CART,
-                variables: { cartId }
-            });
-
+            const cartData = await shopifyFetch({ query: GET_CART, variables: { cartId } });
             if (cartData.data.cart) {
-                // ✅ FIX: wrap with buildCheckoutUrl
                 setCheckoutUrl(buildCheckoutUrl(cartData.data.cart.checkoutUrl));
                 updateCartItems(cartData.data.cart);
-                console.log('✅ Cart refreshed successfully');
             }
-        } catch (error) {
-            console.error('❌ Error refreshing cart:', error);
+        } catch (err) {
+            console.error('❌ Error refreshing cart:', err);
         }
     };
 
     const addToCart = async (product) => {
         try {
-            console.log('🛒 Adding to cart:', product);
-
             let currentCartId = cartId;
-            let userId = getCurrentUserId();
-
-            if (!currentCartId) {
-                console.log('📝 No cart exists, creating new one...');
-                currentCartId = await createNewCart(userId);
-            }
+            const userId = getCurrentUserId();
+            if (!currentCartId) currentCartId = await createNewCart(userId);
 
             let variantId = product.variantId;
+            if (!variantId && product.variants?.length > 0) variantId = product.variants[0].id;
+            if (!variantId) { alert('Unable to add product to cart.'); return; }
 
-            if (!variantId && product.variants && product.variants.length > 0) {
-                variantId = product.variants[0].id;
-                console.log('Using first variant:', variantId);
-            }
-
-            if (!variantId) {
-                console.error('❌ No variant ID found for product:', product);
-                alert('Unable to add product to cart. Please try again.');
-                return;
-            }
-
-            console.log('✅ Using variant ID:', variantId);
-
-            const existingItem = cartItems.find(item => item.variantId === variantId);
-
+            const existingItem = cartItems.find((item) => item.variantId === variantId);
             if (existingItem) {
-                console.log('📦 Item exists, updating quantity...');
                 await updateQuantity(existingItem.id, existingItem.quantity + (product.quantity || 1));
             } else {
-                console.log('➕ Adding new item to cart...');
-
-                const addResponse = await shopifyFetch({
+                await shopifyFetch({
                     query: ADD_TO_CART,
                     variables: {
                         cartId: currentCartId,
-                        lines: [
-                            {
-                                merchandiseId: variantId,
-                                quantity: product.quantity || 1
-                            }
-                        ]
-                    }
+                        lines: [{ merchandiseId: variantId, quantity: product.quantity || 1 }],
+                    },
                 });
-
-                console.log('✅ Add to cart response:', addResponse);
                 await refreshCart();
             }
-
-            console.log('🎉 Item added successfully!');
-
-        } catch (error) {
-            console.error('❌ Error adding to cart:', error);
-            alert('Failed to add item to cart. Please check console for details.');
+        } catch (err) {
+            console.error('❌ Error adding to cart:', err);
+            alert('Failed to add item to cart.');
         }
     };
 
     const updateQuantity = async (lineId, newQuantity) => {
         if (!cartId) return;
-
         try {
-            console.log(`🔄 Updating quantity for ${lineId} to ${newQuantity}`);
-
-            if (newQuantity <= 0) {
-                await removeFromCart(lineId);
-                return;
-            }
-
+            if (newQuantity <= 0) { await removeFromCart(lineId); return; }
             await shopifyFetch({
                 query: UPDATE_CART_LINE,
-                variables: {
-                    cartId,
-                    lines: [{ id: lineId, quantity: newQuantity }]
-                }
+                variables: { cartId, lines: [{ id: lineId, quantity: newQuantity }] },
             });
-
             await refreshCart();
-            console.log('✅ Quantity updated');
-        } catch (error) {
-            console.error('❌ Error updating quantity:', error);
+        } catch (err) {
+            console.error('❌ Error updating quantity:', err);
         }
     };
 
     const removeFromCart = async (lineId) => {
         if (!cartId) return;
-
         try {
-            console.log(`🗑️ Removing item ${lineId}`);
-
             await shopifyFetch({
                 query: REMOVE_CART_LINE,
-                variables: {
-                    cartId,
-                    lineIds: [lineId]
-                }
+                variables: { cartId, lineIds: [lineId] },
             });
-
             await refreshCart();
-            console.log('✅ Item removed');
-        } catch (error) {
-            console.error('❌ Error removing from cart:', error);
+        } catch (err) {
+            console.error('❌ Error removing from cart:', err);
         }
     };
 
     const clearCart = async () => {
         try {
-            console.log('🗑️ Clearing cart...');
             const userId = getCurrentUserId();
             await createNewCart(userId);
-            console.log('✅ Cart cleared');
-        } catch (error) {
-            console.error('❌ Error clearing cart:', error);
+        } catch (err) {
+            console.error('❌ Error clearing cart:', err);
+        }
+    };
+
+    // ── Apply discount code ───────────────────────────────────────────────────
+    const applyDiscount = async (code) => {
+        if (!cartId || !code?.trim()) return;
+        setDiscountLoading(true);
+        setDiscountError(null);
+
+        try {
+            const response = await shopifyFetch({
+                query: APPLY_DISCOUNT_CODE,
+                variables: { cartId, discountCodes: [code.trim().toUpperCase()] },
+            });
+
+            const { cart, userErrors } = response.data.cartDiscountCodesUpdate;
+
+            if (userErrors?.length) {
+                setDiscountError(userErrors[0].message);
+                return;
+            }
+
+            const applied = cart.discountCodes.find(
+                (d) => d.code.toUpperCase() === code.trim().toUpperCase()
+            );
+
+            if (!applied?.applicable) {
+                setDiscountError('This offer code is invalid or conditions are not met.');
+                return;
+            }
+
+            setCheckoutUrl(buildCheckoutUrl(cart.checkoutUrl));
+            updateCartItems(cart);
+        } catch (err) {
+            console.error('❌ Error applying discount:', err);
+            setDiscountError('Failed to apply offer. Please try again.');
+        } finally {
+            setDiscountLoading(false);
+        }
+    };
+
+    // ── Remove a specific discount code ──────────────────────────────────────
+    const removeDiscount = async (codeToRemove) => {
+        if (!cartId) return;
+        setDiscountLoading(true);
+        setDiscountError(null);
+
+        try {
+            const remaining = discountCodes
+                .filter((d) => d.code !== codeToRemove)
+                .map((d) => d.code);
+
+            const response = await shopifyFetch({
+                query: APPLY_DISCOUNT_CODE,
+                variables: { cartId, discountCodes: remaining },
+            });
+
+            const { cart, userErrors } = response.data.cartDiscountCodesUpdate;
+            if (userErrors?.length) { setDiscountError(userErrors[0].message); return; }
+
+            setCheckoutUrl(buildCheckoutUrl(cart.checkoutUrl));
+            updateCartItems(cart);
+        } catch (err) {
+            console.error('❌ Error removing discount:', err);
+        } finally {
+            setDiscountLoading(false);
         }
     };
 
     const value = {
-        cartItems,
-        cartId,
-        checkoutUrl,   // ✅ Already has return_to appended
-        loading,
-        addToCart,
-        updateQuantity,
-        removeFromCart,
-        clearCart,
-        refreshCart,
-        currentUserId
+        cartItems, cartId, checkoutUrl, loading,
+        addToCart, updateQuantity, removeFromCart, clearCart, refreshCart, currentUserId,
+        discountCodes, discountAmount, discountError, discountLoading,
+        applyDiscount, removeDiscount,
     };
 
     return (
@@ -340,8 +378,6 @@ export function CartProvider({ children }) {
 
 export function useCart() {
     const context = useContext(CartContext);
-    if (context === undefined) {
-        throw new Error('useCart must be used within a CartProvider');
-    }
+    if (context === undefined) throw new Error('useCart must be used within a CartProvider');
     return context;
 }

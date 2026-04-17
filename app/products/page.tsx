@@ -7,6 +7,7 @@ import { Filter, X, Heart, ShoppingCart, ChevronRight } from 'lucide-react';
 import { useCart } from '@/src/context/CartContext';
 import { useWishlist } from '@/src/context/WishlistContext';
 import { getProducts, getProductsByCollection, getAllCollections } from '@/src/lib/shopify_utilis';
+import ProductCard from '@/src/components/ProductCard';
 import { useSearchParams } from 'next/navigation';
 
 interface Product {
@@ -132,24 +133,6 @@ function ProductsPageContent() {
 
     const pct = (v: number) => (sliderMax > 0 ? (v / sliderMax) * 100 : 0);
 
-    const handleAddToCart = (product: Product) => {
-        const variantId = (product.variants as any[])?.[0]?.id;
-        if (!variantId) {
-            alert('This product is currently unavailable');
-            return;
-        }
-        addToCart({
-            id: product.id,
-            variantId,
-            name: product.name,
-            price: product.price,
-            quantity: 1,
-            image: product.image,
-            handle: product.handle,
-            variants: product.variants
-        });
-    };
-
     // Color map
     const cssColorMap: Record<string, string> = {
         red: '#EF4444', crimson: '#DC143C', pink: '#EC4899', hotpink: '#FF69B4',
@@ -226,65 +209,12 @@ function ProductsPageContent() {
         </div>
     );
 
-    // Product Card
-    const ProductCard = ({ product }: { product: Product }) => {
-        const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-        const wishlisted = isInWishlist(product.id.toString());
-        const isOnSale = !!product.originalPrice;
 
-        return (
-            <div className="group">
-                <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-3">
-                    {product.badge && (
-                        <div className="absolute top-3 left-3 z-10 flex items-center gap-1 bg-[#2BBFA4] text-white px-3 py-1 text-xs font-medium rounded-full shadow-sm">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="white">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                            </svg>
-                            {product.badge}
-                        </div>
-                    )}
-                    <button
-                        onClick={e => {
-                            e.preventDefault(); e.stopPropagation();
-                            wishlisted
-                                ? removeFromWishlist(product.id.toString())
-                                : addToWishlist({ id: product.id.toString(), variantId: (product.variants as any[])?.[0]?.id || '', name: product.name, price: product.price, image: product.image, handle: product.handle, variants: product.variants });
-                        }}
-                        className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    >
-                        <Heart size={15} className={wishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
-                    </button>
-                    <button
-                        onClick={e => { e.preventDefault(); e.stopPropagation(); handleAddToCart(product); }}
-                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#007B57] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
-                    >
-                        <ShoppingCart size={14} /> Quick Add
-                    </button>
-                    <button
-                        onClick={e => { e.preventDefault(); e.stopPropagation(); handleAddToCart(product); }}
-                        className="absolute bottom-3 right-3 z-10 w-9 h-9 bg-[#007B57] text-white rounded-full flex items-center justify-center md:hidden"
-                    >
-                        <ShoppingCart size={14} />
-                    </button>
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </div>
-                <div className="space-y-1.5">
-                    <h3 className={`text-sm md:text-base font-normal leading-snug ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>{product.name}</h3>
-                    {product.description && <p className="text-xs text-gray-400 italic leading-tight line-clamp-1">{product.description}</p>}
-                    <StarRatingMini rating={4.5} count={0} />
-                    <div className="flex items-center gap-2 pt-0.5">
-                        <span className={`text-sm font-medium ${isOnSale ? 'text-[#2F8C6E]' : 'text-gray-900'}`}>Rs. {product.price}</span>
-                        {isOnSale && <span className="text-xs text-gray-400 line-through">Rs. {product.originalPrice}</span>}
-                    </div>
-                </div>
-            </div>
-        );
-    };
 
     if (loading) return (
         <div className="min-h-screen bg-white flex items-center justify-center">
             <div className="text-center">
-                <div className="w-16 h-16 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                <div className="w-16 h-16 border-4 border-[#6b9238] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                 <p className="text-gray-600">Loading products...</p>
             </div>
         </div>
@@ -294,7 +224,7 @@ function ProductsPageContent() {
         <div className="min-h-screen bg-white flex items-center justify-center">
             <div className="text-center">
                 <p className="text-red-600 mb-4">Error: {error}</p>
-                <button onClick={() => window.location.reload()} className="bg-[#007B57] text-white px-6 py-3 rounded">Retry</button>
+                <button onClick={() => window.location.reload()} className="bg-[#6b9238] text-white px-6 py-3 rounded">Retry</button>
             </div>
         </div>
     );
@@ -308,13 +238,13 @@ function ProductsPageContent() {
                         {/* BREADCRUMBS */}
                         <div className="py-4">
                             <nav className="flex items-center justify-center space-x-2 text-sm text-gray-600">
-                                <Link href="/" className="hover:text-[#007B57]">Home</Link>
+                                <Link href="/" className="hover:text-[#6b9238]">Home</Link>
                                 <ChevronRight className="w-4 h-4" />
-                                <Link href="/products" className="hover:text-[#007B57]">Products</Link>
+                                <Link href="/products" className="hover:text-[#6b9238]">Products</Link>
                                 {filterParam && (
                                     <>
                                         <ChevronRight className="w-4 h-4" />
-                                        <span className="text-[#007B57] font-medium">{getPageTitle()}</span>
+                                        <span className="text-[#6b9238] font-medium">{getPageTitle()}</span>
                                     </>
                                 )}
                             </nav>
@@ -322,12 +252,12 @@ function ProductsPageContent() {
 
                         {/* Header */}
                         <div className="mb-12 md:mb-16">
-                            <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-lexend font-semibold text-[#007B57] mb-4">
+                            <h1 className="text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-lexend font-semibold text-[#6b9238] mb-4">
                                 {getPageTitle()}
                             </h1>
                             <p className="text-gray-600 text-base md:text-l lg:text-l">{getPageDescription()}</p>
                             {filterParam && (
-                                <Link href="/products" className="inline-block mt-4 text-[#007B57] hover:text-[#007B57] font-medium underline">
+                                <Link href="/products" className="inline-block mt-4 text-[#6b9238] hover:text-[#6b9238] font-medium underline">
                                     View All Products
                                 </Link>
                             )}
@@ -337,12 +267,12 @@ function ProductsPageContent() {
                         <div className="mb-8 flex flex-wrap items-center gap-3">
                             <button
                                 onClick={() => setShowFiltersSidebar(true)}
-                                className="relative inline-flex items-center gap-2 px-6 py-3 border border-[#007B57] rounded-md text-[#007B57] hover:bg-[#007B57] hover:text-white transition font-medium"
+                                className="relative inline-flex items-center gap-2 px-6 py-3 border border-[#6b9238] rounded-md text-[#6b9238] hover:bg-[#6b9238] hover:text-white transition font-medium"
                             >
                                 <Filter size={20} />
                                 Filter and sort
                                 {activeFilterCount > 0 && (
-                                    <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#007B57] text-white text-xs rounded-full flex items-center justify-center font-bold">
+                                    <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#6b9238] text-white text-xs rounded-full flex items-center justify-center font-bold">
                                         {activeFilterCount}
                                     </span>
                                 )}
@@ -351,17 +281,17 @@ function ProductsPageContent() {
 
                             {/* Active chips */}
                             {selectedColors.map(c => (
-                                <span key={c} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#007B57]/10 text-[#007B57] text-xs font-medium rounded-full">
+                                <span key={c} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#6b9238]/10 text-[#6b9238] text-xs font-medium rounded-full">
                                     {c}<button onClick={() => setSelectedColors(p => p.filter(x => x !== c))}><X size={12} /></button>
                                 </span>
                             ))}
                             {selectedSizes.map(s => (
-                                <span key={s} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#007B57]/10 text-[#007B57] text-xs font-medium rounded-full">
+                                <span key={s} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#6b9238]/10 text-[#6b9238] text-xs font-medium rounded-full">
                                     {s}<button onClick={() => setSelectedSizes(p => p.filter(x => x !== s))}><X size={12} /></button>
                                 </span>
                             ))}
                             {selectedCollections.map(h => (
-                                <span key={h} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#007B57]/10 text-[#007B57] text-xs font-medium rounded-full">
+                                <span key={h} className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#6b9238]/10 text-[#6b9238] text-xs font-medium rounded-full">
                                     {collections.find(c => c.handle === h)?.name || h}
                                     <button onClick={() => setSelectedCollections(p => p.filter(x => x !== h))}><X size={12} /></button>
                                 </span>
@@ -377,7 +307,7 @@ function ProductsPageContent() {
                         <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-in-out ${showFiltersSidebar ? 'translate-x-0' : 'translate-x-full'} flex flex-col`}>
 
                             {/* Sidebar Header */}
-                            <div className="bg-gradient-to-r from-[#007B57] to-[#007B57] p-6 flex items-center justify-between flex-shrink-0">
+                            <div className="bg-gradient-to-r from-[#6b9238] to-[#6b9238] p-6 flex items-center justify-between flex-shrink-0">
                                 <div>
                                     <h2 className="text-xl font-semibold text-white">Filters & Sort</h2>
                                     <p className="text-sm text-white/80 mt-1">Customize your search</p>
@@ -393,13 +323,13 @@ function ProductsPageContent() {
                                 {/* Sort By */}
                                 <div className="bg-white rounded-xl p-5 shadow-sm">
                                     <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full"></span>
+                                        <span className="w-1.5 h-1.5 bg-[#6b9238] rounded-full"></span>
                                         Sort by
                                     </h3>
                                     <select
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value)}
-                                        className="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent bg-white text-gray-900 font-medium cursor-pointer"
+                                        className="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent bg-white text-gray-900 font-medium cursor-pointer"
                                     >
                                         <option value="popular">✨ Featured</option>
                                         <option value="newest">🆕 Newest First</option>
@@ -411,21 +341,21 @@ function ProductsPageContent() {
                                 {/* Price Range */}
                                 <div className="bg-white rounded-xl p-5 shadow-sm">
                                     <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full"></span>
+                                        <span className="w-1.5 h-1.5 bg-[#6b9238] rounded-full"></span>
                                         Price Range
                                     </h3>
 
                                     {/* Min / Max display box — unchanged */}
-                                    <div className="bg-gradient-to-r from-[#007B57]/5 to-[#007B57]/5 rounded-lg p-4 mb-4">
+                                    <div className="bg-gradient-to-r from-[#6b9238]/5 to-[#6b9238]/5 rounded-lg p-4 mb-4">
                                         <div className="flex items-center justify-between">
                                             <div className="text-center flex-1">
                                                 <p className="text-xs text-gray-500 mb-1">Minimum</p>
-                                                <p className="text-lg font-bold text-[#007B57]">₹{priceRange[0]}</p>
+                                                <p className="text-lg font-bold text-[#6b9238]">₹{priceRange[0]}</p>
                                             </div>
                                             <div className="w-px h-8 bg-gray-300 mx-3"></div>
                                             <div className="text-center flex-1">
                                                 <p className="text-xs text-gray-500 mb-1">Maximum</p>
-                                                <p className="text-lg font-bold text-[#007B57]">₹{priceRange[1]}</p>
+                                                <p className="text-lg font-bold text-[#6b9238]">₹{priceRange[1]}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -436,7 +366,7 @@ function ProductsPageContent() {
                                         <div className="absolute left-0 right-0 h-[3px] bg-gray-200 rounded-full pointer-events-none" />
                                         {/* Green active fill */}
                                         <div
-                                            className="absolute h-[3px] bg-[#007B57] rounded-full pointer-events-none"
+                                            className="absolute h-[3px] bg-[#6b9238] rounded-full pointer-events-none"
                                             style={{
                                                 left: `${pct(priceRange[0])}%`,
                                                 right: `${100 - pct(priceRange[1])}%`,
@@ -475,10 +405,10 @@ function ProductsPageContent() {
                                 {collections.length > 0 && (
                                     <div className="bg-white rounded-xl p-5 shadow-sm">
                                         <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full"></span>
+                                            <span className="w-1.5 h-1.5 bg-[#6b9238] rounded-full"></span>
                                             Collections
                                             {selectedCollections.length > 0 && (
-                                                <span className="ml-auto text-xs text-[#007B57] font-medium">{selectedCollections.length} selected</span>
+                                                <span className="ml-auto text-xs text-[#6b9238] font-medium">{selectedCollections.length} selected</span>
                                             )}
                                         </h3>
                                         <div className="space-y-2.5">
@@ -486,7 +416,7 @@ function ProductsPageContent() {
                                                 const checked = selectedCollections.includes(col.handle);
                                                 return (
                                                     <label key={col.handle} className="flex items-center gap-3 cursor-pointer group/item">
-                                                        <span className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${checked ? 'bg-[#007B57] border-[#007B57]' : 'border-gray-300 group-hover/item:border-[#007B57]'}`}>
+                                                        <span className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${checked ? 'bg-[#6b9238] border-[#6b9238]' : 'border-gray-300 group-hover/item:border-[#6b9238]'}`}>
                                                             {checked && (
                                                                 <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
                                                                     <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -503,7 +433,7 @@ function ProductsPageContent() {
                                                                 )
                                                             }
                                                         />
-                                                        <span className={`text-sm transition-colors ${checked ? 'text-[#007B57] font-medium' : 'text-gray-700 group-hover/item:text-[#007B57]'}`}>
+                                                        <span className={`text-sm transition-colors ${checked ? 'text-[#6b9238] font-medium' : 'text-gray-700 group-hover/item:text-[#6b9238]'}`}>
                                                             {col.name}
                                                         </span>
                                                     </label>
@@ -517,10 +447,10 @@ function ProductsPageContent() {
                                 {availableColors.length > 0 && (
                                     <div className="bg-white rounded-xl p-5 shadow-sm">
                                         <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full"></span>
+                                            <span className="w-1.5 h-1.5 bg-[#6b9238] rounded-full"></span>
                                             Color
                                             {selectedColors.length > 0 && (
-                                                <span className="ml-auto text-xs text-[#007B57] font-medium">{selectedColors.length} selected</span>
+                                                <span className="ml-auto text-xs text-[#6b9238] font-medium">{selectedColors.length} selected</span>
                                             )}
                                         </h3>
                                         <div className="flex flex-wrap gap-3">
@@ -536,14 +466,14 @@ function ProductsPageContent() {
                                                         onClick={() => setSelectedColors(prev => active ? prev.filter(c => c !== color) : [...prev, color])}
                                                         className="relative flex items-center justify-center transition-transform duration-200 hover:scale-110"
                                                     >
-                                                        <span className={`absolute inset-0 rounded-full ${active ? 'ring-2 ring-offset-2 ring-[#007B57]' : ''}`} />
+                                                        <span className={`absolute inset-0 rounded-full ${active ? 'ring-2 ring-offset-2 ring-[#6b9238]' : ''}`} />
                                                         <span
                                                             className={`w-8 h-8 rounded-full block shadow-sm ${isLight ? 'border border-gray-300' : ''}`}
                                                             style={{ backgroundColor: css }}
                                                         />
                                                         {active && (
                                                             <span className="absolute inset-0 flex items-center justify-center">
-                                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isLight ? '#007B57' : 'white'} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isLight ? '#6b9238' : 'white'} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                                                     <polyline points="20 6 9 17 4 12" />
                                                                 </svg>
                                                             </span>
@@ -559,10 +489,10 @@ function ProductsPageContent() {
                                 {availableSizes.length > 0 && (
                                     <div className="bg-white rounded-xl p-5 shadow-sm">
                                         <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 bg-[#007B57] rounded-full"></span>
+                                            <span className="w-1.5 h-1.5 bg-[#6b9238] rounded-full"></span>
                                             Size
                                             {selectedSizes.length > 0 && (
-                                                <span className="ml-auto text-xs text-[#007B57] font-medium">{selectedSizes.length} selected</span>
+                                                <span className="ml-auto text-xs text-[#6b9238] font-medium">{selectedSizes.length} selected</span>
                                             )}
                                         </h3>
                                         <div className="flex flex-wrap gap-2">
@@ -572,7 +502,7 @@ function ProductsPageContent() {
                                                     <button
                                                         key={size}
                                                         onClick={() => setSelectedSizes(prev => active ? prev.filter(s => s !== size) : [...prev, size])}
-                                                        className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${active ? 'bg-[#007B57] text-white border-[#007B57] shadow-sm' : 'bg-white text-gray-700 border-gray-300 hover:border-[#007B57] hover:text-[#007B57]'}`}
+                                                        className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${active ? 'bg-[#6b9238] text-white border-[#6b9238] shadow-sm' : 'bg-white text-gray-700 border-gray-300 hover:border-[#6b9238] hover:text-[#6b9238]'}`}
                                                     >
                                                         {size}
                                                     </button>
@@ -583,9 +513,9 @@ function ProductsPageContent() {
                                 )}
 
                                 {/* Match count */}
-                                <div className="bg-[#007B57]/5 rounded-lg p-4 border border-[#007B57]/10">
+                                <div className="bg-[#6b9238]/5 rounded-lg p-4 border border-[#6b9238]/10">
                                     <p className="text-sm text-gray-700">
-                                        <span className="font-semibold text-[#007B57]">{filteredProducts.length}</span> products match your filters
+                                        <span className="font-semibold text-[#6b9238]">{filteredProducts.length}</span> products match your filters
                                     </p>
                                 </div>
                             </div>
@@ -600,13 +530,13 @@ function ProductsPageContent() {
                                         setSelectedSizes([]);
                                         setSelectedCollections([]);
                                     }}
-                                    className="flex-1 text-center px-6 py-3 border-2 border-[#007B57] rounded-lg text-[#007B57] hover:bg-[#007B57]/5 font-semibold transition-colors"
+                                    className="flex-1 text-center px-6 py-3 border-2 border-[#6b9238] rounded-lg text-[#6b9238] hover:bg-[#6b9238]/5 font-semibold transition-colors"
                                 >
                                     Clear All
                                 </button>
                                 <button
                                     onClick={() => setShowFiltersSidebar(false)}
-                                    className="flex-1 bg-[#007B57] text-white font-semibold rounded-lg hover:bg-[#006046] transition-colors py-3 shadow-lg"
+                                    className="flex-1 bg-[#6b9238] text-white font-semibold rounded-lg hover:bg-[#006046] transition-colors py-3 shadow-lg"
                                 >
                                     Apply
                                 </button>
@@ -630,7 +560,7 @@ function ProductsPageContent() {
                                 height: 20px;
                                 border-radius: 50%;
                                 background: white;
-                                border: 3px solid #007B57;
+                                border: 3px solid #6b9238;
                                 cursor: pointer;
                                 pointer-events: all;
                                 box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -645,7 +575,7 @@ function ProductsPageContent() {
                                 height: 20px;
                                 border-radius: 50%;
                                 background: white;
-                                border: 3px solid #007B57;
+                                border: 3px solid #6b9238;
                                 cursor: pointer;
                                 pointer-events: all;
                                 box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -691,13 +621,13 @@ function ProductsPageContent() {
                     <div className="fixed z-40 bg-[#F0F4F1] border-t border-gray-200 shadow-lg bottom-[70px] left-3 right-3 sm:bottom-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-[500px] sm:rounded-t-[20px] sm:rounded-b-none p-5 rounded-[20px] sm:p-4 sm:rounded-[16px]">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="bg-[#007B57] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">{totalItems}</div>
+                                <div className="bg-[#6b9238] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">{totalItems}</div>
                                 <div>
                                     <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
                                     <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
                                 </div>
                             </div>
-                            <Link href="/cart" className="bg-[#007B57] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#006046] transition">
+                            <Link href="/cart" className="bg-[#6b9238] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#006046] transition">
                                 View Cart
                             </Link>
                         </div>
@@ -713,7 +643,7 @@ export default function ProductsPage() {
         <Suspense fallback={
             <div className="min-h-screen bg-white flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <div className="w-16 h-16 border-4 border-[#6b9238] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                     <p className="text-gray-600">Loading products...</p>
                 </div>
             </div>

@@ -189,7 +189,7 @@ export default function OrderTracking() {
         return (
             <div className="bg-[#f5f7f4] min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-[#007B57] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <div className="w-12 h-12 border-4 border-[#6b9238] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
                     <p className="text-gray-500 text-sm">Loading your order...</p>
                 </div>
             </div>
@@ -225,7 +225,7 @@ export default function OrderTracking() {
 
                     <Link
                         href="/login"
-                        className="inline-block bg-[#007B57] text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-[#009A7B] transition"
+                        className="inline-block bg-[#6b9238] text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-[#009A7B] transition"
                     >
                         {error === "no_orders" ? "Shop Now" : "Go to Login"}
                     </Link>
@@ -244,7 +244,7 @@ export default function OrderTracking() {
 
                 <div className="flex items-start justify-between mb-6">
                     <div>
-                        <h1 className="text-2xl font-semibold text-[#007B57]">Track Your Plant</h1>
+                        <h1 className="text-2xl font-semibold text-[#6b9238]">Track Your Plant</h1>
                         <p className="text-sm text-gray-500 mt-1">
                             Order ID: <span className="font-medium">{order.id}</span>
                         </p>
@@ -278,13 +278,13 @@ export default function OrderTracking() {
                                 onError={(e) => { e.target.src = "/placeholder.png"; }}
                             />
                             <div className="flex-1 min-w-0">
-                                <h3 className="text-sm md:text-base font-medium text-[#007B57] line-clamp-1">{item.title}</h3>
+                                <h3 className="text-sm md:text-base font-medium text-[#6b9238] line-clamp-1">{item.title}</h3>
                                 {item.variantTitle && item.variantTitle !== "Default Title" && (
                                     <p className="text-xs text-gray-500 mt-0.5">{item.variantTitle}</p>
                                 )}
                                 <p className="text-xs text-gray-400 mt-0.5">Qty: {item.quantity}</p>
                             </div>
-                            <div className="text-sm md:text-base font-semibold text-[#007B57] flex-shrink-0">
+                            <div className="text-sm md:text-base font-semibold text-[#6b9238] flex-shrink-0">
                                 ₹{(item.price * item.quantity).toFixed(2)}
                             </div>
                         </div>
@@ -307,7 +307,7 @@ export default function OrderTracking() {
                                     )}
                                 </div>
                                 <div>
-                                    <h4 className={`text-sm md:text-base font-medium ${isCompleted || isActive ? "text-[#007B57]" : "text-gray-400"
+                                    <h4 className={`text-sm md:text-base font-medium ${isCompleted || isActive ? "text-[#6b9238]" : "text-gray-400"
                                         }`}>{step.title}</h4>
                                     <p className="text-xs md:text-sm text-gray-500 mt-0.5">{step.desc}</p>
                                 </div>
@@ -324,17 +324,17 @@ export default function OrderTracking() {
                         <span>Shipping</span>
                         <span>{order.shipping > 0 ? `₹${order.shipping.toFixed(2)}` : "FREE"}</span>
                     </div>
-                    <div className="flex justify-between text-base font-semibold text-[#007B57] pt-1">
+                    <div className="flex justify-between text-base font-semibold text-[#6b9238] pt-1">
                         <span>Total</span><span>{order.total}</span>
                     </div>
                 </div>
 
                 <div className="mt-8 space-y-3">
                     <Link href="/products"
-                        className="block w-full bg-[#007B57] text-white py-3 rounded-xl font-medium hover:bg-[#009A7B] transition text-center">
+                        className="block w-full bg-[#6b9238] text-white py-3 rounded-xl font-medium hover:bg-[#009A7B] transition text-center">
                         Continue Shopping
                     </Link>
-                    <button className="w-full border border-[#007B57] text-[#007B57] py-3 rounded-xl font-medium hover:bg-[#f0f4f1] transition">
+                    <button className="w-full border border-[#6b9238] text-[#6b9238] py-3 rounded-xl font-medium hover:bg-[#f0f4f1] transition">
                         Need Plant Care Help?
                     </button>
                 </div>

@@ -57,13 +57,13 @@ export default function CheckoutPage() {
 
                         <div className="relative bg-white rounded-3xl shadow-2xl shadow-gray-900/20 p-12 border border-gray-200">
                             <div className="mb-8 relative">
-                                <div className="mx-auto w-24 h-24 bg-[#007B57] rounded-full flex items-center justify-center shadow-xl animate-[bounce_1s_ease-in-out_3]">
+                                <div className="mx-auto w-24 h-24 bg-[#6b9238] rounded-full flex items-center justify-center shadow-xl animate-[bounce_1s_ease-in-out_3]">
                                     <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
                                 <div className="absolute top-0 left-1/2 -translate-x-1/2">
-                                    <div className="absolute w-2 h-2 bg-[#007B57] rounded-full animate-ping" style={{ top: '-20px', left: '-30px' }} />
+                                    <div className="absolute w-2 h-2 bg-[#6b9238] rounded-full animate-ping" style={{ top: '-20px', left: '-30px' }} />
                                     <div className="absolute w-2 h-2 bg-[#009A7B] rounded-full animate-ping" style={{ top: '-25px', left: '30px', animationDelay: '0.2s' }} />
                                     <div className="absolute w-2 h-2 bg-green-400 rounded-full animate-ping" style={{ top: '-15px', left: '50px', animationDelay: '0.4s' }} />
                                 </div>
@@ -76,7 +76,7 @@ export default function CheckoutPage() {
 
                                 <div className="bg-gray-50 rounded-2xl p-6 mt-6 border border-gray-200">
                                     <div className="flex items-center justify-center gap-2 text-sm text-gray-700">
-                                        <svg className="w-5 h-5 text-[#007B57]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg className="w-5 h-5 text-[#6b9238]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                         <span>Confirmation sent to <strong>{formData.email}</strong></span>
@@ -84,7 +84,7 @@ export default function CheckoutPage() {
                                 </div>
 
                                 <div className="pt-6">
-                                    <Link href="" className="group relative inline-flex items-center gap-2 bg-[#007B57] text-white px-8 py-4 rounded-full font-semibold text-lg shadow-xl hover:bg-[#009A7B] hover:scale-105 transition-all duration-300">
+                                    <Link href="" className="group relative inline-flex items-center gap-2 bg-[#6b9238] text-white px-8 py-4 rounded-full font-semibold text-lg shadow-xl hover:bg-[#009A7B] hover:scale-105 transition-all duration-300">
                                         <span>Continue Shopping</span>
                                         <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -107,7 +107,7 @@ export default function CheckoutPage() {
                     <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your cart is empty</h2>
                     <p className="text-gray-600 mb-6">Add some plants before checking out.</p>
-                    <Link href="/products" className="inline-block bg-[#007B57] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition">
+                    <Link href="/products" className="inline-block bg-[#6b9238] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition">
                         Shop Now
                     </Link>
                 </div>
@@ -122,7 +122,7 @@ export default function CheckoutPage() {
 
                 {/* Header */}
                 <div className="mb-8">
-                    <Link href="/cart" className="flex items-center text-gray-600 hover:text-[#007B57] mb-6 transition-colors">
+                    <Link href="/cart" className="flex items-center text-gray-600 hover:text-[#6b9238] mb-6 transition-colors">
                         <ChevronLeft className="w-5 h-5 mr-2" />
                         Back to Cart
                     </Link>
@@ -141,24 +141,24 @@ export default function CheckoutPage() {
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleInputChange}
-                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition" required />
+                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition" required />
                                         <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleInputChange}
-                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition" required />
+                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition" required />
                                     </div>
                                     <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleInputChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition" required />
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition" required />
                                     <input type="tel" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleInputChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition" required />
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition" required />
                                     <input type="text" name="address" placeholder="Street Address" value={formData.address} onChange={handleInputChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition" required />
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition" required />
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleInputChange}
-                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition" required />
+                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition" required />
                                         <input type="text" name="state" placeholder="State" value={formData.state} onChange={handleInputChange}
-                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition" required />
+                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition" required />
                                     </div>
                                     <input type="text" name="zipCode" placeholder="ZIP / Postal Code" value={formData.zipCode} onChange={handleInputChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition" required />
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition" required />
                                 </div>
                             </section>
 
@@ -174,7 +174,7 @@ export default function CheckoutPage() {
                                             const formatted = raw.match(/.{1,4}/g)?.join(' ') || raw;
                                             setFormData(prev => ({ ...prev, cardNumber: formatted }));
                                         }}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition font-mono tracking-widest" required />
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition font-mono tracking-widest" required />
                                     <div className="grid grid-cols-2 gap-4">
                                         <input type="text" name="expiryDate" placeholder="MM / YY" maxLength={5}
                                             value={formData.expiryDate}
@@ -183,21 +183,21 @@ export default function CheckoutPage() {
                                                 const formatted = raw.length > 2 ? `${raw.slice(0, 2)} / ${raw.slice(2)}` : raw;
                                                 setFormData(prev => ({ ...prev, expiryDate: formatted }));
                                             }}
-                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition font-mono" required />
+                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition font-mono" required />
                                         <input type="password" name="cvv" placeholder="CVV" maxLength={4}
                                             value={formData.cvv}
                                             onChange={(e) => {
                                                 const raw = e.target.value.replace(/\D/g, '').slice(0, 4);
                                                 setFormData(prev => ({ ...prev, cvv: raw }));
                                             }}
-                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007B57] focus:border-transparent transition font-mono" required />
+                                            className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b9238] focus:border-transparent transition font-mono" required />
                                     </div>
                                 </div>
                             </section>
 
                             {/* Submit */}
                             <button type="submit"
-                                className="w-full bg-[#007B57] text-white py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:bg-[#009A7B] active:scale-[0.98] transition-all shadow-md hover:shadow-lg">
+                                className="w-full bg-[#6b9238] text-white py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:bg-[#009A7B] active:scale-[0.98] transition-all shadow-md hover:shadow-lg">
                                 <Lock className="w-5 h-5" />
                                 Place Order — ₹{total}
                             </button>
@@ -254,7 +254,7 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
                                     <span className="text-lg font-bold text-gray-900">Total</span>
-                                    <span className="text-lg font-bold text-[#007B57]">₹{total}</span>
+                                    <span className="text-lg font-bold text-[#6b9238]">₹{total}</span>
                                 </div>
                             </div>
 
@@ -263,7 +263,7 @@ export default function CheckoutPage() {
                                 <div className="mt-5 pt-4 border-t border-gray-100">
                                     <p className="text-xs text-gray-500 mb-2 text-center">Or checkout securely with Shopify</p>
                                     <a href={checkoutUrl}
-                                        className="flex items-center justify-center gap-2 w-full border border-[#007B57] text-[#007B57] py-3 rounded-xl text-sm font-semibold hover:bg-[#007B57] hover:text-white transition-all">
+                                        className="flex items-center justify-center gap-2 w-full border border-[#6b9238] text-[#6b9238] py-3 rounded-xl text-sm font-semibold hover:bg-[#6b9238] hover:text-white transition-all">
                                         <Lock className="w-4 h-4" />
                                         Shopify Checkout
                                     </a>

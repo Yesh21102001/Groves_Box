@@ -42,7 +42,7 @@ const SocialIcon = ({ type }) => {
 const StarRating = ({ rating }) => (
     <div className="flex items-center gap-0.5">
         {[1, 2, 3, 4, 5].map((s) => (
-            <svg key={s} width="15" height="15" viewBox="0 0 24 24" fill={s <= rating ? "#007B57" : "#E5E7EB"}>
+            <svg key={s} width="15" height="15" viewBox="0 0 24 24" fill={s <= rating ? "#6b9238" : "#E5E7EB"}>
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
         ))}
@@ -132,7 +132,7 @@ export default function TestimonialsSection() {
                         style={{ fontFamily: "Georgia, serif" }}
                     >
                         {title}{" "}
-                        <span className="text-[#007B57]">{titleHighlight}</span>
+                        <span className="text-[#6b9238]">{titleHighlight}</span>
                     </h2>
                     <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto leading-relaxed">
                         {subtitle}
@@ -155,7 +155,7 @@ export default function TestimonialsSection() {
                             border border-gray-200 flex items-center justify-center
                             shadow-md cursor-pointer
                             transition-all duration-300 ease-out
-                            hover:bg-[#007B57] hover:border-[#007B57] hover:scale-110
+                            hover:bg-[#6b9238] hover:border-[#6b9238] hover:scale-110
                             hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
                             group
                         "
@@ -181,9 +181,9 @@ export default function TestimonialsSection() {
                                         "duration-[600ms]",
                                         "ease-[cubic-bezier(0.34,1.15,0.64,1)]",
                                         isOnly
-                                            ? "scale-100 opacity-100 shadow-[0_14px_44px_rgba(0,0,0,0.12)] border-[#007B57]"
+                                            ? "scale-100 opacity-100 shadow-[0_14px_44px_rgba(0,0,0,0.12)] border-[#6b9238]"
                                             : isCenter
-                                                ? "scale-[1.05] -translate-y-1 opacity-100 shadow-[0_20px_56px_rgba(0,0,0,0.13),0_4px_16px_rgba(43,191,164,0.12)] border-[#007B57] z-10"
+                                                ? "scale-[1.05] -translate-y-1 opacity-100 shadow-[0_20px_56px_rgba(0,0,0,0.13),0_4px_16px_rgba(43,191,164,0.12)] border-[#6b9238] z-10"
                                                 : "scale-[0.93] translate-y-1.5 opacity-60 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border-transparent",
                                     ].join(" ")}
                                 >
@@ -195,7 +195,7 @@ export default function TestimonialsSection() {
                                             className={[
                                                 "w-14 h-14 rounded-full object-cover flex-shrink-0",
                                                 "border-[2.5px] transition-[border-color] duration-500",
-                                                isCenter || isOnly ? "border-[#007B57]" : "border-[#e0f2ed]",
+                                                isCenter || isOnly ? "border-[#6b9238]" : "border-[#e0f2ed]",
                                             ].join(" ")}
                                         />
                                         <div className="flex-1 min-w-0">
@@ -203,7 +203,7 @@ export default function TestimonialsSection() {
                                                 <span className="font-bold text-[15px] text-gray-900 truncate">{t.name}</span>
                                                 <SocialIcon type={t.social} />
                                             </div>
-                                            <p className="text-[#007B57] text-[10.5px] font-bold uppercase tracking-widest mb-1.5">{t.role}</p>
+                                            <p className="text-[#6b9238] text-[10.5px] font-bold uppercase tracking-widest mb-1.5">{t.role}</p>
                                             <StarRating rating={t.rating} />
                                         </div>
                                     </div>
@@ -213,7 +213,7 @@ export default function TestimonialsSection() {
 
                                     {/* Quote + text */}
                                     <div>
-                                        <p className="text-[#007B57] leading-none mb-[-8px] opacity-75" style={{ fontSize: 44, fontFamily: "Georgia, serif" }}>
+                                        <p className="text-[#6b9238] leading-none mb-[-8px] opacity-75" style={{ fontSize: 44, fontFamily: "Georgia, serif" }}>
                                             &ldquo;
                                         </p>
                                         <p className="text-gray-500 text-[13px] sm:text-sm leading-[1.8] italic">{t.text}</p>
@@ -233,7 +233,7 @@ export default function TestimonialsSection() {
                             border border-gray-200 flex items-center justify-center
                             shadow-md cursor-pointer
                             transition-all duration-300 ease-out
-                            hover:bg-[#007B57] hover:border-[#007B57] hover:scale-110
+                            hover:bg-[#6b9238] hover:border-[#6b9238] hover:scale-110
                             hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
                             group
                         "
@@ -253,7 +253,7 @@ export default function TestimonialsSection() {
                                 "h-2.5 rounded-full border-none cursor-pointer p-0",
                                 "transition-[width,background-color] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
                                 "hover:bg-[#1aab8e]",
-                                i === activeIndex ? "w-8 bg-[#007B57]" : "w-2.5 bg-[#c4dfd8]",
+                                i === activeIndex ? "w-8 bg-[#6b9238]" : "w-2.5 bg-[#c4dfd8]",
                             ].join(" ")}
                         />
                     ))}

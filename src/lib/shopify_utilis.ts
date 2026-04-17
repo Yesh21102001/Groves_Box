@@ -1,4 +1,4 @@
-// lib/shopify_utilis.js
+// lib/shopify_utilis.ts
 // Utility functions for Shopify Storefront API
 
 const SHOPIFY_STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
@@ -13,7 +13,15 @@ interface ShopifyFetchParams {
  * Fetch data from Shopify Storefront API
  */
 export async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams) {
+  if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+    console.error('Missing Shopify env variables: NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN or NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN');
+    throw new Error('Shopify configuration is missing. Check your .env.local file.');
+  }
+
   const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/2024-01/graphql.json`;
+
+  // next: { revalidate } only works server-side — guard it for client-side useEffect calls
+  const nextOptions = typeof window === 'undefined' ? { next: { revalidate: 3600 } } : {};
 
   try {
     const result = await fetch(endpoint, {
@@ -23,7 +31,7 @@ export async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams
         'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_ACCESS_TOKEN || '',
       }),
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: 3600 }
+      ...nextOptions
     });
 
     if (!result.ok) {
@@ -659,42 +667,57 @@ export async function getProducts(limit = 20) {
  * Get new arrival products — includes selectedOptions
  */
 export async function getNewArrivals(limit = 8) {
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  try {
+    // First try to get products tagged as "new" or "new-arrival"
+    const taggedProducts = await getProductsByTag("new", limit);
+    if (taggedProducts.length > 0) {
+      return taggedProducts;
+    }
 
-  const query = `
-    query getNewArrivals($first: Int!, $query: String!) {
-      products(first: $first, query: $query, sortKey: CREATED_AT, reverse: true) {
-        edges {
-          node {
-            id
-            title
-            description
-            handle
-            tags
-            availableForSale
-            createdAt
-            priceRange {
-              minVariantPrice { amount currencyCode }
-            }
-            compareAtPriceRange {
-              minVariantPrice { amount currencyCode }
-            }
-            images(first: 5) {
-              edges {
-                node { url altText }
+    // Fallback: get products tagged as "new-arrival"
+    const newArrivalTagged = await getProductsByTag("new-arrival", limit);
+    if (newArrivalTagged.length > 0) {
+      return newArrivalTagged;
+    }
+
+    // Final fallback: get recent products by creation date
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const query = `
+      query getNewArrivals($first: Int!, $query: String!) {
+        products(first: $first, query: $query, sortKey: CREATED_AT, reverse: true) {
+          edges {
+            node {
+              id
+              title
+              description
+              handle
+              tags
+              availableForSale
+              createdAt
+              priceRange {
+                minVariantPrice { amount currencyCode }
               }
-            }
-            variants(first: 10) {
-              edges {
-                node {
-                  id
-                  title
-                  availableForSale
-                  price { amount }
-                  selectedOptions {
-                    name
-                    value
+              compareAtPriceRange {
+                minVariantPrice { amount currencyCode }
+              }
+              images(first: 5) {
+                edges {
+                  node { url altText }
+                }
+              }
+              variants(first: 10) {
+                edges {
+                  node {
+                    id
+                    title
+                    availableForSale
+                    price { amount }
+                    selectedOptions {
+                      name
+                      value
+                    }
                   }
                 }
               }
@@ -702,18 +725,27 @@ export async function getNewArrivals(limit = 8) {
           }
         }
       }
-    }
-  `;
+    `;
 
-  const data = await shopifyFetch({
-    query,
-    variables: {
-      first: limit,
-      query: `created_at:>${thirtyDaysAgo.toISOString()}`
-    }
-  });
+    const data = await shopifyFetch({
+      query,
+      variables: {
+        first: limit,
+        query: `created_at:>${thirtyDaysAgo.toISOString().split('T')[0]}` // Use date only, not datetime
+      }
+    });
 
-  return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
+    return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
+  } catch (error) {
+    console.error('Error fetching new arrivals:', error);
+    // Return some general products as fallback instead of empty array
+    try {
+      return await getProducts(limit);
+    } catch (fallbackError) {
+      console.error('Fallback also failed:', fallbackError);
+      return [];
+    }
+  }
 }
 
 /**

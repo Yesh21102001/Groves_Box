@@ -1,162 +1,169 @@
 // ============================================================
-//  FOOTER CONFIG — src/config/footer.config.js
+//  FOOTER CONFIG — src/config/Footer.config.js
 //  Change ANYTHING here → footer updates automatically
 //  No need to touch Footer.jsx at all
 // ============================================================
 
 export const footerConfig = {
 
-    // ── Section Background & Border ───────────────────────
-    bg: "#F0F4F1",
-    borderColor: "#E5E7EB",
+    // ── Background Image & Border ──────────────────────────
+    backgroundImage: '/images/2148488544.jpg',   // ← your forest/nature image
+    bg: 'transparent',                            // fallback if no image
+    borderColor: 'rgba(255, 255, 255, 0.1)',
 
     // ── Brand ─────────────────────────────────────────────
     brand: {
-        name: "Groves Box",
-        emoji: "🌿",
-        description: "Bringing nature to your doorstep with premium plants and expert care guides.",
-        copyright: "© 2026 Groves Box. All rights reserved.",
+        name: 'Groves Box',
+        emoji: '🌿',
+        description:
+            'Your premier destination for all things eco-friendly and environmentally conscious. We are your one-stop source for a greener, healthier, and more sustainable world.',
+        copyright: '© 2025 GreenNest. All rights reserved',
 
         // Text styles
-        nameColor: "#1a1a1a",
-        nameMobileColor: "#2F4F3E",
-        nameFontSize: "text-2xl",
-        nameFontWeight: "font-bold",
-        descColor: "#4B5563",
-        descFontSize: "text-sm",
-        copyrightColor: "#6B7280",
-        copyrightFontSize: "text-sm",
-        copyrightMobileFontSize: "text-xs",
-        emojiSize: "text-3xl",
+        nameColor: '#ffffff',
+        nameMobileColor: '#ffffff',
+        nameFontSize: 'text-3xl',
+        nameFontWeight: 'font-bold',
+        descColor: 'rgba(255, 255, 255, 0.80)',
+        descFontSize: 'text-sm',
+        copyrightColor: 'rgba(255, 255, 255, 0.75)',
+        copyrightFontSize: 'text-sm',
+        copyrightMobileFontSize: 'text-xs',
+        emojiSize: 'text-3xl',
     },
 
     // ── Navigation Columns ────────────────────────────────
     columns: [
         {
-            title: "Customer Service",
+            title: 'Information',
             links: [
-                { label: "FAQ", href: "/faq" },
-                { label: "Shipping & Returns", href: "/shipping" },
-                { label: "Track Order", href: "/track-order" },
+                { label: 'Shop', href: '/shop' },
+                { label: 'Blog', href: '/blog' },
+                { label: 'Portfolio', href: '/portfolio' },
+                { label: 'About us', href: '/about-us' },
+                { label: 'Contact us', href: '/contact-us' },
             ],
         },
         {
-            title: "Company",
+            title: 'Support',
             links: [
-                { label: "About Us", href: "/about-us" },
-                { label: "Contact Us", href: "/contact-us" },
+                { label: 'Account', href: '/account' },
+                { label: 'Support Center', href: '/support' },
+                { label: 'Privacy Policy', href: '/privacy-policy' },
+                { label: 'Terms & Conditions', href: '/terms' },
             ],
         },
         {
-            title: "Legal",
+            title: 'Community',
             links: [
-                { label: "Privacy Policy", href: "/privacy-policy" },
-                { label: "Terms of Service", href: "/terms-service" },
-                { label: "Refund Policy", href: "/refund-policy" },
+                { label: 'Refer A Friend', href: '/refer' },
+                { label: 'Gift Card', href: '/gift-card' },
             ],
         },
     ],
 
     // Column text styles
     columnStyles: {
-        titleColor: "#111827",
-        titleFontSize: "text-base",
-        titleFontWeight: "font-semibold",
-        titleAlign: "text-left",
-        titleMarginB: "mb-4",
-        linkColor: "#4B5563",
-        linkHoverColor: "#111827",
-        linkFontSize: "text-sm",
-        linkSpacing: "space-y-2.5",
+        titleColor: '#ffffff',
+        titleFontSize: 'text-base',
+        titleFontWeight: 'font-bold',
+        titleAlign: 'text-left',
+        titleMarginB: 'mb-5',
+        linkColor: 'rgba(255, 255, 255, 0.80)',
+        linkHoverColor: '#ffffff',
+        linkFontSize: 'text-sm',
+        linkSpacing: 'space-y-3',
     },
 
     // Mobile accordion styles
     accordionStyles: {
-        buttonTextColor: "#111827",
-        buttonFontWeight: "font-medium",
-        borderColor: "#E5E7EB",
-        paddingX: "px-6",
-        paddingY: "py-4",
-        listPaddingX: "px-6",
-        listPaddingB: "pb-4",
-        listSpacing: "space-y-2.5",
+        buttonTextColor: '#ffffff',
+        buttonFontWeight: 'font-semibold',
+        borderColor: 'rgba(255, 255, 255, 0.12)',
+        paddingX: 'px-6',
+        paddingY: 'py-4',
+        listPaddingX: 'px-6',
+        listPaddingB: 'pb-4',
+        listSpacing: 'space-y-3',
         iconSize: 18,
     },
 
     // ── Newsletter ────────────────────────────────────────
     newsletter: {
-        title: "Stay Connected",
-        description: "Subscribe for updates and exclusive offers",
-        placeholder: "Your email address",
-        buttonText: "Subscribe",
+        title: 'Stay Connected',
+        description: 'Subscribe for eco-tips and exclusive member offers',
+        placeholder: 'Your email address',
+        buttonText: 'Subscribe',
 
         // Button colors
-        buttonBg: "#007B57",
-        buttonHoverBg: "#009A7B",
-        buttonTextColor: "#ffffff",
+        buttonBg: '#6B9238',
+        buttonHoverBg: '#C2DEA3',
+        buttonTextColor: '#ffffff',
+        buttonHoverTextColor: '#2D4A14',  // dark green for contrast on light hover bg
 
         // Input styles
-        inputBorderColor: "#D1D5DB",
-        inputFocusBorder: "#111827",
-        inputFontSize: "text-sm",
-        inputPadding: "px-4 py-2.5",
+        inputBorderColor: 'rgba(255, 255, 255, 0.25)',
+        inputFocusBorder: '#ffffff',
+        inputFontSize: 'text-sm',
+        inputPadding: 'px-4 py-2.5',
 
         // Desktop text styles
-        titleColor: "#111827",
-        titleFontSize: "text-base",
-        titleFontWeight: "font-semibold",
-        titleMarginB: "mb-4",
-        titleAlign: "text-left",
-        descColor: "#4B5563",
-        descFontSize: "text-sm",
-        descMarginB: "mb-4",
-        descAlign: "text-left",
+        titleColor: '#ffffff',
+        titleFontSize: 'text-base',
+        titleFontWeight: 'font-bold',
+        titleMarginB: 'mb-4',
+        titleAlign: 'text-left',
+        descColor: 'rgba(255, 255, 255, 0.75)',
+        descFontSize: 'text-sm',
+        descMarginB: 'mb-4',
+        descAlign: 'text-left',
 
         // Mobile text styles
-        mobileTitleSize: "text-2xl",
-        mobileTitleWeight: "font-light",
-        mobileTitleColor: "#111827",
-        mobileTitleMarginB: "mb-2",
-        mobileDescColor: "#4B5563",
-        mobileDescFontSize: "text-sm",
-        mobileDescMarginB: "mb-4",
-        mobileAlign: "text-left",
+        mobileTitleSize: 'text-2xl',
+        mobileTitleWeight: 'font-light',
+        mobileTitleColor: '#ffffff',
+        mobileTitleMarginB: 'mb-2',
+        mobileDescColor: 'rgba(255, 255, 255, 0.75)',
+        mobileDescFontSize: 'text-sm',
+        mobileDescMarginB: 'mb-4',
+        mobileAlign: 'text-left',
     },
 
     // ── Social Links ──────────────────────────────────────
-    // icon options: "facebook" | "instagram" | "youtube" | "twitter"
+    // icon options: "facebook" | "instagram" | "youtube" | "twitter" | "linkedin"
     socials: [
-        { icon: "facebook", href: "#" },
-        { icon: "instagram", href: "#" },
-        { icon: "youtube", href: "#" },
-        { icon: "twitter", href: "#" },
+        { icon: 'facebook', href: '#' },
+        { icon: 'twitter', href: '#' },
+        { icon: 'instagram', href: '#' },
+        { icon: 'linkedin', href: '#' },
+        { icon: 'youtube', href: '#' },
     ],
 
     socialStyles: {
-        iconColor: "#6B7280",
-        iconHoverColor: "#111827",
-        iconSize: 20,
-        gap: "gap-4",
-        mobileMarginT: "mb-0",
+        iconColor: '#ffffff',
+        iconHoverColor: '#ffffff',
+        iconSize: 16,
+        gap: 'gap-3',
+        mobileMarginT: 'mb-0',
     },
 
     // ── Bottom Bar ────────────────────────────────────────
     bottomBar: {
-        borderColor: "#E5E7EB",
-        paddingTop: "pt-8",
+        borderColor: 'rgba(255, 255, 255, 0.12)',
+        paddingTop: 'pt-6',
         // "between" | "center" | "start" | "end"
-        desktopJustify: "between",
+        desktopJustify: 'center',
     },
 
     // ── Spacing ───────────────────────────────────────────
     spacing: {
-        desktopPaddingX: "px-8 xl:px-16 2xl:px-24",
-        desktopPaddingY: "py-12",
-        mobilePaddingX: "px-6",
-        mobileSectionY: "py-8",
-        mobileBottomY: "py-6",
-        columnGap: "gap-12 xl:gap-16 2xl:gap-20",
-        sectionBottomGap: "mb-12",
+        desktopPaddingX: 'px-8 xl:px-16 2xl:px-24',
+        desktopPaddingY: 'py-14',
+        mobilePaddingX: 'px-6',
+        mobileSectionY: 'py-8',
+        mobileBottomY: 'py-6',
+        columnGap: 'gap-12 xl:gap-16 2xl:gap-20',
+        sectionBottomGap: 'mb-10',
     },
 
 };

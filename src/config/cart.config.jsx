@@ -4,7 +4,7 @@
 
 // ── 1. BRAND COLORS ───────────────────────────────────────────────────────────
 export const colors = {
-    primary: '#007B57',
+    primary: '#6b9238',
     primaryHover: '#009A7B',
     primaryLight: '#F0F4F1',
     primaryDark: '#005C41',
@@ -25,7 +25,7 @@ export const colors = {
 
     border: {
         default: '#E5E7EB',
-        focus: '#007B57',
+        focus: '#6b9238',
     },
 
     badge: {
@@ -50,7 +50,7 @@ export const colors = {
 
     progressBar: {
         track: '#E5E7EB',
-        fillFrom: '#007B57',
+        fillFrom: '#6b9238',
         fillTo: '#009A7B',
     },
 };

@@ -55,12 +55,12 @@ export default function CollectionsPage() {
                             Home
                         </Link>
                         <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-                        <span className="text-[#007B57] font-medium">Collections</span>
+                        <span className="text-[#6b9238] font-medium">Collections</span>
                     </nav>
 
                     {/* Header */}
                     <div className="mb-8 md:mb-10 lg:mb-12">
-                        <h1 className="font-light text-[#007B57] text-3xl lg:text-4xl 2xl:text-5xl tracking-tight">
+                        <h1 className="font-light text-[#6b9238] text-3xl lg:text-4xl 2xl:text-5xl tracking-tight">
                             Collections
                         </h1>
                     </div>

@@ -7,6 +7,7 @@ import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingC
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import TestimonialsSection from "../Home/TestimonialsSection";
+import IndoorPlantsSlider from "../Home/IndoorPlantsSlider";
 import ProductCard from "../ProductCard";
 import { getProducts, getCollections, getNewArrivals, getProductsByCollection } from "../../lib/shopify_utilis";
 import { homeConfig } from "../../config/home.config";
@@ -470,6 +471,8 @@ export default function HomePage() {
           </section>
         )
       }
+
+      <IndoorPlantsSlider />
 
 
       {/* ══════════════════════════════════════

@@ -84,10 +84,10 @@ export default function CollectionsPage() {
 
                                 {/* Title + arrow — below image, no overlay */}
                                 <div className="flex items-center gap-1.5">
-                                    <span className="text-sm sm:text-base lg:text-lg text-[#1a1a1a] font-light leading-snug group-hover:text-[#009A7B] transition-colors duration-200">
+                                    <span className="text-sm sm:text-base lg:text-lg text-[#1a1a1a] font-light leading-snug group-hover:text-[#6B9238] transition-colors duration-200">
                                         {collection.name}
                                     </span>
-                                    <span className="text-[#1a1a1a] text-base leading-none group-hover:text-[#009A7B] transition-transform duration-200 group-hover:translate-x-1 inline-block">
+                                    <span className="text-[#1a1a1a] text-base leading-none group-hover:text-[#6B9238] transition-transform duration-200 group-hover:translate-x-1 inline-block">
                                         →
                                     </span>
                                 </div>

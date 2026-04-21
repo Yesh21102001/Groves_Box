@@ -491,7 +491,7 @@ export default function HomePage() {
 
               {/* CTA button */}
               <Link
-                href="/collections/all"
+                href="/collections"
                 className="inline-flex items-center justify-center gap-2 text-white px-9 py-4 rounded-full text-base font-medium transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5"
                 style={{
                   background: 'linear-gradient(135deg, #6B9238 0%, #8CAB4F 100%)',

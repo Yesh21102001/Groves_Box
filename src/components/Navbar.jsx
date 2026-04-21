@@ -126,6 +126,17 @@ export default function Navbar() {
         return () => document.removeEventListener('mousedown', h);
     }, [isAccountOpen]);
 
+    // ── FIX: programmatic navigation helper ──────────────────────────────
+    // Using router.push after closing the dropdown avoids the issue where
+    // the <Link> gets unmounted before Next.js finishes its client-side
+    // navigation (which was preventing /account from opening).
+    const goTo = (href) => {
+        setIsAccountOpen(false);
+        setIsMenuOpen(false);
+        setIsCartOpen(false);
+        router.push(href);
+    };
+
     // logout
     const handleLogout = async () => {
         try {
@@ -156,7 +167,7 @@ export default function Navbar() {
         { label: 'Wishlist', href: '/wishlist', icon: Heart },
         {
             label: 'Account',
-            href: isLoggedIn ? '/account' : '/account/login',
+            href: '/account',
             icon: User,
         },
     ];
@@ -288,7 +299,7 @@ export default function Navbar() {
                                 <button
                                     onClick={() => {
                                         if (isLoggedIn) setIsAccountOpen(p => !p);
-                                        else router.push('/account/login');
+                                        else router.push('/account');
                                     }}
                                     style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 7, borderRadius: 4, color: iconColor, display: 'flex', alignItems: 'center', gap: 2 }}
                                     onMouseEnter={e => e.currentTarget.style.background = scrolled ? 'rgba(120,162,64,0.1)' : ICON_HOVER}
@@ -312,12 +323,15 @@ export default function Navbar() {
                                                     <p style={{ fontSize: 14, fontWeight: 600 }}>{currentUser?.name}</p>
                                                     <p style={{ fontSize: 12, opacity: 0.85, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{currentUser?.email}</p>
                                                 </div>
-                                                <Link href="/account" onClick={() => setIsAccountOpen(false)}
-                                                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', textDecoration: 'none', color: '#374151', fontSize: 14 }}
+                                                {/* FIX: use button + router.push instead of <Link> */}
+                                                <button
+                                                    onClick={() => goTo('/account')}
+                                                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', width: '100%', background: 'none', border: 'none', cursor: 'pointer', color: '#374151', fontSize: 14, textAlign: 'left' }}
                                                     onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
-                                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                                >
                                                     <User size={16} /> My Account
-                                                </Link>
+                                                </button>
                                                 <div style={{ borderTop: '1px solid #e2e8f0' }} />
                                                 <button onClick={handleLogout}
                                                     style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', width: '100%', background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', fontSize: 14 }}
@@ -328,14 +342,16 @@ export default function Navbar() {
                                             </>
                                         ) : (
                                             <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                                                <Link href="/account/login" onClick={() => setIsAccountOpen(false)}
-                                                    style={{ display: 'flex', justifyContent: 'center', padding: '10px 16px', background: GREEN, color: WHITE, textDecoration: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
+                                                <button
+                                                    onClick={() => goTo('/account')}
+                                                    style={{ display: 'flex', justifyContent: 'center', padding: '10px 16px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
                                                     Login
-                                                </Link>
-                                                <Link href="/account/register" onClick={() => setIsAccountOpen(false)}
-                                                    style={{ display: 'flex', justifyContent: 'center', padding: '10px 16px', border: `2px solid ${GREEN}`, color: GREEN, textDecoration: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
+                                                </button>
+                                                <button
+                                                    onClick={() => goTo('/account')}
+                                                    style={{ display: 'flex', justifyContent: 'center', padding: '10px 16px', border: `2px solid ${GREEN}`, color: GREEN, background: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
                                                     Sign Up
-                                                </Link>
+                                                </button>
                                             </div>
                                         )}
                                     </div>
@@ -419,10 +435,12 @@ export default function Navbar() {
                 <div style={{ padding: 16, borderTop: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {isLoggedIn ? (
                         <>
-                            <Link href="/account" onClick={() => setIsMenuOpen(false)}
-                                style={{ display: 'block', padding: '12px 16px', background: GREEN, color: WHITE, textDecoration: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14 }}>
+                            {/* FIX: button + router.push */}
+                            <button
+                                onClick={() => goTo('/account')}
+                                style={{ display: 'block', padding: '12px 16px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14, cursor: 'pointer' }}>
                                 My Account
-                            </Link>
+                            </button>
                             <button onClick={() => { handleLogout(); setIsMenuOpen(false); }}
                                 style={{ padding: '12px 16px', border: `2px solid #dc2626`, color: '#dc2626', background: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontSize: 14 }}>
                                 Logout
@@ -430,14 +448,16 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Link href="/account/login" onClick={() => setIsMenuOpen(false)}
-                                style={{ display: 'block', padding: '12px 16px', background: GREEN, color: WHITE, textDecoration: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14 }}>
+                            <button
+                                onClick={() => goTo('/account')}
+                                style={{ display: 'block', padding: '12px 16px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14, cursor: 'pointer' }}>
                                 Login
-                            </Link>
-                            <Link href="/account/register" onClick={() => setIsMenuOpen(false)}
-                                style={{ display: 'block', padding: '12px 16px', border: `2px solid ${GREEN}`, color: GREEN, textDecoration: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14 }}>
+                            </button>
+                            <button
+                                onClick={() => goTo('/account')}
+                                style={{ display: 'block', padding: '12px 16px', border: `2px solid ${GREEN}`, color: GREEN, background: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14, cursor: 'pointer' }}>
                                 Sign Up
-                            </Link>
+                            </button>
                         </>
                     )}
                 </div>

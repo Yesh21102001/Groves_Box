@@ -440,7 +440,7 @@ export default function HomePage() {
                 >
                   <div
                     className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #4a8a3a 0%, #2d6b25 100%)' }}
+                    style={{ background: 'linear-gradient(135deg, #6B9238 0%, #8CAB4F 100%)' }}
                   >
                     <ArrowUp size={18} strokeWidth={2.5} className="text-white" />
                   </div>
@@ -494,7 +494,7 @@ export default function HomePage() {
                 href="/collections/all"
                 className="inline-flex items-center justify-center gap-2 text-white px-9 py-4 rounded-full text-base font-medium transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5"
                 style={{
-                  background: 'linear-gradient(135deg, #2d7a3e 0%, #1e5a2e 100%)',
+                  background: 'linear-gradient(135deg, #6B9238 0%, #8CAB4F 100%)',
                   boxShadow: '0 8px 20px rgba(30,90,46,0.3)',
                 }}
               >

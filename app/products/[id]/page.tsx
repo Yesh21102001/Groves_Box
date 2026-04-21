@@ -69,7 +69,7 @@ const StarRating = ({
                     key={star}
                     size={size}
                     className={`transition-colors ${star <= (interactive ? hover || rating : rating)
-                        ? 'fill-[#2F8C6E] text-[#2F8C6E]'
+                        ? 'fill-[#78a240] text-[#78a240]'
                         : 'fill-gray-200 text-gray-200'
                         } ${interactive ? 'cursor-pointer' : ''}`}
                     onMouseEnter={() => interactive && setHover(star)}
@@ -110,11 +110,11 @@ const RatingBar = ({ stars, count, total }: { stars: number; count: number; tota
         <div className="flex items-center gap-3 text-sm">
             <div className="flex items-center gap-0.5 w-20 flex-shrink-0">
                 {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} size={11} className={s <= stars ? 'fill-[#2F8C6E] text-[#2F8C6E]' : 'fill-gray-200 text-gray-200'} />
+                    <Star key={s} size={11} className={s <= stars ? 'fill-[#78a240] text-[#78a240]' : 'fill-gray-200 text-gray-200'} />
                 ))}
             </div>
             <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-[#2F8C6E] rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                <div className="h-full bg-[#78a240] rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
             </div>
             <span className="text-gray-500 w-6 text-right">({count})</span>
         </div>
@@ -161,18 +161,18 @@ const WriteReviewModal = ({ onClose, onSubmit }: { onClose: () => void; onSubmit
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Review Title</label>
-                        <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Summarize your experience" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2F8C6E]" />
+                        <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Summarize your experience" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#78a240]" />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Your Review *</label>
-                        <textarea value={body} onChange={e => setBody(e.target.value)} rows={4} placeholder="Tell us about your experience..." className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2F8C6E] resize-none" />
+                        <textarea value={body} onChange={e => setBody(e.target.value)} rows={4} placeholder="Tell us about your experience..." className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#78a240] resize-none" />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
-                        <input value={name} onChange={e => setName(e.target.value)} placeholder="First name only" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2F8C6E]" />
+                        <input value={name} onChange={e => setName(e.target.value)} placeholder="First name only" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#78a240]" />
                     </div>
                     <div className="flex items-center gap-2">
-                        <input type="checkbox" id="recommend" checked={recommend} onChange={e => setRecommend(e.target.checked)} className="accent-[#2F8C6E]" />
+                        <input type="checkbox" id="recommend" checked={recommend} onChange={e => setRecommend(e.target.checked)} className="accent-[#78a240]" />
                         <label htmlFor="recommend" className="text-sm text-gray-700">I would recommend this product</label>
                     </div>
                     <button type="submit" className="w-full bg-[#6b9238] text-white py-3 rounded-lg font-semibold hover:bg-[#2F4F3E] transition">
@@ -467,7 +467,7 @@ export default function ProductDetailPage() {
                                         Rs. {product.originalPrice.toLocaleString()}
                                     </span>
                                 )}
-                                <span className={`text-sm font-medium ${product.availableForSale ? 'text-[#2F8C6E]' : 'text-red-500'}`}>
+                                <span className={`text-sm font-medium ${product.availableForSale ? 'text-[#78a240]' : 'text-red-500'}`}>
                                     {product.availableForSale ? '• In Stock' : '• Out of Stock'}
                                 </span>
                             </div>
@@ -481,7 +481,7 @@ export default function ProductDetailPage() {
                                             <span className="font-normal text-gray-600">{selectedOptions[option.name]}</span>
                                         </label>
                                         {/planter/i.test(option.name) && (
-                                            <button className="text-sm text-[#2F8C6E] underline underline-offset-2 hover:text-[#6b9238] transition">
+                                            <button className="text-sm text-[#78a240] underline underline-offset-2 hover:text-[#6b9238] transition">
                                                 Style Guide
                                             </button>
                                         )}
@@ -528,7 +528,7 @@ export default function ProductDetailPage() {
                                                             }`}
                                                     >
                                                         {selected && (
-                                                            <span className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-[#2F8C6E] rounded-full flex items-center justify-center">
+                                                            <span className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-[#78a240] rounded-full flex items-center justify-center">
                                                                 <Check size={10} className="text-white" />
                                                             </span>
                                                         )}
@@ -557,8 +557,8 @@ export default function ProductDetailPage() {
                                     onClick={handleAddToCart}
                                     disabled={!product.availableForSale}
                                     className={`flex-1 py-4 font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 ${addedToCart
-                                        ? 'bg-[007b5f] text-white'
-                                        : 'bg-[#2F8C6E] hover:bg-[#009A7B] text-white'
+                                        ? 'bg-[#78a240] text-white'
+                                        : 'bg-[#78a240] hover:bg-[#8CAB4F] text-white'
                                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                                 >
                                     {addedToCart ? (
@@ -569,9 +569,9 @@ export default function ProductDetailPage() {
                                 </button>
                                 <button
                                     onClick={handleWishlistToggle}
-                                    className="w-14 h-14 border border-[#2F8C6E] rounded-4xl flex items-center justify-center hover:border-[#2F8C6E] hover:bg-green-50 transition-all duration-300"
+                                    className="w-14 h-14 border border-[#78a240] rounded-4xl flex items-center justify-center hover:border-[#8CAB4F] hover:bg-green-50 transition-all duration-300"
                                 >
-                                    <Heart size={20} className={isProductWishlisted ? 'fill-red-500 text-red-500' : 'text-[#2F8C6E]'} />
+                                    <Heart size={20} className={isProductWishlisted ? 'fill-red-500 text-red-500' : 'text-[#8CAB4F]'} />
                                 </button>
                             </div>
 
@@ -612,7 +612,7 @@ export default function ProductDetailPage() {
                                 <div className="space-y-4">
                                     {product.descriptionHtml && (
                                         <div
-                                            className="prose prose-sm max-w-none text-gray-600 [&_ul]:list-none [&_li]:flex [&_li]:gap-3 [&_li]:before:content-['→'] [&_li]:before:text-[#2F8C6E] [&_li]:before:flex-shrink-0"
+                                            className="prose prose-sm max-w-none text-gray-600 [&_ul]:list-none [&_li]:flex [&_li]:gap-3 [&_li]:before:content-['→'] [&_li]:before:text-[#78a240] [&_li]:before:flex-shrink-0"
                                             dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
                                         />
                                     )}
@@ -683,7 +683,7 @@ export default function ProductDetailPage() {
                             <div className="lg:col-span-2 space-y-6">
                                 <div className="flex items-center justify-between">
                                     <h3 className="font-semibold text-gray-900">Reviews {reviews.length}</h3>
-                                    <select className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#2F8C6E]">
+                                    <select className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#78a240]">
                                         <option>Most Recent</option>
                                         <option>Highest Rated</option>
                                         <option>Lowest Rated</option>
@@ -697,8 +697,8 @@ export default function ProductDetailPage() {
                                             <span className="text-sm text-gray-400">{review.date}</span>
                                         </div>
                                         {review.recommend && (
-                                            <div className="flex items-center gap-1.5 text-[#2F8C6E] text-sm mb-2">
-                                                <ThumbsUp size={13} className="fill-[#2F8C6E]" />
+                                            <div className="flex items-center gap-1.5 text-[#78a240] text-sm mb-2">
+                                                <ThumbsUp size={13} className="fill-[#78a240]" />
                                                 <span>I recommend this product</span>
                                             </div>
                                         )}

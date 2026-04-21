@@ -4,51 +4,71 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import {
-    colors,
-    typography,
-    layout,
     images,
-    meta,
     heroContent,
     founderContent,
     ctaContent,
     features,
-    transitions,
 } from '../../src/config/About-Us.config';
 
-// ── Metadata (driven by config) ───────────────────────────────────────────────
-// export const metadata = {
-//     title: meta.title,
-//     description: meta.description,
-// };
+/* ──────────────────────────────────────────────────────────────────────────
+   MINIMAL ABOUT — drop-in redesign
+   Palette:  ink #1F2A14  ·  leaf #6B9238  ·  moss #8CAB4F
+             sage #C2DEA3 ·  paper #F5F7F2
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────────────────────
+   Fonts (add once in your <head> or via next/font):
+     Fraunces        — display serif (opsz variable, light weights)
+     Instrument Sans — body sans
+     JetBrains Mono  — eyebrow labels
+   ────────────────────────────────────────────────────────────────────────── */
 
-/** Renders a paragraph that may be a plain string or an object with inline parts */
+const palette = {
+    ink: '#1F2A14',
+    inkSoft: '#4A5A3A',
+    leaf: '#6B9238',
+    moss: '#8CAB4F',
+    sage: '#C2DEA3',
+    sageSoft: '#E3EED1',
+    paper: '#F5F7F2',
+    paperWarm: '#EEF2E6',
+};
+
+const font = {
+    display: '"Fraunces", "Cormorant Garamond", Georgia, serif',
+    body: '"Instrument Sans", "Inter Tight", system-ui, sans-serif',
+    mono: '"JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace',
+};
+
+/* ─────────────────────────────── RichParagraph ─────────────────────────── */
 function RichParagraph({ paragraph }) {
-    // Plain string
+    const linkStyle = {
+        color: palette.leaf,
+        textDecoration: 'none',
+        borderBottom: `1px solid ${palette.moss}`,
+        paddingBottom: '1px',
+        transition: 'color .25s ease, border-color .25s ease',
+    };
+    const hoverIn = e => { e.currentTarget.style.color = palette.ink; e.currentTarget.style.borderColor = palette.ink; };
+    const hoverOut = e => { e.currentTarget.style.color = palette.leaf; e.currentTarget.style.borderColor = palette.moss; };
+
+    const pStyle = {
+        color: palette.inkSoft,
+        fontFamily: font.body,
+        fontSize: '1.0625rem',
+        lineHeight: 1.75,
+        letterSpacing: '-0.005em',
+        margin: 0,
+    };
+
     if (typeof paragraph === 'string') {
-        return (
-            <p style={{ color: colors.text.body, lineHeight: typography.lineHeight.relaxed }}>
-                {paragraph}
-            </p>
-        );
+        return <p style={pStyle}>{paragraph}</p>;
     }
 
-    // Paragraph with inline link
     if (paragraph.linkText) {
         return (
-            <p style={{ color: colors.text.body, lineHeight: typography.lineHeight.relaxed }}>
+            <p style={pStyle}>
                 {paragraph.before}
-                <a
-                    href={paragraph.linkHref}
-                    className={transitions.link}
-                    style={{ color: colors.accent, textDecoration: 'underline', fontWeight: typography.weights.medium }}
-                    onMouseOver={e => e.currentTarget.style.color = colors.accentHover}
-                    onMouseOut={e => e.currentTarget.style.color = colors.accent}
-                >
+                <a href={paragraph.linkHref} style={linkStyle} onMouseOver={hoverIn} onMouseOut={hoverOut}>
                     {paragraph.linkText}
                 </a>
                 {paragraph.after}
@@ -56,28 +76,20 @@ function RichParagraph({ paragraph }) {
         );
     }
 
-    // Paragraph with multiple inline parts (text / link / italic)
     if (paragraph.parts) {
         return (
-            <p style={{ color: colors.text.body, lineHeight: typography.lineHeight.relaxed }}>
+            <p style={pStyle}>
                 {paragraph.parts.map((part, i) => {
                     if (part.type === 'link') {
                         return (
-                            <a
-                                key={i}
-                                href={part.href}
-                                className={transitions.link}
-                                style={{ color: colors.accent, textDecoration: 'underline' }}
-                                onMouseOver={e => e.currentTarget.style.color = colors.accentHover}
-                                onMouseOut={e => e.currentTarget.style.color = colors.accent}
-                            >
+                            <a key={i} href={part.href} style={linkStyle} onMouseOver={hoverIn} onMouseOut={hoverOut}>
                                 {part.value}
                             </a>
                         );
                     }
                     if (part.type === 'italic') {
                         return (
-                            <span key={i} style={{ fontStyle: 'italic', color: colors.text.muted }}>
+                            <span key={i} style={{ fontStyle: 'italic', fontFamily: font.display, color: palette.ink }}>
                                 {part.value}
                             </span>
                         );
@@ -87,76 +99,121 @@ function RichParagraph({ paragraph }) {
             </p>
         );
     }
-
     return null;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// AboutUs Page
-// ─────────────────────────────────────────────────────────────────────────────
+/* ─────────────────────────────── Small bits ────────────────────────────── */
+const Eyebrow = ({ children, number }) => (
+    <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.875rem',
+        fontFamily: font.mono,
+        fontSize: '0.75rem',
+        letterSpacing: '0.18em',
+        textTransform: 'uppercase',
+        color: palette.leaf,
+        marginBottom: '2rem',
+    }}>
+        {number && <span style={{ color: palette.moss }}>{number}</span>}
+        <span style={{ width: '2rem', height: '1px', backgroundColor: palette.moss }} />
+        <span>{children}</span>
+    </div>
+);
+
+const ThinRule = ({ color = palette.sage, width = '100%' }) => (
+    <div style={{ width, height: '1px', backgroundColor: color }} />
+);
+
+/* ─────────────────────────────── Page ──────────────────────────────────── */
 export default function AboutUs() {
     return (
-        <div className="min-h-screen" style={{ backgroundColor: colors.page }}>
+        <div style={{ backgroundColor: palette.paper, color: palette.ink, minHeight: '100vh' }}>
 
-            {/* ── HERO SECTION ──────────────────────────────────────────────────── */}
+            {/* ── HERO ────────────────────────────────────────────────────── */}
             {features.showHeroSection && (
-                <section
-                    className="grid lg:grid-cols-2"
-                    style={{ minHeight: layout.hero.minHeight }}
-                >
-                    {/* Image panel */}
-                    <div
-                        className="relative lg:min-h-screen"
-                        style={{
-                            height: layout.hero.imageHeightMobile,
-                            order: layout.hero.imageOrder.mobile,
-                        }}
-                    >
-                        <div className="absolute inset-0 flex items-center justify-center p-8 lg:p-16">
-                            <div className="relative w-full h-full max-w-2xl">
+                <section style={{
+                    paddingTop: 'clamp(4rem, 10vh, 7rem)',
+                    paddingBottom: 'clamp(4rem, 10vh, 7rem)',
+                    paddingLeft: 'clamp(1.5rem, 6vw, 6rem)',
+                    paddingRight: 'clamp(1.5rem, 6vw, 6rem)',
+                }}>
+                    <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+
+                        <Eyebrow number="01">About</Eyebrow>
+
+                        <h1 style={{
+                            fontFamily: font.display,
+                            fontWeight: 300,
+                            fontSize: 'clamp(2.75rem, 7vw, 5.5rem)',
+                            lineHeight: 1.02,
+                            letterSpacing: '-0.025em',
+                            color: palette.ink,
+                            margin: 0,
+                            maxWidth: '18ch',
+                        }}>
+                            {heroContent.heading}
+                            {features.showTrademark && (
+                                <sup style={{
+                                    fontSize: '0.32em',
+                                    fontWeight: 400,
+                                    color: palette.leaf,
+                                    marginLeft: '0.1em',
+                                    top: '-1.2em',
+                                }}>®</sup>
+                            )}
+                        </h1>
+
+                        {/* Asymmetric split: image left, text right */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'minmax(0, 5fr) minmax(0, 7fr)',
+                            gap: 'clamp(2rem, 5vw, 5rem)',
+                            alignItems: 'start',
+                            marginTop: 'clamp(3rem, 7vh, 5rem)',
+                        }} className="hero-split">
+
+                            {/* Image column */}
+                            <div style={{
+                                position: 'relative',
+                                aspectRatio: '4 / 5',
+                                overflow: 'hidden',
+                                borderRadius: '2px',
+                                backgroundColor: palette.sageSoft,
+                            }}>
                                 <Image
                                     src={images.hero.src}
                                     alt={images.hero.alt}
                                     fill
-                                    className="object-cover"
-                                    style={{
-                                        objectFit: images.hero.objectFit,
-                                        borderRadius: layout.borderRadius.image,
-                                    }}
+                                    style={{ objectFit: images.hero.objectFit || 'cover' }}
                                     priority={images.hero.priority}
                                 />
+                                {/* subtle corner tick */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '1rem', left: '1rem',
+                                    width: '20px', height: '20px',
+                                    borderTop: `1px solid ${palette.paper}`,
+                                    borderLeft: `1px solid ${palette.paper}`,
+                                    opacity: 0.8,
+                                }} />
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: '1rem', right: '1rem',
+                                    width: '20px', height: '20px',
+                                    borderBottom: `1px solid ${palette.paper}`,
+                                    borderRight: `1px solid ${palette.paper}`,
+                                    opacity: 0.8,
+                                }} />
                             </div>
-                        </div>
-                    </div>
 
-                    {/* Content panel */}
-                    <div
-                        className="flex items-center justify-center"
-                        style={{
-                            background: `linear-gradient(135deg, ${colors.heroRight}, ${colors.heroRightVia}, ${colors.heroRight})`,
-                            padding: `${layout.hero.contentPadding.y.base} ${layout.hero.contentPadding.x.base}`,
-                            order: layout.hero.contentOrder.mobile,
-                            textAlign: layout.hero.contentAlign,
-                        }}
-                    >
-                        <div style={{ maxWidth: layout.maxWidth.heroText }}>
-                            <h1
-                                className="font-serif font-light leading-tight mb-8"
-                                style={{
-                                    fontFamily: typography.fonts.heading,
-                                    fontSize: typography.sizes.heroHeading.base,
-                                    fontWeight: typography.weights.light,
-                                    color: colors.text.heading,
-                                    lineHeight: typography.lineHeight.tight,
-                                }}
-                            >
-                                {heroContent.heading}
-                                {features.showTrademark && (
-                                    <sup style={{ fontSize: typography.sizes.superscript.base }}>®</sup>
-                                )}
-                            </h1>
-
-                            <div className="space-y-6">
+                            {/* Text column */}
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '1.5rem',
+                                paddingTop: '0.5rem',
+                            }}>
                                 {heroContent.paragraphs.map((para, i) => (
                                     <RichParagraph key={i} paragraph={para} />
                                 ))}
@@ -166,77 +223,88 @@ export default function AboutUs() {
                 </section>
             )}
 
-            {/* ── FOUNDER'S NOTE SECTION ────────────────────────────────────────── */}
+            {/* ── FOUNDER'S NOTE ──────────────────────────────────────────── */}
             {features.showFounderNote && (
-                <section
-                    style={{
-                        paddingTop: layout.founder.padding.y.base,
-                        paddingBottom: layout.founder.padding.y.base,
-                        paddingLeft: layout.founder.padding.x.base,
-                        paddingRight: layout.founder.padding.x.base,
-                        background: `linear-gradient(to bottom, ${colors.founderBg}, ${colors.founderBgVia}, ${colors.founderBgVia})`,
-                    }}
-                >
-                    <div style={{ maxWidth: layout.maxWidth.content, margin: '0 auto' }}>
+                <section style={{
+                    backgroundColor: palette.paperWarm,
+                    paddingTop: 'clamp(5rem, 12vh, 8rem)',
+                    paddingBottom: 'clamp(5rem, 12vh, 8rem)',
+                    paddingLeft: 'clamp(1.5rem, 6vw, 6rem)',
+                    paddingRight: 'clamp(1.5rem, 6vw, 6rem)',
+                    position: 'relative',
+                }}>
+                    {/* Top hairline */}
+                    <div style={{
+                        position: 'absolute',
+                        top: 0, left: 0, right: 0,
+                        height: '1px',
+                        backgroundColor: palette.sage,
+                    }} />
 
-                        {/* Founder image */}
-                        <div
-                            className="relative w-full overflow-hidden"
-                            style={{
-                                height: layout.founder.imageHeight.base,
-                                marginBottom: layout.founder.imageMarginBottom,
-                                borderRadius: layout.founder.imageRadius,
-                                boxShadow: layout.founder.imageShadow,
-                            }}
-                        >
+                    <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+                        <Eyebrow number="02">Founder's Note</Eyebrow>
+
+                        <h2 style={{
+                            fontFamily: font.display,
+                            fontWeight: 300,
+                            fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
+                            lineHeight: 1.1,
+                            letterSpacing: '-0.02em',
+                            color: palette.ink,
+                            margin: '0 0 3rem 0',
+                        }}>
+                            {founderContent.sectionHeading}
+                        </h2>
+
+                        {/* Founder portrait — smaller, restrained */}
+                        <div style={{
+                            position: 'relative',
+                            width: '100%',
+                            aspectRatio: '3 / 2',
+                            marginBottom: '3rem',
+                            overflow: 'hidden',
+                            borderRadius: '2px',
+                            backgroundColor: palette.sage,
+                        }}>
                             <Image
                                 src={images.founder.src}
                                 alt={images.founder.alt}
                                 fill
-                                style={{ objectFit: images.founder.objectFit }}
+                                style={{ objectFit: images.founder.objectFit || 'cover' }}
                                 priority={images.founder.priority}
                             />
                         </div>
 
-                        {/* Founder note text */}
-                        <div>
-                            <h2
-                                className="font-serif font-light mb-12"
-                                style={{
-                                    fontFamily: typography.fonts.heading,
-                                    fontSize: typography.sizes.sectionHeading.base,
-                                    fontWeight: typography.weights.light,
-                                    color: colors.text.heading,
-                                }}
-                            >
-                                {founderContent.sectionHeading}
-                            </h2>
+                        {/* Body */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            {founderContent.paragraphs.map((para, i) => (
+                                <RichParagraph key={i} paragraph={para} />
+                            ))}
+                        </div>
 
-                            <div className="space-y-6">
-                                {founderContent.paragraphs.map((para, i) => (
-                                    <RichParagraph key={i} paragraph={para} />
-                                ))}
-                            </div>
-
-                            {/* Sign-off */}
-                            <div style={{ marginTop: '3rem' }}>
-                                <p
-                                    className="font-serif font-light"
-                                    style={{
-                                        fontSize: typography.sizes.founderSign.base,
-                                        color: colors.text.body,
-                                        marginBottom: '0.5rem',
-                                    }}
-                                >
+                        {/* Sign-off */}
+                        <div style={{ marginTop: '3.5rem', display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                            <div style={{ width: '3rem', height: '1px', backgroundColor: palette.leaf }} />
+                            <div>
+                                <p style={{
+                                    fontFamily: font.display,
+                                    fontStyle: 'italic',
+                                    fontWeight: 300,
+                                    fontSize: '1.375rem',
+                                    color: palette.ink,
+                                    margin: 0,
+                                    lineHeight: 1.3,
+                                }}>
                                     {founderContent.signOff.line1}
                                 </p>
-                                <p
-                                    className="font-serif font-light"
-                                    style={{
-                                        fontSize: typography.sizes.founderSign.base,
-                                        color: colors.text.body,
-                                    }}
-                                >
+                                <p style={{
+                                    fontFamily: font.mono,
+                                    fontSize: '0.75rem',
+                                    letterSpacing: '0.18em',
+                                    textTransform: 'uppercase',
+                                    color: palette.moss,
+                                    margin: '0.5rem 0 0 0',
+                                }}>
                                     {founderContent.signOff.line2}
                                 </p>
                             </div>
@@ -245,72 +313,121 @@ export default function AboutUs() {
                 </section>
             )}
 
-            {/* ── CTA SECTION ───────────────────────────────────────────────────── */}
+            {/* ── CTA ─────────────────────────────────────────────────────── */}
             {features.showCtaSection && (
-                <section
-                    style={{
-                        paddingTop: layout.cta.padding.y,
-                        paddingBottom: layout.cta.padding.y,
-                        paddingLeft: layout.cta.padding.x.base,
-                        paddingRight: layout.cta.padding.x.base,
-                        backgroundColor: colors.ctaBg,
-                        textAlign: layout.cta.textAlign,
-                    }}
-                >
-                    <div style={{ maxWidth: layout.maxWidth.content, margin: '0 auto' }}>
-                        <h2
-                            className="font-serif"
-                            style={{
-                                fontFamily: typography.fonts.heading,
-                                fontSize: typography.sizes.ctaHeading.base,
-                                fontWeight: typography.weights.black,
-                                color: colors.text.ctaHeading,
-                                marginBottom: '1.5rem',
-                            }}
-                        >
+                <section style={{
+                    backgroundColor: palette.sageSoft,
+                    paddingTop: 'clamp(5rem, 12vh, 8rem)',
+                    paddingBottom: 'clamp(5rem, 12vh, 8rem)',
+                    paddingLeft: 'clamp(1.5rem, 6vw, 6rem)',
+                    paddingRight: 'clamp(1.5rem, 6vw, 6rem)',
+                    position: 'relative',
+                }}>
+                    {/* Top hairline to separate from founder section */}
+                    <div style={{
+                        position: 'absolute',
+                        top: 0, left: 0, right: 0,
+                        height: '1px',
+                        backgroundColor: palette.sage,
+                    }} />
+
+                    <div style={{ maxWidth: '840px', margin: '0 auto', position: 'relative' }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.875rem',
+                            fontFamily: font.mono,
+                            fontSize: '0.75rem',
+                            letterSpacing: '0.18em',
+                            textTransform: 'uppercase',
+                            color: palette.leaf,
+                            marginBottom: '2rem',
+                        }}>
+                            <span style={{ color: palette.moss }}>03</span>
+                            <span style={{ width: '2rem', height: '1px', backgroundColor: palette.moss }} />
+                            <span>Get in touch</span>
+                        </div>
+
+                        <h2 style={{
+                            fontFamily: font.display,
+                            fontWeight: 300,
+                            fontSize: 'clamp(2.25rem, 5vw, 3.75rem)',
+                            lineHeight: 1.05,
+                            letterSpacing: '-0.025em',
+                            color: palette.ink,
+                            margin: '0 0 1.5rem 0',
+                            maxWidth: '20ch',
+                        }}>
                             {ctaContent.heading}
                         </h2>
 
-                        <p
-                            style={{
-                                fontSize: typography.sizes.ctaBody.base,
-                                color: colors.text.ctaBody,
-                                marginBottom: '2.5rem',
-                                maxWidth: '42rem',
-                                margin: '0 auto 2.5rem',
-                                lineHeight: typography.lineHeight.relaxed,
-                            }}
-                        >
+                        <p style={{
+                            fontFamily: font.body,
+                            fontSize: '1.0625rem',
+                            lineHeight: 1.7,
+                            color: palette.inkSoft,
+                            maxWidth: '42rem',
+                            margin: '0 0 3rem 0',
+                        }}>
                             {ctaContent.subtext}
                         </p>
 
-                        <div
-                            className="flex flex-col sm:flex-row gap-4 items-center"
-                            style={{ justifyContent: layout.cta.textAlign === 'center' ? 'center' : 'flex-start' }}
-                        >
-                            {ctaContent.buttons.map((btn, i) => (
-                                <Link
-                                    key={i}
-                                    href={btn.href}
-                                    className={`${transitions.button} ${transitions.buttonHover} w-full sm:w-auto inline-block text-center`}
-                                    style={{
-                                        backgroundColor: btn.style === 'primary' ? colors.button.bg : 'transparent',
-                                        color: btn.style === 'primary' ? colors.button.text : colors.button.bg,
-                                        border: btn.style === 'outline' ? `2px solid ${colors.button.bg}` : 'none',
-                                        padding: '1rem 2rem',
-                                        borderRadius: layout.borderRadius.button,
-                                        fontWeight: typography.weights.medium,
-                                        fontFamily: typography.fonts.body,
-                                    }}
-                                >
-                                    {btn.label}
-                                </Link>
-                            ))}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                            {ctaContent.buttons.map((btn, i) => {
+                                const isPrimary = btn.style === 'primary';
+                                return (
+                                    <Link
+                                        key={i}
+                                        href={btn.href}
+                                        className="cta-btn"
+                                        data-variant={isPrimary ? 'primary' : 'ghost'}
+                                        style={{
+                                            fontFamily: font.body,
+                                            fontSize: '0.9375rem',
+                                            fontWeight: 500,
+                                            letterSpacing: '0.01em',
+                                            padding: '1rem 1.75rem',
+                                            borderRadius: '2px',
+                                            textDecoration: 'none',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            transition: 'all .3s cubic-bezier(.2,.6,.2,1)',
+                                            backgroundColor: isPrimary ? palette.leaf : 'transparent',
+                                            color: isPrimary ? palette.paper : palette.ink,
+                                            border: isPrimary ? '1px solid transparent' : `1px solid ${palette.ink}`,
+                                        }}
+                                    >
+                                        {btn.label}
+                                        <span aria-hidden style={{ display: 'inline-block', transition: 'transform .3s ease' }}>→</span>
+                                    </Link>
+                                );
+                            })}
                         </div>
                     </div>
                 </section>
             )}
 
+            {/* Scoped styles: hover, responsive hero split */}
+            <style jsx>{`
+                :global(.cta-btn[data-variant="primary"]:hover) {
+                    background-color: ${palette.moss};
+                    transform: translateY(-1px);
+                }
+                :global(.cta-btn[data-variant="ghost"]:hover) {
+                    background-color: ${palette.ink};
+                    border-color: ${palette.ink};
+                    color: ${palette.paper};
+                }
+                :global(.cta-btn:hover span[aria-hidden]) {
+                    transform: translateX(4px);
+                }
+                @media (max-width: 860px) {
+                    :global(.hero-split) {
+                        grid-template-columns: 1fr !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 }

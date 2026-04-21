@@ -657,7 +657,7 @@ export default function HomePage() {
                 <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
               </div>
             </div>
-            <Link href="/cart" className="bg-[#6b9238] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition">
+            <Link href="/cart" className="bg-[#6b9238] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#8CAB4F] transition">
               View Cart
             </Link>
           </div>

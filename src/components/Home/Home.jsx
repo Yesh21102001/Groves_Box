@@ -514,7 +514,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{categoriesConfig.title}</h2>
-              <Link href={categoriesConfig.viewAllHref} className="text-green-600 text-sm font-semibold hover:underline flex items-center gap-1">
+              <Link href={categoriesConfig.viewAllHref} className="text-[#6B9238] text-sm font-semibold hover:underline flex items-center gap-1">
                 {categoriesConfig.viewAllText} <ArrowRight size={14} />
               </Link>
             </div>

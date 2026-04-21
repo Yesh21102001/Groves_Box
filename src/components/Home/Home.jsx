@@ -61,9 +61,9 @@ function WishlistButton({ product, className = "" }) {
 
 const featuredCollection = {
   handle: "Gift Box",
-  label: "Spring into Green –",
+  label: "Gift BOX –",
   discount: "35%",
-  titleAfter: "Off All Indoor Plants!",
+  titleAfter: "Off All Gifts Box!",
   description:
     "One simple and rewarding way to make a difference is by incorporating at-home composting and reusing materials into your gardening routine.",
   cta: "Explore More",

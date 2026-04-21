@@ -12,7 +12,7 @@ export const navbarConfig = {
         emoji: "🌿",
         mobileShort: "GB",
         href: "/",
-        color: "#007B57",
+        color: "#78a240",
         fontSize: "text-2xl md:text-3xl",
         fontWeight: "font-bold",
         emojiSize: "text-3xl md:text-4xl",
@@ -41,7 +41,7 @@ export const navbarConfig = {
 
     // ── Nav Collection Pills (Desktop) ────────────────────
     collectionPills: {
-        activeBg: "#007B57",
+        activeBg: "#78a240",
         activeText: "#ffffff",
         inactiveBg: "transparent",
         inactiveText: "#374151",
@@ -67,7 +67,7 @@ export const navbarConfig = {
 
     // ── Cart Badge ────────────────────────────────────────
     cartBadge: {
-        bg: "#007B57",
+        bg: "#78a240",
         textColor: "#ffffff",
         fontSize: "text-xs",
         fontWeight: "font-bold",
@@ -81,15 +81,15 @@ export const navbarConfig = {
         shadow: "shadow-2xl",
 
         // Logged-in header gradient
-        loggedInGradientFrom: "#007B57",
+        loggedInGradientFrom: "#78a240",
         loggedInGradientTo: "#009A7B",
         loggedInTextColor: "#ffffff",
 
         // Menu items
         itemHoverBg: "#F0F4F1",
         itemIconBg: "#F0F4F1",
-        itemIconColor: "#007B57",
-        itemIconHoverBg: "#007B57",
+        itemIconColor: "#78a240",
+        itemIconHoverBg: "#78a240",
         itemIconHoverColor: "#ffffff",
 
         // Logout button
@@ -106,30 +106,30 @@ export const navbarConfig = {
         guestSubtitle: "Sign in to your account",
         loginHref: "/login",
         loginLabel: "Log In",
-        loginBg: "#007B57",
+        loginBg: "#78a240",
         loginHoverBg: "#009A7B",
         loginTextColor: "#ffffff",
         signupHref: "/signup",
         signupLabel: "Create Account",
-        signupBorderColor: "#007B57",
-        signupTextColor: "#007B57",
+        signupBorderColor: "#78a240",
+        signupTextColor: "#78a240",
         signupHoverBg: "#F0F4F1",
     },
 
     // ── Cart Sidebar ──────────────────────────────────────
     cartSidebar: {
         width: "w-full sm:w-96",
-        headerTitleColor: "#007B57",
+        headerTitleColor: "#78a240",
         headerTitle: "Shopping Cart",
         emptyIcon: true,
         emptyMessage: "Your cart is empty",
         emptyButtonLabel: "Continue Shopping",
-        emptyButtonBg: "#007B57",
+        emptyButtonBg: "#78a240",
         emptyButtonHoverBg: "#2F4F3E",
 
         // Item styles
         itemBorderColor: "#E5E7EB",
-        itemNameColor: "#007B57",
+        itemNameColor: "#78a240",
         itemPriceColor: "#2F4F3E",
         itemImageBg: "#F3F4F6",
 
@@ -140,19 +140,19 @@ export const navbarConfig = {
 
         // Footer
         subtotalLabel: "Subtotal",
-        subtotalColor: "#007B57",
+        subtotalColor: "#78a240",
         subtotalNote: "Shipping and taxes calculated at checkout",
         subtotalNoteColor: "#6B7280",
 
         viewCartHref: "/cart",
         viewCartLabel: "View Cart",
-        viewCartBg: "#007B57",
+        viewCartBg: "#78a240",
         viewCartHoverBg: "#009A7B",
         viewCartTextColor: "#ffffff",
 
         continueLabel: "Continue Shopping",
-        continueBorderColor: "#007B57",
-        continueTextColor: "#007B57",
+        continueBorderColor: "#78a240",
+        continueTextColor: "#78a240",
         continueHoverBg: "#F3F4F6",
     },
 
@@ -161,7 +161,7 @@ export const navbarConfig = {
         bg: "#ffffff",
         borderColor: "#E5E7EB",
         height: "h-16",
-        activeColor: "#007B57",
+        activeColor: "#78a240",
         inactiveColor: "#9CA3AF",  // gray-400
         hoverColor: "#000000",
         iconSize: 24,
@@ -169,10 +169,10 @@ export const navbarConfig = {
         labelFontWeight: "font-medium",
         labelMarginTop: "mt-1",
         items: [
-            { label: "Home", icon: "Home", href: "/" },
-            { label: "Shop", icon: "Store", href: "/products" },
-            { label: "Wishlist", icon: "Heart", href: "/wishlist" },
-            { label: "Account", icon: "User", href: "/account", authHref: "/login" },
+            { label: "Home", icon: "/icons/house.png", href: "/" },
+            { label: "Shop", icon: "/icons/shopping-bag.png", href: "/products" },
+            { label: "Wishlist", icon: "/icons/heart.png", href: "/wishlist" },
+            { label: "Account", icon: "/icons/user.png", href: "/account", authHref: "/login" },
         ],
     },
 
@@ -183,7 +183,7 @@ export const navbarConfig = {
         shadow: "shadow-xl",
 
         // Header
-        brandColor: "#007B57",
+        brandColor: "#78a240",
         brandEmoji: "🌿",
         brandName: "Groves Box",
 
@@ -193,7 +193,7 @@ export const navbarConfig = {
         userAvatarTextColor: "#ffffff",
 
         // Collections section heading
-        sectionTitleColor: "#007B57",
+        sectionTitleColor: "#78a240",
         sectionTitleSize: "text-lg",
         sectionTitleWeight: "font-semibold",
         sectionTitle: "Collections",
@@ -218,7 +218,7 @@ export const navbarConfig = {
         // Bottom action buttons
         myAccountLabel: "My Account",
         myAccountHref: "/account",
-        myAccountBg: "#007B57",
+        myAccountBg: "#78a240",
         myAccountHoverBg: "#009A7B",
         myAccountTextColor: "#ffffff",
 
@@ -229,14 +229,14 @@ export const navbarConfig = {
 
         loginLabel: "Log In",
         loginHref: "/login",
-        loginBg: "#007B57",
+        loginBg: "#78a240",
         loginHoverBg: "#009A7B",
         loginTextColor: "#ffffff",
 
         signupLabel: "Sign Up",
         signupHref: "/signup",
-        signupBorderColor: "#007B57",
-        signupTextColor: "#007B57",
+        signupBorderColor: "#78a240",
+        signupTextColor: "#78a240",
         signupHoverBg: "#F9FAFB",
     },
 
@@ -252,7 +252,7 @@ export const navbarConfig = {
         message: "You have been successfully logged out. Thank you for visiting Groves Box!",
         messageColor: "#4B5563",
         closeLabel: "Close",
-        closeBg: "#007B57",
+        closeBg: "#78a240",
         closeHoverBg: "#009A7B",
         closeTextColor: "#ffffff",
         autoCloseDuration: 2000,        // ms before auto-redirect

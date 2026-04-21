@@ -6,10 +6,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
     Search, Heart, User, ShoppingCart, ChevronDown,
     Menu, X, ChevronRight, Minus, Plus, Trash2, LogOut, CheckCircle,
-    Home, Store
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { getCollections, customerLogout } from '../lib/shopify_utilis';
+import { navbarConfig } from '../config/Navbar.config.jsx';
 
 // ─── Brand SVG leaf icon ───────────────────────────────────────────────────
 function LeafIcon() {
@@ -126,10 +126,7 @@ export default function Navbar() {
         return () => document.removeEventListener('mousedown', h);
     }, [isAccountOpen]);
 
-    // ── FIX: programmatic navigation helper ──────────────────────────────
-    // Using router.push after closing the dropdown avoids the issue where
-    // the <Link> gets unmounted before Next.js finishes its client-side
-    // navigation (which was preventing /account from opening).
+    // programmatic navigation helper
     const goTo = (href) => {
         setIsAccountOpen(false);
         setIsMenuOpen(false);
@@ -155,22 +152,14 @@ export default function Navbar() {
         }
     };
 
-    // ── navbar bg ─────────────────────────────────────────────────────────
+    // navbar bg
     const navBg = scrolled ? WHITE : GREEN;
     const iconColor = scrolled ? GREEN_DEEP : WHITE;
     const textColor = scrolled ? GREEN_DEEP : WHITE;
 
-    // ── bottom nav items ──────────────────────────────────────────────────
-    const bottomNavItems = [
-        { label: 'Home', href: '/', icon: Home },
-        { label: 'Shop', href: '/collections', icon: Store },
-        { label: 'Wishlist', href: '/wishlist', icon: Heart },
-        {
-            label: 'Account',
-            href: '/account',
-            icon: User,
-        },
-    ];
+    // ── Bottom nav items — now pulled straight from config ──────────────
+    const bottomNavItems = navbarConfig.mobileBottomNav.items;
+    const bottomNavCfg = navbarConfig.mobileBottomNav;
 
     return (
         <>
@@ -323,7 +312,6 @@ export default function Navbar() {
                                                     <p style={{ fontSize: 14, fontWeight: 600 }}>{currentUser?.name}</p>
                                                     <p style={{ fontSize: 12, opacity: 0.85, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{currentUser?.email}</p>
                                                 </div>
-                                                {/* FIX: use button + router.push instead of <Link> */}
                                                 <button
                                                     onClick={() => goTo('/account')}
                                                     style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', width: '100%', background: 'none', border: 'none', cursor: 'pointer', color: '#374151', fontSize: 14, textAlign: 'left' }}
@@ -435,7 +423,6 @@ export default function Navbar() {
                 <div style={{ padding: 16, borderTop: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {isLoggedIn ? (
                         <>
-                            {/* FIX: button + router.push */}
                             <button
                                 onClick={() => goTo('/account')}
                                 style={{ display: 'block', padding: '12px 16px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14, cursor: 'pointer' }}>
@@ -582,8 +569,8 @@ export default function Navbar() {
                     left: 0,
                     right: 0,
                     height: 64,
-                    background: WHITE,
-                    borderTop: '1px solid #e2e8f0',
+                    background: bottomNavCfg.bg,
+                    borderTop: `1px solid ${bottomNavCfg.borderColor}`,
                     boxShadow: '0 -2px 12px rgba(0,0,0,0.06)',
                     zIndex: 45,
                     justifyContent: 'space-around',
@@ -591,15 +578,23 @@ export default function Navbar() {
                     paddingBottom: 'env(safe-area-inset-bottom)',
                 }}
             >
-                {bottomNavItems.map(({ label, href, icon: Icon }) => {
+                {bottomNavItems.map(({ label, href, icon, authHref }) => {
+                    // If user is not logged in and item has authHref, redirect to it
+                    const finalHref = (!isLoggedIn && authHref) ? authHref : href;
+
                     const active =
                         href === '/'
                             ? pathname === '/'
                             : pathname === href || pathname.startsWith(href + '/');
+
+                    const iconColor = active
+                        ? bottomNavCfg.activeColor
+                        : bottomNavCfg.inactiveColor;
+
                     return (
                         <Link
                             key={label}
-                            href={href}
+                            href={finalHref}
                             style={{
                                 flex: 1,
                                 display: 'flex',
@@ -608,7 +603,7 @@ export default function Navbar() {
                                 justifyContent: 'center',
                                 gap: 3,
                                 textDecoration: 'none',
-                                color: active ? GREEN : '#6b7280',
+                                color: iconColor,
                                 fontSize: 11,
                                 fontWeight: active ? 600 : 500,
                                 height: '100%',
@@ -625,12 +620,31 @@ export default function Navbar() {
                                         transform: 'translateX(-50%)',
                                         width: 32,
                                         height: 3,
-                                        background: GREEN,
+                                        background: bottomNavCfg.activeColor,
                                         borderRadius: '0 0 4px 4px',
                                     }}
                                 />
                             )}
-                            <Icon size={22} strokeWidth={active ? 2.2 : 1.8} />
+
+                            {/* Icon rendered as CSS mask → color changes with activeColor */}
+                            <span
+                                style={{
+                                    display: 'inline-block',
+                                    width: bottomNavCfg.iconSize,
+                                    height: bottomNavCfg.iconSize,
+                                    backgroundColor: iconColor,
+                                    WebkitMaskImage: `url(${icon})`,
+                                    maskImage: `url(${icon})`,
+                                    WebkitMaskSize: 'contain',
+                                    maskSize: 'contain',
+                                    WebkitMaskRepeat: 'no-repeat',
+                                    maskRepeat: 'no-repeat',
+                                    WebkitMaskPosition: 'center',
+                                    maskPosition: 'center',
+                                    transition: 'background-color 0.2s',
+                                }}
+                            />
+
                             <span>{label}</span>
                         </Link>
                     );

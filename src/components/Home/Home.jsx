@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from 'react';
-import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingCart, X, ArrowRight, GraduationCap, Users, Shield } from "lucide-react";
+import { Phone, MessageSquare, Mail, ChevronRight, ChevronLeft, Heart, ShoppingCart, X, ArrowRight, ArrowUp, GraduationCap, Users, Shield } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import TestimonialsSection from "../Home/TestimonialsSection";
@@ -70,9 +70,7 @@ const featuredCollection = {
   image: "/images/2148488544.jpg",
 };
 
-
-
-// Each card navigates to /collections/[handle] on click
+// ── Category Row ─────────────────────────────────────────────────────
 function CategoryRow({ categories }) {
   return (
     <div style={{ width: "100%", overflowX: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}>
@@ -94,7 +92,6 @@ function CategoryRow({ categories }) {
           overflowX: "auto",
           scrollbarWidth: "none",
           padding: "8px 0 12px",
-          /* Show 6 on desktop, scroll for more; on mobile ~3 visible then scroll */
           justifyContent: "center",
         }}
       >
@@ -116,7 +113,6 @@ function CategoryRow({ categories }) {
                 textDecoration: "none",
               }}
             >
-              {/* Circle image */}
               <div
                 className="cat-circle"
                 style={{
@@ -140,8 +136,6 @@ function CategoryRow({ categories }) {
                   <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.5rem" }}>🪴</div>
                 )}
               </div>
-
-              {/* Label */}
               <div style={{ textAlign: "center" }}>
                 <p
                   className="cat-name"
@@ -149,7 +143,6 @@ function CategoryRow({ categories }) {
                 >
                   {cat.name}
                 </p>
-
               </div>
             </Link>
           );
@@ -165,7 +158,7 @@ export default function HomePage() {
   const [bestSellerIndex, setBestSellerIndex] = useState(0);
   const { cartItems, addToCart } = useCart();
   const [saleProducts, setSaleProducts] = useState([]);
-  const [products, setProducts] = useState([]); // best sellers fallback
+  const [products, setProducts] = useState([]);
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [featuredCategory, setFeaturedCategory] = useState(null);
   const [newArrivals, setNewArrivals] = useState([]);
@@ -174,7 +167,6 @@ export default function HomePage() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -196,7 +188,6 @@ export default function HomePage() {
           getProductsByCollection(onSale.collectionHandle, onSale.limit).then(d => d.length > 0 ? d : getProducts(onSale.limit)),
           getCollections(20),
           getNewArrivals(newArrivalsConfig.limit).then(d => d && d.length > 0 ? d : getProducts(newArrivalsConfig.limit)),
-
         ]);
         setProducts(bestSellersData || []);
         setSaleProducts(saleData || []);
@@ -231,7 +222,6 @@ export default function HomePage() {
     fetchAllData();
   }, []);
 
-
   const CARDS_PER_PAGE = 4;
   const displayProducts = categoryProducts.length > 0 ? categoryProducts : products;
   const maxIndex = Math.max(0, displayProducts.length - CARDS_PER_PAGE);
@@ -260,80 +250,256 @@ export default function HomePage() {
     <div className={`bg-white ${totalItems > 0 ? 'pb-24 sm:pb-20' : ''}`}>
 
       {/* ══════════════════════════════════════
-          HERO
+          HERO — Boutique Plants. Big Love.
       ══════════════════════════════════════ */}
-      <section className="w-full relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f0f4ee 0%, #e8f0e4 50%, #f2f5f0 100%)' }}>
-        <div className="absolute inset-0 flex items-center justify-start pointer-events-none select-none overflow-hidden">
-          <span
-            className="font-serif font-black leading-none tracking-tight"
-            style={{
-              fontSize: 'clamp(80px, 18vw, 220px)',
-              color: 'transparent',
-              WebkitTextStroke: '2px rgba(160,185,150,0.18)',
-              letterSpacing: '-0.02em',
-              whiteSpace: 'nowrap',
-              transform: 'translateX(-5%)',
-            }}
+      <section
+        className="w-full relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(120deg, #e8f0e3 0%, #eef5ea 40%, #e4efdc 100%)',
+        }}
+      >
+        {/* ── Decorative layer (absolute, non-interactive) ── */}
+        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+
+          {/* Trailing ivy vine — top-left */}
+          <svg
+            className="absolute -top-4 -left-4 md:left-0"
+            width="260"
+            height="640"
+            viewBox="0 0 260 640"
+            fill="none"
+            style={{ opacity: 0.85 }}
           >
-            GROVES
-          </span>
-        </div>
-        <div className="absolute inset-0 flex items-end justify-start pointer-events-none select-none overflow-hidden pb-2">
-          <span
-            className="font-serif font-black leading-none tracking-tight"
-            style={{
-              fontSize: 'clamp(80px, 18vw, 220px)',
-              color: 'transparent',
-              WebkitTextStroke: '2px rgba(160,185,150,0.13)',
-              letterSpacing: '-0.02em',
-              whiteSpace: 'nowrap',
-              transform: 'translateX(5%)',
-            }}
+            {/* Main vine stem */}
+            <path
+              d="M 30 0 Q 50 80 40 160 Q 25 240 55 320 Q 80 400 45 480 Q 30 560 60 640"
+              stroke="#6b8e4e"
+              strokeWidth="2"
+              fill="none"
+              opacity="0.5"
+            />
+            {/* Leaves scattered along the vine */}
+            {[
+              { x: 45, y: 30, r: -20, s: 1 },
+              { x: 20, y: 90, r: 40, s: 1.1 },
+              { x: 70, y: 140, r: -30, s: 0.9 },
+              { x: 15, y: 200, r: 25, s: 1.2 },
+              { x: 85, y: 260, r: -45, s: 1 },
+              { x: 25, y: 320, r: 15, s: 1.1 },
+              { x: 80, y: 380, r: -25, s: 0.95 },
+              { x: 10, y: 440, r: 50, s: 1.15 },
+              { x: 70, y: 500, r: -35, s: 1 },
+              { x: 30, y: 560, r: 20, s: 1.05 },
+              { x: 85, y: 610, r: -40, s: 0.9 },
+            ].map((leaf, i) => (
+              <g key={i} transform={`translate(${leaf.x}, ${leaf.y}) rotate(${leaf.r}) scale(${leaf.s})`}>
+                <path
+                  d="M0 0 Q -8 -18 0 -30 Q 8 -18 0 0 Z"
+                  fill="#5a8a3e"
+                  opacity="0.75"
+                />
+                <path
+                  d="M0 0 L 0 -28"
+                  stroke="#3d6428"
+                  strokeWidth="0.8"
+                />
+              </g>
+            ))}
+            {/* Additional cluster leaves */}
+            {[
+              { x: 50, y: 50 },
+              { x: 35, y: 180 },
+              { x: 65, y: 420 },
+            ].map((leaf, i) => (
+              <g key={`c${i}`} transform={`translate(${leaf.x}, ${leaf.y})`}>
+                <ellipse cx="0" cy="0" rx="14" ry="8" fill="#78a255" opacity="0.6" transform="rotate(-30)" />
+                <ellipse cx="4" cy="6" rx="10" ry="6" fill="#5a8a3e" opacity="0.7" transform="rotate(20)" />
+              </g>
+            ))}
+          </svg>
+
+          {/* Hanging planter — top-right */}
+          <svg
+            className="absolute top-0 right-4 sm:right-12 hidden sm:block"
+            width="140"
+            height="260"
+            viewBox="0 0 140 260"
+            fill="none"
+            style={{ opacity: 0.9 }}
           >
-            BOX
-          </span>
+            {/* Hanging strings */}
+            <line x1="30" y1="0" x2="55" y2="95" stroke="#a8a8a8" strokeWidth="1" />
+            <line x1="110" y1="0" x2="85" y2="95" stroke="#a8a8a8" strokeWidth="1" />
+            <line x1="70" y1="0" x2="70" y2="95" stroke="#a8a8a8" strokeWidth="1" />
+            {/* Pot */}
+            <ellipse cx="70" cy="100" rx="30" ry="8" fill="#e8e8e8" />
+            <path d="M 42 100 Q 45 135 55 145 Q 70 150 85 145 Q 95 135 98 100 Z" fill="#f0f0f0" stroke="#d0d0d0" strokeWidth="1" />
+            {/* Cascading leaves */}
+            {[
+              { x: 60, y: 100, len: 90, rot: -15 },
+              { x: 70, y: 95, len: 120, rot: 5 },
+              { x: 80, y: 100, len: 100, rot: 20 },
+              { x: 55, y: 95, len: 80, rot: -30 },
+              { x: 85, y: 95, len: 110, rot: 30 },
+            ].map((v, i) => (
+              <g key={i}>
+                <path
+                  d={`M ${v.x} ${v.y} Q ${v.x - 8 + i * 3} ${v.y + v.len / 2} ${v.x + v.rot / 3} ${v.y + v.len}`}
+                  stroke="#5a8a3e"
+                  strokeWidth="1.5"
+                  fill="none"
+                  opacity="0.8"
+                />
+                {/* Leaves on vines */}
+                {[0.25, 0.5, 0.75, 0.95].map((t, j) => {
+                  const lx = v.x + (v.rot / 3) * t;
+                  const ly = v.y + v.len * t;
+                  return (
+                    <ellipse
+                      key={j}
+                      cx={lx + (j % 2 ? 6 : -6)}
+                      cy={ly}
+                      rx="5"
+                      ry="3"
+                      fill="#6b9b48"
+                      opacity="0.75"
+                      transform={`rotate(${v.rot + (j % 2 ? 30 : -30)} ${lx} ${ly})`}
+                    />
+                  );
+                })}
+              </g>
+            ))}
+          </svg>
+
+          {/* Blurred floating leaves — atmospheric depth */}
+          <div
+            className="absolute top-20 right-1/3 w-40 h-40 blur-2xl"
+            style={{ background: 'radial-gradient(ellipse, rgba(134,239,172,0.35) 0%, transparent 70%)' }}
+          />
+          <div
+            className="absolute top-1/2 left-1/3 w-32 h-32 blur-xl"
+            style={{ background: 'radial-gradient(ellipse, rgba(163,213,133,0.3) 0%, transparent 70%)' }}
+          />
+          <div
+            className="absolute bottom-10 right-1/4 w-48 h-32 blur-2xl"
+            style={{ background: 'radial-gradient(ellipse, rgba(134,239,172,0.25) 0%, transparent 70%)' }}
+          />
+
+          {/* Single detailed falling leaf — bottom-right */}
+          <svg
+            className="absolute bottom-8 right-16 hidden md:block"
+            width="120"
+            height="60"
+            viewBox="0 0 120 60"
+            fill="none"
+            style={{ opacity: 0.45, filter: 'blur(0.5px)' }}
+          >
+            <path
+              d="M 10 30 Q 30 10 60 15 Q 90 20 110 35 Q 90 45 60 42 Q 30 38 10 30 Z"
+              fill="#86c05a"
+              opacity="0.6"
+            />
+            <path d="M 10 30 L 110 35" stroke="#5a8a3e" strokeWidth="0.8" opacity="0.5" />
+          </svg>
         </div>
-        <svg className="absolute top-4 right-[42%] opacity-10 pointer-events-none" width="80" height="80" viewBox="0 0 80 80" fill="none">
-          <ellipse cx="40" cy="40" rx="18" ry="36" fill="#4ade80" transform="rotate(-30 40 40)" />
-          <line x1="40" y1="10" x2="40" y2="70" stroke="#16a34a" strokeWidth="1.5" />
-        </svg>
-        <div className="relative max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-12 sm:py-16 md:py-20">
-          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-6">
-            <div className="flex-1 z-10">
-              <p className="mb-2 text-gray-500" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', fontSize: 'clamp(18px, 3vw, 28px)' }}>
-                Groves Box
-              </p>
-              <h1 className="font-serif font-extrabold text-gray-900 leading-[1.05] mb-5" style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>
-                Garden<br />Plants
-              </h1>
-              <div className="flex items-center gap-4 flex-wrap">
-                <Link
-                  href="/collections/sale"
-                  className="inline-flex items-center gap-2 bg-[#78A240] text-white text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#3a8a5b] transition-all duration-200 shadow-sm"
-                >
-                  Shop Now
-                </Link>
-              </div>
-            </div>
-            <div className="flex-1 flex items-center justify-center relative z-10">
-              {heroProduct ? (
-                <div className="relative">
-                  <div
-                    className="absolute inset-0 rounded-full blur-3xl opacity-30"
-                    style={{ background: "radial-gradient(circle, #86efac 0%, transparent 70%)", transform: "scale(1.3)" }}
-                  />
+
+        {/* ── Main content ── */}
+        <div className="relative max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-14 sm:py-20 md:py-24 lg:py-28">
+          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-8 lg:gap-16">
+
+            {/* LEFT — Plant image with floating info card */}
+            <div className="flex-1 relative flex items-center justify-center w-full order-2 md:order-1">
+              <div className="relative">
+                {/* Soft glow behind plant */}
+                <div
+                  className="absolute inset-0 rounded-full blur-3xl"
+                  style={{
+                    background: 'radial-gradient(circle, rgba(134,239,172,0.35) 0%, transparent 65%)',
+                    transform: 'scale(1.2)',
+                  }}
+                />
+
+                {heroProduct ? (
                   <Image
                     src={Hero}
-                    alt={heroProduct.name}
-                    width={500}
-                    height={500}
-                    className="relative w-56 sm:w-72 md:w-80 lg:w-96 object-contain drop-shadow-xl"
-                    style={{ filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.12))" }}
+                    alt="Boutique Indoor Plant"
+                    width={520}
+                    height={520}
+                    priority
+                    className="relative w-64 sm:w-80 md:w-80 lg:w-[440px] object-contain"
+                    style={{ filter: 'drop-shadow(0 30px 50px rgba(30,70,40,0.25))' }}
                   />
+                ) : (
+                  <div className="w-64 h-64 flex items-center justify-center text-8xl">🪴</div>
+                )}
+
+                {/* Floating info pill card */}
+                <div
+                  className="absolute -bottom-2 left-0 sm:-left-4 md:-left-8 bg-white rounded-full pl-1.5 pr-6 py-1.5 flex items-center gap-3 z-10"
+                  style={{ boxShadow: '0 10px 30px rgba(30,70,40,0.12), 0 2px 8px rgba(0,0,0,0.04)' }}
+                >
+                  <div
+                    className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'linear-gradient(135deg, #4a8a3a 0%, #2d6b25 100%)' }}
+                  >
+                    <ArrowUp size={18} strokeWidth={2.5} className="text-white" />
+                  </div>
+                  <p className="text-[13px] sm:text-sm font-medium text-gray-700 leading-snug">
+                    A peaceful, air-purifying<br />indoor plant
+                  </p>
                 </div>
-              ) : (
-                <div className="w-64 h-64 flex items-center justify-center text-8xl">🪴</div>
-              )}
+              </div>
+            </div>
+
+            {/* RIGHT — Text content */}
+            <div className="flex-1 z-10 order-1 md:order-2 text-center md:text-left">
+
+              {/* Pill badge with dots */}
+              <div
+                className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full mb-6 sm:mb-7"
+                style={{ background: 'rgba(184, 214, 168, 0.55)' }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1e3a2e]" />
+                <span className="text-[13px] sm:text-sm font-medium text-[#1e3a2e] tracking-wide">
+                  Welcome Agritourism Company
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1e3a2e]" />
+              </div>
+
+              {/* Main heading */}
+              <h1
+                className="font-bold leading-[1.02] mb-6 tracking-tight"
+                style={{
+                  fontFamily: "'Playfair Display', 'Georgia', serif",
+                  color: '#1e3a2e',
+                  fontSize: 'clamp(40px, 6.5vw, 80px)',
+                }}
+              >
+                Boutique Plants.
+                <br />
+                Big Love.
+              </h1>
+
+              {/* Description */}
+              <p
+                className="text-gray-600 leading-relaxed mb-8 max-w-md mx-auto md:mx-0"
+                style={{ fontSize: 'clamp(14px, 1.5vw, 16px)' }}
+              >
+                This text is a temporary placeholder and needs to be replaced with
+                SEO-friendly content and relevant keyword.
+              </p>
+
+              {/* CTA button */}
+              <Link
+                href="/collections/all"
+                className="inline-flex items-center justify-center gap-2 text-white px-9 py-4 rounded-full text-base font-medium transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5"
+                style={{
+                  background: 'linear-gradient(135deg, #2d7a3e 0%, #1e5a2e 100%)',
+                  boxShadow: '0 8px 20px rgba(30,90,46,0.3)',
+                }}
+              >
+                Explore More
+              </Link>
             </div>
           </div>
         </div>
@@ -341,21 +507,17 @@ export default function HomePage() {
 
 
       {/* ══════════════════════════════════════
-          CATEGORIES — Pill/Icon row style
-          (like the reference image)
+          CATEGORIES
       ══════════════════════════════════════ */}
       {categories.length > 0 && (
         <section className="w-full px-5 sm:px-8 lg:px-12 pt-10 pb-4 bg-white">
           <div className="max-w-7xl mx-auto">
-            {/* Section header */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{categoriesConfig.title}</h2>
               <Link href={categoriesConfig.viewAllHref} className="text-green-600 text-sm font-semibold hover:underline flex items-center gap-1">
                 {categoriesConfig.viewAllText} <ArrowRight size={14} />
               </Link>
             </div>
-
-            {/* Category scroll row — navigates to collection page on click */}
             <CategoryRow categories={categories} />
           </div>
         </section>
@@ -365,25 +527,23 @@ export default function HomePage() {
       {/* ══════════════════════════════════════
           NEW ARRIVALS
       ══════════════════════════════════════ */}
-      {
-        newArrivals.length > 0 && (
-          <section className="w-full px-5 sm:px-8 lg:px-12 py-12">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{newArrivalsConfig.title}</h2>
-                <Link href={newArrivalsConfig.viewAllHref} className="text-green-600 text-sm font-semibold hover:underline flex items-center gap-1">
-                  {newArrivalsConfig.viewAllText} <ArrowRight size={14} />
-                </Link>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {newArrivals.slice(0, 4).map(product => (
-                  <ProductCard key={`new-${product.id}`} product={product} />
-                ))}
-              </div>
+      {newArrivals.length > 0 && (
+        <section className="w-full px-5 sm:px-8 lg:px-12 py-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{newArrivalsConfig.title}</h2>
+              <Link href={newArrivalsConfig.viewAllHref} className="text-green-600 text-sm font-semibold hover:underline flex items-center gap-1">
+                {newArrivalsConfig.viewAllText} <ArrowRight size={14} />
+              </Link>
             </div>
-          </section>
-        )
-      }
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {newArrivals.slice(0, 4).map(product => (
+                <ProductCard key={`new-${product.id}`} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
 
       {/* ══════════════════════════════════════
@@ -392,23 +552,19 @@ export default function HomePage() {
       <section className="w-full px-5 sm:px-8 lg:px-12 py-6 pb-12">
         <div className="max-w-7xl mx-auto">
           <div className="rounded-3xl overflow-hidden flex flex-col md:flex-row items-stretch min-h-[320px] lg:min-h-[380px]">
-            {/* LEFT: green gradient panel */}
             <div className="flex-1 bg-gradient-to-br from-[#8CAB4F] to-[#C2DEA3] p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
               <span className="text-sm font-medium text-white/90 block mb-3">
                 {featuredCollection.label}
               </span>
-
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-5 flex flex-wrap items-center gap-x-3 gap-y-2">
                 <span className="inline-flex items-center bg-white/95 text-green-800 px-3 py-1 rounded-md text-xl sm:text-2xl lg:text-3xl font-extrabold">
                   {featuredCollection.discount}
                 </span>
                 <span>{featuredCollection.titleAfter}</span>
               </h2>
-
               <p className="text-sm text-white/80 max-w-md leading-relaxed mb-7">
                 {featuredCollection.description}
               </p>
-
               <Link
                 href={`/collections/${featuredCollection.handle}`}
                 className="inline-flex w-fit items-center gap-2 bg-[#6B9238] hover:bg-[#8CAB4F] text-white px-6 py-3 text-sm font-semibold rounded-md transition-all duration-200 shadow-md"
@@ -417,8 +573,6 @@ export default function HomePage() {
                 <ArrowRight size={14} />
               </Link>
             </div>
-
-            {/* RIGHT: full-bleed image */}
             <div className="flex-1 relative min-h-[240px] md:min-h-0">
               <img
                 src={featuredCollection.image}
@@ -434,60 +588,55 @@ export default function HomePage() {
       {/* ══════════════════════════════════════
           ON SALE
       ══════════════════════════════════════ */}
-      {
-        saleProducts.length > 0 && (
-          <section className="w-full px-5 sm:px-8 lg:px-12 py-12 bg-[#fafff9]">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{onSale.title}</h2>
-                <Link href={onSale.viewAllHref} className="text-green-600 text-sm font-semibold hover:underline flex items-center gap-1">
-                  {onSale.viewAllText} <ArrowRight size={14} />
-                </Link>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {saleProducts.slice(0, 4).map(product => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+      {saleProducts.length > 0 && (
+        <section className="w-full px-5 sm:px-8 lg:px-12 py-12 bg-[#fafff9]">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{onSale.title}</h2>
+              <Link href={onSale.viewAllHref} className="text-green-600 text-sm font-semibold hover:underline flex items-center gap-1">
+                {onSale.viewAllText} <ArrowRight size={14} />
+              </Link>
             </div>
-          </section>
-        )
-      }
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {saleProducts.slice(0, 4).map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
 
       {/* ══════════════════════════════════════
           WORKSHOPS & BLOG
       ══════════════════════════════════════ */}
-      {
-        workshops.length > 0 && (
-          <section className="w-full px-5 sm:px-8 lg:px-12 py-12" style={{ backgroundColor: workshopsConfig.bgColor }}>
-            <div className="max-w-7xl mx-auto">
-              <div className="mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{workshopsConfig.title}</h2>
-                <p className="text-gray-500">{workshopsConfig.subtitle}</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {workshops.map(w => (
-                  <a key={w.id} href="/" className="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
-                    <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-                      <img src={w.image} alt={w.imageAlt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <div className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 text-xs font-bold rounded-full">{w.date}</div>
-                      {w.isFree && <div className="absolute bottom-3 left-3 bg-white text-green-700 px-3 py-1 text-xs font-bold rounded-full shadow">FREE</div>}
-                    </div>
-                    <div className="p-5">
-                      <h3 className="font-bold text-gray-800 mb-2 leading-tight group-hover:text-green-700 transition-colors">{w.title}</h3>
-                      <p className="text-sm text-gray-500 leading-relaxed">{w.description}</p>
-                    </div>
-                  </a>
-                ))}
-              </div>
+      {workshops.length > 0 && (
+        <section className="w-full px-5 sm:px-8 lg:px-12 py-12" style={{ backgroundColor: workshopsConfig.bgColor }}>
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{workshopsConfig.title}</h2>
+              <p className="text-gray-500">{workshopsConfig.subtitle}</p>
             </div>
-          </section>
-        )
-      }
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {workshops.map(w => (
+                <a key={w.id} href="/" className="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                    <img src={w.image} alt={w.imageAlt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 text-xs font-bold rounded-full">{w.date}</div>
+                    {w.isFree && <div className="absolute bottom-3 left-3 bg-white text-green-700 px-3 py-1 text-xs font-bold rounded-full shadow">FREE</div>}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-bold text-gray-800 mb-2 leading-tight group-hover:text-green-700 transition-colors">{w.title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{w.description}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <IndoorPlantsSlider />
-
 
       {/* ══════════════════════════════════════
           TESTIMONIALS
@@ -515,6 +664,6 @@ export default function HomePage() {
         </div>
       )}
 
-    </div >
+    </div>
   );
 }

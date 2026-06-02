@@ -216,11 +216,8 @@ export default function Navbar() {
                         <Link href="/" style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                             <LeafIcon />
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <span style={{ fontSize: 17, fontWeight: 700, color: textColor, letterSpacing: 0.3, lineHeight: 1.1 }}>
-                                    PlantTree
-                                </span>
-                                <span style={{ fontSize: 9, color: scrolled ? '#78a240' : 'rgba(255,255,255,0.8)', letterSpacing: 1.5, textTransform: 'uppercase' }}>
-                                    Indoor Plants
+                                <span style={{ fontSize: 18, fontWeight: 700, color: textColor, letterSpacing: 0.3, lineHeight: 1.1 }}>
+                                    Groves Box
                                 </span>
                             </div>
                         </Link>
@@ -389,7 +386,7 @@ export default function Navbar() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', borderBottom: '1px solid #e2e8f0' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <LeafIcon />
-                        <span style={{ fontSize: 18, fontWeight: 700, color: GREEN }}>PlantTree</span>
+                        <span style={{ fontSize: 18, fontWeight: 700, color: GREEN }}>Groves Box</span>
                     </div>
                     <button onClick={() => setIsMenuOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}>
                         <X size={22} />
@@ -453,25 +450,40 @@ export default function Navbar() {
             {/* ════════════════════════  CART SIDEBAR  ════════════════════════ */}
             {isCartOpen && (
                 <div
-                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50 }}
+                    style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,17,0.45)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)', zIndex: 50, transition: 'opacity 0.3s ease' }}
                     onClick={() => setIsCartOpen(false)}
                 />
             )}
             <div style={{
                 position: 'fixed', top: 0, right: 0, bottom: 0,
-                width: 380, background: WHITE, zIndex: 51,
+                width: 'min(420px, 100vw)', background: '#f7f9f4', zIndex: 51,
                 display: 'flex', flexDirection: 'column',
                 transform: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
-                transition: 'transform 0.3s ease-in-out',
-                boxShadow: '-4px 0 24px rgba(0,0,0,0.15)',
+                transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1)',
+                boxShadow: '-12px 0 40px rgba(36,64,51,0.18)',
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottom: '1px solid #e2e8f0' }}>
-                    <h2 style={{ fontSize: 18, fontWeight: 700, color: GREEN_DEEP }}>Cart ({cartCount})</h2>
-                    <button onClick={() => setIsCartOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}>
-                        <X size={22} />
-                    </button>
+                {/* Header */}
+                <div style={{ background: `linear-gradient(135deg, ${GREEN}, ${GREEN_DARK})`, padding: '20px 20px 18px', color: WHITE, flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div style={{ width: 38, height: 38, borderRadius: 12, background: 'rgba(255,255,255,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <ShoppingCart size={20} />
+                            </div>
+                            <div>
+                                <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0, lineHeight: 1.1 }}>Your Cart</h2>
+                                <span style={{ fontSize: 12.5, opacity: 0.85 }}>{cartCount} {cartCount === 1 ? 'item' : 'items'}</span>
+                            </div>
+                        </div>
+                        <button onClick={() => setIsCartOpen(false)} aria-label="Close cart"
+                            style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.16)', border: 'none', cursor: 'pointer', color: WHITE, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.28)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.16)'}>
+                            <X size={20} />
+                        </button>
+                    </div>
                 </div>
 
+                {/* Items */}
                 <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
                     {loading ? (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12 }}>
@@ -479,60 +491,70 @@ export default function Navbar() {
                             <p style={{ color: '#6b7280' }}>Loading cart…</p>
                         </div>
                     ) : cartItems.length === 0 ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12 }}>
-                            <ShoppingCart size={56} color="#d1d5db" />
-                            <p style={{ color: '#6b7280' }}>Your cart is empty</p>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 14, textAlign: 'center' }}>
+                            <div style={{ width: 96, height: 96, borderRadius: '50%', background: '#eef5e6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <ShoppingCart size={44} color={GREEN} />
+                            </div>
+                            <div>
+                                <p style={{ color: GREEN_DEEP, fontWeight: 700, fontSize: 16, margin: '0 0 4px' }}>Your cart is empty</p>
+                                <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>Start adding some greens 🌿</p>
+                            </div>
                             <button onClick={() => setIsCartOpen(false)}
-                                style={{ padding: '10px 24px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>
+                                style={{ padding: '12px 28px', background: `linear-gradient(135deg, ${GREEN}, ${GREEN_DARK})`, color: WHITE, border: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer', boxShadow: '0 8px 20px rgba(94,126,48,0.3)' }}>
                                 Shop Now
                             </button>
                         </div>
                     ) : cartItems.map(item => (
-                        <div key={item.id} style={{ display: 'flex', gap: 12, padding: 12, border: '1px solid #e2e8f0', borderRadius: 10 }}>
-                            <div style={{ width: 72, height: 72, borderRadius: 8, overflow: 'hidden', background: '#f3f4f6', flexShrink: 0 }}>
+                        <div key={item.id} style={{ display: 'flex', gap: 12, padding: 12, background: WHITE, border: '1px solid #eceee8', borderRadius: 16, boxShadow: '0 2px 8px rgba(36,64,51,0.04)' }}>
+                            <div style={{ width: 76, height: 76, borderRadius: 12, overflow: 'hidden', background: '#eef5e6', flexShrink: 0 }}>
                                 <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
-                                <p style={{ fontWeight: 600, fontSize: 14, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                                    <p style={{ fontWeight: 600, fontSize: 13.5, color: '#111827', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
+                                    <button onClick={() => removeFromCart(item.id)} aria-label="Remove item"
+                                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#c0c4bb', padding: 2, flexShrink: 0, transition: 'color 0.2s' }}
+                                        onMouseEnter={e => e.currentTarget.style.color = '#dc2626'}
+                                        onMouseLeave={e => e.currentTarget.style.color = '#c0c4bb'}>
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
                                 {item.variant && item.variant !== 'Default Title' && (
-                                    <p style={{ fontSize: 12, color: '#6b7280' }}>Variant: {item.variant}</p>
+                                    <p style={{ fontSize: 12, color: '#6b7280', margin: '3px 0 0' }}>{item.variant}</p>
                                 )}
-                                <p style={{ fontWeight: 700, color: GREEN, fontSize: 14, marginTop: 2 }}>Rs. {item.price.toFixed(2)}</p>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: 6 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', background: '#f1f5ec', borderRadius: 10, padding: 2 }}>
                                         <button onClick={() => item.quantity > 1 && updateQuantity(item.id, item.quantity - 1)}
-                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', color: '#374151' }}>
+                                            style={{ background: WHITE, border: 'none', cursor: 'pointer', width: 28, height: 28, borderRadius: 8, color: GREEN_DEEP, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.06)' }}>
                                             <Minus size={14} />
                                         </button>
-                                        <span style={{ padding: '0 8px', fontSize: 13, fontWeight: 600 }}>{item.quantity}</span>
+                                        <span style={{ padding: '0 12px', fontSize: 13.5, fontWeight: 700, color: GREEN_DEEP, minWidth: 18, textAlign: 'center' }}>{item.quantity}</span>
                                         <button onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', color: '#374151' }}>
+                                            style={{ background: WHITE, border: 'none', cursor: 'pointer', width: 28, height: 28, borderRadius: 8, color: GREEN_DEEP, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.06)' }}>
                                             <Plus size={14} />
                                         </button>
                                     </div>
-                                    <button onClick={() => removeFromCart(item.id)}
-                                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', padding: 4, borderRadius: 4 }}>
-                                        <Trash2 size={16} />
-                                    </button>
+                                    <p style={{ fontWeight: 700, color: GREEN_DEEP, fontSize: 15, margin: 0 }}>Rs. {(item.price * item.quantity).toFixed(2)}</p>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
+                {/* Footer */}
                 {cartItems.length > 0 && (
-                    <div style={{ padding: 16, borderTop: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontWeight: 600, color: GREEN_DEEP }}>Subtotal</span>
-                            <span style={{ fontSize: 22, fontWeight: 700, color: GREEN_DEEP }}>Rs. {subtotal}</span>
+                    <div style={{ padding: 18, background: WHITE, borderTop: '1px solid #eceee8', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 -6px 20px rgba(36,64,51,0.06)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                            <span style={{ fontWeight: 600, color: '#6b7280', fontSize: 14 }}>Subtotal</span>
+                            <span style={{ fontSize: 24, fontWeight: 800, color: GREEN_DEEP }}>Rs. {subtotal}</span>
                         </div>
-                        <p style={{ fontSize: 12, color: '#9ca3af' }}>Taxes and shipping calculated at checkout</p>
+                        <p style={{ fontSize: 11.5, color: '#9ca3af', margin: 0 }}>Taxes &amp; shipping calculated at checkout</p>
                         <Link href="/cart" onClick={() => setIsCartOpen(false)}
-                            style={{ display: 'block', padding: '13px 16px', background: GREEN, color: WHITE, textDecoration: 'none', borderRadius: 8, fontWeight: 700, textAlign: 'center' }}>
-                            View Cart
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '15px 16px', background: `linear-gradient(135deg, ${GREEN}, ${GREEN_DARK})`, color: WHITE, textDecoration: 'none', borderRadius: 14, fontWeight: 700, fontSize: 15, boxShadow: '0 8px 20px rgba(94,126,48,0.32)' }}>
+                            Checkout
                         </Link>
                         <button onClick={() => setIsCartOpen(false)}
-                            style={{ padding: '13px 16px', border: `2px solid ${GREEN}`, color: GREEN, background: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>
+                            style={{ padding: '12px 16px', border: 'none', color: GREEN_DEEP, background: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer', fontSize: 14 }}>
                             Continue Shopping
                         </button>
                     </div>

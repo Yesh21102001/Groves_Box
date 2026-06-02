@@ -96,6 +96,32 @@ const featuredCollection = {
   image: "/images/2148488544.jpg",
 };
 
+// ── Section Header (unified across all sections) ─────────────────────
+function SectionHeader({ eyebrow, title, href, linkText }) {
+  return (
+    <div className="flex items-end justify-between mb-8 gap-4">
+      <div>
+        {eyebrow && (
+          <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-[#6B9238] mb-2">
+            {eyebrow}
+          </span>
+        )}
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+          {title}
+        </h2>
+      </div>
+      {href && (
+        <Link
+          href={href}
+          className="shrink-0 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B9238] hover:gap-2.5 hover:text-[#557420] transition-all duration-200"
+        >
+          {linkText} <ArrowRight size={15} />
+        </Link>
+      )}
+    </div>
+  );
+}
+
 // ── Category Row ─────────────────────────────────────────────────────
 function CategoryRow({ categories }) {
   return (
@@ -109,23 +135,23 @@ function CategoryRow({ categories }) {
     >
       <style>{`
         .cat-scroll::-webkit-scrollbar { display: none; }
-        .cat-card:hover .cat-circle { transform: scale(1.06); box-shadow: 0 6px 20px rgba(0,0,0,0.13); border-color: #86efac !important; }
-        .cat-card:hover .cat-name { color: #16a34a; }
+        .cat-card:hover .cat-circle { transform: translateY(-4px) scale(1.04); box-shadow: 0 10px 28px rgba(107,146,56,0.22); border-color: #b6d68a !important; }
+        .cat-card:hover .cat-name { color: #6B9238; }
         @media (max-width: 640px) {
-          .cat-circle { width: 80px !important; height: 80px !important; }
+          .cat-circle { width: 84px !important; height: 84px !important; }
           .cat-name { font-size: 12px !important; }
-          .cat-count { font-size: 10px !important; }
         }
       `}</style>
       <div
         className="cat-scroll"
         style={{
           display: "flex",
-          gap: "0",
+          gap: "4px",
           overflowX: "auto",
           scrollbarWidth: "none",
-          padding: "8px 0 12px",
-          justifyContent: "center",
+          padding: "8px 0 16px",
+          justifyContent: "flex-start",
+          flexWrap: "nowrap",
         }}
       >
         {categories.map((cat, idx) => {
@@ -149,13 +175,13 @@ function CategoryRow({ categories }) {
               <div
                 className="cat-circle"
                 style={{
-                  width: "130px",
-                  height: "130px",
+                  width: "124px",
+                  height: "124px",
                   borderRadius: "50%",
                   overflow: "hidden",
-                  border: "3px solid #e5e7eb",
-                  transition: "all 0.22s ease",
-                  background: "linear-gradient(135deg, #f0f7f0, #e3f2e3)",
+                  border: "3px solid #eef2eb",
+                  transition: "all 0.28s cubic-bezier(0.22,1,0.36,1)",
+                  background: "linear-gradient(135deg, #f4f9f0, #e3f2e3)",
                   position: "relative",
                 }}
               >
@@ -342,12 +368,17 @@ export default function HomePage() {
             
             {/* Left Content */}
             <div className="flex flex-col justify-center z-10">
-              
+
+              {/* Eyebrow badge */}
+              <span className="inline-flex w-fit items-center gap-2 bg-green-100/70 text-[#557420] text-xs font-semibold uppercase tracking-[0.16em] px-4 py-1.5 rounded-full mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#78a240]" />
+                Fresh Greens, Delivered
+              </span>
 
               {/* Main Headline */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4 tracking-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-[1.08] mb-5 tracking-tight">
                 Transform Your Space Into a{" "}
-                <span className="bg-[#78a240] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#78a240] to-[#557420] bg-clip-text text-transparent">
                   Green Paradise
                 </span>
               </h1>
@@ -450,19 +481,14 @@ export default function HomePage() {
           CATEGORIES
       ══════════════════════════════════════ */}
       {categories.length > 0 && (
-        <section className="w-full px-5 sm:px-8 lg:px-12 pt-10 pb-4 bg-white">
+        <section className="w-full px-5 sm:px-8 lg:px-12 py-16 bg-white">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                {categoriesConfig.title}
-              </h2>
-              <Link
-                href={categoriesConfig.viewAllHref}
-                className="text-[#6B9238] text-sm font-semibold hover:underline flex items-center gap-1"
-              >
-                {categoriesConfig.viewAllText} <ArrowRight size={14} />
-              </Link>
-            </div>
+            <SectionHeader
+              eyebrow="Shop by Category"
+              title={categoriesConfig.title}
+              href={categoriesConfig.viewAllHref}
+              linkText={categoriesConfig.viewAllText}
+            />
             <CategoryRow categories={categories} />
           </div>
         </section>
@@ -472,20 +498,15 @@ export default function HomePage() {
           NEW ARRIVALS
       ══════════════════════════════════════ */}
       {newArrivals.length > 0 && (
-        <section className="w-full px-5 sm:px-8 lg:px-12 py-12">
+        <section className="w-full px-5 sm:px-8 lg:px-12 py-16 bg-[#fafff9]">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                {newArrivalsConfig.title}
-              </h2>
-              <Link
-                href={newArrivalsConfig.viewAllHref}
-                className="text-green-600 text-sm font-semibold hover:underline flex items-center gap-1"
-              >
-                {newArrivalsConfig.viewAllText} <ArrowRight size={14} />
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <SectionHeader
+              eyebrow="Just Landed"
+              title={newArrivalsConfig.title}
+              href={newArrivalsConfig.viewAllHref}
+              linkText={newArrivalsConfig.viewAllText}
+            />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {newArrivals.slice(0, 4).map((product) => (
                 <ProductCard key={`new-${product.id}`} product={product} />
               ))}
@@ -497,9 +518,9 @@ export default function HomePage() {
       {/* ══════════════════════════════════════
           SPECIAL OFFER BANNER
       ══════════════════════════════════════ */}
-      <section className="w-full px-5 sm:px-8 lg:px-12 py-6 pb-12">
+      <section className="w-full px-5 sm:px-8 lg:px-12 py-16">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-3xl overflow-hidden flex flex-col md:flex-row items-stretch min-h-[320px] lg:min-h-[380px]">
+          <div className="rounded-3xl overflow-hidden flex flex-col md:flex-row items-stretch min-h-[320px] lg:min-h-[380px] shadow-xl shadow-green-100/60 ring-1 ring-black/5">
             <div className="flex-1 bg-gradient-to-br from-[#8CAB4F] to-[#C2DEA3] p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
               <span className="text-sm font-medium text-white/90 block mb-3">
                 {featuredCollection.label}
@@ -536,20 +557,15 @@ export default function HomePage() {
           ON SALE
       ══════════════════════════════════════ */}
       {saleProducts.length > 0 && (
-        <section className="w-full px-5 sm:px-8 lg:px-12 py-12 bg-[#fafff9]">
+        <section className="w-full px-5 sm:px-8 lg:px-12 py-16">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                {onSale.title}
-              </h2>
-              <Link
-                href={onSale.viewAllHref}
-                className="text-green-600 text-sm font-semibold hover:underline flex items-center gap-1"
-              >
-                {onSale.viewAllText} <ArrowRight size={14} />
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <SectionHeader
+              eyebrow="Limited Time"
+              title={onSale.title}
+              href={onSale.viewAllHref}
+              linkText={onSale.viewAllText}
+            />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {saleProducts.slice(0, 4).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -563,22 +579,25 @@ export default function HomePage() {
       ══════════════════════════════════════ */}
       {workshops.length > 0 && (
         <section
-          className="w-full px-5 sm:px-8 lg:px-12 py-12"
+          className="w-full px-5 sm:px-8 lg:px-12 py-16"
           style={{ backgroundColor: workshopsConfig.bgColor }}
         >
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-[#6B9238] mb-2">
+                Learn & Grow
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2">
                 {workshopsConfig.title}
               </h2>
-              <p className="text-gray-500">{workshopsConfig.subtitle}</p>
+              <p className="text-gray-500 max-w-xl">{workshopsConfig.subtitle}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {workshops.map((w) => (
                 <a
                   key={w.id}
                   href="/"
-                  className="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300"
+                  className="group block bg-white rounded-2xl overflow-hidden shadow-sm ring-1 ring-black/5 hover:shadow-xl hover:ring-green-200 hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                     <img

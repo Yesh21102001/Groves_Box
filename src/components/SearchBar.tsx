@@ -114,7 +114,7 @@ export default function SearchBar() {
                                 />
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-gray-900 truncate">{result.name}</p>
-                                    <p className="text-sm text-gray-600">${result.price}</p>
+                                    <p className="text-sm text-gray-600">Rs. {result.price}</p>
                                 </div>
                             </Link>
                         ))}

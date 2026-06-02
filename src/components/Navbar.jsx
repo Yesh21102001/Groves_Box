@@ -329,12 +329,12 @@ export default function Navbar() {
                                             <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
                                                 <button
                                                     onClick={() => goTo('/account')}
-                                                    style={{ display: 'flex', justifyContent: 'center', padding: '10px 16px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+                                                    className="btn-primary" style={{ width: '100%' }}>
                                                     Login
                                                 </button>
                                                 <button
                                                     onClick={() => goTo('/account')}
-                                                    style={{ display: 'flex', justifyContent: 'center', padding: '10px 16px', border: `2px solid ${GREEN}`, color: GREEN, background: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+                                                    className="btn-outline" style={{ width: '100%' }}>
                                                     Sign Up
                                                 </button>
                                             </div>
@@ -434,12 +434,12 @@ export default function Navbar() {
                         <>
                             <button
                                 onClick={() => goTo('/account')}
-                                style={{ display: 'block', padding: '12px 16px', background: GREEN, color: WHITE, border: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14, cursor: 'pointer' }}>
+                                className="btn-primary" style={{ width: '100%' }}>
                                 Login
                             </button>
                             <button
                                 onClick={() => goTo('/account')}
-                                style={{ display: 'block', padding: '12px 16px', border: `2px solid ${GREEN}`, color: GREEN, background: 'none', borderRadius: 8, fontWeight: 600, textAlign: 'center', fontSize: 14, cursor: 'pointer' }}>
+                                className="btn-outline" style={{ width: '100%' }}>
                                 Sign Up
                             </button>
                         </>
@@ -499,8 +499,7 @@ export default function Navbar() {
                                 <p style={{ color: GREEN_DEEP, fontWeight: 700, fontSize: 16, margin: '0 0 4px' }}>Your cart is empty</p>
                                 <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>Start adding some greens 🌿</p>
                             </div>
-                            <button onClick={() => setIsCartOpen(false)}
-                                style={{ padding: '12px 28px', background: `linear-gradient(135deg, ${GREEN}, ${GREEN_DARK})`, color: WHITE, border: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer', boxShadow: '0 8px 20px rgba(94,126,48,0.3)' }}>
+                            <button onClick={() => setIsCartOpen(false)} className="btn-primary">
                                 Shop Now
                             </button>
                         </div>
@@ -549,12 +548,10 @@ export default function Navbar() {
                             <span style={{ fontSize: 24, fontWeight: 800, color: GREEN_DEEP }}>Rs. {subtotal}</span>
                         </div>
                         <p style={{ fontSize: 11.5, color: '#9ca3af', margin: 0 }}>Taxes &amp; shipping calculated at checkout</p>
-                        <Link href="/cart" onClick={() => setIsCartOpen(false)}
-                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '15px 16px', background: `linear-gradient(135deg, ${GREEN}, ${GREEN_DARK})`, color: WHITE, textDecoration: 'none', borderRadius: 14, fontWeight: 700, fontSize: 15, boxShadow: '0 8px 20px rgba(94,126,48,0.32)' }}>
+                        <Link href="/cart" onClick={() => setIsCartOpen(false)} className="btn-primary" style={{ width: '100%' }}>
                             Checkout
                         </Link>
-                        <button onClick={() => setIsCartOpen(false)}
-                            style={{ padding: '12px 16px', border: 'none', color: GREEN_DEEP, background: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer', fontSize: 14 }}>
+                        <button onClick={() => setIsCartOpen(false)} className="btn-outline" style={{ width: '100%' }}>
                             Continue Shopping
                         </button>
                     </div>

@@ -84,7 +84,7 @@ export default function CheckoutPage() {
                                 </div>
 
                                 <div className="pt-6">
-                                    <Link href="" className="group relative inline-flex items-center gap-2 bg-[#6b9238] text-white px-8 py-4 rounded-full font-semibold text-lg shadow-xl hover:bg-[#009A7B] hover:scale-105 transition-all duration-300">
+                                    <Link href="" className="btn-primary group">
                                         <span>Continue Shopping</span>
                                         <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -107,7 +107,7 @@ export default function CheckoutPage() {
                     <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your cart is empty</h2>
                     <p className="text-gray-600 mb-6">Add some plants before checking out.</p>
-                    <Link href="/products" className="inline-block bg-[#6b9238] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition">
+                    <Link href="/products" className="btn-primary">
                         Shop Now
                     </Link>
                 </div>
@@ -197,7 +197,7 @@ export default function CheckoutPage() {
 
                             {/* Submit */}
                             <button type="submit"
-                                className="w-full bg-[#6b9238] text-white py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:bg-[#009A7B] active:scale-[0.98] transition-all shadow-md hover:shadow-lg">
+                                className="btn-primary w-full">
                                 <Lock className="w-5 h-5" />
                                 Place Order — ₹{total}
                             </button>
@@ -263,7 +263,7 @@ export default function CheckoutPage() {
                                 <div className="mt-5 pt-4 border-t border-gray-100">
                                     <p className="text-xs text-gray-500 mb-2 text-center">Or checkout securely with Shopify</p>
                                     <a href={checkoutUrl}
-                                        className="flex items-center justify-center gap-2 w-full border border-[#6b9238] text-[#6b9238] py-3 rounded-xl text-sm font-semibold hover:bg-[#6b9238] hover:text-white transition-all">
+                                        className="btn-outline w-full">
                                         <Lock className="w-4 h-4" />
                                         Shopify Checkout
                                     </a>

@@ -208,7 +208,7 @@ function GlassCard({ product, truncate }) {
                 {/* Explore Now button */}
                 <Link
                     href={`/products/${product.handle}`}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#6B9238] hover:bg-[#78a240] text-white rounded-lg text-sm font-semibold self-start transition-all duration-200 hover:translate-x-0.5"
+                    className="btn-primary self-start"
                 >
                     Explore Now <ArrowRight size={14} />
                 </Link>

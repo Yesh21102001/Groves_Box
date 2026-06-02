@@ -205,7 +205,7 @@ export default function ContactUsPage() {
                             <div className="flex justify-center pt-4">
                                 <button
                                     type="submit"
-                                    className="bg-black text-white px-12 py-4 rounded-xl font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5 inline-flex items-center gap-2"
+                                    className="btn-primary"
                                 >
                                     Send Message
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

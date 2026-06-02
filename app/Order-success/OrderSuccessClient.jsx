@@ -244,14 +244,14 @@ export default function OrderSuccessClient() {
                         <div className="space-y-3">
                             <Link
                                 href="/products"
-                                className="flex items-center justify-center gap-2 w-full bg-[#6b9238] text-white py-4 rounded-2xl font-semibold text-base hover:bg-[#009A7B] active:scale-[0.98] transition-all shadow-md hover:shadow-lg"
+                                className="btn-primary w-full"
                             >
                                 Continue Shopping
                                 <ArrowRight size={18} />
                             </Link>
                             <Link
                                 href={displayOrderId ? `/track-order?order=${displayOrderId}` : '/track-order'}
-                                className="flex items-center justify-center w-full border border-gray-200 text-gray-600 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-50 transition-colors"
+                                className="btn-outline w-full"
                             >
                                 Track Order
                             </Link>

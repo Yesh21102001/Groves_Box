@@ -346,7 +346,7 @@ export default function HomePage() {
           <p className="text-red-500 mb-4">Error: {error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg"
+            className="btn-primary"
           >
             Retry
           </button>
@@ -420,13 +420,13 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Link
                   href="/collections"
-                  className="px-8 py-3.5 rounded-lg bg-[#78a240] text-white font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-green-200 hover:scale-105 active:scale-95"
+                  className="btn-primary"
                 >
                   Explore Collections
                 </Link>
                 <Link
                   href="/about"
-                  className="px-8 py-3.5 rounded-lg border-2 border-gray-300 text-gray-900 font-semibold transition-all duration-300 hover:border-green-600 hover:bg-green-50 active:scale-95"
+                  className="btn-outline"
                 >
                   Learn More
                 </Link>
@@ -536,7 +536,7 @@ export default function HomePage() {
               </p>
               <Link
                 href={`/collections/${featuredCollection.handle}`}
-                className="inline-flex w-fit items-center gap-2 bg-[#6B9238] hover:bg-[#8CAB4F] text-white px-6 py-3 text-sm font-semibold rounded-md transition-all duration-200 shadow-md"
+                className="btn-primary w-fit"
               >
                 {featuredCollection.cta}
                 <ArrowRight size={14} />
@@ -655,7 +655,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/cart"
-              className="bg-[#6b9238] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#8CAB4F] transition"
+              className="btn-primary"
             >
               View Cart
             </Link>

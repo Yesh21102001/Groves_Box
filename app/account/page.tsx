@@ -513,7 +513,7 @@ export default function AccountPage() {
                                     {!isEditing && (
                                         <button
                                             onClick={() => setIsEditing(true)}
-                                            className="flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 bg-[#6b9238] text-white rounded-xl hover:bg-black-400 transition-all duration-200 shadow-sm hover:shadow-md text-sm"
+                                            className="btn-primary"
                                         >
                                             <Edit2 className="w-4 h-4 mr-2" />
                                             Edit Profile
@@ -590,7 +590,7 @@ export default function AccountPage() {
                                             <button
                                                 onClick={handleSaveChanges}
                                                 disabled={isSaving}
-                                                className="flex-1 flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3.5 bg-[#6b9238] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-md hover:shadow-lg font-semibold text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="btn-primary flex-1"
                                             >
                                                 {isSaving ? (
                                                     <>
@@ -610,7 +610,7 @@ export default function AccountPage() {
                                                     loadUserData(); // Reset form
                                                 }}
                                                 disabled={isSaving}
-                                                className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3.5 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="btn-outline flex-1"
                                             >
                                                 Cancel
                                             </button>
@@ -674,7 +674,7 @@ export default function AccountPage() {
                                         <p className="text-gray-600 mb-6">Start shopping to see your orders here</p>
                                         <button
                                             onClick={() => router.push('/products')}
-                                            className="px-6 py-3 bg-[#6b9238] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-md"
+                                            className="btn-primary"
                                         >
                                             Start Shopping
                                         </button>
@@ -834,7 +834,7 @@ export default function AccountPage() {
                                     </h2>
                                     <button
                                         onClick={() => openAddressModal()}
-                                        className="flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 bg-[#6b9238] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-sm hover:shadow-md text-sm"
+                                        className="btn-primary"
                                     >
                                         <Plus className="w-4 h-4 mr-2" />
                                         Add Address
@@ -896,7 +896,7 @@ export default function AccountPage() {
                                                     <button
                                                         onClick={() => openAddressModal(addr)}
                                                         disabled={isSaving}
-                                                        className="flex-1 px-3 py-2 text-sm font-semibold text-[#6b9238] border-2 border-[#6b9238] rounded-lg hover:bg-[#6b9238] hover:text-white transition-all duration-200 disabled:opacity-50"
+                                                        className="btn-outline flex-1"
                                                     >
                                                         Edit
                                                     </button>
@@ -905,7 +905,7 @@ export default function AccountPage() {
                                                             <button
                                                                 onClick={() => handleSetDefaultAddress(addr.id)}
                                                                 disabled={isSaving}
-                                                                className="flex-1 px-3 py-2 text-sm font-semibold text-gray-700 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 disabled:opacity-50"
+                                                                className="btn-outline flex-1"
                                                             >
                                                                 Set Default
                                                             </button>
@@ -963,7 +963,7 @@ export default function AccountPage() {
                                                 </p>
                                             </div>
                                         </div>
-                                        <button className="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 font-semibold text-sm">
+                                        <button className="btn-outline">
                                             Change
                                         </button>
                                     </div>
@@ -982,7 +982,7 @@ export default function AccountPage() {
                                         </div>
                                         <button
                                             disabled
-                                            className="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-semibold text-sm cursor-not-allowed"
+                                            className="btn-outline"
                                         >
                                             Enable
                                         </button>
@@ -1159,7 +1159,7 @@ export default function AccountPage() {
                                 <button
                                     onClick={handleSaveAddress}
                                     disabled={isSaving}
-                                    className="flex-1 px-6 py-3 bg-[#6b9238] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="btn-primary flex-1"
                                 >
                                     {isSaving ? (
                                         <>
@@ -1173,7 +1173,7 @@ export default function AccountPage() {
                                 <button
                                     onClick={closeAddressModal}
                                     disabled={isSaving}
-                                    className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="btn-outline flex-1"
                                 >
                                     Cancel
                                 </button>
@@ -1215,13 +1215,13 @@ export default function AccountPage() {
                             <div className="flex gap-3">
                                 <button
                                     onClick={cancelLogout}
-                                    className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold"
+                                    className="btn-outline flex-1"
                                 >
                                     No, Stay
                                 </button>
                                 <button
                                     onClick={confirmLogout}
-                                    className="flex-1 px-6 py-3 bg-[#6b9238] text-white rounded-xl hover:bg-[#009A7B] transition-all duration-200 shadow-md font-semibold"
+                                    className="btn-primary flex-1"
                                 >
                                     Yes, Logout
                                 </button>

@@ -74,7 +74,7 @@ export default function CartSidebar() {
                                         {item.color && (
                                             <p className="text-xs text-gray-600 mb-2">Color: {item.color}</p>
                                         )}
-                                        <p className="font-semibold text-gray-900 mb-3">${item.price}</p>
+                                        <p className="font-semibold text-gray-900 mb-3">Rs. {item.price}</p>
 
                                         {/* Quantity Controls */}
                                         <div className="flex items-center justify-between">
@@ -112,7 +112,7 @@ export default function CartSidebar() {
                             {/* Subtotal */}
                             <div className="flex justify-between items-center pb-4 border-b border-gray-200">
                                 <span className="text-gray-600 font-medium">Subtotal</span>
-                                <span className="text-xl font-semibold text-gray-900">${totalPrice.toFixed(2)}</span>
+                                <span className="text-xl font-semibold text-gray-900">Rs. {totalPrice.toFixed(2)}</span>
                             </div>
 
                             {/* View Cart Button */}

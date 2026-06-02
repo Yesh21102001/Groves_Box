@@ -270,9 +270,9 @@ export default function CollectionDetailPage() {
                     <div className="mb-8 flex flex-wrap items-center gap-3">
                         <button
                             onClick={() => setShowFiltersSidebar(true)}
-                            className="relative inline-flex items-center gap-2 px-6 py-3 border border-[#6b9238] rounded-md text-[#6b9238] hover:bg-[#6b9238] hover:text-white transition-colors font-medium"
+                            className="relative inline-flex items-center justify-center gap-2 rounded-xl border-[1.5px] border-[#84b048] px-5 py-2.5 text-sm font-semibold text-[#557420] hover:bg-[#f3f8ee] hover:border-[#648a33] transition-all active:scale-95"
                         >
-                            <Filter size={20} />
+                            <Filter size={18} />
                             Filter and sort
                             {activeFilterCount > 0 && (
                                 <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#6b9238] text-white text-xs rounded-full flex items-center justify-center font-bold">
@@ -468,13 +468,13 @@ export default function CollectionDetailPage() {
                         <div className="bg-white border-t border-gray-200 p-6 flex gap-3 flex-shrink-0">
                             <button
                                 onClick={() => { setPriceRange([0, maxProductPrice]); setSortBy('popular'); setSelectedColors([]); setSelectedSizes([]); }}
-                                className="flex-1 text-center px-6 py-3 border-2 border-[#6b9238] rounded-lg text-[#6b9238] hover:bg-[#6b9238]/5 font-semibold transition-colors"
+                                className="btn-outline flex-1"
                             >
                                 Clear All
                             </button>
                             <button
                                 onClick={() => setShowFiltersSidebar(false)}
-                                className="flex-1 bg-[#6b9238] text-white font-semibold rounded-lg hover:bg-[#009A7B] transition-colors py-3 shadow-lg"
+                                className="btn-primary flex-1"
                             >
                                 Apply
                             </button>
@@ -557,7 +557,7 @@ export default function CollectionDetailPage() {
                                 <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
                             </div>
                         </div>
-                        <Link href="/cart" className="bg-[#6b9238] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition">
+                        <Link href="/cart" className="btn-primary">
                             View Cart
                         </Link>
                     </div>

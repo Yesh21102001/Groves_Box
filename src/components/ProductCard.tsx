@@ -240,11 +240,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                                 <h3 className="bs-name">{product.name}</h3>
                                 <div className="bs-price-row">
                                     <span className="bs-price">
-                                        ${bsPrice.toLocaleString("en-IN")}
+                                        Rs. {bsPrice.toLocaleString("en-IN")}
                                     </span>
                                     {bsCompare && bsCompare > bsPrice && (
                                         <span className="bs-compare">
-                                            ${bsCompare.toLocaleString("en-IN")}
+                                            Rs. {bsCompare.toLocaleString("en-IN")}
                                         </span>
                                     )}
                                     {bsDiscount && (
@@ -278,7 +278,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                                                         {v.title}
                                                     </span>
                                                     <span className="bs-variant-price">
-                                                        ${v.price.toLocaleString("en-IN")}
+                                                        Rs. {v.price.toLocaleString("en-IN")}
                                                     </span>
                                                 </div>
                                                 <div className="bs-variant-right">
@@ -318,7 +318,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                             ) : (
                                 <>
                                     <ShoppingCart size={18} />
-                                    Add to Cart · ${bsPrice.toLocaleString("en-IN")}
+                                    Add to Cart · Rs. {bsPrice.toLocaleString("en-IN")}
                                 </>
                             )}
                         </button>
@@ -464,11 +464,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                             <div className="qv-price-row">
                                 <span className="qv-price">
-                                    ${qvPrice.toLocaleString("en-IN")}
+                                    Rs. {qvPrice.toLocaleString("en-IN")}
                                 </span>
                                 {qvCompare && qvCompare > qvPrice && (
                                     <span className="qv-compare">
-                                        ${qvCompare.toLocaleString("en-IN")}
+                                        Rs. {qvCompare.toLocaleString("en-IN")}
                                     </span>
                                 )}
                                 {qvDiscount && (

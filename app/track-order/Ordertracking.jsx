@@ -225,7 +225,7 @@ export default function OrderTracking() {
 
                     <Link
                         href="/login"
-                        className="inline-block bg-[#6b9238] text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-[#009A7B] transition"
+                        className="btn-primary"
                     >
                         {error === "no_orders" ? "Shop Now" : "Go to Login"}
                     </Link>
@@ -331,10 +331,10 @@ export default function OrderTracking() {
 
                 <div className="mt-8 space-y-3">
                     <Link href="/products"
-                        className="block w-full bg-[#6b9238] text-white py-3 rounded-xl font-medium hover:bg-[#009A7B] transition text-center">
+                        className="btn-primary w-full">
                         Continue Shopping
                     </Link>
-                    <button className="w-full border border-[#6b9238] text-[#6b9238] py-3 rounded-xl font-medium hover:bg-[#f0f4f1] transition">
+                    <button className="btn-outline w-full">
                         Need Plant Care Help?
                     </button>
                 </div>

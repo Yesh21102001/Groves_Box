@@ -1,14 +1,15 @@
 'use client';
 
 import React from 'react';
-import { Heart, ShoppingCart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/src/context/CartContext';
 import { useWishlist } from '@/src/context/WishlistContext';
+import ProductCard from '@/src/components/ProductCard';
 
 export default function WishlistPage() {
-    const { wishlistItems, removeFromWishlist } = useWishlist();
-    const { addToCart, cartItems } = useCart();
+    const { wishlistItems } = useWishlist();
+    const { cartItems } = useCart();
 
     const totalItems = cartItems.reduce(
         (sum: number, item: any) => sum + item.quantity,
@@ -45,7 +46,7 @@ export default function WishlistPage() {
                         </h2>
                         <Link
                             href="/products"
-                            className="inline-flex items-center px-6 py-3 bg-[#6b9238] text-white rounded-xl font-semibold transition"
+                            className="btn-primary"
                         >
                             Browse Products
                         </Link>
@@ -54,106 +55,17 @@ export default function WishlistPage() {
 
                     /* Product Grid */
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-
                         {wishlistItems.map((item) => (
-                            <Link
+                            <ProductCard
                                 key={item.id}
-                                href={`/products/${item.handle}`}
-                                className="group block"
-                            >
-                                {/* Image Section */}
-                                <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4] mb-4">
-
-                                    {/* Remove Button */}
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            removeFromWishlist(item.id);
-                                        }}
-                                        className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow hover:bg-[#6b9238] hover:text-white transition"
-                                    >
-                                        <Heart size={18} className="fill-current text-red-500" />
-                                    </button>
-
-                                    {/* Quick Add */}
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-
-                                            const variantId = item.variantId;
-
-                                            if (!variantId) {
-                                                alert("This product is unavailable");
-                                                return;
-                                            }
-
-                                            addToCart({
-                                                id: item.id,
-                                                variantId: variantId,
-                                                name: item.name,
-                                                price: item.price,
-                                                quantity: 1,
-                                                image: item.image,
-                                                handle: item.handle,
-                                                variants: item.variants
-                                            });
-                                        }}
-                                        className="hidden md:flex absolute bottom-3 left-3 right-3 z-10 bg-[#6b9238] text-white py-2.5 text-sm font-medium hover:bg-[#009A7B] transition items-center justify-center gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 duration-300"
-                                    >
-                                        <ShoppingCart size={16} />
-                                        Quick Add
-                                    </button>
-
-                                    {/* Mobile Quick Add */}
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-
-                                            const variantId = item.variantId;
-
-                                            if (!variantId) {
-                                                alert("This product is unavailable");
-                                                return;
-                                            }
-
-                                            addToCart({
-                                                id: item.id,
-                                                variantId: variantId,
-                                                name: item.name,
-                                                price: item.price,
-                                                quantity: 1,
-                                                image: item.image,
-                                                handle: item.handle,
-                                                variants: item.variants
-                                            });
-                                        }}
-                                        className="absolute bottom-3 right-3 z-10 w-10 h-10 bg-[#6b9238] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition md:hidden"
-                                    >
-                                        <ShoppingCart size={18} />
-                                    </button>
-
-                                    {/* Image */}
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                    />
-                                </div>
-
-                                {/* Product Info */}
-                                <h3 className="text-sm md:text-base font-light text-gray-900 mb-1">
-                                    {item.name}
-                                </h3>
-
-                                <div className="text-sm">
-                                    <span className="font-medium text-gray-900">
-                                        Rs. {item.price}
-                                    </span>
-                                </div>
-                            </Link>
+                                product={{
+                                    id: item.id,
+                                    name: item.name,
+                                    handle: item.handle,
+                                    image: item.image,
+                                    variants: item.variants,
+                                }}
+                            />
                         ))}
                     </div>
                 )}
@@ -195,7 +107,7 @@ sm:rounded-b-none
 
                         <Link
                             href="/cart"
-                            className="bg-[#6b9238] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#009A7B] transition"
+                            className="btn-primary"
                         >
                             View Cart
                         </Link>

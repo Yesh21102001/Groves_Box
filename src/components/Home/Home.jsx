@@ -186,15 +186,12 @@ function CategoryRow({ categories }) {
                 }}
               >
                 {cat.image ? (
-                  <img
+                  <Image
                     src={cat.image}
                     alt={cat.name}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
+                    fill
+                    sizes="124px"
+                    className="object-cover"
                   />
                 ) : (
                   <div
@@ -235,19 +232,28 @@ function CategoryRow({ categories }) {
 }
 
 // ── Main Page ────────────────────────────────────────────────────────
-export default function HomePage() {
+export default function HomePage({ initialData = {} }) {
   const [selectedSize, setSelectedSize] = useState("M");
   const [bestSellerIndex, setBestSellerIndex] = useState(0);
   const { cartItems, addToCart } = useCart();
-  const [saleProducts, setSaleProducts] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [categoryProducts, setCategoryProducts] = useState([]);
-  const [featuredCategory, setFeaturedCategory] = useState(null);
-  const [newArrivals, setNewArrivals] = useState([]);
-  const [testimonials, setTestimonials] = useState([]);
-  const [workshops, setWorkshops] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const [saleProducts, setSaleProducts] = useState(initialData.saleProducts ?? []);
+  const [products, setProducts] = useState(initialData.products ?? []);
+  const [categoryProducts, setCategoryProducts] = useState(
+    initialData.categoryProducts ?? [],
+  );
+  const [featuredCategory, setFeaturedCategory] = useState(
+    initialData.featuredCategory ?? null,
+  );
+  const [newArrivals, setNewArrivals] = useState(initialData.newArrivals ?? []);
+  const [testimonials, setTestimonials] = useState(
+    initialData.testimonials ?? homeConfig.testimonials.items,
+  );
+  const [workshops, setWorkshops] = useState(initialData.workshops ?? []);
+  const [categories, setCategories] = useState(initialData.categories ?? []);
+  const [loading, setLoading] = useState(
+    Object.keys(initialData).length === 0,
+  );
   const [error, setError] = useState(null);
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -264,10 +270,13 @@ export default function HomePage() {
     newArrivals: newArrivalsConfig,
     onSale,
     workshops: workshopsConfig,
-    testimonials: testimonialsConfig,
   } = homeConfig;
 
   useEffect(() => {
+    if (Object.keys(initialData).length > 0) {
+      return;
+    }
+
     async function fetchAllData() {
       try {
         setLoading(true);
@@ -304,16 +313,6 @@ export default function HomePage() {
           setCategoryProducts(categoryProductsData || []);
         }
 
-        try {
-          const [testimonialsRes, workshopsRes] = await Promise.all([
-            fetch("/data/testimonials.json"),
-            fetch(workshopsConfig.dataFile),
-          ]);
-          if (testimonialsRes.ok) setTestimonials(await testimonialsRes.json());
-          if (workshopsRes.ok) setWorkshops(await workshopsRes.json());
-        } catch (jsonError) {
-          console.log("Optional data not available:", jsonError);
-        }
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err.message);
@@ -322,7 +321,7 @@ export default function HomePage() {
       }
     }
     fetchAllData();
-  }, []);
+  }, [initialData]);
 
   const CARDS_PER_PAGE = 4;
   const displayProducts =
@@ -441,10 +440,12 @@ export default function HomePage() {
 
               {/* Hero Image */}
               <div className="relative z-10 h-full rounded-2xl overflow-hidden shadow-2xl">
-                <img
+                <Image
                   src="/images/artificial-green-plant-pot-display-rack-sale.jpg"
                   alt="Beautiful gardening setup"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  fill
+                  priority
+                  className="object-cover hover:scale-105 transition-transform duration-500"
                 />
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -468,10 +469,12 @@ export default function HomePage() {
 
         {/* Mobile Image - shown only on small screens */}
         <div className="md:hidden relative mx-5 sm:mx-8 mb-8 rounded-2xl overflow-hidden shadow-lg h-64 sm:h-80">
-          <img
+          <Image
             src="/images/artificial-green-plant-pot-display-rack-sale.jpg"
             alt="Beautiful gardening setup"
-            className="w-full h-full object-cover"
+            fill
+            priority
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
         </div>
@@ -543,10 +546,11 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="flex-1 relative min-h-[240px] md:min-h-0">
-              <img
+              <Image
                 src={featuredCollection.image}
                 alt={featuredCollection.titleAfter}
-                className="absolute inset-0 w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
           </div>
@@ -600,10 +604,11 @@ export default function HomePage() {
                   className="group block bg-white rounded-2xl overflow-hidden shadow-sm ring-1 ring-black/5 hover:shadow-xl hover:ring-green-200 hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-                    <img
+                    <Image
                       src={w.image}
                       alt={w.imageAlt}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 text-xs font-bold rounded-full">
                       {w.date}

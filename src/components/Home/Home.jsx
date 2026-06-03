@@ -484,7 +484,7 @@ export default function HomePage({ initialData = {} }) {
           CATEGORIES
       ══════════════════════════════════════ */}
       {categories.length > 0 && (
-        <section className="w-full px-5 sm:px-8 lg:px-12 py-16 bg-white">
+        <section className="w-full px-5 sm:px-8 lg:px-12 pt-10 pb-2 sm:py-16 bg-white">
           <div className="max-w-7xl mx-auto">
             <SectionHeader
               eyebrow="Shop by Category"

@@ -589,9 +589,7 @@ function ProductsPageContent() {
                             {sortedProducts.length > 0 ? (
                                 <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
                                     {sortedProducts.map((product) => (
-                                        <Link key={product.id} href={`/products/${product.handle}`} className="group">
-                                            <ProductCard product={product} />
-                                        </Link>
+                                        <ProductCard key={product.id} product={product} />
                                     ))}
                                 </div>
                             ) : (

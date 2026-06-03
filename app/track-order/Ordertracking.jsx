@@ -207,21 +207,12 @@ export default function OrderTracking() {
                                 error === "no_orders" ? "No Orders Found" :
                                     "Something went wrong"}
                     </h2>
-                    <p className="text-gray-500 text-sm mb-4">
+                    <p className="text-gray-500 text-sm mb-6">
                         {error === "not_logged_in" ? "You need to be logged in to track your order." :
                             error === "session_expired" ? "Your session has expired. Please log in again." :
                                 error === "no_orders" ? "No orders found on your account." :
                                     "Failed to load order. Please try again."}
-                    </p>                    {debugKeys.length > 0 && (
-                        <div className="bg-gray-50 rounded-xl p-3 mb-4 text-left">
-                            <p className="text-xs font-semibold text-gray-500 mb-1">
-                                🔍 localStorage keys found:
-                            </p>
-                            <p className="text-xs text-gray-600 break-all">
-                                {debugKeys.join(", ") || "none"}
-                            </p>
-                        </div>
-                    )}
+                    </p>
 
                     <Link
                         href="/login"

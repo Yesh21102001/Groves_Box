@@ -1,200 +1,254 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { Search, ChevronDown, Leaf, Truck, Sprout, Droplets } from 'lucide-react';
 
 interface FAQItem {
+    category: string;
     question: string;
     answer: string;
-    category: string;
 }
 
 const faqData: FAQItem[] = [
+    // Plant Care
     {
-        category: 'General',
-        question: 'What is GrovesBox?',
-        answer: 'GrovesBox is a premium subscription service that delivers curated boxes of sustainable, eco-friendly products directly to your door. Each box is thoughtfully designed to bring nature-inspired items into your daily life.'
+        category: 'Plant Care',
+        question: 'How often should I water my plants?',
+        answer: 'It depends on the plant type, pot size, soil, and humidity. Most indoor plants prefer soil that is moist but not waterlogged. Check soil moisture by inserting your finger 1-2 inches deep — if it feels dry, water. Overwatering is the most common plant killer, so when in doubt, wait a day and check again.'
     },
     {
-        category: 'General',
-        question: 'How does the subscription work?',
-        answer: 'Choose your preferred plan (monthly, quarterly, or annual), and we\'ll deliver a carefully curated box to your doorstep. You can pause, skip, or cancel your subscription at any time from your account dashboard.'
+        category: 'Plant Care',
+        question: 'How much light do indoor plants need?',
+        answer: 'Different plants have different light needs. Most common indoor plants prefer indirect sunlight (bright but not direct rays). Place them near a window with filtered light, or 3-6 feet away from a sunny window. Low-light plants like snake plants and pothos can tolerate darker corners, while succulents need more direct sun.'
     },
     {
-        category: 'Shipping',
-        question: 'Where do you ship?',
-        answer: 'We currently ship to all 50 US states, Canada, and select European countries. International shipping rates vary by location and will be calculated at checkout.'
+        category: 'Plant Care',
+        question: 'What should I do if my plant is turning yellow?',
+        answer: 'Yellow leaves can indicate overwatering, poor drainage, nutrient deficiency, or low light. Check if the soil is soggy (overwatering), ensure your pot has drainage holes, and move the plant to brighter light if needed. If leaves continue yellowing, try fertilizing with a balanced plant food.'
     },
     {
-        category: 'Shipping',
-        question: 'How long does shipping take?',
-        answer: 'Domestic orders typically arrive within 3-5 business days. International orders may take 7-14 business days depending on customs processing and your location.'
+        category: 'Plant Care',
+        question: 'How do I know if my plant is getting the right humidity?',
+        answer: 'Most tropical plants prefer humidity around 50-60%. Signs of low humidity include crispy leaf tips and slow growth. Increase humidity by misting leaves, grouping plants together, or placing them on a pebble tray with water. You can also run a humidifier nearby.'
     },
     {
-        category: 'Shipping',
-        question: 'Do you offer expedited shipping?',
-        answer: 'Yes! We offer express shipping options at checkout for customers who need their boxes sooner. Express shipping typically delivers within 1-2 business days domestically.'
+        category: 'Plant Care',
+        question: 'Is it okay to move my plant to a different location?',
+        answer: 'Yes, but do it gradually. Plants need time to adjust to new light and temperature conditions. If moving from low to bright light, acclimate over 1-2 weeks by slowly increasing exposure. Avoid moving plants too frequently, as frequent relocations cause stress.'
+    },
+
+    // Orders & Shipping
+    {
+        category: 'Orders & Shipping',
+        question: 'How long do plants take to arrive?',
+        answer: 'Most orders are processed and shipped within 1-2 business days. Delivery times vary by location: metro cities (2-4 days), tier 2 & 3 cities (4-7 days), and remote areas (7-10 days). You\'ll receive a tracking number via email as soon as your order ships.'
     },
     {
-        category: 'Products',
-        question: 'Are your products eco-friendly?',
-        answer: 'Absolutely! Sustainability is at our core. All products are carefully vetted to ensure they meet our environmental standards, including recyclable packaging, ethical sourcing, and minimal environmental impact.'
+        category: 'Orders & Shipping',
+        question: 'Do you offer free shipping?',
+        answer: 'Yes! We offer free shipping on orders over ₹799. For orders below ₹799, a flat shipping fee of ₹79 applies. Bulky items may have additional handling charges, which are shown at checkout.'
     },
     {
-        category: 'Products',
-        question: 'Can I customize my box?',
-        answer: 'While our standard boxes are pre-curated, premium subscribers can access our customization portal to adjust preferences and swap certain items before each shipment.'
+        category: 'Orders & Shipping',
+        question: 'What if my plant arrives damaged?',
+        answer: 'We take special care when packing, but if your plant arrives damaged or unhealthy, contact us within 48 hours with photos. We\'ll investigate and send a replacement or refund immediately at no extra cost.'
     },
     {
-        category: 'Products',
-        question: 'What if I receive a damaged item?',
-        answer: 'We take great care in packaging, but if something arrives damaged, please contact us within 48 hours with photos. We\'ll send a replacement immediately at no additional cost.'
+        category: 'Orders & Shipping',
+        question: 'Can I track my order?',
+        answer: 'Absolutely! Once your order ships, you\'ll receive a tracking number via email. You can also track it from our Track Order page in your account. If you don\'t receive a tracking number within 48 hours of ordering, contact our support team.'
     },
     {
-        category: 'Account',
-        question: 'How do I cancel my subscription?',
-        answer: 'You can cancel anytime from your account settings. Simply navigate to "Subscription Management" and click "Cancel Subscription." You\'ll continue to receive boxes until the end of your current billing period.'
+        category: 'Orders & Shipping',
+        question: 'Do you ship internationally?',
+        answer: 'Currently, we ship within India only. We\'re working on expanding to international locations soon. If you\'d like to be notified when international shipping becomes available, reach out to our team.'
+    },
+
+    // Returns & Refunds
+    {
+        category: 'Returns & Refunds',
+        question: 'What is your return policy?',
+        answer: 'We offer a 30-day return window from the date of delivery. Plants must be in original condition with proper care instructions. If a plant arrives unhealthy or damaged, we replace it free of charge. Final sale items and opened soil bags cannot be returned.'
     },
     {
-        category: 'Account',
-        question: 'Can I pause my subscription?',
-        answer: 'Yes! You can pause your subscription for up to 3 months. This is perfect for vacations or when you need a break. Just reactivate whenever you\'re ready to resume.'
+        category: 'Returns & Refunds',
+        question: 'How do I initiate a return?',
+        answer: 'Log into your account, go to "My Orders," select the order, and click "Request Return." Print the prepaid return label we provide and drop off your package at any courier location. Refunds are processed 5-7 business days after we receive and inspect your return.'
     },
     {
-        category: 'Payment',
+        category: 'Returns & Refunds',
+        question: 'What if I received the wrong item?',
+        answer: 'We apologize! Contact our support team immediately with your order number and photos. We\'ll send the correct item right away via express shipping at no cost. You can return the incorrect item using the prepaid label we provide.'
+    },
+
+    // Account & Payment
+    {
+        category: 'Account & Payment',
         question: 'What payment methods do you accept?',
-        answer: 'We accept all major credit cards (Visa, MasterCard, American Express, Discover), PayPal, Apple Pay, and Google Pay for your convenience.'
+        answer: 'We accept all major credit cards (Visa, MasterCard, American Express), debit cards, UPI, net banking, digital wallets (Google Pay, Apple Pay, PhonePe), and buy now pay later (BNPL) options.'
     },
     {
-        category: 'Payment',
-        question: 'When will I be charged?',
-        answer: 'Your card is charged when your box ships. For subscriptions, billing occurs on the same day each billing cycle. You\'ll receive an email notification 3 days before each charge.'
-    }
+        category: 'Account & Payment',
+        question: 'Is my payment information secure?',
+        answer: 'Yes, all transactions are encrypted using SSL (Secure Sockets Layer) technology. We do not store your full credit card details — only the last 4 digits are saved for your convenience. Your payment is processed by trusted payment gateways.'
+    },
+    {
+        category: 'Account & Payment',
+        question: 'How do I create an account?',
+        answer: 'Click "Sign Up" on our homepage, enter your email and create a password. You\'ll receive a verification email — click the link to confirm. You can also sign up using your Google or Apple account for faster checkout.'
+    },
+    {
+        category: 'Account & Payment',
+        question: 'Can I use a discount code?',
+        answer: 'Yes! If you have a discount code, enter it at checkout in the "Promo Code" field. The discount will be applied to your order total. Check our email newsletters and social media for exclusive codes and promotions.'
+    },
+
+    // General
+    {
+        category: 'General',
+        question: 'Do you sell rare or exotic plants?',
+        answer: 'We specialize in hardy, beginner-friendly indoor plants that are easy to care for. Our collection includes popular varieties like pothos, snake plants, monstera, and succulents. We carefully source from trusted nurseries to ensure quality and health.'
+    },
+    {
+        category: 'General',
+        question: 'Are your plants organic and chemical-free?',
+        answer: 'Yes! All plants are grown using sustainable, eco-friendly practices without harmful pesticides. Soil is nutrient-rich and prepared without synthetic chemicals. We\'re committed to delivering healthy, clean plants to your home.'
+    },
+    {
+        category: 'General',
+        question: 'Do you offer bulk or corporate orders?',
+        answer: 'Absolutely! We offer special pricing and customized packaging for bulk orders (10+ plants) and corporate gifts. Contact our bulk sales team at bulk@grovesbox.com or use our contact form with details about your needs.'
+    },
+    {
+        category: 'General',
+        question: 'How do I contact customer support?',
+        answer: 'You can reach us via email at support@grovesbox.com, WhatsApp for instant support, or through our contact form. Our team responds within 24 hours. Visit our Contact Us page for all available channels.'
+    },
 ];
 
 const categories = ['All', ...Array.from(new Set(faqData.map(faq => faq.category)))];
 
 export default function FAQPage() {
+    const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
     const [openIndex, setOpenIndex] = useState<number | null>(null);
-    const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredFAQs = faqData.filter(faq => {
-        const matchesCategory = activeCategory === 'All' || faq.category === activeCategory;
-        const matchesSearch = searchQuery === '' ||
-            faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
-    });
+    const filteredFAQs = useMemo(() => {
+        return faqData.filter(faq => {
+            const matchesCategory = activeCategory === 'All' || faq.category === activeCategory;
+            const matchesSearch = searchQuery === '' ||
+                faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesCategory && matchesSearch;
+        });
+    }, [searchQuery, activeCategory]);
 
-    const toggleFAQ = (index: number) => {
-        setOpenIndex(openIndex === index ? null : index);
+    const categoryIcons: { [key: string]: React.ReactNode } = {
+        'Plant Care': <Leaf size={16} />,
+        'Orders & Shipping': <Truck size={16} />,
+        'Returns & Refunds': <Sprout size={16} />,
+        'Account & Payment': <Droplets size={16} />,
+        'General': <Leaf size={16} />,
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
+        <div className="min-h-screen bg-white">
 
-            {/* Hero Section */}
-            <section className="relative overflow-hidden bg-[#F0F4F1] py-10 sm:py-12 lg:py-16">
-
-                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="inline-block mb-6 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-[#244033]">
-                        <span className="text-sm font-medium text-[#244033]">Help Center</span>
-                    </div>
-
-                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light text-[#2F4F3E] mb-6 tracking-tight">
-                        Frequently Asked
-                        <span className="block mt-2 bg-[#2F4F3E] bg-clip-text text-transparent font-normal">
-                            Questions
-                        </span>
+            {/* ── HERO ───────────────────────────────────────────────────── */}
+            <section className="w-full bg-[#6b9238] px-5 sm:px-8 lg:px-12 py-16 md:py-20">
+                <div className="max-w-7xl mx-auto">
+                    <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-white/70 mb-3">
+                        Help Center
+                    </span>
+                    <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-4 max-w-xl">
+                        Frequently Asked Questions
                     </h1>
-
-                    <p className="text-lg sm:text-xl text-black-300 max-w-3xl mx-auto mb-10">
-                        Find answers to common questions about our products, shipping, and services.
+                    <p className="text-white/80 text-lg max-w-lg leading-relaxed mb-8">
+                        Find answers to common questions about plant care, orders, shipping, and more.
                     </p>
 
                     {/* Search Bar */}
-
+                    <div className="relative max-w-md">
+                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                        <input
+                            type="text"
+                            placeholder="Search FAQs..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border border-white/30 text-white placeholder:text-white/50 outline-none focus:border-white/60 transition-colors text-sm"
+                        />
+                    </div>
                 </div>
             </section>
 
-            {/* Category Filter */}
-            <section className="sticky top-[80px] z-20 bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-sm">
-
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex flex-wrap justify-center gap-3">
-                        {categories.map((category) => (
+            {/* ── CATEGORY TABS ──────────────────────────────────────────── */}
+            <section className="w-full px-5 sm:px-8 lg:px-12 py-6 border-b border-gray-200 sticky top-0 z-40 bg-white/95 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
+                        {categories.map(cat => (
                             <button
-                                key={category}
-                                onClick={() => setActiveCategory(category)}
-                                className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${activeCategory === category
-                                    ? 'bg-[#244033] text-white shadow-lg scale-105'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-105'
-                                    }`}
+                                key={cat}
+                                onClick={() => { setActiveCategory(cat); setOpenIndex(null); }}
+                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                                    activeCategory === cat
+                                        ? 'bg-[#6b9238] text-white shadow-sm'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                }`}
                             >
-                                {category}
+                                {cat}
                             </button>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* FAQ Accordion */}
-            <section className="py-16 sm:py-20 lg:py-24">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* ── FAQ ACCORDION ──────────────────────────────────────────── */}
+            <section className="w-full px-5 sm:px-8 lg:px-12 py-14">
+                <div className="max-w-4xl mx-auto">
 
                     {filteredFAQs.length === 0 ? (
                         <div className="text-center py-16">
-                            <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-6">
-                                <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                                <Leaf size={24} className="text-gray-400" />
                             </div>
-                            <h3 className="text-2xl font-medium text-gray-900 mb-3">No results found</h3>
-                            <p className="text-gray-600">Try adjusting your search or filter to find what you're looking for.</p>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">No results found</h3>
+                            <p className="text-gray-500">Try adjusting your search or browsing a different category.</p>
                         </div>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                             {filteredFAQs.map((faq, index) => (
                                 <div
                                     key={index}
-                                    className="group bg-white rounded-2xl border-2 border-gray-200 overflow-hidden transition-all duration-300 hover:border-gray-300 hover:shadow-lg"
+                                    className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-[#6b9238] hover:shadow-sm transition-all"
                                 >
                                     <button
-                                        onClick={() => toggleFAQ(index)}
-                                        className="w-full flex items-center justify-between p-6 sm:p-8 text-left transition-colors"
+                                        onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                        className="w-full flex items-start justify-between p-5 text-left gap-4"
                                     >
-                                        <div className="flex-1 pr-4">
-                                            <span className="inline-block px-3 py-1 bg-[#244033] text-white text-xs font-semibold rounded-full mb-3">
-                                                {faq.category}
-                                            </span>
-                                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="text-[#6b9238]">{categoryIcons[faq.category]}</span>
+                                                <span className="text-xs font-semibold text-[#6b9238] uppercase tracking-wide">
+                                                    {faq.category}
+                                                </span>
+                                            </div>
+                                            <h3 className="font-semibold text-gray-900 group-hover:text-[#6b9238] transition-colors text-sm sm:text-base">
                                                 {faq.question}
                                             </h3>
                                         </div>
-                                        <div className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 transition-all duration-300 ${openIndex === index ? 'rotate-180 bg-gray-900' : 'group-hover:bg-gray-200'
-                                            }`}>
-                                            <svg
-                                                className={`w-5 h-5 transition-colors ${openIndex === index ? 'text-white' : 'text-gray-600'
-                                                    }`}
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                            </svg>
+                                        <div className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-[#6b9238] transition-all ${openIndex === index ? 'rotate-180' : ''}`}>
+                                            <ChevronDown
+                                                size={18}
+                                                className={`transition-colors ${openIndex === index ? 'text-white' : 'text-gray-600 group-hover:text-white'}`}
+                                            />
                                         </div>
                                     </button>
 
-                                    <div className={`transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                                        }`}>
-                                        <div className="px-6 sm:px-8 pb-6 sm:pb-8 pt-0">
-                                            <div className="border-t border-gray-200 pt-6">
-                                                <p className="text-gray-600 leading-relaxed">
-                                                    {faq.answer}
-                                                </p>
-                                            </div>
+                                    {openIndex === index && (
+                                        <div className="px-5 pb-5 pt-0 border-t border-gray-100">
+                                            <p className="text-gray-600 text-sm leading-relaxed">{faq.answer}</p>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -202,33 +256,24 @@ export default function FAQPage() {
                 </div>
             </section>
 
-            {/* Contact CTA Section */}
-            <section className="py-16 sm:py-20 lg:py-24 bg-[#F0F4F1] relative overflow-hidden">
-
-                <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full mb-6">
-                        <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                    </div>
-
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#2F4F3E] mb-4">
-                        Still have questions?
+            {/* ── CTA SECTION ────────────────────────────────────────────── */}
+            <section className="w-full px-5 sm:px-8 lg:px-12 py-14 bg-[#F5F7F2]">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+                        Didn't Find Your Answer?
                     </h2>
-                    <p className="text-lg text-black mb-8 max-w-2xl mx-auto">
-                        Can't find the answer you're looking for? Our friendly team is here to help.
+                    <p className="text-gray-600 text-lg mb-8 max-w-lg mx-auto">
+                        Our plant experts are here to help. Get instant support via email, WhatsApp, or our contact form.
                     </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-
-                        <a
-                            href="mailto:support@grovesbox.com"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#244033] backdrop-blur-sm text-white  rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-                        >
-                            Email Us
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="/contact-us"
+                            className="btn-primary">
+                            Contact Us
+                        </a>
+                        <a href="https://wa.me/91XXXXXXXXXX"
+                            target="_blank" rel="noopener noreferrer"
+                            className="btn-outline">
+                            Chat on WhatsApp
                         </a>
                     </div>
                 </div>

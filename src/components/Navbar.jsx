@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-    Search, Heart, User, ShoppingCart, ChevronDown,
+    Heart, User, ShoppingCart, ChevronDown,
     Menu, X, ChevronRight, Minus, Plus, Trash2, LogOut, CheckCircle,
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -250,15 +250,6 @@ export default function Navbar() {
 
                         {/* Right actions */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 2, marginLeft: 'auto' }}>
-
-                            {/* Search */}
-                            <button
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 7, borderRadius: 4, color: iconColor, display: 'flex', alignItems: 'center' }}
-                                onMouseEnter={e => e.currentTarget.style.background = scrolled ? 'rgba(120,162,64,0.1)' : ICON_HOVER}
-                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                            >
-                                <Search size={20} />
-                            </button>
 
                             {/* Wishlist (desktop only) */}
                             <Link

@@ -1,8 +1,24 @@
 @import "tailwindcss";
 
+/* ── Brand design tokens ──────────────────────────────────────────────────── */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Brand greens — single source of truth */
+  --green-primary:   #6b9238;   /* base brand green  */
+  --green-light:     #84b048;   /* lighter / gradient start */
+  --green-dark:      #557420;   /* darker / gradient end  */
+  --green-deep:      #3d5c14;   /* deepest, hover states  */
+  --green-surface:   #f0f7e8;   /* tinted backgrounds     */
+  --green-border:    #dcebc8;   /* card borders on hover  */
+
+  /* Semantic aliases */
+  --color-primary:      var(--green-primary);
+  --color-primary-hover: var(--green-dark);
+
+  /* Page background */
+  --page-bg: #F0F4F1;
 }
 
 /* Default body */
@@ -61,7 +77,7 @@ p {
 
 /* Filled — product-card gradient */
 .btn-primary {
-  background: linear-gradient(135deg, #84b048, #648a33);
+  background: linear-gradient(135deg, var(--green-light), var(--green-dark));
   color: #ffffff;
   box-shadow: 0 6px 16px rgba(85, 116, 32, 0.28);
 }
@@ -82,12 +98,12 @@ p {
 /* Outline — secondary actions */
 .btn-outline {
   background: transparent;
-  color: #557420;
-  border: 1.5px solid #84b048;
+  color: var(--green-dark);
+  border: 1.5px solid var(--green-light);
 }
 .btn-outline:hover {
-  background: #f3f8ee;
-  border-color: #648a33;
+  background: var(--green-surface);
+  border-color: var(--green-dark);
 }
 .btn-outline:active {
   transform: scale(0.97);

@@ -1,4 +1,4 @@
-import { DM_Sans, Lexend } from "next/font/google";
+import { Inter, Lexend } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/src/context/CartContext";
 import { WishlistProvider } from "@/src/context/WishlistContext";
@@ -8,15 +8,15 @@ import Footer from "@/src/components/Footer";
 
 const lexend = Lexend({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-lexend",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-dm-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -29,10 +29,8 @@ export default function RootLayout({
     <html lang="en">
       <body
         suppressHydrationWarning={true}
-        className={`${lexend.variable} ${dmSans.variable} antialiased`}
+        className={`${lexend.variable} ${inter.variable} antialiased`}
       >
-        {/* All consumers (Initializer, Navbar, page content, Footer) must live
-            inside the providers — otherwise useCart()/useWishlist() throw. */}
         <CartProvider>
           <WishlistProvider>
             <Initializer />

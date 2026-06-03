@@ -1,433 +1,240 @@
-"use client";
-
 import Image from 'next/image';
 import Link from 'next/link';
+import { Leaf, Heart, Truck, ShieldCheck } from 'lucide-react';
 
-import {
-    images,
-    heroContent,
-    founderContent,
-    ctaContent,
-    features,
-} from '../../src/config/About-Us.config';
-
-/* ──────────────────────────────────────────────────────────────────────────
-   MINIMAL ABOUT — drop-in redesign
-   Palette:  ink #1F2A14  ·  leaf #6B9238  ·  moss #8CAB4F
-             sage #C2DEA3 ·  paper #F5F7F2
-
-   Fonts (add once in your <head> or via next/font):
-     Fraunces        — display serif (opsz variable, light weights)
-     Instrument Sans — body sans
-     JetBrains Mono  — eyebrow labels
-   ────────────────────────────────────────────────────────────────────────── */
-
-const palette = {
-    ink: '#1F2A14',
-    inkSoft: '#4A5A3A',
-    leaf: '#6B9238',
-    moss: '#8CAB4F',
-    sage: '#C2DEA3',
-    sageSoft: '#E3EED1',
-    paper: '#F5F7F2',
-    paperWarm: '#EEF2E6',
+export const metadata = {
+    title: 'About Us | Groves Box',
+    description: "Learn about Groves Box and our mission to bring the joy of plants into people's lives.",
 };
 
-const font = {
-    display: '"Fraunces", "Cormorant Garamond", Georgia, serif',
-    body: '"Instrument Sans", "Inter Tight", system-ui, sans-serif',
-    mono: '"JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace',
-};
+const values = [
+    {
+        icon: Leaf,
+        title: 'Sustainably Sourced',
+        desc: 'Every plant in our collection is ethically grown by trusted nurseries that share our love for the environment.',
+    },
+    {
+        icon: Heart,
+        title: 'Plant Parent Support',
+        desc: 'From first-timers to seasoned growers, we provide guidance and care tips to help every plant thrive.',
+    },
+    {
+        icon: Truck,
+        title: 'Safe Delivery',
+        desc: 'Your plants are packaged with breathable, eco-friendly materials and delivered with care to your doorstep.',
+    },
+    {
+        icon: ShieldCheck,
+        title: 'Quality Guarantee',
+        desc: "We stand behind every plant we send. If your order arrives unhealthy, we'll make it right.",
+    },
+];
 
-/* ─────────────────────────────── RichParagraph ─────────────────────────── */
-function RichParagraph({ paragraph }) {
-    const linkStyle = {
-        color: palette.leaf,
-        textDecoration: 'none',
-        borderBottom: `1px solid ${palette.moss}`,
-        paddingBottom: '1px',
-        transition: 'color .25s ease, border-color .25s ease',
-    };
-    const hoverIn = e => { e.currentTarget.style.color = palette.ink; e.currentTarget.style.borderColor = palette.ink; };
-    const hoverOut = e => { e.currentTarget.style.color = palette.leaf; e.currentTarget.style.borderColor = palette.moss; };
+const stats = [
+    { value: '10,000+', label: 'Plants Delivered' },
+    { value: '5,000+', label: 'Happy Customers' },
+    { value: '200+', label: 'Plant Varieties' },
+    { value: '4.9★', label: 'Average Rating' },
+];
 
-    const pStyle = {
-        color: palette.inkSoft,
-        fontFamily: font.body,
-        fontSize: '1.0625rem',
-        lineHeight: 1.75,
-        letterSpacing: '-0.005em',
-        margin: 0,
-    };
-
-    if (typeof paragraph === 'string') {
-        return <p style={pStyle}>{paragraph}</p>;
-    }
-
-    if (paragraph.linkText) {
-        return (
-            <p style={pStyle}>
-                {paragraph.before}
-                <a href={paragraph.linkHref} style={linkStyle} onMouseOver={hoverIn} onMouseOut={hoverOut}>
-                    {paragraph.linkText}
-                </a>
-                {paragraph.after}
-            </p>
-        );
-    }
-
-    if (paragraph.parts) {
-        return (
-            <p style={pStyle}>
-                {paragraph.parts.map((part, i) => {
-                    if (part.type === 'link') {
-                        return (
-                            <a key={i} href={part.href} style={linkStyle} onMouseOver={hoverIn} onMouseOut={hoverOut}>
-                                {part.value}
-                            </a>
-                        );
-                    }
-                    if (part.type === 'italic') {
-                        return (
-                            <span key={i} style={{ fontStyle: 'italic', fontFamily: font.display, color: palette.ink }}>
-                                {part.value}
-                            </span>
-                        );
-                    }
-                    return <span key={i}>{part.value}</span>;
-                })}
-            </p>
-        );
-    }
-    return null;
-}
-
-/* ─────────────────────────────── Small bits ────────────────────────────── */
-const Eyebrow = ({ children, number }) => (
-    <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.875rem',
-        fontFamily: font.mono,
-        fontSize: '0.75rem',
-        letterSpacing: '0.18em',
-        textTransform: 'uppercase',
-        color: palette.leaf,
-        marginBottom: '2rem',
-    }}>
-        {number && <span style={{ color: palette.moss }}>{number}</span>}
-        <span style={{ width: '2rem', height: '1px', backgroundColor: palette.moss }} />
-        <span>{children}</span>
-    </div>
-);
-
-const ThinRule = ({ color = palette.sage, width = '100%' }) => (
-    <div style={{ width, height: '1px', backgroundColor: color }} />
-);
-
-/* ─────────────────────────────── Page ──────────────────────────────────── */
 export default function AboutUs() {
     return (
-        <div style={{ backgroundColor: palette.paper, color: palette.ink, minHeight: '100vh' }}>
+        <div className="bg-white">
 
             {/* ── HERO ────────────────────────────────────────────────────── */}
-            {features.showHeroSection && (
-                <section style={{
-                    paddingTop: 'clamp(4rem, 10vh, 7rem)',
-                    paddingBottom: 'clamp(4rem, 10vh, 7rem)',
-                    paddingLeft: 'clamp(1.5rem, 6vw, 6rem)',
-                    paddingRight: 'clamp(1.5rem, 6vw, 6rem)',
-                }}>
-                    <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            <section className="relative w-full min-h-105 md:min-h-130 flex items-center overflow-hidden">
+                <Image
+                    src="/images/artificial-green-plant-pot-display-rack-sale.jpg"
+                    alt="Groves Box plants"
+                    fill
+                    priority
+                    className="object-cover"
+                />
+                <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent" />
 
-                        <Eyebrow number="01">About</Eyebrow>
+                <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20">
+                    <span className="inline-block text-xs font-semibold uppercase tracking-[0.18em] text-[#C2DEA3] mb-4">
+                        Our Story
+                    </span>
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-2xl mb-6">
+                        We Believe Plants Make People Happy
+                    </h1>
+                    <p className="text-lg text-white/80 max-w-xl leading-relaxed mb-8">
+                        Groves Box started with a simple idea — that bringing a little greenery
+                        into your space can change everything. We're here to make that easy for everyone.
+                    </p>
+                    <Link href="/collections" className="btn-primary">
+                        Explore Our Plants
+                    </Link>
+                </div>
+            </section>
 
-                        <h1 style={{
-                            fontFamily: font.display,
-                            fontWeight: 300,
-                            fontSize: 'clamp(2.75rem, 7vw, 5.5rem)',
-                            lineHeight: 1.02,
-                            letterSpacing: '-0.025em',
-                            color: palette.ink,
-                            margin: 0,
-                            maxWidth: '18ch',
-                        }}>
-                            {heroContent.heading}
-                            {features.showTrademark && (
-                                <sup style={{
-                                    fontSize: '0.32em',
-                                    fontWeight: 400,
-                                    color: palette.leaf,
-                                    marginLeft: '0.1em',
-                                    top: '-1.2em',
-                                }}>®</sup>
-                            )}
-                        </h1>
-
-                        {/* Asymmetric split: image left, text right */}
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'minmax(0, 5fr) minmax(0, 7fr)',
-                            gap: 'clamp(2rem, 5vw, 5rem)',
-                            alignItems: 'start',
-                            marginTop: 'clamp(3rem, 7vh, 5rem)',
-                        }} className="hero-split">
-
-                            {/* Image column */}
-                            <div style={{
-                                position: 'relative',
-                                aspectRatio: '4 / 5',
-                                overflow: 'hidden',
-                                borderRadius: '2px',
-                                backgroundColor: palette.sageSoft,
-                            }}>
-                                <Image
-                                    src={images.hero.src}
-                                    alt={images.hero.alt}
-                                    fill
-                                    style={{ objectFit: images.hero.objectFit || 'cover' }}
-                                    priority={images.hero.priority}
-                                />
-                                {/* subtle corner tick */}
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '1rem', left: '1rem',
-                                    width: '20px', height: '20px',
-                                    borderTop: `1px solid ${palette.paper}`,
-                                    borderLeft: `1px solid ${palette.paper}`,
-                                    opacity: 0.8,
-                                }} />
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: '1rem', right: '1rem',
-                                    width: '20px', height: '20px',
-                                    borderBottom: `1px solid ${palette.paper}`,
-                                    borderRight: `1px solid ${palette.paper}`,
-                                    opacity: 0.8,
-                                }} />
+            {/* ── STATS STRIP ─────────────────────────────────────────────── */}
+            <section className="bg-[#6b9238]">
+                <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-10">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x md:divide-white/30">
+                        {stats.map(({ value, label }) => (
+                            <div key={label} className="text-center px-4">
+                                <p className="text-3xl sm:text-4xl font-bold text-white mb-1">{value}</p>
+                                <p className="text-sm text-white/80 font-medium">{label}</p>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
-                            {/* Text column */}
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '1.5rem',
-                                paddingTop: '0.5rem',
-                            }}>
-                                {heroContent.paragraphs.map((para, i) => (
-                                    <RichParagraph key={i} paragraph={para} />
-                                ))}
-                            </div>
+            {/* ── OUR STORY ───────────────────────────────────────────────── */}
+            <section className="w-full px-5 sm:px-8 lg:px-12 py-16 md:py-24 bg-[#F5F7F2]">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+                    {/* Image */}
+                    <div className="relative rounded-2xl overflow-hidden aspect-4/3 shadow-xl">
+                        <Image
+                            src="/images/2148488544.jpg"
+                            alt="Our nursery"
+                            fill
+                            className="object-cover"
+                        />
+                        {/* Floating badge */}
+                        <div className="absolute bottom-5 left-5 bg-white rounded-xl px-4 py-3 shadow-lg">
+                            <p className="text-xs text-gray-500 font-medium">Est.</p>
+                            <p className="text-2xl font-bold text-[#6b9238]">2012</p>
                         </div>
                     </div>
-                </section>
-            )}
+
+                    {/* Text */}
+                    <div>
+                        <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-[#6b9238] mb-3">
+                            Who We Are
+                        </span>
+                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-6">
+                            A Community Built Around the Love of Plants
+                        </h2>
+                        <div className="space-y-4 text-gray-600 leading-relaxed">
+                            <p>
+                                Groves Box was founded in 2012 with a single mission: to make plants
+                                accessible to everyone — from first-time plant parents to seasoned
+                                green thumbs. What began as a small operation has grown into a trusted
+                                destination for thousands of plant lovers across India.
+                            </p>
+                            <p>
+                                Every plant in our collection is hand-picked from trusted nurseries,
+                                carefully packaged, and delivered with the care it deserves. We don't
+                                just sell plants — we help people build a greener, happier home.
+                            </p>
+                            <p>
+                                Science backs it up too: being around plants reduces stress, boosts
+                                mood, and transforms spaces. That's the simple belief that drives
+                                everything we do at Groves Box.
+                            </p>
+                        </div>
+                        <div className="mt-8 flex items-center gap-4">
+                            <Link href="/contact-us" className="btn-primary">Get in Touch</Link>
+                            <Link href="/products" className="btn-outline">Shop Plants</Link>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ── VALUES ──────────────────────────────────────────────────── */}
+            <section className="w-full px-5 sm:px-8 lg:px-12 py-16 md:py-24 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-14">
+                        <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-[#6b9238] mb-3">
+                            What We Stand For
+                        </span>
+                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                            Our Core Values
+                        </h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {values.map(({ icon: Icon, title, desc }) => (
+                            <div key={title}
+                                className="group bg-[#F5F7F2] rounded-2xl p-6 hover:bg-[#6b9238] transition-colors duration-300">
+                                <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center mb-5 shadow-sm group-hover:bg-white/20 transition-colors">
+                                    <Icon className="w-6 h-6 text-[#6b9238] group-hover:text-white transition-colors" />
+                                </div>
+                                <h3 className="text-base font-bold text-gray-900 mb-2 group-hover:text-white transition-colors">
+                                    {title}
+                                </h3>
+                                <p className="text-sm text-gray-500 leading-relaxed group-hover:text-white/85 transition-colors">
+                                    {desc}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             {/* ── FOUNDER'S NOTE ──────────────────────────────────────────── */}
-            {features.showFounderNote && (
-                <section style={{
-                    backgroundColor: palette.paperWarm,
-                    paddingTop: 'clamp(5rem, 12vh, 8rem)',
-                    paddingBottom: 'clamp(5rem, 12vh, 8rem)',
-                    paddingLeft: 'clamp(1.5rem, 6vw, 6rem)',
-                    paddingRight: 'clamp(1.5rem, 6vw, 6rem)',
-                    position: 'relative',
-                }}>
-                    {/* Top hairline */}
-                    <div style={{
-                        position: 'absolute',
-                        top: 0, left: 0, right: 0,
-                        height: '1px',
-                        backgroundColor: palette.sage,
-                    }} />
+            <section className="w-full px-5 sm:px-8 lg:px-12 py-16 md:py-24 bg-[#F5F7F2]">
+                <div className="max-w-4xl mx-auto">
+                    <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-[#6b9238] mb-3">
+                        From the Founder
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-10">
+                        A Note from Our Founder
+                    </h2>
 
-                    <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-                        <Eyebrow number="02">Founder's Note</Eyebrow>
-
-                        <h2 style={{
-                            fontFamily: font.display,
-                            fontWeight: 300,
-                            fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
-                            lineHeight: 1.1,
-                            letterSpacing: '-0.02em',
-                            color: palette.ink,
-                            margin: '0 0 3rem 0',
-                        }}>
-                            {founderContent.sectionHeading}
-                        </h2>
-
-                        {/* Founder portrait — smaller, restrained */}
-                        <div style={{
-                            position: 'relative',
-                            width: '100%',
-                            aspectRatio: '3 / 2',
-                            marginBottom: '3rem',
-                            overflow: 'hidden',
-                            borderRadius: '2px',
-                            backgroundColor: palette.sage,
-                        }}>
-                            <Image
-                                src={images.founder.src}
-                                alt={images.founder.alt}
-                                fill
-                                style={{ objectFit: images.founder.objectFit || 'cover' }}
-                                priority={images.founder.priority}
-                            />
+                    <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-gray-100">
+                        {/* Quote mark */}
+                        <div className="text-[#6b9238] text-6xl font-serif leading-none mb-4 select-none">"</div>
+                        <div className="space-y-4 text-gray-600 leading-relaxed text-base sm:text-lg mb-8">
+                            <p>
+                                I started Groves Box because I experienced firsthand how a single plant
+                                can transform a space — and a mood. When I moved into my first apartment,
+                                it felt cold and lifeless. My mother, who grew up gardening, suggested I
+                                get some houseplants. Within weeks, everything changed.
+                            </p>
+                            <p>
+                                That feeling — of calm, of connection, of being grounded — is what I
+                                wanted everyone to have access to. Not just people with big gardens or
+                                green thumbs. Everyone. That's why Groves Box exists.
+                            </p>
+                            <p>
+                                We've come a long way since that first tiny office, but our mission
+                                remains the same: to put a plant in every home and a smile on every
+                                plant parent's face.
+                            </p>
                         </div>
 
-                        {/* Body */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            {founderContent.paragraphs.map((para, i) => (
-                                <RichParagraph key={i} paragraph={para} />
-                            ))}
-                        </div>
-
-                        {/* Sign-off */}
-                        <div style={{ marginTop: '3.5rem', display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                            <div style={{ width: '3rem', height: '1px', backgroundColor: palette.leaf }} />
+                        {/* Sign off */}
+                        <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
+                            <div className="w-12 h-12 rounded-full bg-[#6b9238] flex items-center justify-center text-white font-bold text-lg">
+                                G
+                            </div>
                             <div>
-                                <p style={{
-                                    fontFamily: font.display,
-                                    fontStyle: 'italic',
-                                    fontWeight: 300,
-                                    fontSize: '1.375rem',
-                                    color: palette.ink,
-                                    margin: 0,
-                                    lineHeight: 1.3,
-                                }}>
-                                    {founderContent.signOff.line1}
-                                </p>
-                                <p style={{
-                                    fontFamily: font.mono,
-                                    fontSize: '0.75rem',
-                                    letterSpacing: '0.18em',
-                                    textTransform: 'uppercase',
-                                    color: palette.moss,
-                                    margin: '0.5rem 0 0 0',
-                                }}>
-                                    {founderContent.signOff.line2}
-                                </p>
+                                <p className="font-semibold text-gray-900">Founder, Groves Box</p>
+                                <p className="text-sm text-gray-500">Est. 2012 · Growing Together</p>
                             </div>
                         </div>
                     </div>
-                </section>
-            )}
+                </div>
+            </section>
 
-            {/* ── CTA ─────────────────────────────────────────────────────── */}
-            {features.showCtaSection && (
-                <section style={{
-                    backgroundColor: palette.sageSoft,
-                    paddingTop: 'clamp(5rem, 12vh, 8rem)',
-                    paddingBottom: 'clamp(5rem, 12vh, 8rem)',
-                    paddingLeft: 'clamp(1.5rem, 6vw, 6rem)',
-                    paddingRight: 'clamp(1.5rem, 6vw, 6rem)',
-                    position: 'relative',
-                }}>
-                    {/* Top hairline to separate from founder section */}
-                    <div style={{
-                        position: 'absolute',
-                        top: 0, left: 0, right: 0,
-                        height: '1px',
-                        backgroundColor: palette.sage,
-                    }} />
-
-                    <div style={{ maxWidth: '840px', margin: '0 auto', position: 'relative' }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.875rem',
-                            fontFamily: font.mono,
-                            fontSize: '0.75rem',
-                            letterSpacing: '0.18em',
-                            textTransform: 'uppercase',
-                            color: palette.leaf,
-                            marginBottom: '2rem',
-                        }}>
-                            <span style={{ color: palette.moss }}>03</span>
-                            <span style={{ width: '2rem', height: '1px', backgroundColor: palette.moss }} />
-                            <span>Get in touch</span>
-                        </div>
-
-                        <h2 style={{
-                            fontFamily: font.display,
-                            fontWeight: 300,
-                            fontSize: 'clamp(2.25rem, 5vw, 3.75rem)',
-                            lineHeight: 1.05,
-                            letterSpacing: '-0.025em',
-                            color: palette.ink,
-                            margin: '0 0 1.5rem 0',
-                            maxWidth: '20ch',
-                        }}>
-                            {ctaContent.heading}
-                        </h2>
-
-                        <p style={{
-                            fontFamily: font.body,
-                            fontSize: '1.0625rem',
-                            lineHeight: 1.7,
-                            color: palette.inkSoft,
-                            maxWidth: '42rem',
-                            margin: '0 0 3rem 0',
-                        }}>
-                            {ctaContent.subtext}
-                        </p>
-
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                            {ctaContent.buttons.map((btn, i) => {
-                                const isPrimary = btn.style === 'primary';
-                                return (
-                                    <Link
-                                        key={i}
-                                        href={btn.href}
-                                        className="cta-btn"
-                                        data-variant={isPrimary ? 'primary' : 'ghost'}
-                                        style={{
-                                            fontFamily: font.body,
-                                            fontSize: '0.9375rem',
-                                            fontWeight: 500,
-                                            letterSpacing: '0.01em',
-                                            padding: '1rem 1.75rem',
-                                            borderRadius: '2px',
-                                            textDecoration: 'none',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: '0.75rem',
-                                            transition: 'all .3s cubic-bezier(.2,.6,.2,1)',
-                                            backgroundColor: isPrimary ? palette.leaf : 'transparent',
-                                            color: isPrimary ? palette.paper : palette.ink,
-                                            border: isPrimary ? '1px solid transparent' : `1px solid ${palette.ink}`,
-                                        }}
-                                    >
-                                        {btn.label}
-                                        <span aria-hidden style={{ display: 'inline-block', transition: 'transform .3s ease' }}>→</span>
-                                    </Link>
-                                );
-                            })}
-                        </div>
+            {/* ── CTA BANNER ──────────────────────────────────────────────── */}
+            <section className="w-full px-5 sm:px-8 lg:px-12 py-16 md:py-20 bg-[#6b9238]">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                        Ready to Start Your Plant Journey?
+                    </h2>
+                    <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+                        Explore hundreds of beautiful plants and find your perfect green companion today.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <Link href="/collections"
+                            className="inline-flex items-center gap-2 bg-white text-[#6b9238] font-semibold px-8 py-3.5 rounded-xl hover:bg-[#F5F7F2] transition-colors shadow-sm">
+                            Shop All Plants
+                        </Link>
+                        <Link href="/contact-us"
+                            className="inline-flex items-center gap-2 border-2 border-white/60 text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-white/10 transition-colors">
+                            Contact Us
+                        </Link>
                     </div>
-                </section>
-            )}
+                </div>
+            </section>
 
-            {/* Scoped styles: hover, responsive hero split */}
-            <style jsx>{`
-                :global(.cta-btn[data-variant="primary"]:hover) {
-                    background-color: ${palette.moss};
-                    transform: translateY(-1px);
-                }
-                :global(.cta-btn[data-variant="ghost"]:hover) {
-                    background-color: ${palette.ink};
-                    border-color: ${palette.ink};
-                    color: ${palette.paper};
-                }
-                :global(.cta-btn:hover span[aria-hidden]) {
-                    transform: translateX(4px);
-                }
-                @media (max-width: 860px) {
-                    :global(.hero-split) {
-                        grid-template-columns: 1fr !important;
-                    }
-                }
-            `}</style>
         </div>
     );
 }

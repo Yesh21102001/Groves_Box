@@ -35,29 +35,30 @@ export const footerConfig = {
     // ── Navigation Columns ────────────────────────────────
     columns: [
         {
-            title: 'Information',
+            title: 'Shop',
             links: [
-                { label: 'Shop', href: '/shop' },
-                { label: 'Blog', href: '/blog' },
-                { label: 'Portfolio', href: '/portfolio' },
-                { label: 'About us', href: '/about-us' },
-                { label: 'Contact us', href: '/contact-us' },
+                { label: 'All Products', href: '/products' },
+                { label: 'Collections', href: '/collections' },
+                { label: 'Wishlist', href: '/wishlist' },
+                { label: 'Track Order', href: '/track-order' },
             ],
         },
         {
-            title: 'Support',
+            title: 'Company',
             links: [
+                { label: 'About Us', href: '/about-us' },
+                { label: 'Contact Us', href: '/contact-us' },
+                { label: 'FAQ', href: '/faq' },
                 { label: 'Account', href: '/account' },
-                { label: 'Support Center', href: '/support' },
-                { label: 'Privacy Policy', href: '/privacy-policy' },
-                { label: 'Terms & Conditions', href: '/terms' },
             ],
         },
         {
-            title: 'Community',
+            title: 'Policies',
             links: [
-                { label: 'Refer A Friend', href: '/refer' },
-                { label: 'Gift Card', href: '/gift-card' },
+                { label: 'Privacy Policy', href: '/privacy-policy' },
+                { label: 'Terms of Service', href: '/terms-service' },
+                { label: 'Refund Policy', href: '/refund-policy' },
+                { label: 'Shipping Policy', href: '/shipping' },
             ],
         },
     ],

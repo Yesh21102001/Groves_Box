@@ -1,4 +1,4 @@
-import { Inter, Lexend } from "next/font/google";
+import { Lexend } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/src/context/CartContext";
 import { WishlistProvider } from "@/src/context/WishlistContext";
@@ -13,13 +13,6 @@ const lexend = Lexend({
   display: "swap",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
 export default function RootLayout({
   children,
 }: {
@@ -29,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         suppressHydrationWarning={true}
-        className={`${lexend.variable} ${inter.variable} antialiased`}
+        className={`${lexend.variable} antialiased`}
       >
         <CartProvider>
           <WishlistProvider>

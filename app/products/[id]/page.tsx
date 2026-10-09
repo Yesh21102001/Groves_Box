@@ -550,19 +550,19 @@ export default function ProductDetailPage() {
                             ))}
 
                             {/* Quantity + Add to Cart */}
-                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 pt-1 sm:flex sm:items-stretch">
-                                <div className="col-span-1 flex min-w-0 items-center justify-between gap-3 sm:contents">
-                                    <span className="text-sm font-medium text-gray-700 sm:hidden">Quantity</span>
+                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 pt-1 lg:flex lg:items-stretch">
+                                <div className="col-span-1 flex min-w-0 items-center justify-between gap-3 lg:contents">
+                                    <span className="text-sm font-medium text-gray-700 lg:hidden">Quantity</span>
                                     <div className="flex flex-shrink-0 items-center overflow-hidden rounded-xl border border-gray-200 bg-white">
-                                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="flex h-12 w-10 items-center justify-center text-lg text-gray-600 transition hover:bg-gray-100 sm:h-14 sm:w-11">−</button>
-                                        <span className="w-8 text-center text-base font-semibold text-gray-900 sm:w-10">{quantity}</span>
-                                        <button onClick={() => setQuantity(quantity + 1)} className="flex h-12 w-10 items-center justify-center text-lg text-gray-600 transition hover:bg-gray-100 sm:h-14 sm:w-11">+</button>
+                                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="flex h-12 w-10 items-center justify-center text-lg text-gray-600 transition hover:bg-gray-100 lg:h-14 lg:w-11">−</button>
+                                        <span className="w-8 text-center text-base font-semibold text-gray-900 lg:w-10">{quantity}</span>
+                                        <button onClick={() => setQuantity(quantity + 1)} className="flex h-12 w-10 items-center justify-center text-lg text-gray-600 transition hover:bg-gray-100 lg:h-14 lg:w-11">+</button>
                                     </div>
                                 </div>
                                 <button
                                     onClick={handleAddToCart}
                                     disabled={!product.availableForSale}
-                                    className={`col-span-2 row-start-2 h-12 w-full rounded-xl text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-md sm:order-2 sm:h-14 sm:flex-1 sm:text-base ${addedToCart
+                                    className={`col-span-2 row-start-2 h-12 w-full rounded-xl text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-md lg:order-2 lg:h-14 lg:flex-1 lg:text-base ${addedToCart
                                         ? 'bg-[#1f4028] text-white'
                                     : 'bg-gradient-to-r from-[#2d5a3d] to-[#1f4028] hover:brightness-105 text-white'
                                         } disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none`}
@@ -570,13 +570,13 @@ export default function ProductDetailPage() {
                                     {addedToCart ? (
                                         <><Check size={18} /> Added to Cart!</>
                                     ) : (
-                                        <><ShoppingCart size={18} /> Add To Cart<span className="hidden sm:inline"> — Rs. {(displayPrice * quantity).toLocaleString()}</span></>
+                                        <><ShoppingCart size={18} /> Add To Cart<span className="hidden lg:inline"> — Rs. {(displayPrice * quantity).toLocaleString()}</span></>
                                     )}
                                 </button>
                                 <button
                                     onClick={handleWishlistToggle}
                                     aria-label="Add to wishlist"
-                                    className="col-start-2 row-start-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-[#d0e8dd] transition-all duration-300 hover:border-[#2d5a3d] hover:bg-[#e5f0eb] sm:order-3 sm:h-14 sm:w-14"
+                                    className="col-start-2 row-start-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-[#d0e8dd] transition-all duration-300 hover:border-[#2d5a3d] hover:bg-[#e5f0eb] lg:order-3 lg:h-14 lg:w-14"
                                 >
                                     <Heart size={20} className={isProductWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
                                 </button>

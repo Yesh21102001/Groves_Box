@@ -227,7 +227,7 @@ export default function SignUpPage() {
             <div className="w-full max-w-md">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 style={{fontFamily: "Georgia, serif"}}">Create Account</h1>
+                    <h1 className="text-4xl font-bold text-gray-900" style={{fontFamily: "Georgia, serif"}}>Create Account</h1>
                     <p className="text-gray-600 mt-2">Join us and start your plant journey</p>
                 </div>
 

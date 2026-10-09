@@ -136,19 +136,11 @@ export default function HomePage({ initialData = {} }) {
             </p>
             <div className="mb-8 flex flex-wrap items-center gap-3 sm:gap-4">
               <Link
-                href="/collections"
+                href="/products"
                 className="inline-flex min-h-11 items-center gap-2 rounded bg-white px-5 py-3 text-sm font-semibold text-[#1f4028] transition-colors hover:bg-[#edf3e9] sm:px-7"
               >
-                Find Your Plant <ArrowRight size={17} />
-              </Link>
-              <Link
-                href="/products"
-                className="inline-flex min-h-11 items-center gap-2 px-2 py-3 text-sm font-semibold text-white transition-colors hover:text-[#d8e9a4]"
-              >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#1f4028]">
-                  <ArrowRight size={14} />
-                </span>
                 Shop All Plants
+                <ArrowRight size={17} />
               </Link>
             </div>
           </div>

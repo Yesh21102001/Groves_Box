@@ -23,7 +23,7 @@ const ICON_MAP = { percent: Percent, gift: Gift, truck: Truck, tag: Tag };
 const OFFER_ICON_STYLE = {
     percent: { bg: 'bg-indigo-50', color: 'text-indigo-500', tag: 'bg-indigo-50 text-indigo-500' },
     gift:    { bg: 'bg-orange-50', color: 'text-orange-500', tag: 'bg-orange-50 text-orange-500' },
-    truck:   { bg: 'bg-green-50',  color: 'text-green-600',  tag: 'bg-green-50 text-green-600' },
+    truck:   { bg: 'bg-[#e5f0eb]',  color: 'text-[#2d5a3d]',  tag: 'bg-[#e5f0eb] text-[#2d5a3d]' },
     tag:     { bg: 'bg-gray-50',   color: 'text-gray-500',   tag: 'bg-gray-100 text-gray-500' },
 };
 
@@ -104,12 +104,12 @@ function OffersDropdown({ applyDiscount, discountLoading, discountCodes, discoun
             <button
                 onClick={() => setIsOpen((p) => !p)}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 border-dashed transition-all ${
-                    isOpen ? 'border-[#6b9238] bg-green-50/50' : 'border-gray-200 bg-gray-50 hover:border-[#6b9238]/50'
+                    isOpen ? 'border-[#2d5a3d] bg-green-50/50' : 'border-gray-200 bg-gray-50 hover:border-[#2d5a3d]/50'
                 }`}
             >
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                        <Tag className="w-4 h-4 text-[#6b9238]" />
+                        <Tag className="w-4 h-4 text-[#2d5a3d]" />
                     </div>
                     <div className="text-left">
                         <p className="text-sm font-semibold text-gray-800">View Available Offers</p>
@@ -118,7 +118,7 @@ function OffersDropdown({ applyDiscount, discountLoading, discountCodes, discoun
                         </p>
                     </div>
                 </div>
-                <ChevronDown className={`w-5 h-5 text-[#6b9238] transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-5 h-5 text-[#2d5a3d] transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Applied codes */}
@@ -157,7 +157,7 @@ function OffersDropdown({ applyDiscount, discountLoading, discountCodes, discoun
                     <div className="max-h-72 overflow-y-auto">
                         {fetching && (
                             <div className="flex flex-col items-center justify-center py-8 gap-2">
-                                <Loader2 className="w-6 h-6 animate-spin text-[#6b9238]" />
+                                <Loader2 className="w-6 h-6 animate-spin text-[#2d5a3d]" />
                                 <p className="text-xs text-gray-400">Fetching latest offers…</p>
                             </div>
                         )}
@@ -165,7 +165,7 @@ function OffersDropdown({ applyDiscount, discountLoading, discountCodes, discoun
                             <div className="flex flex-col items-center justify-center py-8 gap-3 px-4 text-center">
                                 <AlertCircle className="w-6 h-6 text-red-400" />
                                 <p className="text-xs text-red-500">{fetchErr}</p>
-                                <button onClick={fetchOffers} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-[#6b9238] text-[#6b9238]">Try Again</button>
+                                <button onClick={fetchOffers} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-[#2d5a3d] text-[#2d5a3d]">Try Again</button>
                             </div>
                         )}
                         {!fetching && !fetchErr && offers.length === 0 && (
@@ -206,7 +206,7 @@ function OffersDropdown({ applyDiscount, discountLoading, discountCodes, discoun
                                                     <button
                                                         onClick={() => handleApply(offer)}
                                                         disabled={discountLoading || !!isApplying}
-                                                        className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-50 text-[#6b9238] border border-[#6b9238]/30 hover:bg-green-100 transition active:scale-95 disabled:opacity-60 flex items-center gap-1"
+                                                        className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-50 text-[#2d5a3d] border border-[#2d5a3d]/30 hover:bg-green-100 transition active:scale-95 disabled:opacity-60 flex items-center gap-1"
                                                     >
                                                         {isApplying ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Apply'}
                                                     </button>
@@ -249,19 +249,19 @@ function ShippingProgress({ subtotal }) {
         <div className="mb-5 px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200">
             <div className="flex items-center justify-between mb-2">
                 <p className="text-xs font-medium text-gray-600">
-                    Add <span className="font-bold text-[#6b9238]">{shippingConfig.currency}{amountLeft.toFixed(2)}</span> for free shipping
+                    Add <span className="font-bold text-[#2d5a3d]">{shippingConfig.currency}{amountLeft.toFixed(2)}</span> for free shipping
                 </p>
                 <Truck className="w-4 h-4 text-gray-400" />
             </div>
             <div className="relative h-1.5 bg-gray-200 rounded-full overflow-hidden">
                 <div
                     className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
-                    style={{ width: `${progress}%`, background: 'linear-gradient(to right, #6b9238, #78a240)' }}
+                    style={{ width: `${progress}%`, background: 'linear-gradient(to right, #2d5a3d, #2d5a3d)' }}
                 />
             </div>
             <div className="flex justify-between mt-1.5">
                 <span className="text-[10px] text-gray-400">{shippingConfig.currency}0</span>
-                <span className="text-[10px] font-semibold text-[#6b9238]">{shippingConfig.currency}{shippingConfig.freeShippingThreshold} free shipping</span>
+                <span className="text-[10px] font-semibold text-[#2d5a3d]">{shippingConfig.currency}{shippingConfig.freeShippingThreshold} free shipping</span>
             </div>
         </div>
     );
@@ -378,7 +378,7 @@ export default function CartPage() {
     if (loading) return (
         <div className="min-h-screen bg-[#F0F4F1] flex items-center justify-center">
             <div className="text-center">
-                <div className="w-14 h-14 border-4 border-[#6b9238] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                <div className="w-14 h-14 border-4 border-[#2d5a3d] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                 <p className="text-gray-500 text-sm">{strings.loading}</p>
             </div>
         </div>
@@ -395,7 +395,7 @@ export default function CartPage() {
                 <p className="text-gray-500 mb-8">{strings.empty.subtext}</p>
                 <Link
                     href={routes.products}
-                    className="inline-block bg-[#6b9238] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#557420] transition-colors shadow-sm"
+                    className="inline-block bg-[#2d5a3d] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#1f4028] transition-colors shadow-sm"
                 >
                     {strings.empty.cta}
                 </Link>
@@ -522,7 +522,7 @@ export default function CartPage() {
                                             {shippingConfig.currency}{(subtotal + shipping).toFixed(2)}
                                         </p>
                                     )}
-                                    <span className="text-2xl font-bold text-[#6b9238]">
+                                    <span className="text-2xl font-bold text-[#2d5a3d]">
                                         {shippingConfig.currency}{estimatedTotal.toFixed(2)}
                                     </span>
                                 </div>
@@ -538,7 +538,7 @@ export default function CartPage() {
                             <button
                                 onClick={handleCheckout}
                                 disabled={!checkoutUrl}
-                                className="w-full py-3.5 rounded-xl bg-[#6b9238] hover:bg-[#557420] text-white font-semibold text-sm tracking-wide transition-all shadow-sm hover:shadow-md active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 rounded-xl bg-[#2d5a3d] hover:bg-[#1f4028] text-white font-semibold text-sm tracking-wide transition-all shadow-sm hover:shadow-md active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
                             >
                                 {checkoutUrl ? strings.checkout.proceed : strings.checkout.loading}
                             </button>

@@ -7,29 +7,29 @@
 export const footerConfig = {
 
     // ── Background Image & Border ──────────────────────────
-    backgroundImage: '/images/2148488544.jpg',   // ← your forest/nature image
-    bg: 'transparent',                            // fallback if no image
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundImage: null,   // No background image - clean white
+    bg: '#ffffff',           // White background
+    borderColor: '#e5e7eb',  // Light gray border
 
     // ── Brand ─────────────────────────────────────────────
     brand: {
-        name: 'Groves Box',
+        name: 'GrovesBox',
         emoji: '🌿',
         description:
-            'Your premier destination for all things eco-friendly and environmentally conscious. We are your one-stop source for a greener, healthier, and more sustainable world.',
-        copyright: '© 2025 GreenNest. All rights reserved',
+            'Discover your perfect plant companion and transform your space into a thriving green sanctuary.',
+        copyright: '© 2024 GrovesBox. All rights reserved',
 
         // Text styles
-        nameColor: '#ffffff',
-        nameMobileColor: '#ffffff',
-        nameFontSize: 'text-3xl',
+        nameColor: '#1a1a1a',
+        nameMobileColor: '#1a1a1a',
+        nameFontSize: 'text-2xl',
         nameFontWeight: 'font-bold',
-        descColor: 'rgba(255, 255, 255, 0.80)',
+        descColor: '#6b7280',
         descFontSize: 'text-sm',
-        copyrightColor: 'rgba(255, 255, 255, 0.75)',
+        copyrightColor: '#6b7280',
         copyrightFontSize: 'text-sm',
         copyrightMobileFontSize: 'text-xs',
-        emojiSize: 'text-3xl',
+        emojiSize: 'text-2xl',
     },
 
     // ── Navigation Columns ────────────────────────────────
@@ -65,22 +65,22 @@ export const footerConfig = {
 
     // Column text styles
     columnStyles: {
-        titleColor: '#ffffff',
+        titleColor: '#1a1a1a',
         titleFontSize: 'text-base',
         titleFontWeight: 'font-bold',
         titleAlign: 'text-left',
         titleMarginB: 'mb-5',
-        linkColor: 'rgba(255, 255, 255, 0.80)',
-        linkHoverColor: '#ffffff',
+        linkColor: '#6b7280',
+        linkHoverColor: '#2d5a3d',
         linkFontSize: 'text-sm',
         linkSpacing: 'space-y-3',
     },
 
     // Mobile accordion styles
     accordionStyles: {
-        buttonTextColor: '#ffffff',
+        buttonTextColor: '#1a1a1a',
         buttonFontWeight: 'font-semibold',
-        borderColor: 'rgba(255, 255, 255, 0.12)',
+        borderColor: '#e5e7eb',
         paddingX: 'px-6',
         paddingY: 'py-4',
         listPaddingX: 'px-6',
@@ -91,40 +91,40 @@ export const footerConfig = {
 
     // ── Newsletter ────────────────────────────────────────
     newsletter: {
-        title: 'Stay Connected',
-        description: 'Subscribe for eco-tips and exclusive member offers',
-        placeholder: 'Your email address',
+        title: 'Stay Connected With Us',
+        description: 'Subscribe to our newsletter for plant care tips and exclusive offers.',
+        placeholder: 'Enter your email',
         buttonText: 'Subscribe',
 
         // Button colors
-        buttonBg: '#6B9238',
-        buttonHoverBg: '#C2DEA3',
+        buttonBg: '#2d5a3d',
+        buttonHoverBg: '#1f4028',
         buttonTextColor: '#ffffff',
-        buttonHoverTextColor: '#2D4A14',  // dark green for contrast on light hover bg
+        buttonHoverTextColor: '#ffffff',
 
         // Input styles
-        inputBorderColor: 'rgba(255, 255, 255, 0.25)',
-        inputFocusBorder: '#ffffff',
+        inputBorderColor: '#e5e7eb',
+        inputFocusBorder: '#2d5a3d',
         inputFontSize: 'text-sm',
         inputPadding: 'px-4 py-2.5',
 
         // Desktop text styles
-        titleColor: '#ffffff',
+        titleColor: '#1a1a1a',
         titleFontSize: 'text-base',
         titleFontWeight: 'font-bold',
         titleMarginB: 'mb-4',
         titleAlign: 'text-left',
-        descColor: 'rgba(255, 255, 255, 0.75)',
+        descColor: '#6b7280',
         descFontSize: 'text-sm',
         descMarginB: 'mb-4',
         descAlign: 'text-left',
 
         // Mobile text styles
         mobileTitleSize: 'text-2xl',
-        mobileTitleWeight: 'font-light',
-        mobileTitleColor: '#ffffff',
+        mobileTitleWeight: 'font-bold',
+        mobileTitleColor: '#1a1a1a',
         mobileTitleMarginB: 'mb-2',
-        mobileDescColor: 'rgba(255, 255, 255, 0.75)',
+        mobileDescColor: '#6b7280',
         mobileDescFontSize: 'text-sm',
         mobileDescMarginB: 'mb-4',
         mobileAlign: 'text-left',
@@ -141,19 +141,19 @@ export const footerConfig = {
     ],
 
     socialStyles: {
-        iconColor: '#ffffff',
-        iconHoverColor: '#ffffff',
-        iconSize: 16,
-        gap: 'gap-3',
+        iconColor: '#6b7280',
+        iconHoverColor: '#2d5a3d',
+        iconSize: 18,
+        gap: 'gap-4',
         mobileMarginT: 'mb-0',
     },
 
     // ── Bottom Bar ────────────────────────────────────────
     bottomBar: {
-        borderColor: 'rgba(255, 255, 255, 0.12)',
+        borderColor: '#e5e7eb',
         paddingTop: 'pt-6',
         // "between" | "center" | "start" | "end"
-        desktopJustify: 'center',
+        desktopJustify: 'between',
     },
 
     // ── Spacing ───────────────────────────────────────────

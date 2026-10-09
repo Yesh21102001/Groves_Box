@@ -583,15 +583,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           position: absolute;
           top: 12px;
           left: 12px;
-          background: linear-gradient(135deg, #78A240, #557420);
-          color: #ffffff;
+          background: linear-gradient(135deg, #d4af37, #b8941a);
+          color: #000000;
           font-size: 10.5px;
           font-weight: 700;
           letter-spacing: 0.03em;
           padding: 5px 10px;
           border-radius: 8px;
           z-index: 10;
-          box-shadow: 0 4px 10px rgba(85, 116, 32, 0.3);
+          box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
         }
 
         .pc-wish {
@@ -623,15 +623,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           right: 12px;
           width: 44px;
           height: 44px;
-          background: linear-gradient(135deg, #84B048, #648A33);
+          background: linear-gradient(135deg, #2d5a3d, #1f4028);
           color: #ffffff;
           border-radius: 14px;
           align-items: center;
           justify-content: center;
-          border: 2px solid rgba(255,255,255,0.85);
+          border: 2px solid rgba(255,255,255,0.9);
           cursor: pointer;
           z-index: 10;
-          box-shadow: 0 6px 16px rgba(85, 116, 32, 0.4);
+          box-shadow: 0 6px 18px rgba(45, 90, 61, 0.4);
           transition: transform 0.15s ease, box-shadow 0.2s ease;
         }
         .pc-mobile-cart:active { transform: scale(0.88); }
@@ -695,7 +695,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         .pc-order-btn {
           flex: 1;
-          background: linear-gradient(135deg, #84B048, #648A33);
+          background: linear-gradient(135deg, #2d5a3d, #1f4028);
           color: #ffffff;
           border: none;
           border-radius: 11px;
@@ -711,9 +711,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           justify-content: center;
           gap: 6px;
           white-space: nowrap;
-          box-shadow: 0 4px 12px rgba(85, 116, 32, 0.25);
+          box-shadow: 0 4px 14px rgba(45, 90, 61, 0.3);
         }
-        .pc-order-btn:hover { filter: brightness(1.05); box-shadow: 0 6px 16px rgba(85, 116, 32, 0.35); }
+        .pc-order-btn:hover { filter: brightness(1.08); box-shadow: 0 6px 18px rgba(45, 90, 61, 0.4); }
         .pc-order-btn:active { transform: scale(0.97); }
 
         .pc-icon-btn {
@@ -731,9 +731,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           flex-shrink: 0;
         }
         .pc-icon-btn:hover {
-          border-color: #78A240;
-          color: #78A240;
-          background: #F3F8EE;
+          border-color: #2d5a3d;
+          color: #2d5a3d;
+          background: #e5f0eb;
         }
 
         .pc-oos {
@@ -874,8 +874,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         .bs-discount {
           font-size: 11px;
           font-weight: 700;
-          color: #ffffff;
-          background: linear-gradient(135deg, #84B048, #557420);
+          color: #000000;
+          background: linear-gradient(135deg, #d4af37, #b8941a);
           padding: 4px 9px;
           border-radius: 6px;
           letter-spacing: 0.02em;
@@ -910,12 +910,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           font-family: 'Inter', sans-serif;
         }
         .bs-variant-btn:hover:not(.disabled):not(.selected) {
-          border-color: #78A240;
+          border-color: #2d5a3d;
         }
         .bs-variant-btn.selected {
-          border-color: #78A240;
-          background: #F3F8EE;
-          box-shadow: 0 4px 14px rgba(85, 116, 32, 0.18);
+          border-color: #2d5a3d;
+          background: #e5f0eb;
+          box-shadow: 0 4px 14px rgba(45, 90, 61, 0.2);
         }
         .bs-variant-btn.disabled {
           opacity: 0.55;
@@ -944,7 +944,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           width: 22px;
           height: 22px;
           border-radius: 50%;
-          background: #78A240;
+          background: #2d5a3d;
           color: #ffffff;
           display: flex;
           align-items: center;
@@ -972,7 +972,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         .bs-add-btn {
           width: 100%;
           height: 54px;
-          background: linear-gradient(135deg, #84B048, #648A33);
+          background: linear-gradient(135deg, #2d5a3d, #1f4028);
           color: #ffffff;
           border: none;
           border-radius: 14px;
@@ -985,9 +985,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           cursor: pointer;
           transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
           font-family: 'Inter', sans-serif;
-          box-shadow: 0 8px 20px rgba(85, 116, 32, 0.3);
+          box-shadow: 0 8px 20px rgba(45, 90, 61, 0.3);
         }
-        .bs-add-btn:hover:not(:disabled) { filter: brightness(1.06); }
+        .bs-add-btn:hover:not(:disabled) { filter: brightness(1.08); }
         .bs-add-btn:active:not(:disabled) { transform: scale(0.98); }
         .bs-add-btn:disabled {
           background: #d1d5db;
@@ -1114,7 +1114,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         }
         .qv-thumb:hover { opacity: 1; }
         .qv-thumb.active {
-          border-color: #78A240;
+          border-color: #2d5a3d;
           opacity: 1;
         }
         .qv-thumb img {
@@ -1156,8 +1156,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         .qv-discount {
           font-size: 12px;
           font-weight: 700;
-          color: #ffffff;
-          background: linear-gradient(135deg, #84B048, #557420);
+          color: #000000;
+          background: linear-gradient(135deg, #d4af37, #b8941a);
           padding: 4px 10px;
           border-radius: 6px;
           letter-spacing: 0.02em;
@@ -1190,14 +1190,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           font-family: 'Inter', sans-serif;
         }
         .qv-variant-btn:hover:not(.disabled):not(.selected) {
-          border-color: #78A240;
-          color: #557420;
+          border-color: #2d5a3d;
+          color: #2d5a3d;
         }
         .qv-variant-btn.selected {
-          border-color: #78A240;
-          background: #78A240;
+          border-color: #2d5a3d;
+          background: #2d5a3d;
           color: #ffffff;
-          box-shadow: 0 4px 12px rgba(85, 116, 32, 0.3);
+          box-shadow: 0 4px 12px rgba(45, 90, 61, 0.3);
         }
         .qv-variant-btn.disabled {
           opacity: 0.5;
@@ -1214,7 +1214,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         .qv-add-btn {
           width: 100%;
           height: 52px;
-          background: linear-gradient(135deg, #84B048, #648A33);
+          background: linear-gradient(135deg, #2d5a3d, #1f4028);
           color: #ffffff;
           border: none;
           border-radius: 14px;
@@ -1227,9 +1227,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           cursor: pointer;
           transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
           font-family: 'Inter', sans-serif;
-          box-shadow: 0 8px 20px rgba(85, 116, 32, 0.3);
+          box-shadow: 0 8px 20px rgba(45, 90, 61, 0.3);
         }
-        .qv-add-btn:hover:not(:disabled) { filter: brightness(1.06); box-shadow: 0 10px 26px rgba(85, 116, 32, 0.4); }
+        .qv-add-btn:hover:not(:disabled) { filter: brightness(1.08); box-shadow: 0 10px 28px rgba(45, 90, 61, 0.4); }
         .qv-add-btn:active:not(:disabled) { transform: scale(0.98); }
         .qv-add-btn:disabled {
           background: #d1d5db;

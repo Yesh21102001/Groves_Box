@@ -189,7 +189,7 @@ export default function OrderTracking() {
         return (
             <div className="bg-[#f5f7f4] min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-[#6b9238] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <div className="w-12 h-12 border-4 border-[#2d5a3d] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
                     <p className="text-gray-500 text-sm">Loading your order...</p>
                 </div>
             </div>
@@ -199,7 +199,7 @@ export default function OrderTracking() {
     if (error) {
         return (
             <div className="bg-[#f5f7f4] min-h-screen flex items-center justify-center px-4">
-                <div className="text-center bg-white rounded-3xl shadow-lg p-10 max-w-sm w-full">
+                <div className="text-center bg-white rounded-lg shadow-md border border-gray-200 p-10 max-w-sm w-full">
                     <p className="text-3xl mb-4">🌿</p>
                     <h2 className="text-lg font-semibold text-gray-800 mb-2">
                         {error === "not_logged_in" ? "Please Log In" :
@@ -231,11 +231,11 @@ export default function OrderTracking() {
 
     return (
         <div className="bg-[#f5f7f4] px-4 py-10 flex justify-center min-h-screen">
-            <div className="w-full max-w-xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl bg-white rounded-3xl shadow-lg p-6 md:p-8">
+            <div className="w-full max-w-xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl bg-white rounded-lg shadow-md border border-gray-200 p-6 md:p-8">
 
                 <div className="flex items-start justify-between mb-6">
                     <div>
-                        <h1 className="text-2xl font-semibold text-[#6b9238]">Track Your Plant</h1>
+                        <h1 className="text-2xl font-semibold text-[#2d5a3d]">Track Your Plant</h1>
                         <p className="text-sm text-gray-500 mt-1">
                             Order ID: <span className="font-medium">{order.id}</span>
                         </p>
@@ -247,7 +247,7 @@ export default function OrderTracking() {
                 </div>
 
                 {order.shippingAddress && (
-                    <div className="bg-[#f0f4f1] rounded-2xl px-4 py-3 mb-6 flex items-start gap-3">
+                    <div className="bg-[#f0f4f1] rounded-lg px-4 py-3 mb-6 flex items-start gap-3">
                         <span className="text-lg mt-0.5">📍</span>
                         <div>
                             <p className="text-xs font-semibold text-gray-600 mb-0.5">Delivering to</p>
@@ -262,20 +262,20 @@ export default function OrderTracking() {
 
                 <div className="space-y-3 mb-8">
                     {order.items.map((item, i) => (
-                        <div key={i} className="flex items-center gap-4 bg-[#f0f4f1] rounded-2xl p-4">
+                        <div key={i} className="flex items-center gap-4 bg-[#f0f4f1] rounded-lg p-4">
                             <img
                                 src={item.image} alt={item.title}
                                 className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
                                 onError={(e) => { e.target.src = "/placeholder.png"; }}
                             />
                             <div className="flex-1 min-w-0">
-                                <h3 className="text-sm md:text-base font-medium text-[#6b9238] line-clamp-1">{item.title}</h3>
+                                <h3 className="text-sm md:text-base font-medium text-[#2d5a3d] line-clamp-1">{item.title}</h3>
                                 {item.variantTitle && item.variantTitle !== "Default Title" && (
                                     <p className="text-xs text-gray-500 mt-0.5">{item.variantTitle}</p>
                                 )}
                                 <p className="text-xs text-gray-400 mt-0.5">Qty: {item.quantity}</p>
                             </div>
-                            <div className="text-sm md:text-base font-semibold text-[#6b9238] flex-shrink-0">
+                            <div className="text-sm md:text-base font-semibold text-[#2d5a3d] flex-shrink-0">
                                 ₹{(item.price * item.quantity).toFixed(2)}
                             </div>
                         </div>
@@ -298,7 +298,7 @@ export default function OrderTracking() {
                                     )}
                                 </div>
                                 <div>
-                                    <h4 className={`text-sm md:text-base font-medium ${isCompleted || isActive ? "text-[#6b9238]" : "text-gray-400"
+                                    <h4 className={`text-sm md:text-base font-medium ${isCompleted || isActive ? "text-[#2d5a3d]" : "text-gray-400"
                                         }`}>{step.title}</h4>
                                     <p className="text-xs md:text-sm text-gray-500 mt-0.5">{step.desc}</p>
                                 </div>
@@ -315,7 +315,7 @@ export default function OrderTracking() {
                         <span>Shipping</span>
                         <span>{order.shipping > 0 ? `₹${order.shipping.toFixed(2)}` : "FREE"}</span>
                     </div>
-                    <div className="flex justify-between text-base font-semibold text-[#6b9238] pt-1">
+                    <div className="flex justify-between text-base font-semibold text-[#2d5a3d] pt-1">
                         <span>Total</span><span>{order.total}</span>
                     </div>
                 </div>

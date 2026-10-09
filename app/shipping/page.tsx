@@ -6,8 +6,8 @@ export const metadata = {
 export default function ShippingPolicy() {
     return (
         <div>
-            <section className="w-full bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm p-6 sm:p-10">
+            <section className="w-full bg-white py-16 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-6 sm:p-10">
 
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                         Shipping Policy
@@ -75,7 +75,7 @@ export default function ShippingPolicy() {
                     <p className="text-gray-700 leading-relaxed">
                         Once your order is dispatched, you will receive a tracking number via email
                         and/or SMS. You can also track your order from the{" "}
-                        <a href="/track-order" className="text-[#6b9238] underline hover:text-[#557420]">
+                        <a href="/track-order" className="text-[#2d5a3d] underline hover:text-[#1f4028]">
                             Track Order
                         </a>{" "}
                         page on our website.

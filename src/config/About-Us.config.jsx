@@ -7,9 +7,9 @@
 // ── 1. COLORS ─────────────────────────────────────────────────────────────────
 export const colors = {
     // Brand
-    primary: '#2F4F3E',     // dark forest green – headings, CTA bg
+    primary: '#2d5a3d',     // dark forest green – headings, CTA bg
     primaryDark: '#244033',     // deeper green – shop button bg
-    accent: '#6b9238',     // emerald links
+    accent: '#2d5a3d',     // emerald links
     accentHover: '#065f46',     // emerald link hover
 
     // Page backgrounds
@@ -22,11 +22,11 @@ export const colors = {
 
     // Text
     text: {
-        heading: '#2F4F3E',     // section headings
+        heading: '#2d5a3d',     // section headings
         body: '#374151',     // gray-700 body paragraphs
         muted: '#6B7280',     // gray-500 italic / helper copy
         light: '#FFFFFF',     // white text on dark bg
-        ctaHeading: '#2F4F3E',     // CTA heading
+        ctaHeading: '#2d5a3d',     // CTA heading
         ctaBody: '#374151',     // CTA sub-text
     },
 

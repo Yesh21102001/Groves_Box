@@ -12,7 +12,7 @@ export const navbarConfig = {
         emoji: "🌿",
         mobileShort: "GB",
         href: "/",
-        color: "#78a240",
+        color: "#2d5a3d",
         fontSize: "text-2xl md:text-3xl",
         fontWeight: "font-bold",
         emojiSize: "text-3xl md:text-4xl",
@@ -41,7 +41,7 @@ export const navbarConfig = {
 
     // ── Nav Collection Pills (Desktop) ────────────────────
     collectionPills: {
-        activeBg: "#78a240",
+        activeBg: "#2d5a3d",
         activeText: "#ffffff",
         inactiveBg: "transparent",
         inactiveText: "#374151",
@@ -67,7 +67,7 @@ export const navbarConfig = {
 
     // ── Cart Badge ────────────────────────────────────────
     cartBadge: {
-        bg: "#78a240",
+        bg: "#2d5a3d",
         textColor: "#ffffff",
         fontSize: "text-xs",
         fontWeight: "font-bold",
@@ -81,15 +81,15 @@ export const navbarConfig = {
         shadow: "shadow-2xl",
 
         // Logged-in header gradient
-        loggedInGradientFrom: "#78a240",
+        loggedInGradientFrom: "#2d5a3d",
         loggedInGradientTo: "#009A7B",
         loggedInTextColor: "#ffffff",
 
         // Menu items
         itemHoverBg: "#F0F4F1",
         itemIconBg: "#F0F4F1",
-        itemIconColor: "#78a240",
-        itemIconHoverBg: "#78a240",
+        itemIconColor: "#2d5a3d",
+        itemIconHoverBg: "#2d5a3d",
         itemIconHoverColor: "#ffffff",
 
         // Logout button
@@ -106,31 +106,31 @@ export const navbarConfig = {
         guestSubtitle: "Sign in to your account",
         loginHref: "/login",
         loginLabel: "Log In",
-        loginBg: "#78a240",
+        loginBg: "#2d5a3d",
         loginHoverBg: "#009A7B",
         loginTextColor: "#ffffff",
         signupHref: "/signup",
         signupLabel: "Create Account",
-        signupBorderColor: "#78a240",
-        signupTextColor: "#78a240",
+        signupBorderColor: "#2d5a3d",
+        signupTextColor: "#2d5a3d",
         signupHoverBg: "#F0F4F1",
     },
 
     // ── Cart Sidebar ──────────────────────────────────────
     cartSidebar: {
         width: "w-full sm:w-96",
-        headerTitleColor: "#78a240",
+        headerTitleColor: "#2d5a3d",
         headerTitle: "Shopping Cart",
         emptyIcon: true,
         emptyMessage: "Your cart is empty",
         emptyButtonLabel: "Continue Shopping",
-        emptyButtonBg: "#78a240",
-        emptyButtonHoverBg: "#2F4F3E",
+        emptyButtonBg: "#2d5a3d",
+        emptyButtonHoverBg: "#2d5a3d",
 
         // Item styles
         itemBorderColor: "#E5E7EB",
-        itemNameColor: "#78a240",
-        itemPriceColor: "#2F4F3E",
+        itemNameColor: "#2d5a3d",
+        itemPriceColor: "#2d5a3d",
         itemImageBg: "#F3F4F6",
 
         // Quantity control
@@ -140,19 +140,19 @@ export const navbarConfig = {
 
         // Footer
         subtotalLabel: "Subtotal",
-        subtotalColor: "#78a240",
+        subtotalColor: "#2d5a3d",
         subtotalNote: "Shipping and taxes calculated at checkout",
         subtotalNoteColor: "#6B7280",
 
         viewCartHref: "/cart",
         viewCartLabel: "View Cart",
-        viewCartBg: "#78a240",
+        viewCartBg: "#2d5a3d",
         viewCartHoverBg: "#009A7B",
         viewCartTextColor: "#ffffff",
 
         continueLabel: "Continue Shopping",
-        continueBorderColor: "#78a240",
-        continueTextColor: "#78a240",
+        continueBorderColor: "#2d5a3d",
+        continueTextColor: "#2d5a3d",
         continueHoverBg: "#F3F4F6",
     },
 
@@ -161,7 +161,7 @@ export const navbarConfig = {
         bg: "#ffffff",
         borderColor: "#E5E7EB",
         height: "h-16",
-        activeColor: "#78a240",
+        activeColor: "#2d5a3d",
         inactiveColor: "#9CA3AF",  // gray-400
         hoverColor: "#000000",
         iconSize: 24,
@@ -183,7 +183,7 @@ export const navbarConfig = {
         shadow: "shadow-xl",
 
         // Header
-        brandColor: "#78a240",
+        brandColor: "#2d5a3d",
         brandEmoji: "🌿",
         brandName: "Groves Box",
 
@@ -193,7 +193,7 @@ export const navbarConfig = {
         userAvatarTextColor: "#ffffff",
 
         // Collections section heading
-        sectionTitleColor: "#78a240",
+        sectionTitleColor: "#2d5a3d",
         sectionTitleSize: "text-lg",
         sectionTitleWeight: "font-semibold",
         sectionTitle: "Collections",
@@ -218,7 +218,7 @@ export const navbarConfig = {
         // Bottom action buttons
         myAccountLabel: "My Account",
         myAccountHref: "/account",
-        myAccountBg: "#78a240",
+        myAccountBg: "#2d5a3d",
         myAccountHoverBg: "#009A7B",
         myAccountTextColor: "#ffffff",
 
@@ -229,14 +229,14 @@ export const navbarConfig = {
 
         loginLabel: "Log In",
         loginHref: "/login",
-        loginBg: "#78a240",
+        loginBg: "#2d5a3d",
         loginHoverBg: "#009A7B",
         loginTextColor: "#ffffff",
 
         signupLabel: "Sign Up",
         signupHref: "/signup",
-        signupBorderColor: "#78a240",
-        signupTextColor: "#78a240",
+        signupBorderColor: "#2d5a3d",
+        signupTextColor: "#2d5a3d",
         signupHoverBg: "#F9FAFB",
     },
 
@@ -252,7 +252,7 @@ export const navbarConfig = {
         message: "You have been successfully logged out. Thank you for visiting Groves Box!",
         messageColor: "#4B5563",
         closeLabel: "Close",
-        closeBg: "#78a240",
+        closeBg: "#2d5a3d",
         closeHoverBg: "#009A7B",
         closeTextColor: "#ffffff",
         autoCloseDuration: 2000,        // ms before auto-redirect

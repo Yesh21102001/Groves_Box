@@ -54,14 +54,22 @@ export default function ContactUsPage() {
     };
 
     const inputClass =
-        'w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:border-[#6b9238] focus:ring-2 focus:ring-[#6b9238]/20 transition-all';
+        'w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:border-[#2d5a3d] focus:ring-2 focus:ring-[#2d5a3d]/20 transition-all';
 
     return (
         <div className="min-h-screen bg-[#F5F7F2]">
 
             {/* ── HERO ───────────────────────────────────────────────────── */}
-            <section className="w-full bg-[#6b9238] px-5 sm:px-8 lg:px-12 py-16 md:py-20">
-                <div className="max-w-7xl mx-auto">
+            <section
+                className="relative isolate w-full overflow-hidden bg-[#2d5a3d] px-5 py-16 sm:px-8 lg:px-12 md:py-20"
+                style={{
+                    backgroundImage: "url('/images/2148851374.jpg')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            >
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#1a3227]/95 via-[#234832]/85 to-[#2d5a3d]/65" />
+                <div className="relative z-10 mx-auto max-w-7xl">
                     <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-white/70 mb-3">
                         Contact Us
                     </span>
@@ -76,19 +84,19 @@ export default function ContactUsPage() {
             </section>
 
             {/* ── INFO CARDS ─────────────────────────────────────────────── */}
-            <section className="w-full px-5 sm:px-8 lg:px-12 -mt-8 mb-8">
+            <section className="mt-8 w-full px-5 sm:px-8 lg:px-12 mb-8">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {contactInfo.map(({ icon: Icon, title, subtitle, value, href }) => (
                         <div key={title}
-                            className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex items-start gap-4">
+                            className="bg-white rounded-lg p-5 shadow-sm border border-gray-100 flex items-start gap-4">
                             <div className="w-11 h-11 rounded-xl bg-[#F5F7F2] flex items-center justify-center shrink-0">
-                                <Icon className="w-5 h-5 text-[#6b9238]" />
+                                <Icon className="w-5 h-5 text-[#2d5a3d]" />
                             </div>
                             <div className="min-w-0">
                                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5">{title}</p>
                                 <p className="text-[11px] text-gray-400 mb-1">{subtitle}</p>
                                 {href && href !== '#'
-                                    ? <a href={href} className="text-sm font-semibold text-gray-800 hover:text-[#6b9238] transition-colors truncate block">{value}</a>
+                                    ? <a href={href} className="text-sm font-semibold text-gray-800 hover:text-[#2d5a3d] transition-colors truncate block">{value}</a>
                                     : <p className="text-sm font-semibold text-gray-800 truncate">{value}</p>
                                 }
                             </div>
@@ -102,14 +110,14 @@ export default function ContactUsPage() {
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                     {/* Form */}
-                    <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
+                    <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-100 p-6 sm:p-8">
                         <h2 className="text-2xl font-bold text-gray-900 mb-1">Send a Message</h2>
                         <p className="text-sm text-gray-500 mb-7">Fill out the form and we'll get back to you shortly.</p>
 
                         {submitted ? (
                             <div className="flex flex-col items-center justify-center py-16 text-center">
                                 <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                                    <CheckCircle className="w-8 h-8 text-[#6b9238]" />
+                                    <CheckCircle className="w-8 h-8 text-[#2d5a3d]" />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">Message Sent!</h3>
                                 <p className="text-gray-500 text-sm max-w-xs">
@@ -117,7 +125,7 @@ export default function ContactUsPage() {
                                 </p>
                                 <button
                                     onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', phone: '', subject: '', message: '' }); }}
-                                    className="mt-6 text-sm font-semibold text-[#6b9238] hover:underline"
+                                    className="mt-6 text-sm font-semibold text-[#2d5a3d] hover:underline"
                                 >
                                     Send another message
                                 </button>
@@ -197,19 +205,19 @@ export default function ContactUsPage() {
                     <div className="flex flex-col gap-5">
 
                         {/* FAQ prompt */}
-                        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
                             <h3 className="font-bold text-gray-900 mb-2">Quick Answers</h3>
                             <p className="text-sm text-gray-500 mb-4 leading-relaxed">
                                 Find instant answers to common questions about orders, plants, and delivery.
                             </p>
                             <a href="/faq"
-                                className="inline-flex items-center gap-2 text-sm font-semibold text-[#6b9238] hover:text-[#557420] transition-colors">
+                                className="inline-flex items-center gap-2 text-sm font-semibold text-[#2d5a3d] hover:text-[#1f4028] transition-colors">
                                 Visit our FAQ →
                             </a>
                         </div>
 
                         {/* WhatsApp */}
-                        <div className="bg-[#25D366]/10 rounded-2xl border border-[#25D366]/20 p-6">
+                        <div className="bg-[#25D366]/10 rounded-lg border border-[#25D366]/20 p-6">
                             <div className="flex items-center gap-3 mb-3">
                                 <div className="w-10 h-10 rounded-xl bg-[#25D366] flex items-center justify-center">
                                     <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -229,7 +237,7 @@ export default function ContactUsPage() {
                         </div>
 
                         {/* Plant tip */}
-                        <div className="bg-[#6b9238] rounded-2xl p-6 text-white">
+                        <div className="bg-[#2d5a3d] rounded-lg p-6 text-white">
                             <p className="text-xs font-semibold uppercase tracking-widest text-white/70 mb-2">Plant Tip</p>
                             <p className="text-sm leading-relaxed text-white/90">
                                 Most indoor plants prefer indirect sunlight. Place them near a window

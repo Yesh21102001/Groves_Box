@@ -412,7 +412,7 @@ export default function AccountPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-white">
                 <div className="text-center">
                     <Loader2 className="w-12 h-12 animate-spin text-[] mx-auto mb-4" />
                     <p className="text-gray-600">Loading your account...</p>
@@ -429,10 +429,10 @@ export default function AccountPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-white to-gray-100 py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8 mb-6 sm:mb-8">
+                <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8 mb-6 sm:mb-8">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
@@ -469,9 +469,9 @@ export default function AccountPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
                     {/* Sidebar Navigation */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 sticky top-6">
+                        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 sticky top-6">
                             <div className="flex items-center justify-center flex-col mb-6 pb-6 border-b border-gray-100">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#6b9238] to-[#3a5f4b] flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg mb-3">
+                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#2d5a3d] to-[#3a5f4b] flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-md border border-gray-200 mb-3">
                                     {userData.firstName?.[0]}{userData.lastName?.[0]}
                                 </div>
                                 <h3 className="font-bold text-gray-900 text-base sm:text-lg text-center">
@@ -491,7 +491,7 @@ export default function AccountPage() {
                                             onClick={() => setActiveTab(tab.id)}
                                             className={`w-full flex items-center px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-200 mb-1 text-sm sm:text-base ${activeTab === tab.id
                                                 ? 'bg-[#F0F4F1] text-black-700 font-semibold shadow-sm'
-                                                : 'text-gray-600 hover:bg-gray-50'
+                                                : 'text-gray-600 hover:bg-white'
                                                 }`}
                                         >
                                             <Icon className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
@@ -507,7 +507,7 @@ export default function AccountPage() {
                     <div className="lg:col-span-3">
                         {/* Profile Tab */}
                         {activeTab === 'profile' && (
-                            <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+                            <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8">
                                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                                     <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Personal Information</h2>
                                     {!isEditing && (
@@ -533,7 +533,7 @@ export default function AccountPage() {
                                                     name="firstName"
                                                     value={userData.firstName}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
+                                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
                                                 />
                                             </div>
                                             <div>
@@ -545,7 +545,7 @@ export default function AccountPage() {
                                                     name="lastName"
                                                     value={userData.lastName}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
+                                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
                                                 />
                                             </div>
                                         </div>
@@ -559,7 +559,7 @@ export default function AccountPage() {
                                                 name="email"
                                                 value={userData.email}
                                                 onChange={handleInputChange}
-                                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
+                                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
                                             />
                                         </div>
 
@@ -578,7 +578,7 @@ export default function AccountPage() {
                                                     value={formatPhoneForDisplay(userData.phone)}
                                                     onChange={handlePhoneChange}
                                                     placeholder="98765-43210"
-                                                    className="w-full pl-16 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
+                                                    className="w-full pl-16 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all duration-200 text-sm sm:text-base"
                                                 />
                                             </div>
                                             <p className="text-xs text-gray-500 mt-1">
@@ -618,7 +618,7 @@ export default function AccountPage() {
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                        <div className="p-4 bg-gray-50 rounded-xl">
+                                        <div className="p-4 bg-white rounded-xl">
                                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                                                 First Name
                                             </p>
@@ -626,7 +626,7 @@ export default function AccountPage() {
                                                 {userData.firstName || 'Not set'}
                                             </p>
                                         </div>
-                                        <div className="p-4 bg-gray-50 rounded-xl">
+                                        <div className="p-4 bg-white rounded-xl">
                                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                                                 Last Name
                                             </p>
@@ -634,7 +634,7 @@ export default function AccountPage() {
                                                 {userData.lastName || 'Not set'}
                                             </p>
                                         </div>
-                                        <div className="p-4 bg-gray-50 rounded-xl">
+                                        <div className="p-4 bg-white rounded-xl">
                                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                                                 Email
                                             </p>
@@ -642,7 +642,7 @@ export default function AccountPage() {
                                                 {userData.email}
                                             </p>
                                         </div>
-                                        <div className="p-4 bg-gray-50 rounded-xl">
+                                        <div className="p-4 bg-white rounded-xl">
                                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                                                 Phone
                                             </p>
@@ -657,14 +657,14 @@ export default function AccountPage() {
 
                         {/* Orders Tab */}
                         {activeTab === 'orders' && (
-                            <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+                            <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8">
                                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">
                                     Order History
                                 </h2>
 
                                 {isLoadingOrders ? (
                                     <div className="text-center py-12">
-                                        <Loader2 className="w-12 h-12 animate-spin text-[#6b9238] mx-auto mb-4" />
+                                        <Loader2 className="w-12 h-12 animate-spin text-[#2d5a3d] mx-auto mb-4" />
                                         <p className="text-gray-600">Loading your orders...</p>
                                     </div>
                                 ) : orders.length === 0 ? (
@@ -689,7 +689,7 @@ export default function AccountPage() {
                                                 {/* Accordion Header */}
                                                 <button
                                                     onClick={() => toggleOrder(order.id)}
-                                                    className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-gray-50 transition-all duration-200"
+                                                    className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white transition-all duration-200"
                                                 >
                                                     <div className="flex items-center gap-3 sm:gap-4 flex-1">
                                                         <Package className="w-5 h-5 text-gray-400 flex-shrink-0" />
@@ -730,7 +730,7 @@ export default function AccountPage() {
                                                         : 'max-h-0 opacity-0 overflow-hidden'
                                                         }`}
                                                 >
-                                                    <div className="p-4 sm:p-6 bg-gray-50 border-t-2 border-gray-100">
+                                                    <div className="p-4 sm:p-6 bg-white border-t-2 border-gray-100">
                                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                                             {/* Order Items */}
                                                             <div>
@@ -827,7 +827,7 @@ export default function AccountPage() {
 
                         {/* Addresses Tab */}
                         {activeTab === 'addresses' && (
-                            <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+                            <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8">
                                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                                     <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                                         Saved Addresses
@@ -843,7 +843,7 @@ export default function AccountPage() {
 
                                 {isLoadingAddresses ? (
                                     <div className="text-center py-12">
-                                        <Loader2 className="w-12 h-12 animate-spin text-[#6b9238] mx-auto mb-4" />
+                                        <Loader2 className="w-12 h-12 animate-spin text-[#2d5a3d] mx-auto mb-4" />
                                         <p className="text-gray-600">Loading your addresses...</p>
                                     </div>
                                 ) : addresses.length === 0 ? (
@@ -864,7 +864,7 @@ export default function AccountPage() {
                                                 className="relative border-2 border-gray-100 rounded-xl p-4 sm:p-6 hover:border-gray-200 transition-all duration-200"
                                             >
                                                 {addr.isDefault && (
-                                                    <span className="absolute top-3 right-3 px-2 py-1 bg-[#6b9238] text-white text-xs font-semibold rounded-lg">
+                                                    <span className="absolute top-3 right-3 px-2 py-1 bg-[#2d5a3d] text-white text-xs font-semibold rounded-lg">
                                                         DEFAULT
                                                     </span>
                                                 )}
@@ -928,12 +928,12 @@ export default function AccountPage() {
 
                         {/* Settings Tab */}
                         {activeTab === 'settings' && (
-                            <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+                            <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8">
                                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">
                                     Account Settings
                                 </h2>
                                 <div className="space-y-6">
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                    <div className="flex items-center justify-between p-4 bg-white rounded-xl">
                                         <div className="flex items-center gap-3">
                                             <Bell className="w-5 h-5 text-gray-400" />
                                             <div>
@@ -947,11 +947,11 @@ export default function AccountPage() {
                                         </div>
                                         <label className="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" className="sr-only peer" />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6b9238]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6b9238]"></div>
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#2d5a3d]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2d5a3d]"></div>
                                         </label>
                                     </div>
 
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                    <div className="flex items-center justify-between p-4 bg-white rounded-xl">
                                         <div className="flex items-center gap-3">
                                             <Lock className="w-5 h-5 text-gray-400" />
                                             <div>
@@ -968,7 +968,7 @@ export default function AccountPage() {
                                         </button>
                                     </div>
 
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl opacity-50">
+                                    <div className="flex items-center justify-between p-4 bg-white rounded-xl opacity-50">
                                         <div className="flex items-center gap-3">
                                             <Lock className="w-5 h-5 text-gray-400" />
                                             <div>
@@ -1005,7 +1005,7 @@ export default function AccountPage() {
                         }
                     }}
                 >
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="p-6 border-b border-gray-100 sticky top-0 bg-white">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-xl font-bold text-gray-900">
@@ -1032,7 +1032,7 @@ export default function AccountPage() {
                                             name="firstName"
                                             value={addressForm.firstName}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1045,7 +1045,7 @@ export default function AccountPage() {
                                             name="lastName"
                                             value={addressForm.lastName}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1060,7 +1060,7 @@ export default function AccountPage() {
                                         name="address1"
                                         value={addressForm.address1}
                                         onChange={handleAddressFormChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                         required
                                     />
                                 </div>
@@ -1074,7 +1074,7 @@ export default function AccountPage() {
                                         name="address2"
                                         value={addressForm.address2}
                                         onChange={handleAddressFormChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                     />
                                 </div>
 
@@ -1088,7 +1088,7 @@ export default function AccountPage() {
                                             name="city"
                                             value={addressForm.city}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1101,7 +1101,7 @@ export default function AccountPage() {
                                             name="province"
                                             value={addressForm.province}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1114,7 +1114,7 @@ export default function AccountPage() {
                                             name="zip"
                                             value={addressForm.zip}
                                             onChange={handleAddressFormChange}
-                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                             required
                                         />
                                     </div>
@@ -1129,7 +1129,7 @@ export default function AccountPage() {
                                         name="country"
                                         value={addressForm.country}
                                         onChange={handleAddressFormChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                         required
                                     />
                                 </div>
@@ -1143,7 +1143,7 @@ export default function AccountPage() {
                                         name="phone"
                                         value={addressForm.phone}
                                         onChange={handleAddressFormChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6b9238] focus:ring-0 transition-all"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#2d5a3d] focus:ring-0 transition-all"
                                     />
                                 </div>
                             </div>
@@ -1194,7 +1194,7 @@ export default function AccountPage() {
                         }
                     }}
                 >
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slideUp">
+                    <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-6 animate-slideUp">
                         <div className="text-center">
                             {/* Icon */}
                             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 mb-4">
@@ -1234,7 +1234,7 @@ export default function AccountPage() {
             {/* Logout Success Modal */}
             {showLogoutSuccess && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-slideUp">
+                    <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-8 animate-slideUp">
                         <div className="text-center">
                             {/* Success Icon with Animation */}
                             <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-4 animate-scaleIn">
@@ -1253,7 +1253,7 @@ export default function AccountPage() {
                             {/* Loading Spinner */}
                             <div className="mt-6">
                                 <div className="flex justify-center">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6b9238]"></div>
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2d5a3d]"></div>
                                 </div>
                             </div>
                         </div>

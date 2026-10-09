@@ -12,26 +12,26 @@ interface ShopifyFetchParams {
 /**
  * Fetch data from Shopify Storefront API
  */
-export async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams) {
+export async function shopifyFetch({
+  query,
+  variables = {},
+}: ShopifyFetchParams) {
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    console.error('Missing Shopify env variables: NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN or NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN');
-    throw new Error('Shopify configuration is missing. Check your .env.local file.');
+    console.warn('Shopify configuration missing — returning empty data. Set NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN and NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN to enable Shopify.');
+    return { data: { products: { edges: [] }, collections: { edges: [] }, customer: null } };
   }
 
-  const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/2024-01/graphql.json`;
-
-  // next: { revalidate } only works server-side — guard it for client-side useEffect calls
-  const nextOptions = typeof window === 'undefined' ? { next: { revalidate: 3600 } } : {};
+  const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/2026-10/graphql.json`;
 
   try {
     const result = await fetch(endpoint, {
       method: 'POST',
+      cache: 'no-store',
       headers: new Headers({
         'Content-Type': 'application/json',
         'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_ACCESS_TOKEN || '',
       }),
       body: JSON.stringify({ query, variables }),
-      ...nextOptions
     });
 
     if (!result.ok) {
@@ -659,8 +659,13 @@ export async function getProducts(limit = 20) {
     }
   `;
 
-  const data = await shopifyFetch({ query, variables: { first: limit } });
-  return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
+  try {
+    const data = await shopifyFetch({ query, variables: { first: limit } });
+    return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
 }
 
 /**
@@ -794,12 +799,16 @@ export async function getProductsByTag(tag: string, limit = 100) {
     }
   `;
 
-  const data = await shopifyFetch({
-    query,
-    variables: { first: limit, query: `tag:${tag}` }
-  });
-
-  return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
+  try {
+    const data = await shopifyFetch({
+      query,
+      variables: { first: limit, query: `tag:${tag}` }
+    });
+    return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
+  } catch (error) {
+    console.error(`Error fetching products by tag "${tag}":`, error);
+    return [];
+  }
 }
 
 /**
@@ -873,7 +882,7 @@ export async function getProductsByCollection(handle: string, first = 100) {
 export async function getProduct(handle: string) {
   const query = `
     query getProduct($handle: String!) {
-      productByHandle(handle: $handle) {
+      product(handle: $handle) {
         id
         title
         description
@@ -898,7 +907,6 @@ export async function getProduct(handle: string) {
               id
               title
               availableForSale
-              quantityAvailable
               price { amount currencyCode }
               compareAtPrice { amount currencyCode }
               selectedOptions {
@@ -912,8 +920,13 @@ export async function getProduct(handle: string) {
     }
   `;
 
-  const data = await shopifyFetch({ query, variables: { handle } });
-  return data.data.productByHandle ? formatProduct(data.data.productByHandle) : null;
+  try {
+    const data = await shopifyFetch({ query, variables: { handle } });
+    return data.data.product ? formatProduct(data.data.product) : null;
+  } catch (error) {
+    console.error(`Error fetching product "${handle}":`, error);
+    return null;
+  }
 }
 
 /**
@@ -936,8 +949,13 @@ export async function getCollections(limit = 10) {
     }
   `;
 
-  const data = await shopifyFetch({ query, variables: { first: limit } });
-  return data.data.collections.edges.map((edge: any) => formatCollection(edge.node));
+  try {
+    const data = await shopifyFetch({ query, variables: { first: limit } });
+    return data.data.collections.edges.map((edge: any) => formatCollection(edge.node));
+  } catch (error) {
+    console.error('Error fetching collections:', error);
+    return [];
+  }
 }
 
 /**
@@ -993,22 +1011,25 @@ export async function getCollection(handle: string) {
     }
   `;
 
-  const data = await shopifyFetch({ query, variables: { handle } });
+  try {
+    const data = await shopifyFetch({ query, variables: { handle } });
 
-  console.log('🔍 Shopify API Response for collection:', handle);
+    if (!data.data.collectionByHandle) {
+      console.log('❌ collectionByHandle is null or undefined');
+      return null;
+    }
 
-  if (!data.data.collectionByHandle) {
-    console.log('❌ collectionByHandle is null or undefined');
+    const collection = data.data.collectionByHandle;
+    const formattedProducts = collection.products.edges.map((edge: any) => formatProduct(edge.node));
+
+    return {
+      ...formatCollection(collection),
+      products: formattedProducts
+    };
+  } catch (error) {
+    console.error(`Error fetching collection "${handle}":`, error);
     return null;
   }
-
-  const collection = data.data.collectionByHandle;
-  const formattedProducts = collection.products.edges.map((edge: any) => formatProduct(edge.node));
-
-  return {
-    ...formatCollection(collection),
-    products: formattedProducts
-  };
 }
 
 /**
@@ -1147,12 +1168,16 @@ export async function searchProducts(searchTerm: string, limit = 20) {
     }
   `;
 
-  const data = await shopifyFetch({
-    query,
-    variables: { query: searchTerm, first: limit }
-  });
-
-  return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
+  try {
+    const data = await shopifyFetch({
+      query,
+      variables: { query: searchTerm, first: limit }
+    });
+    return data.data.products.edges.map((edge: any) => formatProduct(edge.node));
+  } catch (error) {
+    console.error(`Error searching products for "${searchTerm}":`, error);
+    return [];
+  }
 }
 
 /**

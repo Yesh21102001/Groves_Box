@@ -73,19 +73,19 @@ export default function OrderSuccessClient() {
         <div className="min-h-screen bg-gradient-to-br from-[#F0F4F1] via-[#E8F0EA] to-[#F0F4F1] flex items-center justify-center px-4 py-12">
             <div className={`max-w-lg w-full transition-all duration-700 ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}>
-                <div className="relative bg-white rounded-3xl shadow-2xl shadow-green-900/10 border border-green-100 overflow-hidden">
+                <div className="relative bg-white rounded-lg shadow-2xl shadow-green-900/10 border border-green-100 overflow-hidden">
 
                     {/* Top gradient bar */}
-                    <div className="h-1.5 w-full bg-gradient-to-r from-[#6b9238] via-[#009A7B] to-[#00C89A]" />
+                    <div className="h-1.5 w-full bg-gradient-to-r from-[#2d5a3d] via-[#009A7B] to-[#00C89A]" />
 
                     <div className="p-8 sm:p-10">
 
                         {/* ── Animated checkmark ── */}
                         <div className="flex justify-center mb-7">
                             <div className="relative">
-                                <span className="absolute inset-0 rounded-full bg-[#6b9238]/20 animate-ping" />
-                                <span className="absolute inset-3 rounded-full bg-[#6b9238]/10 animate-ping" style={{ animationDelay: '0.4s' }} />
-                                <div className="relative w-24 h-24 bg-gradient-to-br from-[#6b9238] to-[#009A7B] rounded-full flex items-center justify-center shadow-xl shadow-green-900/25">
+                                <span className="absolute inset-0 rounded-full bg-[#2d5a3d]/20 animate-ping" />
+                                <span className="absolute inset-3 rounded-full bg-[#2d5a3d]/10 animate-ping" style={{ animationDelay: '0.4s' }} />
+                                <div className="relative w-24 h-24 bg-gradient-to-br from-[#2d5a3d] to-[#009A7B] rounded-full flex items-center justify-center shadow-xl shadow-green-900/25">
                                     <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.8} strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M5 13l4 4L19 7" />
                                     </svg>
@@ -104,7 +104,7 @@ export default function OrderSuccessClient() {
                         </div>
 
                         {/* ── Order details box ── */}
-                        <div className="bg-[#F0F4F1] rounded-2xl p-5 mb-7 space-y-3">
+                        <div className="bg-[#F0F4F1] rounded-lg p-5 mb-7 space-y-3">
                             {displayOrderId && (
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-gray-500 font-medium">Order Number</span>
@@ -120,7 +120,7 @@ export default function OrderSuccessClient() {
                             {displayTotal && (
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-gray-500 font-medium">Total Paid</span>
-                                    <span className="font-bold text-[#6b9238]">{displayTotal}</span>
+                                    <span className="font-bold text-[#2d5a3d]">{displayTotal}</span>
                                 </div>
                             )}
                             {displayEmail && (
@@ -156,7 +156,7 @@ export default function OrderSuccessClient() {
                                 </p>
                                 <div className="space-y-3">
                                     {order.items.map((item, i) => (
-                                        <div key={i} className="flex items-center gap-3 bg-[#F0F4F1] rounded-2xl p-3">
+                                        <div key={i} className="flex items-center gap-3 bg-[#F0F4F1] rounded-lg p-3">
                                             <img
                                                 src={item.image}
                                                 alt={item.title}
@@ -164,7 +164,7 @@ export default function OrderSuccessClient() {
                                                 onError={(e) => { e.target.src = '/placeholder.png'; }}
                                             />
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-[#6b9238] line-clamp-1">{item.title}</p>
+                                                <p className="text-sm font-medium text-[#2d5a3d] line-clamp-1">{item.title}</p>
                                                 {item.variantTitle && item.variantTitle !== 'Default Title' && (
                                                     <p className="text-xs text-gray-500">{item.variantTitle}</p>
                                                 )}
@@ -191,7 +191,7 @@ export default function OrderSuccessClient() {
                                             <span>₹{order.shipping.toFixed(2)}</span>
                                         </div>
                                     )}
-                                    <div className="flex justify-between text-sm font-semibold text-[#6b9238] pt-1">
+                                    <div className="flex justify-between text-sm font-semibold text-[#2d5a3d] pt-1">
                                         <span>Total</span>
                                         <span>{order.total}</span>
                                     </div>
@@ -206,19 +206,19 @@ export default function OrderSuccessClient() {
                             </p>
                             <div className="relative">
                                 <div className="absolute top-5 left-5 right-5 h-0.5 bg-gray-100" />
-                                <div className="absolute top-5 left-5 h-0.5 bg-[#6b9238] z-0" style={{ width: '8%' }} />
+                                <div className="absolute top-5 left-5 h-0.5 bg-[#2d5a3d] z-0" style={{ width: '8%' }} />
                                 <div className="relative z-10 grid grid-cols-4 gap-2">
                                     {steps.map((step, i) => {
                                         const Icon = step.icon;
                                         return (
                                             <div key={i} className="flex flex-col items-center text-center gap-2">
                                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${step.active
-                                                    ? 'bg-[#6b9238] border-[#6b9238] text-white shadow-md shadow-green-900/20'
+                                                    ? 'bg-[#2d5a3d] border-[#2d5a3d] text-white shadow-md shadow-green-900/20'
                                                     : 'bg-white border-gray-200 text-gray-300'
                                                     }`}>
                                                     <Icon size={17} />
                                                 </div>
-                                                <p className={`text-[10px] sm:text-xs font-semibold leading-tight ${step.active ? 'text-[#6b9238]' : 'text-gray-400'
+                                                <p className={`text-[10px] sm:text-xs font-semibold leading-tight ${step.active ? 'text-[#2d5a3d]' : 'text-gray-400'
                                                     }`}>
                                                     {step.label}
                                                 </p>
@@ -230,10 +230,10 @@ export default function OrderSuccessClient() {
                         </div>
 
                         {/* ── Care tip ── */}
-                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-4 mb-7 flex gap-3 items-start">
+                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 rounded-lg p-4 mb-7 flex gap-3 items-start">
                             <span className="text-2xl flex-shrink-0">🌱</span>
                             <div>
-                                <p className="text-sm font-semibold text-[#6b9238] mb-0.5">Quick Care Tip</p>
+                                <p className="text-sm font-semibold text-[#2d5a3d] mb-0.5">Quick Care Tip</p>
                                 <p className="text-xs text-gray-600 leading-relaxed">
                                     When your plant arrives, keep it in indirect sunlight for 2–3 days before watering to help it settle in.
                                 </p>
@@ -259,7 +259,7 @@ export default function OrderSuccessClient() {
 
                         <p className="text-center text-xs text-gray-400 mt-6 leading-relaxed">
                             Questions?{' '}
-                            <a href="mailto:support@yourstore.com" className="text-[#6b9238] hover:underline">
+                            <a href="mailto:support@yourstore.com" className="text-[#2d5a3d] hover:underline">
                                 Contact support
                             </a>
                         </p>

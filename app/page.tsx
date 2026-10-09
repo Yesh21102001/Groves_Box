@@ -9,31 +9,26 @@ import { homeConfig } from "../src/config/home.config";
 
 export default async function Home() {
   const {
-    bestSellers,
     onSale,
-    newArrivals: newArrivalsConfig,
-    categories: categoriesConfig,
   } = homeConfig;
 
-  const [bestSellersData, saleData, collectionsData, newArrivalsData] =
+  const [saleData, collectionsData, newArrivalsData] =
     await Promise.all([
-      getProductsByCollection(bestSellers.collectionHandle, bestSellers.limit).then(
-        (d) => (d.length > 0 ? d : getProducts(bestSellers.limit)),
-      ),
       getProductsByCollection(onSale.collectionHandle, onSale.limit).then((d) =>
         d.length > 0 ? d : getProducts(onSale.limit),
       ),
-      getCollections(20),
-      getNewArrivals(newArrivalsConfig.limit).then((d) =>
-        d && d.length > 0 ? d : getProducts(newArrivalsConfig.limit),
+      getCollections(250),
+      getProductsByCollection("new-arrivals", 5).then((collectionProducts) =>
+        collectionProducts.length > 0
+          ? collectionProducts
+          : getNewArrivals(5),
       ),
     ]);
 
-  const trimmedCategories = (collectionsData || []).slice(
-    0,
-    categoriesConfig.limit,
+  const allCategories = (collectionsData || []).filter(
+    (collection) => collection.handle !== "frontpage",
   );
-  const featuredCategory = trimmedCategories.length > 0 ? trimmedCategories[0] : null;
+  const featuredCategory = allCategories.length > 0 ? allCategories[0] : null;
   const categoryProducts = featuredCategory
     ? await getProductsByCollection(featuredCategory.handle, 8)
     : [];
@@ -41,9 +36,9 @@ export default async function Home() {
   return (
     <Home1
       initialData={{
-        products: bestSellersData || [],
+        products: newArrivalsData || [],
         saleProducts: saleData || [],
-        categories: trimmedCategories,
+        categories: allCategories,
         newArrivals: newArrivalsData || [],
         featuredCategory,
         categoryProducts,

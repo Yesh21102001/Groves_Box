@@ -22,12 +22,12 @@ export default function WishlistPage() {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
 
                 {/* Header */}
                 <div className="text-center mb-10">
-                    <h1 className="text-3xl lg:text-4xl font-bold text-[#6b9238] mb-4">
+                    <h1 className="text-3xl lg:text-4xl font-bold text-[#2d5a3d] mb-4">
                         My Wishlist
                     </h1>
                     <p className="text-l text-gray-600 max-w-xl mx-auto">
@@ -38,10 +38,10 @@ export default function WishlistPage() {
                 {/* Empty State */}
                 {wishlistItems.length === 0 ? (
                     <div className="text-center py-16">
-                        <div className="w-24 h-24 bg-[#6b9238] rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="w-24 h-24 bg-[#2d5a3d] rounded-full flex items-center justify-center mx-auto mb-6">
                             <Heart className="w-12 h-12 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-[#6b9238] mb-4">
+                        <h2 className="text-2xl font-bold text-[#2d5a3d] mb-4">
                             Your wishlist is empty
                         </h2>
                         <Link
@@ -76,7 +76,7 @@ export default function WishlistPage() {
                 <div
                     className="
       fixed z-40
-      bg-[#F0F4F1] border-t border-gray-200 shadow-lg
+      bg-[#F0F4F1] border-t border-gray-200 shadow-md border border-gray-200
 
       bottom-[70px] left-3 right-3          /* mobile */
       
@@ -94,7 +94,7 @@ sm:rounded-b-none
                 >
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="bg-[#6b9238] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                            <div className="bg-[#2d5a3d] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                 {totalItems}
                             </div>
                             <div>

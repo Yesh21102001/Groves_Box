@@ -3,10 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Heart, ArrowRight } from "lucide-react";
+import { Heart, ShoppingCart, ArrowRight } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import ProductCard from "../ProductCard";
 import {
+  getProducts,
   getCollections,
   getNewArrivals,
   getProductsByCollection,
@@ -14,25 +15,16 @@ import {
 import { homeConfig } from "../../config/home.config";
 
 export default function HomePage({ initialData = {} }) {
-  const [products, setProducts] = useState(initialData.products ?? initialData.newArrivals ?? []);
+  const [products, setProducts] = useState(initialData.products ?? []);
   const [categories, setCategories] = useState(initialData.categories ?? []);
   const [newArrivals, setNewArrivals] = useState(initialData.newArrivals ?? []);
   const [saleProducts, setSaleProducts] = useState(initialData.saleProducts ?? []);
+  const [categoryProducts, setCategoryProducts] = useState(initialData.categoryProducts ?? []);
   const [loading, setLoading] = useState(Object.keys(initialData).length === 0);
   const { cartItems } = useCart();
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const collectionCategories = categories.filter((category) => {
-    const handle = category.handle?.toLowerCase();
-    const name = category.name?.trim().toLowerCase();
-    return (
-      handle !== "new-arrivals" &&
-      handle !== "best-sellers" &&
-      name !== "new arrivals" &&
-      name !== "best sellers"
-    );
-  });
 
   useEffect(() => {
     if (Object.keys(initialData).length > 0) return;
@@ -40,16 +32,15 @@ export default function HomePage({ initialData = {} }) {
     async function fetchAllData() {
       try {
         setLoading(true);
-        const [collectionsData, newArrivalsData] = await Promise.all([
-          getCollections(250),
-          getProductsByCollection("new-arrivals", 5).then((collectionProducts) =>
-            collectionProducts.length > 0
-              ? collectionProducts
-              : getNewArrivals(5),
-          ),
+        const [bestSellersData, saleData, collectionsData, newArrivalsData] = await Promise.all([
+          getProducts(8),
+          getProducts(4),
+          getCollections(6),
+          getNewArrivals(8),
         ]);
-        setProducts(newArrivalsData || []);
-        setCategories((collectionsData || []).filter((collection) => collection.handle !== "frontpage"));
+        setProducts(bestSellersData || []);
+        setSaleProducts(saleData || []);
+        setCategories(collectionsData || []);
         setNewArrivals(newArrivalsData || []);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -64,86 +55,104 @@ export default function HomePage({ initialData = {} }) {
     <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="text-center">
         <div className="w-14 h-14 border-4 border-[#2d5a3d] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-gray-600">Loading…</p>
+        <p className="text-gray-600">Loading...</p>
       </div>
     </div>
   );
 
   return (
     <div className={`bg-white ${totalItems > 0 ? "pb-24 sm:pb-20" : ""}`}>
-
       {/* ════════════════════════════════════════════════
           HERO SECTION - The Right Plant for The Right Space
       ════════════════════════════════════════════════ */}
-      <section
-        className="home-hero relative isolate w-full overflow-hidden bg-[#1a3227] text-white"
-        style={{
-          backgroundImage: "url('/images/2148851374.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-[#14291f]/95 via-[#1a3227]/80 to-[#1a3227]/20"
-        />
-        <div className="relative z-10 mx-auto grid min-h-[560px] max-w-7xl grid-cols-1 items-center gap-10 px-5 py-14 sm:px-8 md:min-h-[600px] md:grid-cols-[1.15fr_0.85fr] md:py-16 lg:px-12">
-          <div className="flex flex-col justify-center">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#d8e9a4] sm:text-sm">
-              Quality You Can Trust
-            </p>
-            <h1 className="home-hero-title mb-5 max-w-2xl font-serif text-white">
-              The Right Plant for The Right Space
-            </h1>
-            <p className="mb-7 max-w-lg text-sm leading-relaxed text-white/90 sm:text-base md:text-lg">
-              Discover plants that fit your space, lifestyle, and level of care. From bright balconies to cozy corners, find beautiful greenery and everything you need to help it thrive.
-            </p>
-            <div className="mb-8 flex flex-wrap items-center gap-3 sm:gap-4">
-              <Link
-                href="/collections"
-                className="inline-flex min-h-11 items-center gap-2 rounded bg-white px-5 py-3 text-sm font-semibold text-[#1f4028] transition-colors hover:bg-[#edf3e9] sm:px-7"
-              >
-                Find Your Plant <ArrowRight size={17} />
-              </Link>
-              <Link
-                href="/products"
-                className="inline-flex min-h-11 items-center gap-2 px-2 py-3 text-sm font-semibold text-white transition-colors hover:text-[#d8e9a4]"
-              >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#1f4028]">
-                  <ArrowRight size={14} />
-                </span>
-                Shop All Plants
-              </Link>
-            </div>
-          </div>
+      <section className="w-full relative py-16 md:py-32 overflow-hidden" style={{
+        backgroundImage: 'url(/images/2148851374.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center right',
+        backgroundAttachment: 'fixed'
+      }}>
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#2d5a3d]/95 via-[#2d5a3d]/85 to-transparent"></div>
 
-          <div className="relative hidden justify-end pr-8 md:flex lg:pr-16">
-            <div
-              aria-hidden="true"
-              className="absolute right-1 top-5 h-[350px] w-[205px] rotate-[7deg] border-[5px] border-white/90 bg-white/90 shadow-2xl"
-            />
-            <div className="relative h-[370px] w-[220px] overflow-hidden border-[5px] border-white bg-white shadow-2xl">
-              <div className="relative h-[245px] overflow-hidden">
-                <Image
-                  src="/images/artificial-green-plant-pot-display-rack-sale.jpg"
-                  alt="Leafy indoor plants in a home"
-                  fill
-                  sizes="220px"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/35 px-5 text-center">
-                  <p className="text-lg font-medium leading-snug text-white">
-                    Lifestyle &amp;
-                    <br />
-                    Inspiration
-                  </p>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+
+            {/* LEFT: Content */}
+            <div className="flex flex-col justify-center">
+              <p className="text-sm text-[#BAF915] font-semibold uppercase tracking-widest mb-4">
+                Quality You Can Trust
+              </p>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white leading-tight mb-6">
+                The Right Plant for The Right Space
+              </h1>
+              <p className="text-gray-100 text-base sm:text-lg mb-8 leading-relaxed max-w-md">
+                Discover a carefully curated selection of exceptional plants. Every plant comes with care tips and expert guidance for success.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex gap-3 sm:gap-4 flex-wrap mb-10">
+                <Link href="/collections" className="px-6 sm:px-8 py-3 bg-white text-[#2d5a3d] font-semibold hover:bg-gray-100 transition-colors rounded">
+                  Find Your Plant →
+                </Link>
+                <button className="flex items-center gap-2 text-white font-semibold hover:text-[#BAF915] transition-colors">
+                  <div className="w-3 h-3 bg-white rounded-full"></div>
+                  Explore Video
+                </button>
+              </div>
+
+              {/* Feature Badges */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/20">
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">🚚</div>
+                  <div>
+                    <p className="text-white font-semibold text-sm">Free Delivery</p>
+                    <p className="text-gray-300 text-xs">On Orders Over ₹99</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">🌿</div>
+                  <div>
+                    <p className="text-white font-semibold text-sm">Healthy Plants</p>
+                    <p className="text-gray-300 text-xs">100% Quality Guaranteed</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">🛡️</div>
+                  <div>
+                    <p className="text-white font-semibold text-sm">Plant Care Support</p>
+                    <p className="text-gray-300 text-xs">We're Here to Help</p>
+                  </div>
                 </div>
               </div>
-              <div className="p-4 text-[#1f4028]">
-                <p className="text-[10px] font-semibold uppercase tracking-wide">Bring Your Dream Home</p>
-                <p className="mt-2 text-[10px] leading-relaxed text-gray-600">
-                  Find the perfect plants to bring nature, calm, and style into every corner of your home.
-                </p>
+            </div>
+
+            {/* RIGHT: Magazine-style image stack */}
+            <div className="relative hidden md:block">
+              {/* Main plant image */}
+              <div className="relative mb-4">
+                <div className="aspect-square relative rounded-lg overflow-hidden shadow-2xl">
+                  <img src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Plants Display" className="w-full h-full object-cover" />
+                </div>
+              </div>
+
+              {/* Stacked magazine cards */}
+              <div className="flex gap-3 justify-end">
+                <div className="bg-white rounded-lg overflow-hidden shadow-xl transform -rotate-3 hover:rotate-0 transition-transform w-32 h-40">
+                  <img src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Lifestyle" className="w-full h-24 object-cover" />
+                  <div className="p-3">
+                    <p className="text-xs text-[#2d5a3d] font-semibold uppercase tracking-wide">Lifestyle &</p>
+                    <p className="text-xs text-[#2d5a3d] font-semibold uppercase">Inspiration</p>
+                    <p className="text-[10px] text-gray-600 mt-2 font-semibold">Bring Your Dream</p>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg overflow-hidden shadow-xl transform rotate-2 hover:rotate-0 transition-transform w-32 h-40 mt-4">
+                  <img src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Garden" className="w-full h-24 object-cover" />
+                  <div className="p-3">
+                    <p className="text-xs text-[#2d5a3d] font-semibold uppercase tracking-wide">Garden</p>
+                    <p className="text-xs text-[#2d5a3d] font-semibold uppercase">Decor Ideas</p>
+                    <p className="text-[10px] text-gray-600 mt-2 font-semibold">Fresh & Natural</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -153,8 +162,8 @@ export default function HomePage({ initialData = {} }) {
       {/* ════════════════════════════════════════════════
           FIND YOUR PERFECT PLANT - Category Showcase
       ════════════════════════════════════════════════ */}
-      {collectionCategories.length > 0 && (
-        <section className="w-full bg-white py-20 border-t border-gray-100">
+      {categories.length > 0 && (
+        <section className="w-full bg-white py-20">
           <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
             <div className="flex justify-between items-end mb-12">
               <div>
@@ -162,29 +171,15 @@ export default function HomePage({ initialData = {} }) {
                 <h2 className="text-4xl md:text-5xl font-serif text-gray-900">Find Your Perfect Plant</h2>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-5">
-              {collectionCategories.slice(0, 5).map((cat) => (
-                <Link key={cat.id} href={`/collections/${cat.handle}`} className="group relative aspect-[2/3] overflow-hidden rounded-lg">
-                  <Image
-                    src={cat.image || "/images/artificial-green-plant-pot-display-rack-sale.jpg"}
-                    alt={cat.name}
-                    fill
-                    sizes="(max-width: 640px) 45vw, (max-width: 768px) 30vw, 20vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/65 via-black/10 to-transparent p-3 transition-colors group-hover:from-black/75 sm:p-4">
-                    <h3 className="text-sm font-bold text-white sm:text-base">{cat.name}</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+              {categories.slice(0, 6).map((cat) => (
+                <Link key={cat.id} href={`/collections/${cat.handle}`} className="group relative overflow-hidden rounded-lg aspect-square">
+                  <Image src={cat.image || "/images/artificial-green-plant-pot-display-rack-sale.jpg"} alt={cat.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-end p-4">
+                    <h3 className="text-white font-bold text-lg">{cat.name}</h3>
                   </div>
                 </Link>
               ))}
-            </div>
-            <div className="mt-8 flex justify-center">
-              <Link
-                href="/collections"
-                className="inline-flex min-h-11 items-center justify-center rounded border-2 border-[#2d5a3d] px-7 py-3 font-semibold text-[#2d5a3d] transition-colors hover:bg-[#2d5a3d]/5"
-              >
-                View All <ArrowRight size={18} className="ml-2" />
-              </Link>
             </div>
           </div>
         </section>
@@ -198,24 +193,21 @@ export default function HomePage({ initialData = {} }) {
           <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
             <div className="flex justify-between items-end mb-12">
               <div>
-                <p className="text-sm text-[#2d5a3d] font-semibold uppercase tracking-widest mb-3">Fresh Finds</p>
-                <h2 className="text-4xl md:text-5xl font-serif text-gray-900">New Arrivals</h2>
+                <p className="text-sm text-[#2d5a3d] font-semibold uppercase tracking-widest mb-3">Best Sellers</p>
+                <h2 className="text-4xl md:text-5xl font-serif text-gray-900">Featured Plants</h2>
               </div>
-              <Link href="/products?filter=new" className="text-[#2d5a3d] font-semibold flex items-center gap-2 hover:gap-3 transition-all hidden md:flex">
+              <Link href="/collections" className="text-[#2d5a3d] font-semibold flex items-center gap-2 hover:gap-3 transition-all">
                 View all <ArrowRight size={18} />
               </Link>
             </div>
-            <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-5 md:gap-6">
-              {products.slice(0, 5).map((product) => (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {products.slice(0, 8).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-            <div className="mt-8 flex justify-center">
-              <Link
-                href="/products?filter=new"
-                className="inline-flex min-h-11 items-center justify-center rounded border-2 border-[#2d5a3d] px-7 py-3 font-semibold text-[#2d5a3d] transition-colors hover:bg-[#2d5a3d]/5"
-              >
-                View All <ArrowRight size={18} className="ml-2" />
+            <div className="flex justify-center mt-12">
+              <Link href="/collections" className="px-8 py-3 border-2 border-[#2d5a3d] text-[#2d5a3d] font-semibold hover:bg-[#2d5a3d]/5 transition-colors rounded">
+                View Our Products
               </Link>
             </div>
           </div>
@@ -225,11 +217,12 @@ export default function HomePage({ initialData = {} }) {
       {/* ════════════════════════════════════════════════
           LET YOUR SPACE COME ALIVE - Scattered Photo Grid
       ════════════════════════════════════════════════ */}
-      <section className="w-full border-t border-gray-100 bg-white py-12 sm:py-16 md:py-20">
+      <section className="w-full bg-white py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-3 md:gap-12">
-            {/* Left side - scattered images */}
-            <div className="hidden md:grid grid-cols-2 gap-4 h-96">
+          {/* DESKTOP: 3-column layout */}
+          <div className="hidden md:grid md:grid-cols-3 gap-12 items-center">
+            {/* Left side */}
+            <div className="grid grid-cols-2 gap-4 h-96">
               <div className="rounded-lg overflow-hidden -rotate-3 shadow-lg mt-8">
                 <Image src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Plant 1" width={200} height={200} className="w-full h-full object-cover" />
               </div>
@@ -246,36 +239,17 @@ export default function HomePage({ initialData = {} }) {
 
             {/* Center - Text content */}
             <div className="flex flex-col justify-center text-center">
-              <h2 className="space-showcase-title mb-4 font-serif leading-tight text-gray-900 sm:mb-6">Let Your Space Come Alive</h2>
-              <p className="mb-6 text-base leading-relaxed text-gray-700 sm:mb-8 sm:text-lg">
+              <h2 className="text-4xl font-serif text-gray-900 mb-6">Let Your Space Come Alive</h2>
+              <p className="text-gray-700 text-lg mb-8 leading-relaxed">
                 Create a beautiful sanctuary with our premium plant collection. Perfect for any room and skill level.
               </p>
-              <Link href="/collections" className="mx-auto inline-block w-fit rounded bg-[#2d5a3d] px-8 py-3 font-semibold text-white transition-colors hover:bg-[#1f4028]">
+              <Link href="/collections" className="px-8 py-3 bg-[#2d5a3d] text-white font-semibold hover:bg-[#1f4028] transition-colors rounded inline-block w-fit mx-auto">
                 Explore Now →
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 md:hidden">
-              {["Plant 1", "Plant 2", "Plant 3", "Plant 4"].map((alt, index) => (
-                <div
-                  key={alt}
-                  className={`relative aspect-[4/3] overflow-hidden rounded-lg shadow-lg ${
-                    index % 2 === 0 ? "-rotate-2" : "rotate-2"
-                  }`}
-                >
-                  <Image
-                    src="/images/artificial-green-plant-pot-display-rack-sale.jpg"
-                    alt={alt}
-                    fill
-                    sizes="(max-width: 640px) 45vw, 200px"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Right side - scattered images */}
-            <div className="hidden md:grid grid-cols-2 gap-4 h-96">
+            {/* Right side */}
+            <div className="grid grid-cols-2 gap-4 h-96">
               <div className="rounded-lg overflow-hidden rotate-2 shadow-lg -mt-8">
                 <Image src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Plant 5" width={200} height={200} className="w-full h-full object-cover" />
               </div>
@@ -287,6 +261,33 @@ export default function HomePage({ initialData = {} }) {
               </div>
               <div className="rounded-lg overflow-hidden rotate-3 shadow-lg -mt-8">
                 <Image src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Plant 8" width={200} height={200} className="w-full h-full object-cover" />
+              </div>
+            </div>
+          </div>
+
+          {/* MOBILE: Text + 3 images row */}
+          <div className="md:hidden flex flex-col">
+            {/* Text content */}
+            <div className="flex flex-col justify-center text-center mb-6">
+              <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 mb-4">Let Your Space Come Alive</h2>
+              <p className="text-gray-700 text-base sm:text-lg mb-6 leading-relaxed">
+                Create a beautiful sanctuary with our premium plant collection. Perfect for any room and skill level.
+              </p>
+              <Link href="/collections" className="px-6 sm:px-8 py-3 bg-[#2d5a3d] text-white font-semibold hover:bg-[#1f4028] transition-colors rounded inline-block w-fit mx-auto">
+                Explore Now →
+              </Link>
+            </div>
+
+            {/* 3-column image row */}
+            <div className="grid grid-cols-3 gap-3 w-full">
+              <div className="rounded-lg overflow-hidden shadow-md w-full" style={{ height: '96px' }}>
+                <img src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Plant 1" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              </div>
+              <div className="rounded-lg overflow-hidden shadow-md w-full" style={{ height: '96px' }}>
+                <img src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Plant 2" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              </div>
+              <div className="rounded-lg overflow-hidden shadow-md w-full" style={{ height: '96px' }}>
+                <img src="/images/artificial-green-plant-pot-display-rack-sale.jpg" alt="Plant 3" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               </div>
             </div>
           </div>
@@ -315,7 +316,7 @@ export default function HomePage({ initialData = {} }) {
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-blue-400"></div>
                   <div>
-                    <p className="font-bold text-gray-900 text-sm">Customer Name</p>
+                    <p className="font-bold text-gray-900">Customer Name</p>
                     <p className="text-sm text-gray-600">Plant Enthusiast</p>
                   </div>
                 </div>

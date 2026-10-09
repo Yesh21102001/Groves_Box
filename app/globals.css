@@ -6,12 +6,12 @@
   --foreground: #171717;
 
   /* Brand greens — single source of truth */
-  --green-primary:   #6b9238;   /* base brand green  */
-  --green-light:     #84b048;   /* lighter / gradient start */
-  --green-dark:      #557420;   /* darker / gradient end  */
-  --green-deep:      #3d5c14;   /* deepest, hover states  */
-  --green-surface:   #f0f7e8;   /* tinted backgrounds     */
-  --green-border:    #dcebc8;   /* card borders on hover  */
+  --green-primary:   #2d5a3d;   /* base brand green  */
+  --green-light:     #e5f0eb;   /* lighter / gradient start */
+  --green-dark:      #1f4028;   /* darker / gradient end  */
+  --green-deep:      #1a3227;   /* deepest, hover states  */
+  --green-surface:   #e5f0eb;   /* tinted backgrounds     */
+  --green-border:    #d0e8dd;   /* card borders on hover  */
 
   /* Semantic aliases */
   --color-primary:      var(--green-primary);
@@ -55,7 +55,7 @@ p, span, a, button, input, textarea, select, label {
   font-weight: 600;
   font-size: 14px;
   line-height: 1;
-  padding: 12px 22px;
+  padding: 12px 24px;
   border-radius: 12px;
   cursor: pointer;
   white-space: nowrap;
@@ -64,17 +64,29 @@ p, span, a, button, input, textarea, select, label {
     border-color 0.2s ease;
   text-decoration: none;
   border: none;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Mobile touch target optimization */
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-outline {
+    padding: 14px 24px;
+    min-height: 48px;
+    font-size: 15px;
+  }
 }
 
 /* Filled — product-card gradient */
 .btn-primary {
-  background: linear-gradient(135deg, var(--green-light), var(--green-dark));
+  background: linear-gradient(135deg, var(--green-primary), var(--green-dark));
   color: #ffffff;
-  box-shadow: 0 6px 16px rgba(85, 116, 32, 0.28);
+  box-shadow: 0 6px 16px rgba(45, 90, 61, 0.28);
 }
 .btn-primary:hover {
   filter: brightness(1.05);
-  box-shadow: 0 8px 20px rgba(85, 116, 32, 0.38);
+  box-shadow: 0 8px 20px rgba(45, 90, 61, 0.38);
 }
 .btn-primary:active {
   transform: scale(0.97);
@@ -98,4 +110,55 @@ p, span, a, button, input, textarea, select, label {
 }
 .btn-outline:active {
   transform: scale(0.97);
+}
+/* Mobile-first responsive typography */
+@media (max-width: 640px) {
+  h1 { font-size: 20px !important; }
+  h2 { font-size: 16px !important; }
+  h3 { font-size: 14px !important; }
+  p, body { font-size: 14px !important; }
+}
+
+@media (max-width: 375px) {
+  h1 { font-size: 18px !important; }
+  h2 { font-size: 15px !important; }
+  h3 { font-size: 13px !important; }
+  p, body { font-size: 13px !important; }
+}
+
+/* Touch-friendly icon sizing */
+[class*="icon-"] {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Input touch optimization */
+input, textarea, select {
+  min-height: 44px;
+  padding: 12px 16px;
+}
+
+@media (max-width: 640px) {
+  input, textarea, select {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+}
+
+.home-hero-title {
+  font-size: clamp(2.75rem, 5vw, 4.75rem) !important;
+  line-height: 1.08 !important;
+}
+
+.space-showcase-title {
+  font-size: clamp(2rem, 3.4vw, 3rem) !important;
+  line-height: 1.15 !important;
+}
+
+.product-detail-title {
+  font-size: clamp(1.75rem, 3vw, 2.5rem) !important;
+  line-height: 1.15 !important;
 }

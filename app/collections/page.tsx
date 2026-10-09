@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import { getCollections } from '@/src/lib/shopify_utilis';
 
 type Collection = {
@@ -25,7 +25,7 @@ export default function CollectionsPage() {
 
     const fetchCollections = async () => {
         try {
-            const data = await getCollections(20);
+            const data = await getCollections(250);
             const validCollections = data.filter((c: any) => c.name && c.id);
             setCollections(validCollections.length > 0 ? validCollections : data);
         } catch (error) {
@@ -38,56 +38,72 @@ export default function CollectionsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-gray-500">Loading collections...</p>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 text-[#2d5a3d] animate-spin mx-auto mb-3" />
+                    <p className="text-gray-600">Loading collections...</p>
+                </div>
             </div>
         );
     }
 
     return (
         <div className="min-h-screen bg-white py-8 md:py-12 lg:py-16">
-            <div className="w-full px-4 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
-                <div className="max-w-[1600px] mx-auto">
+            <div className="w-full px-5 sm:px-8 lg:px-12">
+                <div className="max-w-7xl mx-auto">
 
                     {/* Breadcrumbs */}
                     <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
-                        <Link href="/" className="hover:text-[#2F4F3E] transition-colors">
+                        <Link href="/" className="hover:text-[#2d5a3d] transition-colors">
                             Home
                         </Link>
                         <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-                        <span className="text-[#6b9238] font-medium">Collections</span>
+                        <span className="text-[#2d5a3d] font-semibold">Collections</span>
                     </nav>
 
                     {/* Header */}
-                    <div className="mb-8 md:mb-10 lg:mb-12">
-                        <h1 className="font-light text-[#6b9238] text-3xl lg:text-4xl 2xl:text-5xl tracking-tight">
-                            Collections
+                    <div className="mb-12 md:mb-14 lg:mb-16">
+                        <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-[#2d5a3d] mb-3">
+                            Our Collection
+                        </p>
+                        <h1
+                            className="text-4xl md:text-5xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4"
+                            style={{ fontFamily: "Georgia, serif" }}
+                        >
+                            Find Your Perfect Plant
                         </h1>
+                        <p className="text-base text-gray-600 max-w-2xl leading-relaxed">
+                            Explore our carefully curated collections of plants, each selected for quality and beauty to transform your space.
+                        </p>
                     </div>
 
                     {/* Collections Grid */}
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-10 lg:gap-x-8 lg:gap-y-12">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
                         {collections.map((collection) => (
                             <Link
                                 key={collection.id}
                                 href={collection.link}
                                 className="group block"
                             >
-                                {/* Image container — no overlay, clean crop */}
-                                <div className="relative overflow-hidden w-full aspect-[3/4] mb-3 sm:mb-4 bg-gray-100">
+                                {/* Image container */}
+                                <div className="relative overflow-hidden w-full aspect-square mb-4 rounded-lg bg-gray-100">
                                     <img
                                         src={collection.image || '/images/White_arch.webp'}
                                         alt={collection.imageAlt || collection.name}
-                                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                                     />
+                                    {/* Overlay on hover */}
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                                 </div>
 
-                                {/* Title + arrow — below image, no overlay */}
-                                <div className="flex items-center gap-1.5">
-                                    <span className="text-sm sm:text-base lg:text-lg text-[#1a1a1a] font-light leading-snug group-hover:text-[#6B9238] transition-colors duration-200">
-                                        {collection.name}
-                                    </span>
-                                    <span className="text-[#1a1a1a] text-base leading-none group-hover:text-[#6B9238] transition-transform duration-200 group-hover:translate-x-1 inline-block">
+                                {/* Title with arrow */}
+                                <div className="flex items-start gap-2">
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="text-sm md:text-base font-semibold text-gray-900 group-hover:text-[#2d5a3d] transition-colors duration-200 line-clamp-2">
+                                            {collection.name}
+                                        </h3>
+                                    </div>
+                                    <span className="text-[#2d5a3d] text-lg flex-shrink-0 group-hover:translate-x-1 transition-transform duration-200">
                                         →
                                     </span>
                                 </div>

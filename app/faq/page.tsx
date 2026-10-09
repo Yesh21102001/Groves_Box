@@ -155,7 +155,7 @@ export default function FAQPage() {
         <div className="min-h-screen bg-white">
 
             {/* ── HERO ───────────────────────────────────────────────────── */}
-            <section className="w-full bg-[#6b9238] px-5 sm:px-8 lg:px-12 py-16 md:py-20">
+            <section className="w-full bg-[#2d5a3d] px-5 sm:px-8 lg:px-12 py-16 md:py-20">
                 <div className="max-w-7xl mx-auto">
                     <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-white/70 mb-3">
                         Help Center
@@ -191,7 +191,7 @@ export default function FAQPage() {
                                 onClick={() => { setActiveCategory(cat); setOpenIndex(null); }}
                                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                                     activeCategory === cat
-                                        ? 'bg-[#6b9238] text-white shadow-sm'
+                                        ? 'bg-[#2d5a3d] text-white shadow-sm'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                             >
@@ -219,7 +219,7 @@ export default function FAQPage() {
                             {filteredFAQs.map((faq, index) => (
                                 <div
                                     key={index}
-                                    className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-[#6b9238] hover:shadow-sm transition-all"
+                                    className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-[#2d5a3d] hover:shadow-sm transition-all"
                                 >
                                     <button
                                         onClick={() => setOpenIndex(openIndex === index ? null : index)}
@@ -227,16 +227,16 @@ export default function FAQPage() {
                                     >
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <span className="text-[#6b9238]">{categoryIcons[faq.category]}</span>
-                                                <span className="text-xs font-semibold text-[#6b9238] uppercase tracking-wide">
+                                                <span className="text-[#2d5a3d]">{categoryIcons[faq.category]}</span>
+                                                <span className="text-xs font-semibold text-[#2d5a3d] uppercase tracking-wide">
                                                     {faq.category}
                                                 </span>
                                             </div>
-                                            <h3 className="font-semibold text-gray-900 group-hover:text-[#6b9238] transition-colors text-sm sm:text-base">
+                                            <h3 className="font-semibold text-gray-900 group-hover:text-[#2d5a3d] transition-colors text-sm sm:text-base">
                                                 {faq.question}
                                             </h3>
                                         </div>
-                                        <div className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-[#6b9238] transition-all ${openIndex === index ? 'rotate-180' : ''}`}>
+                                        <div className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-[#2d5a3d] transition-all ${openIndex === index ? 'rotate-180' : ''}`}>
                                             <ChevronDown
                                                 size={18}
                                                 className={`transition-colors ${openIndex === index ? 'text-white' : 'text-gray-600 group-hover:text-white'}`}

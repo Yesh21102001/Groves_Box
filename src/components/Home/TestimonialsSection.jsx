@@ -4,75 +4,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { homeConfig } from "../../config/home.config";
 
-/* ── Social icons ── */
-const InstagramIcon = () => (
-    <span
-        className="inline-flex items-center justify-center w-7 h-7 rounded-full flex-shrink-0"
-        style={{ background: "radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)" }}
-    >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-        </svg>
-    </span>
-);
-
-const FacebookIcon = () => (
-    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full flex-shrink-0 bg-[#1877F2]">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-        </svg>
-    </span>
-);
-
-const TwitterIcon = () => (
-    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full flex-shrink-0 bg-[#1DA1F2]">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-        </svg>
-    </span>
-);
-
-const SocialIcon = ({ type }) => {
-    if (type === "instagram") return <InstagramIcon />;
-    if (type === "facebook") return <FacebookIcon />;
-    return <TwitterIcon />;
-};
-
-/* ── Star rating ── */
-const StarRating = ({ rating }) => (
-    <div className="flex items-center gap-0.5">
-        {[1, 2, 3, 4, 5].map((s) => (
-            <svg key={s} width="15" height="15" viewBox="0 0 24 24" fill={s <= rating ? "#6b9238" : "#E5E7EB"}>
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-        ))}
-    </div>
-);
-
-/* ── Main component ── */
 export default function TestimonialsSection() {
-    // ── All values come from config ──────────────────────────────────
-    const { title, titleHighlight, subtitle, bgColor, autoPlayInterval, items: testimonials } = homeConfig.testimonials;
+    const { eyebrow, title, titleHighlight, subtitle, bgColor, autoPlayInterval, items: testimonials } = homeConfig.testimonials;
 
     const total = testimonials.length;
     const [activeIndex, setActiveIndex] = useState(0);
-    const [visibleCount, setVisibleCount] = useState(3);
     const autoRef = useRef(null);
     const isAnimating = useRef(false);
-    const touchStartX = useRef(null);
 
-    /* Responsive visible count */
-    useEffect(() => {
-        const update = () => {
-            const w = window.innerWidth;
-            setVisibleCount(w < 640 ? 1 : w < 1024 ? 2 : 3);
-        };
-        update();
-        window.addEventListener("resize", update);
-        return () => window.removeEventListener("resize", update);
-    }, []);
-
-    /* Auto-play — interval from config */
     const startAuto = useCallback(() => {
         clearInterval(autoRef.current);
         autoRef.current = setInterval(() => {
@@ -85,7 +24,6 @@ export default function TestimonialsSection() {
         return () => clearInterval(autoRef.current);
     }, [startAuto]);
 
-    /* Navigation */
     const goTo = useCallback(
         (raw) => {
             if (isAnimating.current) return;
@@ -98,167 +36,133 @@ export default function TestimonialsSection() {
         [total, startAuto]
     );
 
-    /* Touch swipe */
-    const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
-    const handleTouchEnd = (e) => {
-        if (touchStartX.current === null) return;
-        const diff = touchStartX.current - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 40) diff > 0 ? goTo(activeIndex + 1) : goTo(activeIndex - 1);
-        touchStartX.current = null;
-    };
-
-    /* Build visible slots */
-    const slots = (() => {
-        if (visibleCount === 1) return [{ idx: activeIndex, offset: 0 }];
-        if (visibleCount === 2) return [
-            { idx: activeIndex % total, offset: 0 },
-            { idx: (activeIndex + 1) % total, offset: 1 },
-        ];
-        return [
-            { idx: ((activeIndex - 1) + total) % total, offset: -1 },
-            { idx: activeIndex % total, offset: 0 },
-            { idx: (activeIndex + 1) % total, offset: 1 },
-        ];
-    })();
-
     return (
-        <section className="w-full py-16 sm:py-20 lg:py-24 overflow-hidden" style={{ backgroundColor: bgColor }}>
-            <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
+        <section className="w-full py-20 lg:py-28" style={{ backgroundColor: bgColor }}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
 
-                {/* ── Heading — from config ── */}
-                <div className="text-center mb-12 sm:mb-14 lg:mb-16">
-                    <h2
-                        className="text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-bold text-[#244033] leading-tight mb-3"
-                        style={{ fontFamily: "Georgia, serif" }}
-                    >
-                        {title}{" "}
-                        <span className="text-[#6b9238]">{titleHighlight}</span>
-                    </h2>
-                    <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto leading-relaxed">
-                        {subtitle}
-                    </p>
-                </div>
-
-                {/* ── Slider ── */}
-                <div
-                    className="relative flex items-center justify-center px-10 sm:px-14 lg:px-16"
-                    onTouchStart={handleTouchStart}
-                    onTouchEnd={handleTouchEnd}
-                >
-                    {/* Left Arrow */}
-                    <button
-                        onClick={() => goTo(activeIndex - 1)}
-                        aria-label="Previous testimonial"
-                        className="
-                            absolute left-0 top-1/2 -translate-y-1/2 z-10
-                            w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white
-                            border border-gray-200 flex items-center justify-center
-                            shadow-md cursor-pointer
-                            transition-all duration-300 ease-out
-                            hover:bg-[#6b9238] hover:border-[#6b9238] hover:scale-110
-                            hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
-                            group
-                        "
-                    >
-                        <ChevronLeft size={20} className="text-[#244033] transition-colors duration-300 group-hover:text-white" />
-                    </button>
-
-                    {/* Cards Track */}
-                    <div className="flex items-stretch justify-center w-full gap-4 sm:gap-5 lg:gap-6 py-6 sm:py-8">
-                        {slots.map(({ idx, offset }) => {
-                            const t = testimonials[idx];
-                            const isCenter = offset === 0;
-                            const isOnly = visibleCount === 1;
-
-                            return (
-                                <div
-                                    key={`${t.id}-${offset}`}
-                                    className={[
-                                        "flex flex-col gap-4 bg-white rounded-2xl p-6 sm:p-7 flex-1 min-w-0",
-                                        "border-t-[3px]",
-                                        "will-change-[transform,opacity]",
-                                        "transition-[transform,opacity,box-shadow,border-color]",
-                                        "duration-[600ms]",
-                                        "ease-[cubic-bezier(0.34,1.15,0.64,1)]",
-                                        isOnly
-                                            ? "scale-100 opacity-100 shadow-[0_14px_44px_rgba(0,0,0,0.12)] border-[#6b9238]"
-                                            : isCenter
-                                                ? "scale-[1.05] -translate-y-1 opacity-100 shadow-[0_20px_56px_rgba(0,0,0,0.13),0_4px_16px_rgba(43,191,164,0.12)] border-[#6b9238] z-10"
-                                                : "scale-[0.93] translate-y-1.5 opacity-60 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border-transparent",
-                                    ].join(" ")}
-                                >
-                                    {/* Avatar row */}
-                                    <div className="flex items-center gap-3.5">
-                                        <img
-                                            src={t.avatar}
-                                            alt={t.name}
-                                            className={[
-                                                "w-14 h-14 rounded-full object-cover flex-shrink-0",
-                                                "border-[2.5px] transition-[border-color] duration-500",
-                                                isCenter || isOnly ? "border-[#6b9238]" : "border-[#e0f2ed]",
-                                            ].join(" ")}
-                                        />
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center justify-between gap-2 mb-0.5">
-                                                <span className="font-bold text-[15px] text-gray-900 truncate">{t.name}</span>
-                                                <SocialIcon type={t.social} />
-                                            </div>
-                                            <p className="text-[#6b9238] text-[10.5px] font-bold uppercase tracking-widest mb-1.5">{t.role}</p>
-                                            <StarRating rating={t.rating} />
-                                        </div>
-                                    </div>
-
-                                    {/* Divider */}
-                                    <hr className="border-t border-gray-100" />
-
-                                    {/* Quote + text */}
-                                    <div>
-                                        <p className="text-[#6b9238] leading-none mb-[-8px] opacity-75" style={{ fontSize: 44, fontFamily: "Georgia, serif" }}>
-                                            &ldquo;
-                                        </p>
-                                        <p className="text-gray-500 text-[13px] sm:text-sm leading-[1.8] italic">{t.text}</p>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                    {/* LEFT: Heading Section */}
+                    <div className="w-full lg:w-1/4 flex-shrink-0">
+                        {eyebrow && (
+                            <div className="flex items-center gap-1 mb-3">
+                                <span className="text-[#2d5a3d] font-bold text-xs">✓</span>
+                                <p className="text-xs font-bold uppercase tracking-wider text-[#2d5a3d]">
+                                    {eyebrow}
+                                </p>
+                            </div>
+                        )}
+                        <h2
+                            className="text-3xl sm:text-4xl font-bold leading-tight mb-4"
+                            style={{ fontFamily: "Georgia, serif", color: "#1a3a2a" }}
+                        >
+                            {title} <br className="hidden sm:block" />
+                            <span style={{ color: "#2d5a3d" }}>{titleHighlight}</span>
+                        </h2>
+                        <p className="text-sm text-gray-600 leading-relaxed pr-4">
+                            {subtitle}
+                        </p>
                     </div>
 
-                    {/* Right Arrow */}
-                    <button
-                        onClick={() => goTo(activeIndex + 1)}
-                        aria-label="Next testimonial"
-                        className="
-                            absolute right-0 top-1/2 -translate-y-1/2 z-10
-                            w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white
-                            border border-gray-200 flex items-center justify-center
-                            shadow-md cursor-pointer
-                            transition-all duration-300 ease-out
-                            hover:bg-[#6b9238] hover:border-[#6b9238] hover:scale-110
-                            hover:shadow-[0_8px_24px_rgba(43,191,164,0.30)]
-                            group
-                        "
-                    >
-                        <ChevronRight size={20} className="text-[#244033] transition-colors duration-300 group-hover:text-white" />
-                    </button>
-                </div>
+                    {/* RIGHT: Carousel Section */}
+                    <div className="w-full lg:flex-1 relative">
+                        {/* Carousel */}
+                        <div className="relative flex items-center">
+                            {/* Left Arrow */}
+                            <button
+                                onClick={() => goTo(activeIndex - 1)}
+                                className="absolute -left-6 top-1/3 z-30 w-9 h-9 bg-white border border-gray-300 rounded-full flex items-center justify-center hover:bg-[#2d5a3d] hover:text-white transition-all shadow-md"
+                            >
+                                <ChevronLeft size={18} />
+                            </button>
 
-                {/* ── Dots ── */}
-                <div className="flex items-center justify-center gap-2 mt-2">
-                    {testimonials.map((_, i) => (
-                        <button
-                            key={i}
-                            onClick={() => goTo(i)}
-                            aria-label={`Go to testimonial ${i + 1}`}
-                            className={[
-                                "h-2.5 rounded-full border-none cursor-pointer p-0",
-                                "transition-[width,background-color] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
-                                "hover:bg-[#1aab8e]",
-                                i === activeIndex ? "w-8 bg-[#6b9238]" : "w-2.5 bg-[#c4dfd8]",
-                            ].join(" ")}
-                        />
-                    ))}
-                </div>
+                            {/* Cards Track */}
+                            <div className="w-full overflow-hidden">
+                                <div
+                                    className="flex gap-5 transition-transform duration-600 ease-out"
+                                    style={{
+                                        transform: `translateX(calc(-${activeIndex} * (100% + 1.25rem)))`,
+                                    }}
+                                >
+                                    {testimonials.map((t) => (
+                                        <div key={t.id} className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3">
+                                            {/* Card */}
+                                            <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6 h-full relative">
 
+                                                {/* Avatar - Large Circular Image */}
+                                                <div className="relative mb-3 flex justify-center">
+                                                    <div className="relative w-36 h-36 sm:w-44 sm:h-44">
+                                                        <img
+                                                            src={t.avatar}
+                                                            alt={t.name}
+                                                            className="w-full h-full rounded-full object-cover border-2 border-[#e8f3ed]"
+                                                        />
+                                                        {/* Quote Mark - Overlay on right side */}
+                                                        <div className="absolute -right-2 top-2 text-5xl sm:text-6xl text-[#2d5a3d] opacity-50 leading-none font-serif">
+                                                            "
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Text Content */}
+                                                <div className="text-center">
+                                                    {/* Testimonial Text */}
+                                                    <p className="text-xs sm:text-sm text-gray-700 mb-3 leading-snug line-clamp-3 h-10 sm:h-12">
+                                                        {t.text}
+                                                    </p>
+
+                                                    {/* Name */}
+                                                    <p className="font-bold text-sm sm:text-base text-gray-900 mb-0.5">
+                                                        {t.name}
+                                                    </p>
+
+                                                    {/* Role - Optional */}
+                                                    {t.role && (
+                                                        <p className="text-xs text-gray-500 mb-1">
+                                                            {t.role}
+                                                        </p>
+                                                    )}
+
+                                                    {/* Signature */}
+                                                    {t.signature && (
+                                                        <p
+                                                            className="text-[#2d5a3d] italic text-xs"
+                                                            style={{ fontFamily: "'Brush Script MT', cursive" }}
+                                                        >
+                                                            {t.signature}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Right Arrow */}
+                            <button
+                                onClick={() => goTo(activeIndex + 1)}
+                                className="absolute -right-6 top-1/3 z-30 w-9 h-9 bg-white border border-gray-300 rounded-full flex items-center justify-center hover:bg-[#2d5a3d] hover:text-white transition-all shadow-md"
+                            >
+                                <ChevronRight size={18} />
+                            </button>
+                        </div>
+
+                        {/* Dots */}
+                        <div className="flex justify-center gap-2 mt-6">
+                            {testimonials.map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => goTo(i)}
+                                    className={`h-2 rounded-full transition-all ${
+                                        i === activeIndex
+                                            ? "w-6 bg-[#2d5a3d]"
+                                            : "w-2 bg-gray-400 hover:bg-[#2d5a3d]"
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     );

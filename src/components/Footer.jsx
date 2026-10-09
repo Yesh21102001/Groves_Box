@@ -45,17 +45,13 @@ export default function Footer() {
     const toggleSection = (title) => setOpenSection(openSection === title ? null : title);
     const handleSubmit = (e) => e.preventDefault();
 
-    // ── Glass styles ──────────────────────────────────────────────────
+    // ── Light theme styles ──────────────────────────────────────────────────
     const glassStyle = {
-        backdropFilter: 'blur(10px) saturate(1.4)',
-        WebkitBackdropFilter: 'blur(6px) saturate(1.4)',
-        backgroundColor: 'rgba(0, 20, 5, 0.55)',
+        backgroundColor: '#ffffff',
     };
 
     const bottomGlassStyle = {
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(6px)',
-        backgroundColor: 'rgba(0, 15, 5, 0.60)',
+        backgroundColor: '#ffffff',
     };
 
     // ── Social icon wrapper style ─────────────────────────────────────
@@ -66,8 +62,8 @@ export default function Footer() {
         width: '36px',
         height: '36px',
         borderRadius: '8px',
-        backgroundColor: 'rgba(30, 80, 40, 0.85)',
-        transition: 'background-color 0.2s',
+        backgroundColor: 'transparent',
+        transition: 'all 0.2s',
     };
 
     // ── Reusable: Social row ──────────────────────────────────────────
@@ -80,8 +76,8 @@ export default function Footer() {
                         key={icon}
                         href={href}
                         style={socialIconBg}
-                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(50, 120, 60, 0.95)'}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(30, 80, 40, 0.85)'}
+                        onMouseEnter={e => e.currentTarget.style.color = '#2d5a3d'}
+                        onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
                         className="transition-colors"
                     >
                         {Icon && (
@@ -105,8 +101,8 @@ export default function Footer() {
                 className={`w-full ${newsletter.inputPadding} ${newsletter.inputFontSize} border rounded focus:outline-none`}
                 style={{
                     borderColor: newsletter.inputBorderColor,
-                    backgroundColor: 'rgba(255,255,255,0.08)',
-                    color: '#fff',
+                    backgroundColor: '#ffffff',
+                    color: '#1a1a1a',
                 }}
                 onFocus={e => e.currentTarget.style.borderColor = newsletter.inputFocusBorder}
                 onBlur={e => e.currentTarget.style.borderColor = newsletter.inputBorderColor}

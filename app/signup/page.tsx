@@ -201,11 +201,11 @@ export default function SignUpPage() {
     const showPhoneValidation = phoneDigits.length === 10;
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-20">
+        <div className="min-h-screen bg-white flex items-center justify-center px-4 py-20">
             {/* Success Popup */}
             {showSuccess && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/20">
-                    <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm mx-4 animate-fade-in">
+                    <div className="bg-white rounded-lg shadow-2xl p-8 max-w-sm mx-4 animate-fade-in">
                         <div className="text-center">
                             <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                                 <CheckCircle className="w-10 h-10 text-green-600" />
@@ -227,12 +227,12 @@ export default function SignUpPage() {
             <div className="w-full max-w-md">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-[#6b9238]">Create Account</h1>
+                    <h1 className="text-4xl font-bold text-gray-900 style={{fontFamily: "Georgia, serif"}}">Create Account</h1>
                     <p className="text-gray-600 mt-2">Join us and start your plant journey</p>
                 </div>
 
                 {/* Sign Up Form */}
-                <div className="bg-white rounded-lg shadow-lg p-8">
+                <div className="bg-white rounded-lg border border-gray-200 p-8">
                     {error && (
                         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                             <p className="text-red-600 text-sm">{error}</p>
@@ -241,7 +241,7 @@ export default function SignUpPage() {
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Name Fields */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-900 mb-2">
                                     First Name
@@ -251,7 +251,7 @@ export default function SignUpPage() {
                                     name="firstName"
                                     value={formData.firstName}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6b9238]"
+                                    className="w-full px-4 py-3.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2d5a3d]"
                                     placeholder="John"
                                     required
                                 />
@@ -266,7 +266,7 @@ export default function SignUpPage() {
                                     name="lastName"
                                     value={formData.lastName}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6b9238]"
+                                    className="w-full px-4 py-3.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2d5a3d]"
                                     placeholder="Doe"
                                     required
                                 />
@@ -283,7 +283,7 @@ export default function SignUpPage() {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6b9238]"
+                                className="w-full px-4 py-3.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2d5a3d]"
                                 placeholder="you@example.com"
                                 required
                             />
@@ -304,7 +304,7 @@ export default function SignUpPage() {
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handlePhoneChange}
-                                    className={`w-full pl-16 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6b9238] ${showPhoneValidation
+                                    className={`w-full pl-16 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2d5a3d] ${showPhoneValidation
                                         ? isPhoneValid
                                             ? 'border-green-300 bg-green-50'
                                             : 'border-red-300 bg-red-50'
@@ -345,7 +345,7 @@ export default function SignUpPage() {
                                     name="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6b9238]"
+                                    className="w-full px-4 py-3.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2d5a3d]"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -388,7 +388,7 @@ export default function SignUpPage() {
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6b9238]"
+                                    className="w-full px-4 py-3.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2d5a3d]"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -419,15 +419,15 @@ export default function SignUpPage() {
                                     type="checkbox"
                                     checked={agreedToTerms}
                                     onChange={(e) => setAgreedToTerms(e.target.checked)}
-                                    className="w-4 h-4 text-[#6b9238] rounded focus:ring-[#6b9238] mt-1"
+                                    className="w-4 h-4 text-[#2d5a3d] rounded focus:ring-[#2d5a3d] mt-1"
                                 />
                                 <span className="ml-2 text-sm text-gray-600">
                                     I agree to the{' '}
-                                    <Link href="/terms-service" className="text-[#6b9238] font-semibold hover:underline">
+                                    <Link href="/terms-service" className="text-[#2d5a3d] font-semibold hover:underline">
                                         Terms of Service
                                     </Link>{' '}
                                     and{' '}
-                                    <Link href="/privacy-policy" className="text-[#6b9238] font-semibold hover:underline">
+                                    <Link href="/privacy-policy" className="text-[#2d5a3d] font-semibold hover:underline">
                                         Privacy Policy
                                     </Link>
                                 </span>
@@ -447,7 +447,7 @@ export default function SignUpPage() {
                     {/* Sign In Link */}
                     <p className="text-center text-gray-600 mt-8">
                         Already have an account?{' '}
-                        <Link href="/login" className="text-[#6b9238] font-semibold hover:underline">
+                        <Link href="/login" className="text-[#2d5a3d] font-semibold hover:underline">
                             Sign in
                         </Link>
                     </p>

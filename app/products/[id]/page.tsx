@@ -28,7 +28,7 @@ interface Product {
     price: number;
     originalPrice?: number | null;
     image: string;
-    images?: Array<{ url: string; altText?: string }>;
+    images?: Array<{ url: string; altText?: string; width?: number; height?: number }>;
     description: string;
     descriptionHtml?: string;
     availableForSale: boolean;
@@ -390,13 +390,19 @@ export default function ProductDetailPage() {
 
                             {/* Main image */}
                             <div className="flex-1">
-                                <div className="relative overflow-hidden aspect-[4/5] rounded-2xl border border-[#d0e8dd] bg-[#e5f0eb] shadow-sm sm:aspect-[3/4]">
+                                <div className="relative overflow-hidden rounded-2xl border border-[#d0e8dd] bg-[#e5f0eb] shadow-sm">
                                     {product.badge && (
                                         <div className={`absolute top-4 left-4 z-10 ${product.badgeColor} text-white px-4 py-1.5 text-xs font-semibold rounded-full shadow-sm`}>
                                             {product.badge}
                                         </div>
                                     )}
-                                    <img src={productImages[mainImage]?.url || product.image} alt={product.name} className="w-full h-full object-contain" />
+                                    <img
+                                        src={productImages[mainImage]?.url || product.image}
+                                        alt={product.name}
+                                        width={productImages[mainImage]?.width}
+                                        height={productImages[mainImage]?.height}
+                                        className="block h-auto w-full object-contain"
+                                    />
                                 </div>
                                 {/* Mobile thumbnails */}
                                 <div className="flex sm:hidden gap-2 mt-3 overflow-x-auto pb-1">

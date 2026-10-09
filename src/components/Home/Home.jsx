@@ -121,6 +121,11 @@ export default function HomePage({ initialData = {} }) {
       >
         <div
           aria-hidden="true"
+          className="absolute inset-0 bg-cover bg-center md:hidden"
+          style={{ backgroundImage: "url('/images/2149155732.jpg')" }}
+        />
+        <div
+          aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-r from-[#14291f]/75 via-[#1a3227]/55 to-[#1a3227]/15"
         />
         <div className="relative z-10 mx-auto grid min-h-[560px] max-w-7xl grid-cols-1 items-center gap-10 px-5 py-14 sm:px-8 md:min-h-[600px] md:grid-cols-[1.15fr_0.85fr] md:py-16 lg:min-h-[680px] lg:px-12">

@@ -62,18 +62,18 @@ export default function Navbar() {
 
       {/* MAIN HEADER */}
       <div className={`border-b border-gray-200 transition-shadow ${scrolled ? 'shadow-md' : ''}`}>
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
           {/* Header Row */}
-          <div className="flex items-center justify-between py-4 gap-8">
+          <div className="flex min-w-0 items-center justify-between gap-2 py-3 sm:gap-4 sm:py-4 xl:gap-5">
 
             {/* LEFT: Logo */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0 mr-16">
-              <span className="text-3xl">🌿</span>
-              <span className="text-lg font-bold text-[#2d5a3d]">GrovesBox</span>
+            <Link href="/" className="flex min-w-0 flex-shrink-0 items-center gap-1.5 sm:gap-2">
+              <span className="text-2xl sm:text-3xl">🌿</span>
+              <span className="text-base font-bold text-[#2d5a3d] sm:text-lg">GrovesBox</span>
             </Link>
 
             {/* CENTER: Navigation (Hidden on Mobile) */}
-            <div className="hidden lg:flex items-center gap-8">
+            <div className="hidden xl:flex items-center gap-4 2xl:gap-6">
               <Link href="/" className="text-gray-700 hover:text-[#2d5a3d] font-medium text-sm transition-colors whitespace-nowrap">
                 Home
               </Link>
@@ -95,14 +95,14 @@ export default function Navbar() {
             </div>
 
             {/* CENTER: Search Bar (Hidden on Mobile) */}
-            <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-shrink-0">
+            <form onSubmit={handleSearch} className="hidden xl:flex min-w-0 flex-shrink items-center">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search by Plants"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="px-4 py-2 bg-gray-100 rounded text-sm focus:outline-none focus:bg-white border border-transparent focus:border-gray-300 transition-colors w-64"
+                  className="w-44 rounded border border-transparent bg-gray-100 px-4 py-2 pr-10 text-sm transition-colors focus:border-gray-300 focus:bg-white focus:outline-none 2xl:w-56"
                 />
                 <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#2d5a3d]">
                   <Search size={18} />
@@ -111,7 +111,7 @@ export default function Navbar() {
             </form>
 
             {/* RIGHT: Icons */}
-            <div className="flex items-center gap-4 flex-shrink-0">
+            <div className="flex flex-shrink-0 items-center gap-1 sm:gap-2 xl:gap-3">
 
               {/* Account Icon */}
               <Link href="/account" className="hidden md:flex p-2.5 hover:bg-gray-100 touch-target rounded-lg transition-colors" title="Account">
@@ -144,7 +144,7 @@ export default function Navbar() {
                   setHeaderVisible(true);
                   setIsMenuOpen(!isMenuOpen);
                 }}
-                className="p-2 lg:hidden"
+                className="p-2 xl:hidden"
               >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -156,7 +156,7 @@ export default function Navbar() {
 
       {/* MOBILE MENU */}
       {isMenuOpen && (
-        <div className="lg:hidden bg-white border-b border-gray-200">
+        <div className="xl:hidden bg-white border-b border-gray-200">
           <div className="px-5 py-4 space-y-3 max-w-7xl mx-auto">
             {/* Mobile Search */}
             <form onSubmit={handleSearch} className="mb-4">

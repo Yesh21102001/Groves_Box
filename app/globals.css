@@ -111,30 +111,6 @@ p, span, a, button, input, textarea, select, label {
 .btn-outline:active {
   transform: scale(0.97);
 }
-/* Mobile-first responsive typography */
-@media (max-width: 640px) {
-  h1 { font-size: 20px !important; }
-  h2 { font-size: 16px !important; }
-  h3 { font-size: 14px !important; }
-  p, body { font-size: 14px !important; }
-}
-
-@media (max-width: 375px) {
-  h1 { font-size: 18px !important; }
-  h2 { font-size: 15px !important; }
-  h3 { font-size: 13px !important; }
-  p, body { font-size: 13px !important; }
-}
-
-/* Touch-friendly icon sizing */
-[class*="icon-"] {
-  min-width: 44px;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* Input touch optimization */
 input, textarea, select {
   min-height: 44px;

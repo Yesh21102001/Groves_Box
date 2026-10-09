@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation';
 import { Heart, User, ShoppingCart, Search, Menu, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { getCollections } from '../lib/shopify_utilis';
 
 export default function Navbar() {
   const router = useRouter();
   const { cartItems } = useCart();
   const { wishlistItems } = useWishlist();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [collections, setCollections] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
@@ -19,6 +21,31 @@ export default function Navbar() {
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const wishlistCount = wishlistItems.length;
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCollections = async () => {
+      const data = await getCollections(250);
+      if (!isMounted) return;
+
+      const excludedHandles = new Set(['new-arrivals', 'best-sellers']);
+      const normalize = (value) => value.toLowerCase().trim().replace(/[\s_]+/g, '-');
+      const availableCollections = data.filter((collection) => {
+        const handle = normalize(collection.handle || '');
+        const name = normalize(collection.name || '');
+        return collection.id && collection.name && !excludedHandles.has(handle) &&
+          name !== 'new-arrivals' && name !== 'best-sellers';
+      });
+
+      setCollections(availableCollections.slice(0, 5));
+    };
+
+    loadCollections();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,7 +91,7 @@ export default function Navbar() {
       <div className={`border-b border-gray-200 transition-shadow ${scrolled ? 'shadow-md' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
           {/* Header Row */}
-          <div className="flex min-w-0 items-center justify-between gap-2 py-3 sm:gap-4 sm:py-4 xl:gap-5">
+          <div className="flex min-w-0 items-center justify-between gap-2 py-3 sm:gap-4 sm:py-4 xl:gap-5 2xl:gap-2">
 
             {/* LEFT: Logo */}
             <Link href="/" className="flex min-w-0 flex-shrink-0 items-center gap-1.5 sm:gap-2">
@@ -73,29 +100,23 @@ export default function Navbar() {
             </Link>
 
             {/* CENTER: Navigation (Hidden on Mobile) */}
-            <div className="hidden xl:flex items-center gap-4 2xl:gap-6">
+            <div className="hidden 2xl:flex items-center gap-4">
               <Link href="/" className="text-gray-700 hover:text-[#2d5a3d] font-medium text-sm transition-colors whitespace-nowrap">
                 Home
               </Link>
-              <Link href="/collections" className="text-gray-700 hover:text-[#2d5a3d] font-medium text-sm transition-colors whitespace-nowrap">
-                Shop
-              </Link>
-              <Link href="/care" className="text-gray-700 hover:text-[#2d5a3d] font-medium text-sm transition-colors whitespace-nowrap">
-                Plant Care
-              </Link>
-              <Link href="/blog" className="text-gray-700 hover:text-[#2d5a3d] font-medium text-sm transition-colors whitespace-nowrap">
-                Blog
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-[#2d5a3d] font-medium text-sm transition-colors whitespace-nowrap">
-                About Us
-              </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-[#2d5a3d] font-medium text-sm transition-colors whitespace-nowrap">
-                Contact Us
-              </Link>
+              {collections.map((collection) => (
+                <Link
+                  key={collection.id}
+                  href={collection.link}
+                  className="text-gray-700 hover:text-[#2d5a3d] font-medium text-sm transition-colors whitespace-nowrap"
+                >
+                  {collection.name}
+                </Link>
+              ))}
             </div>
 
             {/* CENTER: Search Bar (Hidden on Mobile) */}
-            <form onSubmit={handleSearch} className="hidden xl:flex min-w-0 flex-shrink items-center">
+            <form onSubmit={handleSearch} className="hidden xl:flex min-w-0 flex-shrink items-center 2xl:hidden">
               <div className="relative">
                 <input
                   type="text"
@@ -144,7 +165,7 @@ export default function Navbar() {
                   setHeaderVisible(true);
                   setIsMenuOpen(!isMenuOpen);
                 }}
-                className="p-2 xl:hidden"
+                className="p-2 2xl:hidden"
               >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -156,7 +177,7 @@ export default function Navbar() {
 
       {/* MOBILE MENU */}
       {isMenuOpen && (
-        <div className="xl:hidden bg-white border-b border-gray-200">
+        <div className="2xl:hidden bg-white border-b border-gray-200">
           <div className="px-5 py-4 space-y-3 max-w-7xl mx-auto">
             {/* Mobile Search */}
             <form onSubmit={handleSearch} className="mb-4">
@@ -178,30 +199,29 @@ export default function Navbar() {
             <Link href="/" onClick={() => setIsMenuOpen(false)} className="block py-2 text-gray-700 hover:text-[#2d5a3d] font-medium">
               Home
             </Link>
-            <Link href="/collections" onClick={() => setIsMenuOpen(false)} className="block py-2 text-gray-700 hover:text-[#2d5a3d] font-medium">
-              Shop
-            </Link>
-            <Link href="/care" onClick={() => setIsMenuOpen(false)} className="block py-2 text-gray-700 hover:text-[#2d5a3d] font-medium">
-              Plant Care
-            </Link>
-            <Link href="/blog" onClick={() => setIsMenuOpen(false)} className="block py-2 text-gray-700 hover:text-[#2d5a3d] font-medium">
-              Blog
-            </Link>
-            <Link href="/about" onClick={() => setIsMenuOpen(false)} className="block py-2 text-gray-700 hover:text-[#2d5a3d] font-medium">
-              About Us
-            </Link>
-            <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="block py-2 text-gray-700 hover:text-[#2d5a3d] font-medium">
-              Contact Us
-            </Link>
+            {collections.map((collection) => (
+              <Link
+                key={collection.id}
+                href={collection.link}
+                onClick={() => setIsMenuOpen(false)}
+                className="block py-2 text-gray-700 hover:text-[#2d5a3d] font-medium"
+              >
+                {collection.name}
+              </Link>
+            ))}
             <Link href="/account" onClick={() => setIsMenuOpen(false)} className="block py-2 text-gray-700 hover:text-[#2d5a3d] font-medium">
               My Account
             </Link>
 
-            {/* Mobile Support */}
+            {/* Mobile Contact */}
             <div className="pt-4 border-t border-gray-200">
-              <a href="tel:+1234567890" className="text-sm font-semibold text-[#2d5a3d]">
-                📞 Get Support: +1-234-567-890
-              </a>
+              <Link
+                href="/contact-us"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex min-h-11 w-full items-center justify-center rounded-lg bg-[#2d5a3d] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1f4028]"
+              >
+                Contact Us
+              </Link>
             </div>
           </div>
         </div>

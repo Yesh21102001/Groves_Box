@@ -262,7 +262,7 @@ export default function HomePage({ initialData = {} }) {
             </div>
             <div className="mobile-product-slider flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:hidden">
               {products.slice(0, 5).map((product) => (
-                <div key={product.id} className="basis-[calc((100%-2.5rem)/2.5)] flex-none snap-start">
+                <div key={product.id} className="basis-[calc((100%-1rem)/2)] flex-none snap-start">
                   <ProductCard product={product} />
                 </div>
               ))}

@@ -128,7 +128,7 @@ export default function HomePage({ initialData = {} }) {
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-r from-[#14291f]/95 via-[#1a3227]/80 to-[#1a3227]/20"
         />
-        <div className="relative z-10 mx-auto grid min-h-[560px] max-w-7xl grid-cols-1 items-center gap-10 px-5 py-14 sm:px-8 md:min-h-[600px] md:grid-cols-[1.15fr_0.85fr] md:py-16 lg:px-12">
+        <div className="relative z-10 mx-auto grid min-h-[560px] max-w-7xl grid-cols-1 items-center gap-10 px-5 py-14 sm:px-8 md:min-h-[600px] md:grid-cols-[1.15fr_0.85fr] md:py-16 lg:min-h-[680px] lg:px-12">
           <div className="flex flex-col justify-center">
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#d8e9a4] sm:text-sm">
               Quality You Can Trust
@@ -137,7 +137,7 @@ export default function HomePage({ initialData = {} }) {
               The Right Plant for The Right Space
             </h1>
             <p className="mb-7 max-w-lg text-sm leading-relaxed text-white/90 sm:text-base md:text-lg">
-              Discover plants that fit your space, lifestyle, and level of care. From bright balconies to cozy corners, find beautiful greenery and everything you need to help it thrive.
+              Discover plants that fit your space, lifestyle, and level of care. From bright balconies to cozy corners
             </p>
             <div className="mb-8 flex flex-wrap items-center gap-3 sm:gap-4">
               <Link

@@ -138,3 +138,49 @@ input, textarea, select {
   font-size: clamp(1.75rem, 3vw, 2.5rem) !important;
   line-height: 1.15 !important;
 }
+
+.mobile-collection-slider,
+.mobile-product-slider {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-collection-slider::-webkit-scrollbar,
+.mobile-product-slider::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  h1 {
+    font-size: clamp(1.875rem, 7vw, 2.25rem) !important;
+    line-height: 1.15 !important;
+    text-wrap: balance;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 1.875rem) !important;
+    line-height: 1.2 !important;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-size: clamp(1.125rem, 4.5vw, 1.375rem) !important;
+    line-height: 1.3 !important;
+    text-wrap: balance;
+  }
+
+  section[class~="py-20"]:not(.home-hero) {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  section[class~="py-16"]:not(.home-hero) {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  section[class~="py-14"] {
+    padding-top: 2.25rem !important;
+    padding-bottom: 2.25rem !important;
+  }
+}

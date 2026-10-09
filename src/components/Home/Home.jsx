@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Heart, ArrowRight } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import ProductCard from "../ProductCard";
@@ -14,6 +14,7 @@ import {
 import { homeConfig } from "../../config/home.config";
 
 export default function HomePage({ initialData = {} }) {
+  const mobileCollectionSliderRef = useRef(null);
   const [products, setProducts] = useState(initialData.products ?? initialData.newArrivals ?? []);
   const [categories, setCategories] = useState(initialData.categories ?? []);
   const [newArrivals, setNewArrivals] = useState(initialData.newArrivals ?? []);
@@ -33,6 +34,46 @@ export default function HomePage({ initialData = {} }) {
       name !== "best sellers"
     );
   });
+
+  useEffect(() => {
+    const slider = mobileCollectionSliderRef.current;
+    const collectionCount = collectionCategories.length;
+    if (!slider || collectionCount === 0) return;
+
+    const getSegmentWidth = () => {
+      const firstCollectionOfNextSet = slider.children[collectionCount];
+      const firstCollection = slider.children[0];
+      return firstCollectionOfNextSet && firstCollection
+        ? firstCollectionOfNextSet.offsetLeft - firstCollection.offsetLeft
+        : 0;
+    };
+
+    const centerSlider = () => {
+      if (window.matchMedia("(min-width: 640px)").matches) return;
+      slider.scrollLeft = getSegmentWidth();
+    };
+
+    const handleScroll = () => {
+      if (window.matchMedia("(min-width: 640px)").matches) return;
+      const segmentWidth = getSegmentWidth();
+      if (!segmentWidth) return;
+
+      if (slider.scrollLeft < segmentWidth / 2) {
+        slider.scrollLeft += segmentWidth;
+      } else if (slider.scrollLeft > segmentWidth * 1.5) {
+        slider.scrollLeft -= segmentWidth;
+      }
+    };
+
+    centerSlider();
+    slider.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", centerSlider);
+
+    return () => {
+      slider.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", centerSlider);
+    };
+  }, [collectionCategories.length]);
 
   useEffect(() => {
     if (Object.keys(initialData).length > 0) return;
@@ -156,13 +197,40 @@ export default function HomePage({ initialData = {} }) {
       {collectionCategories.length > 0 && (
         <section className="w-full bg-white py-20 border-t border-gray-100">
           <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-            <div className="flex justify-between items-end mb-12">
+            <div className="flex justify-between items-end mb-6 sm:mb-12">
               <div>
                 <p className="text-sm text-[#2d5a3d] font-semibold uppercase tracking-widest mb-3">Our Collection</p>
                 <h2 className="text-4xl md:text-5xl font-serif text-gray-900">Find Your Perfect Plant</h2>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-5">
+            <div
+              ref={mobileCollectionSliderRef}
+              className="mobile-collection-slider flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:hidden"
+            >
+              {[0, 1, 2].flatMap((copy) =>
+                collectionCategories.map((cat) => (
+                  <Link
+                    key={`${copy}-${cat.id}`}
+                    href={`/collections/${cat.handle}`}
+                    aria-hidden={copy !== 1}
+                    tabIndex={copy === 1 ? undefined : -1}
+                    className="group relative aspect-[2/3] basis-[calc((100%-2.5rem)/2.5)] flex-none snap-start overflow-hidden rounded-lg"
+                  >
+                    <Image
+                      src={cat.image || "/images/artificial-green-plant-pot-display-rack-sale.jpg"}
+                      alt={cat.name}
+                      fill
+                      sizes="35vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/65 via-black/10 to-transparent p-3 transition-colors group-hover:from-black/75">
+                      <h3 className="text-sm font-bold text-white">{cat.name}</h3>
+                    </div>
+                  </Link>
+                )),
+              )}
+            </div>
+            <div className="hidden grid-cols-2 gap-4 sm:grid sm:grid-cols-3 md:grid-cols-5 md:gap-5">
               {collectionCategories.slice(0, 5).map((cat) => (
                 <Link key={cat.id} href={`/collections/${cat.handle}`} className="group relative aspect-[2/3] overflow-hidden rounded-lg">
                   <Image
@@ -181,7 +249,7 @@ export default function HomePage({ initialData = {} }) {
             <div className="mt-8 flex justify-center">
               <Link
                 href="/collections"
-                className="inline-flex min-h-11 items-center justify-center rounded border-2 border-[#2d5a3d] px-7 py-3 font-semibold text-[#2d5a3d] transition-colors hover:bg-[#2d5a3d]/5"
+                className="inline-flex min-h-9 items-center justify-center rounded border-2 border-[#2d5a3d] px-4 py-2 text-sm font-semibold text-[#2d5a3d] transition-colors hover:bg-[#2d5a3d]/5 sm:min-h-11 sm:px-7 sm:py-3 sm:text-base"
               >
                 View All <ArrowRight size={18} className="ml-2" />
               </Link>
@@ -196,7 +264,7 @@ export default function HomePage({ initialData = {} }) {
       {products.length > 0 && (
         <section className="w-full bg-white py-20 border-t border-gray-100">
           <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-            <div className="flex justify-between items-end mb-12">
+            <div className="flex justify-between items-end mb-6 sm:mb-12">
               <div>
                 <p className="text-sm text-[#2d5a3d] font-semibold uppercase tracking-widest mb-3">Fresh Finds</p>
                 <h2 className="text-4xl md:text-5xl font-serif text-gray-900">New Arrivals</h2>
@@ -205,7 +273,14 @@ export default function HomePage({ initialData = {} }) {
                 View all <ArrowRight size={18} />
               </Link>
             </div>
-            <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-5 md:gap-6">
+            <div className="mobile-product-slider flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:hidden">
+              {products.slice(0, 5).map((product) => (
+                <div key={product.id} className="basis-[calc((100%-2.5rem)/2.5)] flex-none snap-start">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+            <div className="hidden grid-cols-2 gap-5 sm:grid sm:grid-cols-3 md:grid-cols-5 md:gap-6">
               {products.slice(0, 5).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -213,7 +288,7 @@ export default function HomePage({ initialData = {} }) {
             <div className="mt-8 flex justify-center">
               <Link
                 href="/products?filter=new"
-                className="inline-flex min-h-11 items-center justify-center rounded border-2 border-[#2d5a3d] px-7 py-3 font-semibold text-[#2d5a3d] transition-colors hover:bg-[#2d5a3d]/5"
+                className="inline-flex min-h-9 items-center justify-center rounded border-2 border-[#2d5a3d] px-4 py-2 text-sm font-semibold text-[#2d5a3d] transition-colors hover:bg-[#2d5a3d]/5 sm:min-h-11 sm:px-7 sm:py-3 sm:text-base"
               >
                 View All <ArrowRight size={18} className="ml-2" />
               </Link>

@@ -550,16 +550,19 @@ export default function ProductDetailPage() {
                             ))}
 
                             {/* Quantity + Add to Cart */}
-                            <div className="flex items-stretch gap-3 pt-1">
-                                <div className="flex items-center bg-white border border-gray-200 rounded-xl overflow-hidden flex-shrink-0">
-                                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-11 h-14 flex items-center justify-center text-lg text-gray-600 hover:bg-gray-100 transition">−</button>
-                                    <span className="w-10 text-center text-base font-semibold text-gray-900">{quantity}</span>
-                                    <button onClick={() => setQuantity(quantity + 1)} className="w-11 h-14 flex items-center justify-center text-lg text-gray-600 hover:bg-gray-100 transition">+</button>
+                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 pt-1 sm:flex sm:items-stretch">
+                                <div className="col-span-1 flex min-w-0 items-center justify-between gap-3 sm:contents">
+                                    <span className="text-sm font-medium text-gray-700 sm:hidden">Quantity</span>
+                                    <div className="flex flex-shrink-0 items-center overflow-hidden rounded-xl border border-gray-200 bg-white">
+                                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="flex h-12 w-10 items-center justify-center text-lg text-gray-600 transition hover:bg-gray-100 sm:h-14 sm:w-11">−</button>
+                                        <span className="w-8 text-center text-base font-semibold text-gray-900 sm:w-10">{quantity}</span>
+                                        <button onClick={() => setQuantity(quantity + 1)} className="flex h-12 w-10 items-center justify-center text-lg text-gray-600 transition hover:bg-gray-100 sm:h-14 sm:w-11">+</button>
+                                    </div>
                                 </div>
                                 <button
                                     onClick={handleAddToCart}
                                     disabled={!product.availableForSale}
-                                    className={`flex-1 h-14 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 shadow-md ${addedToCart
+                                    className={`col-span-2 row-start-2 h-12 w-full rounded-xl text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-md sm:order-2 sm:h-14 sm:flex-1 sm:text-base ${addedToCart
                                         ? 'bg-[#1f4028] text-white'
                                     : 'bg-gradient-to-r from-[#2d5a3d] to-[#1f4028] hover:brightness-105 text-white'
                                         } disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none`}
@@ -567,13 +570,13 @@ export default function ProductDetailPage() {
                                     {addedToCart ? (
                                         <><Check size={18} /> Added to Cart!</>
                                     ) : (
-                                        <><ShoppingCart size={18} /> Add To Cart — Rs. {(displayPrice * quantity).toLocaleString()}</>
+                                        <><ShoppingCart size={18} /> Add To Cart<span className="hidden sm:inline"> — Rs. {(displayPrice * quantity).toLocaleString()}</span></>
                                     )}
                                 </button>
                                 <button
                                     onClick={handleWishlistToggle}
                                     aria-label="Add to wishlist"
-                                    className="w-14 h-14 flex-shrink-0 border border-[#d0e8dd] rounded-xl flex items-center justify-center hover:border-[#2d5a3d] hover:bg-[#e5f0eb] transition-all duration-300"
+                                    className="col-start-2 row-start-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-[#d0e8dd] transition-all duration-300 hover:border-[#2d5a3d] hover:bg-[#e5f0eb] sm:order-3 sm:h-14 sm:w-14"
                                 >
                                     <Heart size={20} className={isProductWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-500'} />
                                 </button>

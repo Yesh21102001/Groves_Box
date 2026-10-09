@@ -26,7 +26,7 @@ export default async function Home() {
     ]);
 
   const allCategories = (collectionsData || []).filter(
-    (collection) => collection.handle !== "frontpage",
+    (collection: { handle: string }) => collection.handle !== "frontpage",
   );
   const featuredCategory = allCategories.length > 0 ? allCategories[0] : null;
   const categoryProducts = featuredCategory

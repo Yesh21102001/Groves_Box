@@ -9,7 +9,6 @@ import CartConfirmationBar from "@/src/components/CartConfirmationBar";
 
 const lexend = Lexend({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-lexend",
   display: "swap",
 });

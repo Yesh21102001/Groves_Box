@@ -5,6 +5,7 @@ import { WishlistProvider } from "@/src/context/WishlistContext";
 import { Initializer } from "@/src/components/Initializer";
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
+import CartConfirmationBar from "@/src/components/CartConfirmationBar";
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
             <Initializer />
             <Navbar />
             {children}
+            <CartConfirmationBar />
             <Footer />
           </WishlistProvider>
         </CartProvider>

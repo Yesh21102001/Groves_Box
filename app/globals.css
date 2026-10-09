@@ -29,6 +29,22 @@ body {
     BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
+
+  body.has-cart-confirmation {
+    padding-bottom: calc(9rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 768px) {
+  body.has-cart-confirmation {
+    padding-bottom: 5rem;
+  }
+}
+
 /* All text → Lexend */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-lexend);

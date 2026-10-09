@@ -3,24 +3,11 @@
 import React from 'react';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
-import { useCart } from '@/src/context/CartContext';
 import { useWishlist } from '@/src/context/WishlistContext';
 import ProductCard from '@/src/components/ProductCard';
 
 export default function WishlistPage() {
     const { wishlistItems } = useWishlist();
-    const { cartItems } = useCart();
-
-    const totalItems = cartItems.reduce(
-        (sum: number, item: any) => sum + item.quantity,
-        0
-    );
-
-    const totalPrice = cartItems.reduce(
-        (sum: number, item: any) => sum + item.price * item.quantity,
-        0
-    );
-
     return (
         <div className="min-h-screen bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
@@ -71,49 +58,6 @@ export default function WishlistPage() {
                 )}
             </div>
 
-            {/* Bottom Cart Navigator */}
-            {totalItems > 0 && (
-                <div
-                    className="
-      fixed z-40
-      bg-[#F0F4F1] border-t border-gray-200 shadow-md border border-gray-200
-
-      bottom-[70px] left-3 right-3          /* mobile */
-      
-     sm:bottom-0 
-sm:left-1/2 
-sm:-translate-x-1/2 
-sm:w-[500px] 
-sm:rounded-t-[20px] 
-sm:rounded-b-none
-                    /* desktop width */
-
-      p-5 rounded-[20px]
-      sm:p-4 sm:rounded-[16px]
-    "
-                >
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-[#2d5a3d] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
-                                {totalItems}
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-600">
-                                    {totalItems} item{totalItems > 1 ? "s" : ""}
-                                </p>
-                                <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
-                            </div>
-                        </div>
-
-                        <Link
-                            href="/cart"
-                            className="btn-primary"
-                        >
-                            View Cart
-                        </Link>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

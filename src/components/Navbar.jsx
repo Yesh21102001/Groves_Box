@@ -2,14 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Heart, User, ShoppingCart, Search, Menu, X } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Heart, User, ShoppingCart, Search, Menu, X, House, Package } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { getCollections } from '../lib/shopify_utilis';
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const { cartItems } = useCart();
   const { wishlistItems } = useWishlist();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -77,11 +78,12 @@ export default function Navbar() {
   };
 
   return (
-    <nav
-      className={`sticky top-0 z-50 bg-white transition-transform duration-300 ease-in-out motion-reduce:transition-none ${
-        headerVisible || isMenuOpen ? 'translate-y-0' : '-translate-y-full'
-      }`}
-    >
+    <>
+      <nav
+        className={`sticky top-0 z-50 bg-white transition-transform duration-300 ease-in-out motion-reduce:transition-none ${
+          headerVisible || isMenuOpen ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
       {/* TOP ANNOUNCEMENT BANNER */}
       <div className="bg-[#2d5a3d] text-white text-center py-2.5 text-sm font-medium">
         HUGE EVERGREENS 25% OFF All Products
@@ -226,6 +228,35 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </nav>
+      </nav>
+      <nav
+        aria-label="Mobile navigation"
+        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 border-t border-gray-200 bg-white/95 px-2 pt-2 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] backdrop-blur md:hidden"
+        style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+      >
+        {[
+          { label: 'Home', href: '/', icon: House },
+          { label: 'Products', href: '/products', icon: Package },
+          { label: 'Wishlist', href: '/wishlist', icon: Heart },
+          { label: 'Account', href: '/account', icon: User },
+        ].map(({ label, href, icon: Icon }) => {
+          const active = href === '/' ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+
+          return (
+            <Link
+              key={label}
+              href={href}
+              aria-current={active ? 'page' : undefined}
+              className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-md text-[11px] font-medium transition-colors ${
+                active ? 'text-[#2d5a3d]' : 'text-gray-500 hover:text-[#2d5a3d]'
+              }`}
+            >
+              <Icon size={20} strokeWidth={active ? 2.4 : 2} />
+              <span>{label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </>
   );
 }

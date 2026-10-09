@@ -4,7 +4,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Filter, X, ChevronRight } from 'lucide-react';
-import { useCart } from '@/src/context/CartContext';
 import { getCollection } from '@/src/lib/shopify_utilis';
 import ProductCard from '@/src/components/ProductCard'; // ← adjust path if yours differs
 
@@ -62,8 +61,6 @@ export default function CollectionDetailPage() {
     const [showFiltersSidebar, setShowFiltersSidebar] = useState(false);
     const [hideForFooter, setHideForFooter] = useState(false);
     const [sortBy, setSortBy] = useState('popular');
-    const { cartItems } = useCart();
-
     const [collection, setCollection] = useState<Collection | null>(null);
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
@@ -71,9 +68,6 @@ export default function CollectionDetailPage() {
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
     const [selectedColors, setSelectedColors] = useState<string[]>([]);
     const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-
-    const totalItems = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
-    const totalPrice = cartItems.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
 
     const collectionHandle = params?.type as string;
 
@@ -238,7 +232,7 @@ export default function CollectionDetailPage() {
     );
 
     return (
-        <div className={`flex flex-col min-h-screen ${totalItems > 0 ? 'pb-40 sm:pb-28' : ''}`}>
+        <div className="flex min-h-screen flex-col">
             <main className="flex-1 bg-white py-8 md:py-12 lg:py-16">
                 <div className="max-w-[1800px] mx-auto px-4 md:px-6 lg:px-8 xl:px-12 2xl:px-24">
 
@@ -546,23 +540,6 @@ export default function CollectionDetailPage() {
                 </div>
             </main>
 
-            {/* Bottom Cart Navigator — floating pill, Blinkit-style */}
-            {totalItems > 0 && (
-                <div className="fixed z-40 bg-[#F0F4F1] border-t border-gray-200 shadow-md border border-gray-200 bottom-[70px] left-3 right-3 sm:bottom-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-[500px] sm:rounded-t-[20px] sm:rounded-b-none p-5 rounded-[20px] sm:p-4 sm:rounded-[16px]">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-[#2d5a3d] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">{totalItems}</div>
-                            <div>
-                                <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
-                                <p className="font-semibold">Rs. {totalPrice.toFixed(2)}</p>
-                            </div>
-                        </div>
-                        <Link href="/cart" className="btn-primary">
-                            View Cart
-                        </Link>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

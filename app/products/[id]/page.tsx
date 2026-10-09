@@ -189,7 +189,7 @@ const WriteReviewModal = ({ onClose, onSubmit }: { onClose: () => void; onSubmit
 /* ------------------------------------------------------------------ */
 export default function ProductDetailPage() {
     const params = useParams();
-    const { addToCart, cartItems } = useCart();
+    const { addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
     const [product, setProduct] = useState<Product | null>(null);
@@ -219,8 +219,6 @@ export default function ProductDetailPage() {
     ]);
 
     /* ---- cart totals ---- */
-    const totalItems = cartItems.reduce((s: number, i: any) => s + i.quantity, 0);
-    const totalPrice = cartItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
     const isProductWishlisted = product ? isInWishlist(product.id.toString()) : false;
 
     /* ---- group variant options ---- */
@@ -347,7 +345,7 @@ export default function ProductDetailPage() {
 
     /* ================================================================ */
     return (
-        <div className={totalItems > 0 ? 'pb-24' : ''}>
+        <div>
             {showReviewModal && (
                 <WriteReviewModal
                     onClose={() => setShowReviewModal(false)}
@@ -738,25 +736,6 @@ export default function ProductDetailPage() {
                 </div>
             </div>
 
-            {/* Bottom Cart Navigator */}
-            {totalItems > 0 && (
-                <div className="fixed z-40 bg-[#F5F7F2] border-t border-[#d0e8dd] shadow-md border bottom-[70px] left-3 right-3 sm:bottom-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-[500px] sm:rounded-t-[20px] sm:rounded-b-none p-5 rounded-[20px] sm:p-4 sm:rounded-[16px]">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-[#2d5a3d] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
-                                {totalItems}
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-500">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
-                                <p className="font-semibold text-sm">Rs. {totalPrice.toFixed(2)}</p>
-                            </div>
-                        </div>
-                        <Link href="/cart" className="btn-primary">
-                            View Cart
-                        </Link>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

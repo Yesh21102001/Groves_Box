@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Heart, ShoppingCart, ArrowRight } from "lucide-react";
-import { useCart } from "../../context/CartContext";
 import ProductCard from "../ProductCard";
 import {
   getProducts,
@@ -21,11 +20,6 @@ export default function HomePage({ initialData = {} }) {
   const [saleProducts, setSaleProducts] = useState(initialData.saleProducts ?? []);
   const [categoryProducts, setCategoryProducts] = useState(initialData.categoryProducts ?? []);
   const [loading, setLoading] = useState(Object.keys(initialData).length === 0);
-  const { cartItems } = useCart();
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
   useEffect(() => {
     if (Object.keys(initialData).length > 0) return;
 
@@ -61,7 +55,7 @@ export default function HomePage({ initialData = {} }) {
   );
 
   return (
-    <div className={`bg-white ${totalItems > 0 ? "pb-24 sm:pb-20" : ""}`}>
+    <div className="bg-white">
       {/* ════════════════════════════════════════════════
           HERO SECTION - The Right Plant for The Right Space
       ════════════════════════════════════════════════ */}
@@ -358,27 +352,6 @@ export default function HomePage({ initialData = {} }) {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════
-          BOTTOM CART BAR
-      ════════════════════════════════════════════════ */}
-      {totalItems > 0 && (
-        <div className="fixed z-40 bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg p-5">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="bg-[#2d5a3d] text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
-                {totalItems}
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">{totalItems} item{totalItems > 1 ? "s" : ""}</p>
-                <p className="font-bold text-gray-900">₹ {totalPrice.toFixed(2)}</p>
-              </div>
-            </div>
-            <Link href="/cart" className="px-8 py-3 bg-[#2d5a3d] text-white font-semibold hover:bg-[#1f4028] rounded transition-colors">
-              View Cart
-            </Link>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -261,9 +261,6 @@ export default function HomePage({ initialData = {} }) {
                 <p className="text-sm text-[#2d5a3d] font-semibold uppercase tracking-widest mb-3">Fresh Finds</p>
                 <h2 className="text-4xl md:text-5xl font-serif text-gray-900">New Arrivals</h2>
               </div>
-              <Link href="/products?filter=new" className="text-[#2d5a3d] font-semibold flex items-center gap-2 hover:gap-3 transition-all hidden md:flex">
-                View all <ArrowRight size={18} />
-              </Link>
             </div>
             <div className="mobile-product-slider flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:hidden">
               {products.slice(0, 5).map((product) => (
